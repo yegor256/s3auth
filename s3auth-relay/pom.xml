@@ -1,0 +1,289 @@
+<?xml version="1.0"?>
+<!--
+ * Copyright (c) 2012, s3auth.com
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met: 1) Redistributions of source code must retain the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer. 2) Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer in the documentation and/or other materials provided
+ * with the distribution. 3) Neither the name of the s3auth.com nor
+ * the names of its contributors may be used to endorse or promote
+ * products derived from this software without specific prior written
+ * permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+ * NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.s3auth</groupId>
+        <artifactId>s3auth</artifactId>
+        <version s3auth="yes">1.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>s3auth-relay</artifactId>
+    <packaging>jar</packaging>
+    <name>s3auth-relay</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-log</artifactId>
+        </dependency>
+        <dependency>
+            <!-- HTTP components, to unify its version in the project -->
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version since="4 Jul 2012">4.2-beta1</version>
+        </dependency>
+        <dependency>
+            <!-- HTTP components, to unify its version in the project -->
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version since="4 Jul 2012">4.2-beta1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit-dep</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <configuration>
+                        <archive>
+                            <manifestEntries>
+                                <S3Auth-Revision>${build.number}</S3Auth-Revision>
+                                <S3Auth-Version>${project.version}</S3Auth-Version>
+                                <S3Auth-Date>${maven.build.timestamp}</S3Auth-Date>
+                            </manifestEntries>
+                        </archive>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version since="2 Dec 2011">1.7</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <!--
+                This plugin will collect current build number
+                from Subversion and save it into Maven property "build.number".
+                -->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version since="5 Aug 2012">1.1</version>
+                <executions>
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                        <configuration>
+                            <buildNumberPropertyName>build.number</buildNumberPropertyName>
+                            <doCheck>false</doCheck>
+                            <doUpdate>false</doUpdate>
+                            <getRevisionOnlyOnce>true</getRevisionOnlyOnce>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>reserve-http-port</id>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>reserve-network-port</goal>
+                        </goals>
+                        <configuration>
+                            <portNames>
+                                <portName>http.port</portName>
+                            </portNames>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>heroku-deployment</id>
+            <activation>
+                <activeByDefault/>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <artifactId>maven-jar-plugin</artifactId>
+                            <configuration>
+                                <archive>
+                                    <manifest>
+                                        <mainClass>com.s3auth.relay.Main</mainClass>
+                                    </manifest>
+                                </archive>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <version since="29 Jul 2012">2.5</version>
+                        <executions>
+                            <execution>
+                                <id>copy-heroku-resources</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.directory}/heroku-resources</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${basedir}/src/main/heroku</directory>
+                                            <filtering>true</filtering>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>deploy-to-heroku</id>
+                                <phase>deploy</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <copy file="${heroku.pem}"
+                                            tofile="${project.build.directory}/heroku.pem"
+                                            overwrite="true" />
+                                        <chmod file="${project.build.directory}/heroku.pem" perm="600"/>
+                                        <echo file="${project.build.directory}/heroku.sh"><![CDATA[
+                                            /usr/bin/ssh -o UserKnownHostsFile=/dev/null \
+                                                -o StrictHostKeyChecking=no \
+                                                -i '${project.build.directory}/heroku.pem' $@
+                                        ]]></echo>
+                                        <chmod file="${project.build.directory}/heroku.sh" perm="a+x"/>
+                                        <exec dir="${project.build.directory}" executable="git" failonerror="true">
+                                            <arg value="clone"/>
+                                            <arg value="git@heroku.com:s3auth.git"/>
+                                            <arg value="heroku"/>
+                                            <env key="GIT_SSH" file="${project.build.directory}/heroku.sh"/>
+                                        </exec>
+                                        <exec dir="${project.build.directory}/heroku" executable="git" failonerror="true">
+                                            <arg value="config"/>
+                                            <arg value="user.name"/>
+                                            <arg value="Maven"/>
+                                        </exec>
+                                        <exec dir="${project.build.directory}/heroku" executable="git" failonerror="true">
+                                            <arg value="config"/>
+                                            <arg value="user.email"/>
+                                            <arg value="maven@s3auth.com"/>
+                                        </exec>
+                                        <copy file="${maven.settings}"
+                                            todir="${project.build.directory}/heroku"
+                                            overwrite="true" />
+                                        <copy todir="${project.build.directory}/heroku" overwrite="true">
+                                            <fileset dir="${project.build.directory}/heroku-resources"/>
+                                        </copy>
+                                        <exec dir="${project.build.directory}/heroku" executable="git" failonerror="true">
+                                            <arg value="add"/>
+                                            <arg value="./pom.xml"/>
+                                            <arg value="./Procfile"/>
+                                            <arg value="./downloader/pom.xml"/>
+                                        </exec>
+                                        <exec dir="${project.build.directory}/heroku" executable="git" failonerror="true">
+                                            <arg value="commit"/>
+                                            <arg value="-a"/>
+                                            <arg value="-m"/>
+                                            <arg value="rev.${build.number}"/>
+                                        </exec>
+                                        <exec dir="${project.build.directory}/heroku" executable="git" failonerror="true">
+                                            <arg value="push"/>
+                                            <arg value="origin"/>
+                                            <arg value="master"/>
+                                            <env key="GIT_SSH" file="${project.build.directory}/heroku.sh"/>
+                                        </exec>
+                                        <retry retrycount="5">
+                                            <exec executable="sh" outputproperty="rev.deployed" failonerror="true">
+                                                <arg value="-c"/>
+                                                <arg value="curl -s http://relay.s3auth.com/version"/>
+                                            </exec>
+                                        </retry>
+                                        <fail message="Revision ${rev.deployed} deployed instead of ${build.number}">
+                                            <condition>
+                                                <not>
+                                                    <equals arg1="${build.number}" arg2="${rev.deployed}"/>
+                                                </not>
+                                           </condition>
+                                        </fail>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>
