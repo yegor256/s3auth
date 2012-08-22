@@ -103,6 +103,9 @@
                                 <S3Auth-Version>${project.version}</S3Auth-Version>
                                 <S3Auth-Date>${maven.build.timestamp}</S3Auth-Date>
                             </manifestEntries>
+                            <manifest>
+                                <mainClass>com.s3auth.relay.Main</mainClass>
+                            </manifest>
                         </archive>
                     </configuration>
                 </plugin>
@@ -165,20 +168,6 @@
                 <activeByDefault/>
             </activation>
             <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <artifactId>maven-jar-plugin</artifactId>
-                            <configuration>
-                                <archive>
-                                    <manifest>
-                                        <mainClass>com.s3auth.relay.Main</mainClass>
-                                    </manifest>
-                                </archive>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
                 <plugins>
                     <plugin>
                         <artifactId>maven-resources-plugin</artifactId>

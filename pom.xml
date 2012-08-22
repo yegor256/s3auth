@@ -54,6 +54,7 @@
     <name>s3auth</name>
 
     <modules>
+        <module>s3auth-hosts</module>
         <module>s3auth-relay</module>
     </modules>
 
@@ -102,6 +103,19 @@
     </scm>
 
     <distributionManagement>
+        <downloadUrl>https://oss.sonatype.org/content/groups/public</downloadUrl>
+        <repository>
+            <uniqueVersion>false</uniqueVersion>
+            <id>sonatype.nexus</id>
+            <name>Sonatype OSS Repository (for releases)</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+        <snapshotRepository>
+            <uniqueVersion>false</uniqueVersion>
+            <id>sonatype.nexus</id>
+            <name>Sonatype OSS Repository (for snapshots)</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
         <site>
             <id>s3auth.s3</id>
             <name>s3auth.com Project Site</name>
@@ -225,6 +239,38 @@
     </dependencyManagement>
 
     <profiles>
+        <profile>
+            <!--
+            Sign artifacts before installation with GPG.
+            -->
+            <id>gpg</id>
+            <activation>
+                <property><name>gpg.keyname</name></property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <!--
+                        To GPG-sign the artifact before deployment to foreign
+                        repository. GPG keys have to be provided in CI
+                        environment, and published beforehand.
+                        @link http://www.sonatype.com/people/2010/01/how-to-generate-pgp-signatures-with-maven/
+                        -->
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version since="19 Oct 2011">1.4</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <!--
             This profile activates all continuous integration specific
