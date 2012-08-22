@@ -92,31 +92,32 @@
     </dependencies>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <configuration>
-                        <archive>
-                            <manifestEntries>
-                                <S3Auth-Revision>${build.number}</S3Auth-Revision>
-                                <S3Auth-Version>${project.version}</S3Auth-Version>
-                                <S3Auth-Date>${maven.build.timestamp}</S3Auth-Date>
-                            </manifestEntries>
-                            <manifest>
-                                <mainClass>com.s3auth.relay.Main</mainClass>
-                            </manifest>
-                        </archive>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>build-helper-maven-plugin</artifactId>
-                    <version since="2 Dec 2011">1.7</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.7.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <manifestEntries>
+                                        <S3Auth-Revision>${build.number}</S3Auth-Revision>
+                                        <S3Auth-Version>${project.version}</S3Auth-Version>
+                                        <S3Auth-Date>${maven.build.timestamp}</S3Auth-Date>
+                                        <Main-Class>com.s3auth.relay.Main</Main-Class>
+                                    </manifestEntries>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <!--
                 This plugin will collect current build number
@@ -143,6 +144,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
+                <version since="2 Dec 2011">1.7</version>
                 <executions>
                     <execution>
                         <id>reserve-http-port</id>
