@@ -56,6 +56,7 @@
     <modules>
         <module>s3auth-hosts</module>
         <module>s3auth-relay</module>
+        <module>s3auth-rest</module>
     </modules>
 
     <description>Amazon S3 HTTP Auth Relay</description>

@@ -42,19 +42,9 @@ import java.net.URI;
 final class CryptedUser implements User {
 
     /**
-     * Identity of the user.
+     * The user.
      */
-    private final transient String idnt;
-
-    /**
-     * Name of the user.
-     */
-    private final transient String nam;
-
-    /**
-     * Photo of the user.
-     */
-    private final transient URI pic;
+    private final transient User user;
 
     /**
      * Thrown by {@link #valueOf(String)} if we can't decrypt.
@@ -75,14 +65,10 @@ final class CryptedUser implements User {
 
     /**
      * Public ctor.
-     * @param identity Identity
-     * @param name The name
-     * @param photo The picture
+     * @param usr The user to encapsulate
      */
-    public Crypted(final String identity, final String name, final URI photo) {
-        this.idnt = identity;
-        this.nam = name;
-        this.pic = photo;
+    public CryptedUser(final User usr) {
+        this.user = usr;
     }
 
     /**
@@ -90,7 +76,7 @@ final class CryptedUser implements User {
      */
     @Override
     public String identity() {
-        return this.idnt;
+        return this.user.identity();
     }
 
     /**
@@ -98,7 +84,7 @@ final class CryptedUser implements User {
      */
     @Override
     public String name() {
-        return this.nam;
+        return this.user.name();
     }
 
     /**
@@ -106,7 +92,7 @@ final class CryptedUser implements User {
      */
     @Override
     public URI photo() {
-        return this.pic;
+        return this.user.photo();
     }
 
     /**
@@ -114,7 +100,7 @@ final class CryptedUser implements User {
      */
     @Override
     public String toString() {
-        return this.identity;
+        return "not implemented yet";
     }
 
     /**
@@ -125,7 +111,22 @@ final class CryptedUser implements User {
      */
     public static CryptedUser valueOf(final String txt)
         throws DecryptionException {
-        return new CryptedUser(txt);
+        return new CryptedUser(
+            new User() {
+                @Override
+                public String identity() {
+                    return "nobody";
+                }
+                @Override
+                public String name() {
+                    return "Mr. Nobody";
+                }
+                @Override
+                public URI photo() {
+                    return URI.create("#");
+                }
+            }
+        );
     }
 
 }

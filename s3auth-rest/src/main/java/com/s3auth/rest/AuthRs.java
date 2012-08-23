@@ -29,16 +29,23 @@
  */
 package com.s3auth.rest;
 
-import com.netbout.rest.jaxb.Invitee;
-import com.netbout.spi.Identity;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
+import com.rexsl.core.Manifests;
+import com.rexsl.misc.CookieBuilder;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.JaxbGroup;
+import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import com.rexsl.test.RestTester;
+import com.s3auth.hosts.User;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
@@ -68,7 +75,10 @@ public final class AuthRs extends BaseRs {
                 .queryParam("redirect_uri", "{uri}")
                 .build(
                     Manifests.read("S3Auth-FbId"),
-                    this.base().path("/a/fb").build()
+                    this.uriInfo().getBaseUriBuilder()
+                        .clone()
+                        .path("/a/fb")
+                        .build()
                 )
         );
         return new PageBuilder()
@@ -149,9 +159,8 @@ public final class AuthRs extends BaseRs {
      * Retrieve facebook access token.
      * @param code Facebook "authorization code"
      * @return The token
-     * @throws IOException If some problem with FB
      */
-    private String token(final String code) throws IOException {
+    private String token(final String code) {
         final URI uri = UriBuilder
             // @checkstyle MultipleStringLiterals (5 lines)
             .fromUri("https://graph.facebook.com/oauth/access_token")
@@ -161,7 +170,10 @@ public final class AuthRs extends BaseRs {
             .queryParam("code", "{code}")
             .build(
                 Manifests.read("S3Auth-FbId"),
-                this.base().path("/fb/back").build(),
+                this.uriInfo().getBaseUriBuilder()
+                    .clone()
+                    .path("/a/fb")
+                    .build(),
                 Manifests.read("S3Auth-FbSecret"),
                 code
             );
@@ -174,7 +186,7 @@ public final class AuthRs extends BaseRs {
         for (String sector : sectors) {
             final String[] pair = sector.split("=");
             if (pair.length != 2) {
-                throw new IOException(
+                throw new IllegalArgumentException(
                     String.format(
                         "Invalid response: '%s'",
                         response
@@ -187,7 +199,7 @@ public final class AuthRs extends BaseRs {
             }
         }
         if (token == null) {
-            throw new IOException(
+            throw new IllegalArgumentException(
                 String.format(
                     "Access token not found in response: '%s'",
                     response
@@ -201,15 +213,13 @@ public final class AuthRs extends BaseRs {
      * Get user name from Facebook, but the code provided.
      * @param token Facebook access token
      * @return The user found in FB
-     * @throws IOException If some problem with FB
      */
-    private com.restfb.types.User login(final String token)
-        throws IOException {
+    private com.restfb.types.User fetch(final String token) {
         try {
             return new DefaultFacebookClient(token)
                 .fetchObject("me", com.restfb.types.User.class);
         } catch (com.restfb.exception.FacebookException ex) {
-            throw new IOException(ex);
+            throw new IllegalArgumentException(ex);
         }
     }
 

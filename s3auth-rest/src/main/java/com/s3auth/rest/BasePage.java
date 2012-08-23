@@ -29,12 +29,6 @@
  */
 package com.s3auth.rest;
 
-import com.netbout.rest.auth.FacebookRs;
-import com.netbout.rest.jaxb.LongHelper;
-import com.netbout.rest.jaxb.LongIdentity;
-import com.netbout.spi.Helper;
-import com.netbout.spi.Identity;
-import com.netbout.spi.client.RestSession;
 import com.rexsl.core.Manifests;
 import com.rexsl.misc.CookieBuilder;
 import com.rexsl.page.JaxbBundle;
@@ -64,10 +58,10 @@ public class BasePage extends com.rexsl.page.BasePage<BasePage, BaseRs> {
 
     /**
      * Render it.
-     * @return This object
+     * @return JAX-RS response
      */
-    public final BasePage render() {
-        this.builder.entity(this);
+    public final Response.ResponseBuilder render() {
+        Response.ResponseBuilder builder = Response.ok();
         this.link(new Link("logout", "/a/out"));
         this.link(new Link("login", "/a/out"));
         this.append(
@@ -79,7 +73,8 @@ public class BasePage extends com.rexsl.page.BasePage<BasePage, BaseRs> {
                 .add("date", Manifests.read("S3Auth-Date"))
                 .up()
         );
-        return this;
+        builder.entity(this);
+        return builder;
     }
 
 }

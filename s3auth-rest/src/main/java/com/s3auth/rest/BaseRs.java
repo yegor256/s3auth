@@ -31,6 +31,8 @@ package com.s3auth.rest;
 
 import com.jcabi.log.Logger;
 import com.rexsl.page.BaseResource;
+import com.s3auth.hosts.Hosts;
+import com.s3auth.hosts.User;
 import javax.servlet.ServletContext;
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.QueryParam;
@@ -51,7 +53,7 @@ public class BaseRs extends BaseResource {
     /**
      * Name of auth cookie.
      */
-    private static final String COOKIE = "s3auth.com";
+    public static final String COOKIE = "s3auth.com";
 
     /**
      * Hosts.
@@ -98,7 +100,7 @@ public class BaseRs extends BaseResource {
     protected final User user() {
         try {
             return CryptedUser.valueOf(this.icookie);
-        } catch (Crypted.DecryptionException ex) {
+        } catch (CryptedUser.DecryptionException ex) {
             Logger.debug(
                 this,
                 "Decryption failure from %s calling '%s': %[exception]s",
@@ -107,6 +109,7 @@ public class BaseRs extends BaseResource {
                 ex
             );
             throw new WebApplicationException(
+                ex,
                 Response.status(Response.Status.TEMPORARY_REDIRECT)
                     .entity(ex.getMessage())
                     .location(
@@ -115,8 +118,7 @@ public class BaseRs extends BaseResource {
                             .path("/a/out")
                             .build()
                     )
-                    .build(),
-                ex
+                    .build()
             );
         }
     }

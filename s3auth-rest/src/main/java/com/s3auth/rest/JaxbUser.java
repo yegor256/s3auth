@@ -30,6 +30,7 @@
 package com.s3auth.rest;
 
 import com.s3auth.hosts.User;
+import java.net.URI;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -68,12 +69,12 @@ public final class JaxbUser {
     }
 
     /**
-     * Get name.
-     * @return The name
+     * Get identity.
+     * @return The unique identity
      */
     @XmlElement
-    public String getName() {
-        return this.user.name();
+    public String getIdentity() {
+        return this.user.identity();
     }
 
     /**

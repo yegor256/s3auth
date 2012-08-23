@@ -95,7 +95,7 @@ public final class HostsListener implements ServletContextListener {
             Logger.warn(this, "#contextDestroyed(): Hosts is null");
         } else {
             try {
-                this.hub.close();
+                this.hosts.close();
             } catch (java.io.IOException ex) {
                 Logger.error(
                     this,
