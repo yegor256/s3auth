@@ -48,6 +48,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-log</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.s3auth</groupId>
             <artifactId>s3auth-hosts</artifactId>
             <version s3auth="yes">1.0-SNAPSHOT</version>
@@ -57,6 +61,13 @@
             <artifactId>s3auth-hosts</artifactId>
             <version s3auth="yes">1.0-SNAPSHOT</version>
             <classifier>mock</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.rexsl</groupId>
+            <artifactId>rexsl-standalone</artifactId>
+            <version since="23 Aug 2012">0.3.8</version>
+            <classifier>bin</classifier>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -75,13 +86,6 @@
             <version since="23 Aug 2012">0.3.8</version>
         </dependency>
         <dependency>
-            <!-- Javax Servlet API 2.4. -->
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version since="26 Oct 2011">2.4</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <!--
             Facebook Client
             @see http://restfb.com/
@@ -98,6 +102,13 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <!-- JAX-RS implementation, from ReXSL -->
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-core</artifactId>
+            <version since="22 Aug 2012">1.12</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
             <!-- JAXB 2.0 API. -->
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
@@ -108,10 +119,6 @@
                     <artifactId>jsr173_api</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.jcabi</groupId>
-            <artifactId>jcabi-log</artifactId>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -142,16 +149,15 @@
             <artifactId>mockito-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-        </dependency>
-        <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
+        </dependency>
+        <dependency>
+            <!-- Javax Servlet API 2.4. -->
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version since="26 Oct 2011">2.4</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -176,7 +182,18 @@
                                 <S3Auth-AwsDynamoSecret>${dynamo.secret}</S3Auth-AwsDynamoSecret>
                                 <S3Auth-AwsDynamoTable>${dynamo.table}</S3Auth-AwsDynamoTable>
                             </manifestEntries>
+                            <manifest>
+                                <mainClass>com.rexsl.standalone.RexslMain</mainClass>
+                            </manifest>
                         </archive>
+                        <overlays>
+                            <overlay>
+                                <groupId>com.rexsl</groupId>
+                                <artifactId>rexsl-standalone</artifactId>
+                                <classifier>bin</classifier>
+                                <type>jar</type>
+                            </overlay>
+                        </overlays>
                     </configuration>
                 </plugin>
             </plugins>

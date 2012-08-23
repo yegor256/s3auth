@@ -163,6 +163,9 @@ public final class DynamoHosts implements Hosts {
     @Override
     public void close() throws IOException {
         this.dynamo.close();
+        for (Host host : this.hosts.values()) {
+            host.close();
+        }
     }
 
 }

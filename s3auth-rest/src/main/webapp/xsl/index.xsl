@@ -53,7 +53,7 @@
         <xsl:choose>
             <xsl:when test="/page/domains/domain">
                 <p>
-                    <xsl:text>Your domains:</xsl:text>
+                    <xsl:text>Your registered domains:</xsl:text>
                 </p>
                 <ul>
                     <xsl:apply-templates select="/page/domains/domain"/>
@@ -61,7 +61,7 @@
             </xsl:when>
             <xsl:otherwise>
                 <p>
-                    <xsl:text>You don't have any domains yet.</xsl:text>
+                    <xsl:text>You haven't registered any domains yet.</xsl:text>
                 </p>
             </xsl:otherwise>
         </xsl:choose>
@@ -73,7 +73,7 @@
                 <xsl:value-of select="/page/links/link[@rel='add']/@href" />
             </xsl:attribute>
             <p>
-                <label><xsl:text>Host name:</xsl:text></label>
+                <label><xsl:text>Host name (the same as S3 bucket name):</xsl:text></label>
                 <input name="host" />
                 <label><xsl:text>AWS key:</xsl:text></label>
                 <input name="key" size="30" maxlength="20" />

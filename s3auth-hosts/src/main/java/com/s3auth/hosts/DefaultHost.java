@@ -29,6 +29,11 @@
  */
 package com.s3auth.hosts;
 
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
 import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,6 +50,11 @@ import java.io.InputStream;
 public final class DefaultHost implements Host {
 
     /**
+     * AWS client.
+     */
+    private final transient AmazonS3 client;
+
+    /**
      * The domain.
      */
     private final transient Domain domain;
@@ -55,6 +65,17 @@ public final class DefaultHost implements Host {
      */
     public DefaultHost(final Domain dmn) {
         this.domain = dmn;
+        this.client = new AmazonS3Client(
+            new BasicAWSCredentials(this.domain.key(), this.domain.secret())
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() throws IOException {
+        // nothing to do
     }
 
     /**
@@ -62,7 +83,10 @@ public final class DefaultHost implements Host {
      */
     @Override
     public InputStream fetch(final String name) throws IOException {
-        final InputStream stream = null;
+        final S3Object object = this.client.getObject(
+            new GetObjectRequest(this.domain.name(), name)
+        );
+        final InputStream stream = object.getObjectContent();
         Logger.debug(
             this,
             "#fetch('%s'): found at %s",

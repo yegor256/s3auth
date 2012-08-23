@@ -115,7 +115,7 @@ public final class Dynamo implements Closeable {
                 )
             );
         }
-        Logger.debug(this, "#load(): %d items", domains.size());
+        Logger.info(this, "#load(): %d items", domains.size());
         return domains;
     }
 
@@ -135,7 +135,7 @@ public final class Dynamo implements Closeable {
         final PutItemResult result = this.client.putItem(
             new PutItemRequest(this.table, attrs)
         );
-        Logger.debug(
+        Logger.info(
             this,
             "#add('%s', '%s'): added, %.2f units",
             user,
@@ -155,7 +155,7 @@ public final class Dynamo implements Closeable {
                 this.table, new Key(new AttributeValue(domain.name()))
             )
         );
-        Logger.debug(
+        Logger.info(
             this,
             "#remove('%s'): removed, %.2f units",
             domain.name(),

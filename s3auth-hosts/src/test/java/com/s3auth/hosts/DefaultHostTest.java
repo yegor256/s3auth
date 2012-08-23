@@ -29,35 +29,40 @@
  */
 package com.s3auth.hosts;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
+import com.rexsl.core.Manifests;
+import org.apache.commons.io.IOUtils;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * One host.
- *
- * <p>Implementation must be immutable and thread-safe.
- *
+ * Test case for {@link DefaultHost}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 0.0.1
  */
-public interface Host extends Closeable {
+public final class DefaultHostTest {
 
     /**
-     * Find resource and return its input stream.
-     * @param name Name of resource
-     * @return The stream
-     * @throws IOException If some error with I/O inside
+     * DefaultHost can load resource from S3.
+     * @throws Exception If there is some problem inside
      */
-    InputStream fetch(String name) throws IOException;
-
-    /**
-     * Can this user login in with this credentials?
-     * @param user User name
-     * @param password Password
-     * @return Yes or no
-     */
-    boolean authorized(String user, String password);
+    @Test
+    public void loadsAmazonResources() throws Exception {
+        final Host host = new DefaultHost(
+            new DomainMocker()
+                .withName("junit.s3auth.com")
+                .withKey(Manifests.read("S3Auth-AwsDynamoKey"))
+                .withSecret(Manifests.read("S3Auth-AwsDynamoSecret"))
+                .mock()
+        );
+        MatcherAssert.assertThat(
+            IOUtils.toString(host.fetch("index.html")),
+            Matchers.equalTo("<html>hello</html>")
+        );
+        MatcherAssert.assertThat(
+            IOUtils.toString(host.fetch("foo/index.html")),
+            Matchers.equalTo("<html>bye</html>")
+        );
+    }
 
 }

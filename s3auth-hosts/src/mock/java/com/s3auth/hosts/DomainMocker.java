@@ -49,9 +49,39 @@ public final class DomainMocker {
      * Public ctor.
      */
     public DomainMocker() {
-        Mockito.doReturn("localhost").when(this.domain).name();
-        Mockito.doReturn("ABCDEF").when(this.domain).key();
-        Mockito.doReturn("nosecret").when(this.domain).secret();
+        this.withName("localhost");
+        this.withKey("ABCDEF");
+        this.withSecret("nosecret");
+    }
+
+    /**
+     * With this name.
+     * @param name The name
+     * @return This object
+     */
+    public DomainMocker withName(final String name) {
+        Mockito.doReturn(name).when(this.domain).name();
+        return this;
+    }
+
+    /**
+     * With this key.
+     * @param key The key
+     * @return This object
+     */
+    public DomainMocker withKey(final String key) {
+        Mockito.doReturn(key).when(this.domain).key();
+        return this;
+    }
+
+    /**
+     * With this secret.
+     * @param secret The secret
+     * @return This object
+     */
+    public DomainMocker withSecret(final String secret) {
+        Mockito.doReturn(secret).when(this.domain).secret();
+        return this;
     }
 
     /**
