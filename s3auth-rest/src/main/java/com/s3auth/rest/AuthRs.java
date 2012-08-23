@@ -97,11 +97,7 @@ public final class AuthRs extends BaseRs {
     @GET
     @Path("/out")
     public Response logout() {
-        return new PageBuilder()
-            .build(CommonPage.class)
-            .init(this)
-            .render()
-            .status(Response.Status.SEE_OTHER)
+        return Response.status(Response.Status.SEE_OTHER)
             .location(this.uriInfo().getBaseUri())
             .cookie(
                 new CookieBuilder(this.uriInfo().getBaseUri())
@@ -139,11 +135,7 @@ public final class AuthRs extends BaseRs {
                     .build(fbuser.getId());
             }
         };
-        return new PageBuilder()
-            .build(CommonPage.class)
-            .init(this)
-            .render()
-            .status(Response.Status.SEE_OTHER)
+        return Response.status(Response.Status.SEE_OTHER)
             .location(this.uriInfo().getBaseUri())
             .cookie(
                 new CookieBuilder(this.uriInfo().getBaseUri())

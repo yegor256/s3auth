@@ -97,11 +97,7 @@ public final class IndexRs extends BaseRs {
                 }
             }
         );
-        return new PageBuilder()
-            .build(CommonPage.class)
-            .init(this)
-            .render()
-            .status(Response.Status.SEE_OTHER)
+        return Response.status(Response.Status.SEE_OTHER)
             .location(this.uriInfo().getBaseUri())
             .build();
     }
@@ -130,11 +126,7 @@ public final class IndexRs extends BaseRs {
                 }
             }
         );
-        return new PageBuilder()
-            .build(CommonPage.class)
-            .init(this)
-            .render()
-            .status(Response.Status.SEE_OTHER)
+        return Response.status(Response.Status.SEE_OTHER)
             .location(this.uriInfo().getBaseUri())
             .build();
     }
