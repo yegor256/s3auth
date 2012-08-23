@@ -29,30 +29,49 @@
  */
 package com.s3auth.hosts;
 
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
+import com.jcabi.log.Logger;
+import java.util.Set;
 
 /**
- * Test case for {@link XmlHosts}.
+ * Collection of hosts, persisted in Amazon DynamoDB.
+ *
+ * <p>The class is immutable and thread-safe.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 0.0.1
  */
-public final class XmlHostsTest {
+public final class DynamoHosts implements Hosts {
 
     /**
-     * XmlHosts can load configuration from XML.
-     * @throws Exception If there is some problem inside
+     * Public ctor.
      */
-    @Test
-    @org.junit.Ignore
-    public void loadsXmlConfiguration() throws Exception {
-        final Hosts hosts = new XmlHosts();
-        final Host host = hosts.find("xxx.s3auth.com");
-        MatcherAssert.assertThat(
-            host,
-            Matchers.notNullValue()
-        );
+    public DynamoHosts() {
+        // todo
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Host find(final String domain) {
+        return new DefaultHost();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Set<Domain> domains(final User user) {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() {
+        // nothing to do
     }
 
 }

@@ -27,32 +27,71 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.s3auth.hosts;
+package com.s3auth.rest;
 
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
+import com.s3auth.hosts.Domain;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Test case for {@link XmlHosts}.
+ * JAXB domain.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 0.0.1
  */
-public final class XmlHostsTest {
+@XmlRootElement(name = "domain")
+@XmlAccessorType(XmlAccessType.NONE)
+public final class JaxbDomain {
 
     /**
-     * XmlHosts can load configuration from XML.
-     * @throws Exception If there is some problem inside
+     * The domain.
      */
-    @Test
-    @org.junit.Ignore
-    public void loadsXmlConfiguration() throws Exception {
-        final Hosts hosts = new XmlHosts();
-        final Host host = hosts.find("xxx.s3auth.com");
-        MatcherAssert.assertThat(
-            host,
-            Matchers.notNullValue()
-        );
+    private final transient Domain domain;
+
+    /**
+     * Public ctor for JAXB.
+     */
+    public JaxbDomain() {
+        throw new IllegalStateException("This ctor should never be called");
+    }
+
+    /**
+     * Private ctor.
+     * @param dmn The domain
+     */
+    public JaxbDomain(final Domain dmn) {
+        this.domain = dmn;
+    }
+
+    /**
+     * Get name.
+     * @return The name
+     */
+    @XmlElement
+    public String getName() {
+        return this.domain.name();
+    }
+
+    /**
+     * Get key.
+     * @return The key
+     */
+    @XmlElement
+    public String getKey() {
+        return this.domain.key();
+    }
+
+    /**
+     * Get secret.
+     * @return The secret
+     */
+    @XmlElement
+    public String getSecret() {
+        return this.domain.secret();
     }
 
 }

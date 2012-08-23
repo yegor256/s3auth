@@ -30,6 +30,7 @@
 package com.s3auth.relay;
 
 import com.jcabi.log.Logger;
+import com.s3auth.hosts.XmlHosts;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -53,7 +54,7 @@ public final class Main {
             );
         }
         final int port = Integer.valueOf(args[0]);
-        final Facade facade = new Facade();
+        final Facade facade = new Facade(new XmlHosts());
         facade.listen(port);
         Logger.info(Main.class, "started at http://localhost:%d...", port);
         while (true) {

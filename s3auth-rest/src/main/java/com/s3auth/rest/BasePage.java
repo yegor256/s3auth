@@ -27,32 +27,59 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.s3auth.hosts;
+package com.s3auth.rest;
 
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
+import com.netbout.rest.auth.FacebookRs;
+import com.netbout.rest.jaxb.LongHelper;
+import com.netbout.rest.jaxb.LongIdentity;
+import com.netbout.spi.Helper;
+import com.netbout.spi.Identity;
+import com.netbout.spi.client.RestSession;
+import com.rexsl.core.Manifests;
+import com.rexsl.misc.CookieBuilder;
+import com.rexsl.page.JaxbBundle;
+import com.rexsl.page.Link;
+import java.util.Collection;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Test case for {@link XmlHosts}.
+ * Base RESTful page.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 0.0.1
  */
-public final class XmlHostsTest {
+@XmlRootElement(name = "page")
+@XmlAccessorType(XmlAccessType.NONE)
+public class BasePage extends com.rexsl.page.BasePage<BasePage, BaseRs> {
 
     /**
-     * XmlHosts can load configuration from XML.
-     * @throws Exception If there is some problem inside
+     * Render it.
+     * @return This object
      */
-    @Test
-    @org.junit.Ignore
-    public void loadsXmlConfiguration() throws Exception {
-        final Hosts hosts = new XmlHosts();
-        final Host host = hosts.find("xxx.s3auth.com");
-        MatcherAssert.assertThat(
-            host,
-            Matchers.notNullValue()
+    public final BasePage render() {
+        this.builder.entity(this);
+        this.link(new Link("logout", "/a/out"));
+        this.link(new Link("login", "/a/out"));
+        this.append(
+            new JaxbBundle("version")
+                .add("name", Manifests.read("S3Auth-Version"))
+                .up()
+                .add("revision", Manifests.read("S3Auth-Revision"))
+                .up()
+                .add("date", Manifests.read("S3Auth-Date"))
+                .up()
         );
+        return this;
     }
 
 }

@@ -1,0 +1,139 @@
+/**
+ * Copyright (c) 2012, s3auth.com
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met: 1) Redistributions of source code must retain the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer. 2) Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer in the documentation and/or other materials provided
+ * with the distribution. 3) Neither the name of the s3auth.com nor
+ * the names of its contributors may be used to endorse or promote
+ * products derived from this software without specific prior written
+ * permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+ * NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+ * THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/* JIGSAW IGNORE: there is some problem in w3c server now */
+
+/* all elements */
+a,
+img,
+body,
+input,
+h1,
+h2,
+h3,
+textarea {
+    font-family: "Helvetica Neue", "HelveticaNeue", "HelveticaNeueRoman",
+        "HelveticaNeue-Roman", "Helvetica Neue Roman", "TeXGyreHerosRegular",
+        "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
+    font-size: 1em;
+    font-stretch: normal;
+    font-weight: normal;
+    color: #211922;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    text-decoration: none;
+}
+
+/* any link */
+a {
+    text-decoration: underline;
+}
+
+    /* any link with a mouse over it */
+    a:hover {
+        text-decoration: underline;
+    }
+
+/* any paragraph */
+p {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+/* any list */
+ul,
+ol {
+    margin-left: 2em;
+}
+
+/* fixed font */
+.tt,
+.fixed,
+pre {
+    font-family: 'Consolas', 'Menlo', 'Monaco', 'Courier New', monospace;
+    background-color: #f3f3f1;
+}
+
+/* inline fixed text */
+.tt {
+    padding-left: 0.4em;
+    padding-right: 0.4em;
+}
+
+/* fixed block */
+.fixed {
+    white-space: pre;
+    font-size: 1.3em;
+}
+
+/* red text marker */
+.red {
+    color: #f24a40;
+}
+
+/* any input field */
+input {
+    border: 0.071em solid #bfbcc1;
+    background-color: white;
+    padding: 0.5em 0.71em; /* multiply by FONT-SIZE = 1em */
+}
+
+    /* any submit button */
+    input[type="submit"] {
+        background-color: #f3f3f1;
+        cursor: pointer;
+    }
+
+/* any text aread */
+textarea {
+    padding: 1em;
+    border: 0.071em solid #bfbcc1;
+    overflow: hidden;
+    font-family: 'Consolas', 'Menlo', 'Monaco', 'Courier New', monospace;
+}
+
+label {
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+    display: block;
+}
+
+/* bottom right label about deployed version */
+#version {
+    font-size: 1.2em;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    padding: 0.4em 0.8em;
+    background-color: #e4e5e3;
+    color: gray;
+}
+

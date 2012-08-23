@@ -38,12 +38,12 @@
         <artifactId>s3auth</artifactId>
         <version s3auth="yes">1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>s3auth-relay</artifactId>
+    <artifactId>s3auth-rest</artifactId>
     <packaging>jar</packaging>
-    <name>s3auth-relay</name>
+    <name>s3auth-rest</name>
 
     <properties>
-        <heroku.repo>git@heroku.com:s3auth.git</heroku.repo>
+        <heroku.repo>git@heroku.com:s3auth-rest.git</heroku.repo>
     </properties>
 
     <dependencies>
@@ -55,18 +55,6 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-log</artifactId>
-        </dependency>
-        <dependency>
-            <!-- HTTP components, to unify its version in the project -->
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version since="4 Jul 2012">4.2-beta1</version>
-        </dependency>
-        <dependency>
-            <!-- HTTP components, to unify its version in the project -->
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpcore</artifactId>
-            <version since="4 Jul 2012">4.2-beta1</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -101,38 +89,28 @@
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version since="2 Dec 2010">2.1</version>
+                    <configuration>
+                        <warSourceExcludes>js/**, css/**, xsl/**</warSourceExcludes>
+                        <archive>
+                            <manifestEntries>
+                                <S3Auth-Revision>${build.number}</S3Auth-Revision>
+                                <S3Auth-Version>${project.version}</S3Auth-Version>
+                                <S3Auth-Date>${maven.build.timestamp}</S3Auth-Date>
+                                <S3Auth-FbId>${fb.id}</S3Auth-FbId>
+                                <S3Auth-FbSecret>${fb.secret}</S3Auth-FbSecret>
+                            </manifestEntries>
+                        </archive>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>1.7.1</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <manifestEntries>
-                                        <S3Auth-Revision>${build.number}</S3Auth-Revision>
-                                        <S3Auth-Version>${project.version}</S3Auth-Version>
-                                        <S3Auth-Date>${maven.build.timestamp}</S3Auth-Date>
-                                        <Main-Class>com.s3auth.relay.Main</Main-Class>
-                                    </manifestEntries>
-                                </transformer>
-                            </transformers>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <!--
-                This plugin will collect current build number
-                from Subversion and save it into Maven property "build.number".
-                -->
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
                 <executions>
@@ -145,21 +123,20 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version since="2 Dec 2011">1.7</version>
+                <groupId>com.rexsl</groupId>
+                <artifactId>rexsl-maven-plugin</artifactId>
+                <version since="22 Aug 2012">0.3.8</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <log4j.configuration>file:${basedir}/src/test/resources/log4j.properties</log4j.configuration>
+                    </systemPropertyVariables>
+                </configuration>
                 <executions>
                     <execution>
-                        <id>reserve-http-port</id>
-                        <phase>generate-test-resources</phase>
                         <goals>
-                            <goal>reserve-network-port</goal>
+                            <goal>check</goal>
+                            <goal>package</goal>
                         </goals>
-                        <configuration>
-                            <portNames>
-                                <portName>http.port</portName>
-                            </portNames>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

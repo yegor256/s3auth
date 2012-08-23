@@ -30,6 +30,7 @@
 package com.s3auth.hosts;
 
 import com.jcabi.log.Logger;
+import java.util.Set;
 
 /**
  * Collection of hosts, on top of XML file.
@@ -55,6 +56,22 @@ public final class XmlHosts implements Hosts {
     @Override
     public Host find(final String domain) {
         return new DefaultHost();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Set<Domain> domains(final User user) {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() {
+        // nothing to do
     }
 
 }

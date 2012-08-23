@@ -27,32 +27,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.s3auth.hosts;
-
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
 
 /**
- * Test case for {@link XmlHosts}.
+ * RESTful resources.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
+ * @since 0.0.1
  */
-public final class XmlHostsTest {
-
-    /**
-     * XmlHosts can load configuration from XML.
-     * @throws Exception If there is some problem inside
-     */
-    @Test
-    @org.junit.Ignore
-    public void loadsXmlConfiguration() throws Exception {
-        final Hosts hosts = new XmlHosts();
-        final Host host = hosts.find("xxx.s3auth.com");
-        MatcherAssert.assertThat(
-            host,
-            Matchers.notNullValue()
-        );
-    }
-
-}
+package com.s3auth.rest;

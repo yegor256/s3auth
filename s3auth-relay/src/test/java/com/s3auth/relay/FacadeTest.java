@@ -27,32 +27,29 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.s3auth.hosts;
+package com.s3auth.relay;
 
+import com.s3auth.hosts.Hosts;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Test case for {@link XmlHosts}.
+ * Test case for {@link Facade}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class XmlHostsTest {
+public final class FacadeTest {
 
     /**
-     * XmlHosts can load configuration from XML.
+     * Facade can process parallel requests.
      * @throws Exception If there is some problem inside
      */
     @Test
-    @org.junit.Ignore
-    public void loadsXmlConfiguration() throws Exception {
-        final Hosts hosts = new XmlHosts();
-        final Host host = hosts.find("xxx.s3auth.com");
-        MatcherAssert.assertThat(
-            host,
-            Matchers.notNullValue()
-        );
+    public void handlesParallelHttpRequests() throws Exception {
+        final Hosts hosts = Mockito.mock(Hosts.class);
+        final Facade facade = new Facade(hosts);
     }
 
 }

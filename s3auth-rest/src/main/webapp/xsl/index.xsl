@@ -1,4 +1,5 @@
-/**
+<?xml version="1.0"?>
+<!--
  * Copyright (c) 2012, s3auth.com
  * All rights reserved.
  *
@@ -26,33 +27,30 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package com.s3auth.hosts;
+ -->
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://www.w3.org/1999/xhtml"
+    version="2.0" exclude-result-prefixes="xs">
 
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
+    <xsl:output method="xml" omit-xml-declaration="yes"/>
 
-/**
- * Test case for {@link XmlHosts}.
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- */
-public final class XmlHostsTest {
+    <xsl:include href="/xsl/layout.xsl" />
 
-    /**
-     * XmlHosts can load configuration from XML.
-     * @throws Exception If there is some problem inside
-     */
-    @Test
-    @org.junit.Ignore
-    public void loadsXmlConfiguration() throws Exception {
-        final Hosts hosts = new XmlHosts();
-        final Host host = hosts.find("xxx.s3auth.com");
-        MatcherAssert.assertThat(
-            host,
-            Matchers.notNullValue()
-        );
-    }
+    <xsl:template name="head">
+        <title>
+            <xsl:text>index</xsl:text>
+        </title>
+        <link rel="stylesheet" type="text/css">
+            <xsl:attribute name="href">
+                <xsl:text>/css/index.css?</xsl:text>
+                <xsl:value-of select="/page/version/revision"/>
+            </xsl:attribute>
+        </link>
+    </xsl:template>
 
-}
+    <xsl:template name="content">
+        to do...
+    </xsl:template>
+
+</xsl:stylesheet>

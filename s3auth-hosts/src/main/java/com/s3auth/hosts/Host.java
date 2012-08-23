@@ -30,6 +30,8 @@
 package com.s3auth.hosts;
 
 import com.jcabi.log.Logger;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * One host.
@@ -43,22 +45,12 @@ import com.jcabi.log.Logger;
 public interface Host {
 
     /**
-     * Get S3 bucket name.
-     * @return The bucket name
+     * Find resource and return its input stream.
+     * @param name Name of resource
+     * @return The stream
+     * @throws IOException If some error with I/O inside
      */
-    String bucket();
-
-    /**
-     * Get Amazon S3 key.
-     * @return The key
-     */
-    String key();
-
-    /**
-     * Get Amazon S3 secret.
-     * @return The key
-     */
-    String secret();
+    InputStream fetch(String name) throws IOException;
 
     /**
      * Can this user login in with this credentials?
@@ -66,6 +58,6 @@ public interface Host {
      * @param password Password
      * @return Yes or no
      */
-    boolean authorize(String user, String password);
+    boolean authorized(String user, String password);
 
 }

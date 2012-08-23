@@ -27,32 +27,71 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.s3auth.hosts;
+package com.s3auth.rest;
 
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
+import com.s3auth.hosts.User;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Test case for {@link XmlHosts}.
+ * JAXB user.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 0.0.1
  */
-public final class XmlHostsTest {
+@XmlRootElement(name = "user")
+@XmlAccessorType(XmlAccessType.NONE)
+public final class JaxbUser {
 
     /**
-     * XmlHosts can load configuration from XML.
-     * @throws Exception If there is some problem inside
+     * The user.
      */
-    @Test
-    @org.junit.Ignore
-    public void loadsXmlConfiguration() throws Exception {
-        final Hosts hosts = new XmlHosts();
-        final Host host = hosts.find("xxx.s3auth.com");
-        MatcherAssert.assertThat(
-            host,
-            Matchers.notNullValue()
-        );
+    private final transient User user;
+
+    /**
+     * Public ctor for JAXB.
+     */
+    public JaxbUser() {
+        throw new IllegalStateException("This ctor should never be called");
+    }
+
+    /**
+     * Private ctor.
+     * @param usr The user
+     */
+    public JaxbUser(final User usr) {
+        this.user = usr;
+    }
+
+    /**
+     * Get name.
+     * @return The name
+     */
+    @XmlElement
+    public String getName() {
+        return this.user.name();
+    }
+
+    /**
+     * Get name.
+     * @return The name
+     */
+    @XmlElement
+    public String getName() {
+        return this.user.name();
+    }
+
+    /**
+     * Get secret.
+     * @return The secret
+     */
+    @XmlElement
+    public URI getPhoto() {
+        return this.user.photo();
     }
 
 }

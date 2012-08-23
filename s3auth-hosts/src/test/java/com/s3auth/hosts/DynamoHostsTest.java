@@ -34,20 +34,20 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * Test case for {@link XmlHosts}.
+ * Test case for {@link DynamoHosts}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class XmlHostsTest {
+public final class DynamoHostsTest {
 
     /**
-     * XmlHosts can load configuration from XML.
+     * DynamoHosts can load configuration from XML.
      * @throws Exception If there is some problem inside
      */
     @Test
     @org.junit.Ignore
-    public void loadsXmlConfiguration() throws Exception {
-        final Hosts hosts = new XmlHosts();
+    public void loadsDynamoConfiguration() throws Exception {
+        final Hosts hosts = new DynamoHosts();
         final Host host = hosts.find("xxx.s3auth.com");
         MatcherAssert.assertThat(
             host,

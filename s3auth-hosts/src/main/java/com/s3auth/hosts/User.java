@@ -29,30 +29,35 @@
  */
 package com.s3auth.hosts;
 
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
+import java.net.URI;
 
 /**
- * Test case for {@link XmlHosts}.
+ * Single user.
+ *
+ * <p>Implementation must be immutable and thread-safe.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 0.0.1
  */
-public final class XmlHostsTest {
+public interface User {
 
     /**
-     * XmlHosts can load configuration from XML.
-     * @throws Exception If there is some problem inside
+     * Unique number of it.
+     * @return Unique number
      */
-    @Test
-    @org.junit.Ignore
-    public void loadsXmlConfiguration() throws Exception {
-        final Hosts hosts = new XmlHosts();
-        final Host host = hosts.find("xxx.s3auth.com");
-        MatcherAssert.assertThat(
-            host,
-            Matchers.notNullValue()
-        );
-    }
+    String identity();
+
+    /**
+     * Full name to display.
+     * @return Full name
+     */
+    String name();
+
+    /**
+     * Photo.
+     * @return URL of the image
+     */
+    URI photo();
 
 }

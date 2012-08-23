@@ -30,6 +30,8 @@
 package com.s3auth.hosts;
 
 import com.jcabi.log.Logger;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Default implementation of host.
@@ -46,31 +48,15 @@ public final class DefaultHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    public String bucket() {
-        return "";
+    public InputStream fetch(final String name) throws IOException {
+        return null;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String key() {
-        return "";
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String secret() {
-        return "";
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean authorize(final String user, final String password) {
+    public boolean authorized(final String user, final String password) {
         return false;
     }
 

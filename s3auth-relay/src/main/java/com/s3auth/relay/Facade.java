@@ -30,6 +30,7 @@
 package com.s3auth.relay;
 
 import com.jcabi.log.Logger;
+import com.s3auth.hosts.Hosts;
 import java.io.Closeable;
 import java.io.IOException;
 
@@ -41,6 +42,19 @@ import java.io.IOException;
  * @since 0.0.1
  */
 public final class Facade implements Closeable {
+
+    /**
+     * Hosts to work with.
+     */
+    private final Hosts hosts;
+
+    /**
+     * Public ctor.
+     * @param hsts Hosts
+     */
+    public Facade(final Hosts hsts) {
+        this.hosts = hsts;
+    }
 
     /**
      * Start listening to this port.

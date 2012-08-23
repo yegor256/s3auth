@@ -27,53 +27,105 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.s3auth.hosts;
+package com.s3auth.rest;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.util.Set;
+import com.s3auth.hosts.User;
+import java.net.URI;
 
 /**
- * Collection of hosts.
- *
- * <p>Implementation must be immutable and thread-safe.
+ * Crypted user.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
  */
-public interface Hosts extends Closeable {
+final class CryptedUser implements User {
 
     /**
-     * Thrown by {@link #find(String)} if domain is not found.
+     * Identity of the user.
      */
-    class NotFoundException extends Exception {
+    private final transient String idnt;
+
+    /**
+     * Name of the user.
+     */
+    private final transient String nam;
+
+    /**
+     * Photo of the user.
+     */
+    private final transient URI pic;
+
+    /**
+     * Thrown by {@link #valueOf(String)} if we can't decrypt.
+     */
+    class DecryptionException extends Exception {
         /**
          * Serialization marker.
          */
-        private static final long serialVersionUID = 0x7529FA789ED21479L;
+        private static final long serialVersionUID = 0x7529FA781EDA1479L;
         /**
          * Public ctor.
          * @param cause The cause of it
          */
-        public NotFoundException(final String cause) {
+        public DecryptionException(final String cause) {
             super(cause);
         }
     }
 
     /**
-     * Find one host by domain name.
-     * @param domain The domain name
-     * @return Host found
-     * @throws NotFoundException
+     * Public ctor.
+     * @param identity Identity
+     * @param name The name
+     * @param photo The picture
      */
-    Host find(String domain) throws NotFoundException;
+    public Crypted(final String identity, final String name, final URI photo) {
+        this.idnt = identity;
+        this.nam = name;
+        this.pic = photo;
+    }
 
     /**
-     * Get domains of the given user.
-     * @param user The user
-     * @return Modifiable collection of domains
+     * {@inheritDoc}
      */
-    Set<Domain> domains(User user);
+    @Override
+    public String identity() {
+        return this.idnt;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String name() {
+        return this.nam;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public URI photo() {
+        return this.pic;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return this.identity;
+    }
+
+    /**
+     * Decrypt.
+     * @param txt The text to decrypt
+     * @return Instance of the class
+     * @throws DecryptionException If can't decrypt
+     */
+    public static CryptedUser valueOf(final String txt)
+        throws DecryptionException {
+        return new CryptedUser(txt);
+    }
 
 }
