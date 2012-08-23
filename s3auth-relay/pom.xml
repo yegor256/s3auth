@@ -111,6 +111,9 @@
                                         <S3Auth-Version>${project.version}</S3Auth-Version>
                                         <S3Auth-Date>${maven.build.timestamp}</S3Auth-Date>
                                         <Main-Class>com.s3auth.relay.Main</Main-Class>
+                                        <S3Auth-AwsDynamoKey>${dynamo.key}</S3Auth-AwsDynamoKey>
+                                        <S3Auth-AwsDynamoSecret>${dynamo.secret}</S3Auth-AwsDynamoSecret>
+                                        <S3Auth-AwsDynamoTable>${dynamo.table}</S3Auth-AwsDynamoTable>
                                     </manifestEntries>
                                 </transformer>
                             </transformers>
