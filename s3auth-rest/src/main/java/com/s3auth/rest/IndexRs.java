@@ -65,6 +65,7 @@ public final class IndexRs extends BaseRs {
             .init(this)
             .append(JaxbGroup.build(this.domains(), "domains"))
             .link(new Link("add", "/add"))
+            .authenticated(this.user())
             .render()
             .build();
     }

@@ -33,6 +33,7 @@ import com.rexsl.core.Manifests;
 import com.rexsl.page.BasePage;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
+import com.s3auth.hosts.User;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -51,12 +52,22 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class CommonPage extends BasePage<CommonPage, BaseRs> {
 
     /**
+     * Set authenticated user.
+     * @param user The user
+     * @return Itself
+     */
+    public final CommonPage authenticated(final User user) {
+        this.link(new Link("logout", "/a/out"));
+        this.append(new JaxbUser(user));
+        return this;
+    }
+
+    /**
      * Render it.
      * @return JAX-RS response
      */
     public final Response.ResponseBuilder render() {
         final Response.ResponseBuilder builder = Response.ok();
-        this.link(new Link("logout", "/a/out"));
         this.append(
             new JaxbBundle("version")
                 .add("name", Manifests.read("S3Auth-Version"))
