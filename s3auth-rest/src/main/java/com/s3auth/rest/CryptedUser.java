@@ -46,7 +46,7 @@ import org.apache.commons.lang.CharEncoding;
  * @version $Id$
  * @since 0.0.1
  */
-final class CryptedUser implements User {
+public final class CryptedUser implements User {
 
     /**
      * Security salt.

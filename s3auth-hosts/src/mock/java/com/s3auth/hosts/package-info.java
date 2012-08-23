@@ -27,34 +27,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.s3auth.rest.rexsl.scripts
 
-import com.rexsl.core.Manifests
-import com.rexsl.test.RestTester
-import com.s3auth.hosts.UserMocker
-import com.s3auth.rest.BaseRs
-import com.s3auth.rest.CryptedUser
-import javax.ws.rs.core.HttpHeaders
-import javax.ws.rs.core.MediaType
-
-Manifests.append(new File(rexsl.basedir, 'src/test/resources/META-INF/MANIFEST.MF'))
-
-def user = new CryptedUser(new UserMocker().mock())
-
-RestTester.start(rexsl.home)
-    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-    .header(HttpHeaders.COOKIE, BaseRs.COOKIE + '=' + user)
-    .get('read home page')
-    .assertStatus(HttpURLConnection.HTTP_OK)
-    .assertXPath('/page/version/revision')
-    .assertXPath('/page/version/name')
-    .assertXPath('/page/version/date')
-    .rel('/page/links/link[@rel="add"]/@href')
-    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-    .post('add new domain', 'host=localhost&key=ABC&secret=foo')
-    .assertStatus(HttpURLConnection.HTTP_SEE_OTHER)
-    .follow()
-    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-    .get('read home page again')
-    .assertStatus(HttpURLConnection.HTTP_OK)
-    .assertXPath('/page/domains/domain[host="localhost"]')
+/**
+ * Configuration of hosts, mocker.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @since 0.0.1
+ */
+package com.s3auth.hosts;
