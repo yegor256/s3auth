@@ -63,12 +63,12 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>com.s3auth</groupId>
-                                    <artifactId>s3auth-relay</artifactId>
+                                    <artifactId>s3auth-rest</artifactId>
                                     <version>${project.version}</version>
-                                    <type>jar</type>
+                                    <type>war</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>../target</outputDirectory>
-                                    <destFileName>s3auth-${project.version}-${build.number}.jar</destFileName>
+                                    <destFileName>s3auth-${project.version}-${build.number}.war</destFileName>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>

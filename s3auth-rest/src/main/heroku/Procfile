@@ -1,1 +1,1 @@
-web: java -Xfuture -enableassertions -Xmx256m -jar ./target/s3auth-${project.version}-${build.number}.jar ${PORT}
+web: java -Xfuture -enableassertions -Xmx256m -jar ./target/s3auth-${project.version}-${build.number}.war ${PORT}
