@@ -614,19 +614,6 @@
                                             <arg value="master"/>
                                             <env key="GIT_SSH" file="${project.build.directory}/heroku.sh"/>
                                         </exec>
-                                        <retry retrycount="5">
-                                            <exec executable="sh" outputproperty="rev.deployed" failonerror="true">
-                                                <arg value="-c"/>
-                                                <arg value="curl -s http://relay.s3auth.com/version"/>
-                                            </exec>
-                                        </retry>
-                                        <fail message="Revision ${rev.deployed} deployed instead of ${build.number}">
-                                            <condition>
-                                                <not>
-                                                    <equals arg1="${build.number}" arg2="${rev.deployed}"/>
-                                                </not>
-                                           </condition>
-                                        </fail>
                                     </target>
                                 </configuration>
                             </execution>
