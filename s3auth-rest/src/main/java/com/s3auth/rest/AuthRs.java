@@ -41,7 +41,9 @@ import java.net.URI;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
@@ -55,6 +57,17 @@ import javax.ws.rs.core.UriBuilder;
  */
 @Path("/a")
 public final class AuthRs extends BaseRs {
+
+    /**
+     * Show entrance page.
+     * @return The JAX-RS response
+     */
+    @GET
+    @Path("/version")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String version() {
+        return Manifests.read("S3Auth-Revision");
+    }
 
     /**
      * Show entrance page.
@@ -104,7 +117,7 @@ public final class AuthRs extends BaseRs {
      * @param code The code from Facebook
      * @return The JAX-RS response
      */
-    @POST
+    @GET
     @Path("/fb")
     public Response callback(@QueryParam("code") final String code) {
         if (code == null) {
