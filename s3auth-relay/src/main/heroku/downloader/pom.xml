@@ -45,7 +45,7 @@
             <id>sonatype.nexus</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
-    <repositories>
+    </repositories>
 
     <build>
         <plugins>
