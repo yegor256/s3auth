@@ -83,6 +83,13 @@
                 <input type="submit" value="add" />
             </p>
         </form>
+        <p>
+            <xsl:text>
+                In the future we'll support .htpasswd files inside
+                S3 buckets. At the moment the only credentials you can use
+                are your AWS credentials (key and secret).
+            </xsl:text>
+        </p>
     </xsl:template>
 
     <xsl:template match="domain">
@@ -92,7 +99,13 @@
             <xsl:value-of select="key"/>
             <xsl:text>, secret: </xsl:text>
             <xsl:value-of select="secret"/>
-            <xsl:text>)</xsl:text>
+            <xsl:text>) </xsl:text>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="links/link[@rel='remove']/@href" />
+                </xsl:attribute>
+                <xsl:text>delete</xsl:text>
+            </a>
         </li>
     </xsl:template>
 

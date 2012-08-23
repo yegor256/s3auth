@@ -597,6 +597,7 @@
                                         </copy>
                                         <exec dir="${project.build.directory}/heroku" executable="git" failonerror="true">
                                             <arg value="add"/>
+                                            <arg value="./settings.xml"/>
                                             <arg value="./pom.xml"/>
                                             <arg value="./Procfile"/>
                                             <arg value="./downloader/pom.xml"/>

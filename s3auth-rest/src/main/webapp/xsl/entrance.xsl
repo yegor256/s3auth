@@ -51,7 +51,21 @@
 
     <xsl:template name="content">
         <p>
-            <xsl:text>Hey, please </xsl:text>
+            <xsl:text>
+                s3auth.com is a Basic HTTP Auth gateway
+                in front of your private Amazon S3 bucket.
+            </xsl:text>
+        </p>
+        <p>
+            <xsl:text>
+                Point your test.example.com CNAME to relay.s3auth.com,
+                and register this domain here. You will be able to
+                access bucket's content in browser with HTTP basic auth
+                (using your Amazon credentials).
+            </xsl:text>
+        </p>
+        <p>
+            <xsl:text>To start, please </xsl:text>
             <a>
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='login']/@href" />
