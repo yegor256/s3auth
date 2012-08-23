@@ -126,9 +126,13 @@ label {
     display: block;
 }
 
+#content {
+    padding: 2em;
+}
+
 /* bottom right label about deployed version */
 #version {
-    font-size: 1.2em;
+    font-size: 0.8em;
     position: fixed;
     right: 0;
     bottom: 0;

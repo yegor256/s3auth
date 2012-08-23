@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml-stylesheet type='text/xsl' href='/xsl/index.xsl'?>
+<page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
+    <domains />
+    <version>
+        <name>1.0-SNAPSHOT</name>
+        <revision>123</revision>
+        <date>22-Aug-2012</date>
+    </version>
+    <links>
+        <link href="http://localhost:9099/a/?" rel="self" type="text/xml"/>
+        <link href="http://localhost:9099/?" rel="home" type="text/xml"/>
+        <link href="http://localhost:9099/a/out?" rel="logout" type="text/xml"/>
+    </links>
+    <millis>16</millis>
+</page>

@@ -85,7 +85,7 @@ public final class AuthRs extends BaseRs {
             .stylesheet("/xsl/entrance.xsl")
             .build(CommonPage.class)
             .init(this)
-            .link(new Link("facebook", fburi))
+            .link(new Link("login", fburi))
             .render()
             .build();
     }

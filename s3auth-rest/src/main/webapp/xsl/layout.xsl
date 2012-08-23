@@ -40,7 +40,7 @@
     </xsl:template>
 
     <xsl:template match="page">
-        <html lang="en_US">
+        <html lang="en">
             <head>
                 <meta charset="UTF-8" />
                 <meta name="description" content="HTTP Basic Authentication for Amazon S3" />
