@@ -29,57 +29,37 @@
  */
 package com.s3auth.hosts;
 
-import com.jcabi.log.Logger;
-import java.io.IOException;
-import java.io.InputStream;
+import org.mockito.Mockito;
 
 /**
- * Default implementation of host.
- *
- * <p>The class is immutable and thread-safe.
+ * Mocker of {@link Domain}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
  */
-public final class DefaultHost implements Host {
+public final class DomainMocker {
 
     /**
-     * The domain.
+     * The mock.
      */
-    private final transient Domain domain;
+    private final transient Domain domain = Mockito.mock(Domain.class);
 
     /**
      * Public ctor.
-     * @param dmn The domain
      */
-    public DefaultHost(final Domain dmn) {
-        this.domain = dmn;
+    public DomainMocker() {
+        Mockito.doReturn("localhost").when(this.domain).name();
+        Mockito.doReturn("ABCDEF").when(this.domain).key();
+        Mockito.doReturn("nosecret").when(this.domain).secret();
     }
 
     /**
-     * {@inheritDoc}
+     * Mock it.
+     * @return The domain
      */
-    @Override
-    public InputStream fetch(final String name) throws IOException {
-        final InputStream stream = null;
-        Logger.debug(
-            this,
-            "#fetch('%s'): found at %s",
-            name,
-            this.domain.name()
-        );
-        return stream;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean authorized(final String user, final String password) {
-        final boolean auth = false;
-        Logger.debug(this, "#authorized('%s', '%s'): %B", user, password, auth);
-        return auth;
+    public Domain mock() {
+        return this.domain;
     }
 
 }

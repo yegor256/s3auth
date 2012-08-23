@@ -41,8 +41,9 @@ package com.s3auth.hosts;
 public interface Domain {
 
     /**
-     * TLS name of domain.
+     * Name of domain.
      * @return Full name of domain
+     * @see <a href="http://en.wikipedia.org/wiki/Domain_name">Domain Name</a>
      */
     String name();
 

@@ -30,8 +30,14 @@
 package com.s3auth.hosts;
 
 import com.jcabi.log.Logger;
+import java.io.IOException;
+import java.util.AbstractSet;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import com.amazonaws.services.dynamodb.AmazonDynamoDBClient;
 
 /**
  * Collection of hosts, persisted in Amazon DynamoDB.
@@ -45,18 +51,52 @@ import java.util.Set;
 public final class DynamoHosts implements Hosts {
 
     /**
-     * Public ctor.
+     * Dynamo DB.
      */
-    public DynamoHosts() {
-        Logger.debug(this, "#DynamoHosts(): instantiated");
+    private final transient Dynamo dynamo = new Dynamo();
+
+    /**
+     * Domains with their hosts.
+     */
+    private final transient ConcurrentMap<String, Host> hosts =
+        new ConcurrentHashMap<String, Host>();
+
+    /**
+     * Users with their domains.
+     */
+    private final transient ConcurrentMap<User, Set<Domain>> users =
+        new ConcurrentHashMap<User, Set<Domain>>();
+
+    /**
+     * Public ctor.
+     * @throws IOException If some IO problem inside
+     */
+    public DynamoHosts() throws IOException {
+        this.users.putAll(this.dynamo.load());
+        for (ConcurrentMap.Entry<User, Set<Domain>> entry
+            : this.users.entrySet()) {
+            for (Domain domain : entry.getValue()) {
+                this.hosts.put(domain.name(), new DefaultHost(domain));
+            }
+        }
+        Logger.debug(
+            this,
+            "#DynamoHosts(): %d host(s) are ready",
+            this.hosts.size()
+        );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Host find(final String domain) {
-        return new DefaultHost();
+    public Host find(final String name) throws Hosts.NotFoundException {
+        final Host host = this.hosts.get(name);
+        if (host == null) {
+            throw new Hosts.NotFoundException("not found");
+        }
+        Logger.debug(this, "#find('%s'): found", name);
+        return host;
     }
 
     /**
@@ -64,17 +104,65 @@ public final class DynamoHosts implements Hosts {
      */
     @Override
     public Set<Domain> domains(final User user) {
-        final Set<Domain> domains = new HashSet<Domain>();
-        Logger.debug(this, "#domains('%s'): found", user);
-        return domains;
+        this.users.putIfAbsent(user, new HashSet<Domain>());
+        final Set<Domain> set = this.users.get(user);
+        // @checkstyle AnonInnerLength (100 lines)
+        return new AbstractSet<Domain>() {
+            @Override
+            public int size() {
+                return set.size();
+            }
+            @Override
+            public Iterator<Domain> iterator() {
+                return set.iterator();
+            }
+            @Override
+            public boolean add(final Domain domain) {
+                boolean added;
+                if (DynamoHosts.this.hosts.containsKey(domain.name())) {
+                    added = false;
+                } else {
+                    try {
+                        DynamoHosts.this.dynamo.add(user, domain);
+                    } catch (java.io.IOException ex) {
+                        throw new IllegalArgumentException(ex);
+                    }
+                    set.add(domain);
+                    DynamoHosts.this.hosts.put(
+                        domain.name(),
+                        new DefaultHost(domain)
+                    );
+                    added = true;
+                }
+                return added;
+            }
+            @Override
+            public boolean remove(final Object obj) {
+                boolean removed;
+                final Domain domain = Domain.class.cast(obj);
+                if (DynamoHosts.this.hosts.containsKey(domain.name())) {
+                    try {
+                        DynamoHosts.this.dynamo.remove(domain);
+                    } catch (java.io.IOException ex) {
+                        throw new IllegalArgumentException(ex);
+                    }
+                    DynamoHosts.this.hosts.remove(domain.name());
+                    set.remove(domain);
+                    removed = true;
+                } else {
+                    removed = false;
+                }
+                return removed;
+            }
+        };
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void close() {
-        // nothing to do
+    public void close() throws IOException {
+        this.dynamo.close();
     }
 
 }

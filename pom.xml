@@ -144,6 +144,11 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-java-sdk</artifactId>
+                <version since="22 Aug 2012">1.3.17</version>
+            </dependency>
+            <dependency>
                 <!-- Logging facility, on top of SLF4J. -->
                 <groupId>com.jcabi</groupId>
                 <artifactId>jcabi-log</artifactId>

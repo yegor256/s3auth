@@ -29,6 +29,7 @@
  */
 package com.s3auth.hosts;
 
+import java.util.Set;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -45,13 +46,17 @@ public final class DynamoHostsTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    @org.junit.Ignore
     public void loadsDynamoConfiguration() throws Exception {
         final Hosts hosts = new DynamoHosts();
-        final Host host = hosts.find("xxx.s3auth.com");
+        final User user = new UserMocker().mock();
+        final Set<Domain> domains = hosts.domains(user);
+        final Domain domain = new DomainMocker().mock();
+        domains.remove(domain);
+        domains.add(domain);
+        final Host host = hosts.find(domain.name());
         MatcherAssert.assertThat(
-            host,
-            Matchers.notNullValue()
+            host.authorized(domain.key(), domain.secret()),
+            Matchers.is(true)
         );
     }
 
