@@ -50,27 +50,39 @@
     </xsl:template>
 
     <xsl:template name="content">
+        <xsl:choose>
+            <xsl:when test="/page/domains/domain">
+                <p>
+                    <xsl:text>Your domains:</xsl:text>
+                </p>
+                <ul>
+                    <xsl:apply-templates select="/page/domains/domain"/>
+                </ul>
+            </xsl:when>
+            <xsl:otherwise>
+                <p>
+                    <xsl:text>You don't have any domains yet.</xsl:text>
+                </p>
+            </xsl:otherwise>
+        </xsl:choose>
         <p>
-            <xsl:text>Your domains:</xsl:text>
+            <xsl:text>Register new domain using the form:</xsl:text>
         </p>
-        <ul>
-            <xsl:apply-templates select="/page/domains/domain"/>
-        </ul>
-        <p>
-            <form method="post">
-                <xsl:attribute name="action">
-                    <xsl:value-of select="/page/links/link[@rel='add']/@href" />
-                </xsl:attribute>
+        <form method="post">
+            <xsl:attribute name="action">
+                <xsl:value-of select="/page/links/link[@rel='add']/@href" />
+            </xsl:attribute>
+            <p>
                 <label><xsl:text>Host name:</xsl:text></label>
                 <input name="host" />
                 <label><xsl:text>AWS key:</xsl:text></label>
-                <input name="key" />
+                <input name="key" size="30" maxlength="20" />
                 <label><xsl:text>AWS secret key:</xsl:text></label>
-                <input name="secret" />
-                <label><xsl:text></xsl:text></label>
+                <input name="secret" size="40" maxlength="40" />
+                <label><xsl:text>&#160;</xsl:text></label>
                 <input type="submit" value="add" />
-            </form>
-        </p>
+            </p>
+        </form>
     </xsl:template>
 
     <xsl:template match="domain">

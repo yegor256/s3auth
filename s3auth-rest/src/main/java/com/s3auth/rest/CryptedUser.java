@@ -107,10 +107,10 @@ final class CryptedUser implements User {
      * Decrypt.
      * @param txt The text to decrypt
      * @return Instance of the class
-     * @throws DecryptionException If can't decrypt
+     * @throws CryptedUser.DecryptionException If can't decrypt
      */
     public static CryptedUser valueOf(final String txt)
-        throws DecryptionException {
+        throws CryptedUser.DecryptionException {
         return new CryptedUser(
             new User() {
                 @Override

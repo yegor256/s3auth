@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.s3auth.rest.rexsl.xhtml;
+package com.s3auth.rest.rexsl.xhtml
 
 import com.rexsl.test.XhtmlMatchers
 import org.hamcrest.MatcherAssert

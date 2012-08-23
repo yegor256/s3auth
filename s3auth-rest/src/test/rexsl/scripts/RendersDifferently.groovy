@@ -27,11 +27,10 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.s3auth.rest.rexsl.scripts;
+package com.s3auth.rest.rexsl.scripts
 
 import com.rexsl.test.RestTester
 import javax.ws.rs.core.HttpHeaders
-import javax.ws.rs.core.MediaType
 
 RestTester.start(rexsl.home)
     .header(HttpHeaders.ACCEPT, '*/*')

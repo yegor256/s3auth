@@ -49,7 +49,9 @@ public final class DefaultHost implements Host {
      */
     @Override
     public InputStream fetch(final String name) throws IOException {
-        return null;
+        final InputStream stream = null;
+        Logger.debug(this, "#fetch('%s'): found", name);
+        return stream;
     }
 
     /**
@@ -57,7 +59,9 @@ public final class DefaultHost implements Host {
      */
     @Override
     public boolean authorized(final String user, final String password) {
-        return false;
+        final boolean auth = false;
+        Logger.debug(this, "#authorized('%s', '%s'): %B", user, password, auth);
+        return auth;
     }
 
 }

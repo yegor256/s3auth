@@ -11,6 +11,7 @@
         <link href="http://localhost:9099/a/?" rel="self" type="text/xml"/>
         <link href="http://localhost:9099/?" rel="home" type="text/xml"/>
         <link href="http://localhost:9099/a/out?" rel="logout" type="text/xml"/>
+        <link href="http://localhost:9099/add" rel="add" type="text/xml"/>
     </links>
     <millis>16</millis>
 </page>

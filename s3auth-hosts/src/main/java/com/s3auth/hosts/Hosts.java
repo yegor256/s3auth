@@ -30,7 +30,6 @@
 package com.s3auth.hosts;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.util.Set;
 
 /**
@@ -65,9 +64,9 @@ public interface Hosts extends Closeable {
      * Find one host by domain name.
      * @param domain The domain name
      * @return Host found
-     * @throws NotFoundException
+     * @throws Hosts.NotFoundException If not found
      */
-    Host find(String domain) throws NotFoundException;
+    Host find(String domain) throws Hosts.NotFoundException;
 
     /**
      * Get domains of the given user.

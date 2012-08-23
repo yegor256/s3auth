@@ -29,20 +29,18 @@
  */
 package com.s3auth.rest;
 
-import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.JaxbGroup;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.s3auth.hosts.Domain;
 import java.util.Collection;
 import java.util.LinkedList;
-import javax.ws.rs.GET;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 
 /**
  * Friends finding service (used by RESTful client or AJAX).
@@ -137,6 +135,7 @@ public final class IndexRs extends BaseRs {
      * Get list of all my domains.
      * @return List of JAXB domains
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private Collection<JaxbDomain> domains() {
         final Collection<JaxbDomain> domains = new LinkedList<JaxbDomain>();
         for (Domain domain : this.hosts().domains(this.user())) {

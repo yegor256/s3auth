@@ -48,7 +48,7 @@ public final class DynamoHosts implements Hosts {
      * Public ctor.
      */
     public DynamoHosts() {
-        // todo
+        Logger.debug(this, "#DynamoHosts(): instantiated");
     }
 
     /**
@@ -64,7 +64,9 @@ public final class DynamoHosts implements Hosts {
      */
     @Override
     public Set<Domain> domains(final User user) {
-        return new HashSet<Domain>();
+        final Set<Domain> domains = new HashSet<Domain>();
+        Logger.debug(this, "#domains('%s'): found", user);
+        return domains;
     }
 
     /**

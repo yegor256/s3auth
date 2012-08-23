@@ -35,11 +35,9 @@ import com.s3auth.hosts.Hosts;
 import com.s3auth.hosts.User;
 import javax.servlet.ServletContext;
 import javax.ws.rs.CookieParam;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 
 /**
  * Abstract RESTful resource.
@@ -76,7 +74,6 @@ public class BaseRs extends BaseResource {
             this.icookie = cookie;
         }
     }
-
 
     /**
      * Inject servlet context. Should be called by JAX-RS implemenation

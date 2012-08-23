@@ -29,8 +29,6 @@
  */
 package com.s3auth.rest;
 
-import com.rexsl.page.JaxbBundle;
-import com.rexsl.page.JaxbGroup;
 import com.rexsl.page.PageBuilder;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;

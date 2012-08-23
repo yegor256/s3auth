@@ -30,20 +30,13 @@
 package com.s3auth.rest;
 
 import com.rexsl.core.Manifests;
-import com.rexsl.misc.CookieBuilder;
 import com.rexsl.page.BasePage;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
-import java.util.Collection;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -62,7 +55,7 @@ public class CommonPage extends BasePage<CommonPage, BaseRs> {
      * @return JAX-RS response
      */
     public final Response.ResponseBuilder render() {
-        Response.ResponseBuilder builder = Response.ok();
+        final Response.ResponseBuilder builder = Response.ok();
         this.link(new Link("logout", "/a/out"));
         this.append(
             new JaxbBundle("version")

@@ -46,7 +46,7 @@ public final class Facade implements Closeable {
     /**
      * Hosts to work with.
      */
-    private final Hosts hosts;
+    private final transient Hosts hosts;
 
     /**
      * Public ctor.
@@ -61,6 +61,7 @@ public final class Facade implements Closeable {
      * @param port Port number
      */
     public void listen(final int port) {
+        Logger.debug(this, "#listen(%d): started with %s", port, this.hosts);
     }
 
     /**
@@ -68,7 +69,7 @@ public final class Facade implements Closeable {
      */
     @Override
     public void close() throws IOException {
-        // todo
+        Logger.debug(this, "#close(): done");
     }
 
 }

@@ -43,6 +43,13 @@ import java.util.concurrent.TimeUnit;
 public final class Main {
 
     /**
+     * It's a utility class.
+     */
+    private Main() {
+        // intentionally empty
+    }
+
+    /**
      * Entrance.
      * @param args Optional arguments
      * @throws Exception If something is wrong

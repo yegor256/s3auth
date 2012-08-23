@@ -27,18 +27,18 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.s3auth.rest.rexsl.scripts;
+package com.s3auth.rest.rexsl.scripts
 
 import com.rexsl.test.RestTester
 import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.MediaType
 
-def auth = RestTester.start(rexsl.home)
+RestTester.start(rexsl.home)
     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
     .get('read home page')
     .assertStatus(HttpURLConnection.HTTP_OK)
-    .assertXPath("/page/version/revision")
-    .assertXPath("/page/version/name")
-    .assertXPath("/page/version/date")
+    .assertXPath('/page/version/revision')
+    .assertXPath('/page/version/name')
+    .assertXPath('/page/version/date')
     .rel('/page/links/link[@rel="home"]/@href')
     .get('back to home')

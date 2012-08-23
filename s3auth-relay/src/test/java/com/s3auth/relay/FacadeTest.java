@@ -50,6 +50,7 @@ public final class FacadeTest {
     public void handlesParallelHttpRequests() throws Exception {
         final Hosts hosts = Mockito.mock(Hosts.class);
         final Facade facade = new Facade(hosts);
+        MatcherAssert.assertThat(facade, Matchers.notNullValue());
     }
 
 }

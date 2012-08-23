@@ -29,7 +29,6 @@
  */
 package com.s3auth.hosts;
 
-import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 

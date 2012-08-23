@@ -33,7 +33,6 @@ import com.rexsl.test.JaxbConverter;
 import com.rexsl.test.XhtmlMatchers;
 import com.s3auth.hosts.Domain;
 import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**

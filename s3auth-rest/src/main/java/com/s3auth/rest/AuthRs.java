@@ -30,20 +30,14 @@
 package com.s3auth.rest;
 
 import com.restfb.DefaultFacebookClient;
-import com.restfb.FacebookClient;
 import com.rexsl.core.Manifests;
 import com.rexsl.misc.CookieBuilder;
-import com.rexsl.page.JaxbBundle;
-import com.rexsl.page.JaxbGroup;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.test.RestTester;
 import com.s3auth.hosts.User;
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.util.LinkedList;
-import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -57,6 +51,7 @@ import javax.ws.rs.core.UriBuilder;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
+ * @checkstyle MultipleStringLiterals (500 lines)
  */
 @Path("/a")
 public final class AuthRs extends BaseRs {
@@ -75,10 +70,7 @@ public final class AuthRs extends BaseRs {
                 .queryParam("redirect_uri", "{uri}")
                 .build(
                     Manifests.read("S3Auth-FbId"),
-                    this.uriInfo().getBaseUriBuilder()
-                        .clone()
-                        .path("/a/fb")
-                        .build()
+                    this.redirectUri()
                 )
         );
         return new PageBuilder()
@@ -154,7 +146,6 @@ public final class AuthRs extends BaseRs {
      */
     private String token(final String code) {
         final URI uri = UriBuilder
-            // @checkstyle MultipleStringLiterals (5 lines)
             .fromUri("https://graph.facebook.com/oauth/access_token")
             .queryParam("client_id", "{id}")
             .queryParam("redirect_uri", "{uri}")
@@ -162,10 +153,7 @@ public final class AuthRs extends BaseRs {
             .queryParam("code", "{code}")
             .build(
                 Manifests.read("S3Auth-FbId"),
-                this.uriInfo().getBaseUriBuilder()
-                    .clone()
-                    .path("/a/fb")
-                    .build(),
+                this.redirectUri(),
                 Manifests.read("S3Auth-FbSecret"),
                 code
             );
@@ -213,6 +201,17 @@ public final class AuthRs extends BaseRs {
         } catch (com.restfb.exception.FacebookException ex) {
             throw new IllegalArgumentException(ex);
         }
+    }
+
+    /**
+     * Facebook redirect URI.
+     * @return The URI
+     */
+    private URI redirectUri() {
+        return this.uriInfo().getBaseUriBuilder()
+            .clone()
+            .path("/a/fb")
+            .build();
     }
 
 }
