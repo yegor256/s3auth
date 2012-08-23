@@ -30,15 +30,26 @@
 package com.s3auth.rest.rexsl.scripts
 
 import com.rexsl.test.RestTester
+import com.s3auth.rest.BaseRs
 import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.MediaType
 
+def cookie = 'boom'
+
 RestTester.start(rexsl.home)
     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+    .header(HttpHeaders.COOKIE, BaseRs.COOKIE + '=' + cookie)
     .get('read home page')
     .assertStatus(HttpURLConnection.HTTP_OK)
     .assertXPath('/page/version/revision')
     .assertXPath('/page/version/name')
     .assertXPath('/page/version/date')
-    .rel('/page/links/link[@rel="home"]/@href')
-    .get('back to home')
+    .rel('/page/links/link[@rel="add"]/@href')
+    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+    .post('add new domain', 'host=localhost&key=ABC&secret=foo')
+    .assertStatus(HttpURLConnection.HTTP_SEE_OTHER)
+    .follow()
+    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+    .get('read home page again')
+    .assertStatus(HttpURLConnection.HTTP_OK)
+    .assertXPath('/page/domains/domain[host="localhost"]')

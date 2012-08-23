@@ -108,11 +108,11 @@ public class BaseRs extends BaseResource {
             throw new WebApplicationException(
                 ex,
                 Response.status(Response.Status.TEMPORARY_REDIRECT)
-                    .entity(ex.getMessage())
+                    .header("s3auth-error", ex.getMessage())
                     .location(
                         this.uriInfo().getBaseUriBuilder()
                             .clone()
-                            .path("/a/out")
+                            .path("/a")
                             .build()
                     )
                     .build()

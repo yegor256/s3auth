@@ -29,8 +29,15 @@
  */
 package com.s3auth.rest;
 
+import com.rexsl.core.Manifests;
 import com.s3auth.hosts.User;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.net.URI;
+import org.apache.commons.codec.binary.Base32;
+import org.apache.commons.lang.CharEncoding;
 
 /**
  * Crypted user.
@@ -42,6 +49,16 @@ import java.net.URI;
 final class CryptedUser implements User {
 
     /**
+     * Security salt.
+     */
+    private static final String SALT = Manifests.read("S3Auth-SecuritySalt");
+
+    /**
+     * Base32 encoder/decoder.
+     */
+    private static final Base32 CODER = new Base32(80, new byte[] {}, true);
+
+    /**
      * The user.
      */
     private final transient User user;
@@ -49,7 +66,7 @@ final class CryptedUser implements User {
     /**
      * Thrown by {@link #valueOf(String)} if we can't decrypt.
      */
-    class DecryptionException extends Exception {
+    public static class DecryptionException extends Exception {
         /**
          * Serialization marker.
          */
@@ -59,6 +76,13 @@ final class CryptedUser implements User {
          * @param cause The cause of it
          */
         public DecryptionException(final String cause) {
+            super(cause);
+        }
+        /**
+         * Public ctor.
+         * @param cause The cause of it
+         */
+        public DecryptionException(final Throwable cause) {
             super(cause);
         }
     }
@@ -100,7 +124,19 @@ final class CryptedUser implements User {
      */
     @Override
     public String toString() {
-        return "not implemented yet";
+        final ByteArrayOutputStream data = new ByteArrayOutputStream();
+        try {
+            final DataOutputStream stream = new DataOutputStream(data);
+            stream.writeUTF(this.identity());
+            stream.writeUTF(this.name());
+            stream.writeUTF(this.photo().toString());
+            stream.writeUTF(CryptedUser.SALT);
+        } catch (java.io.IOException ex) {
+            throw new IllegalArgumentException(ex);
+        }
+        return CryptedUser.CODER.encodeToString(
+            CryptedUser.xor(data.toByteArray())
+        );
     }
 
     /**
@@ -111,22 +147,61 @@ final class CryptedUser implements User {
      */
     public static CryptedUser valueOf(final String txt)
         throws CryptedUser.DecryptionException {
-        return new CryptedUser(
-            new User() {
-                @Override
-                public String identity() {
-                    return "nobody";
-                }
-                @Override
-                public String name() {
-                    return "Mr. Nobody";
-                }
-                @Override
-                public URI photo() {
-                    return URI.create("#");
-                }
-            }
+        if (txt == null) {
+            throw new CryptedUser.DecryptionException("text can't be NULL");
+        }
+        final byte[] bytes = CryptedUser.CODER.decode(txt);
+        final DataInputStream stream = new DataInputStream(
+            new ByteArrayInputStream(CryptedUser.xor(bytes))
         );
+        try {
+            final String identity = stream.readUTF();
+            final String name = stream.readUTF();
+            final String photo = stream.readUTF();
+            if (!CryptedUser.SALT.equals(stream.readUTF())) {
+                throw new CryptedUser.DecryptionException("invalid salt");
+            }
+            return new CryptedUser(
+                new User() {
+                    @Override
+                    public String identity() {
+                        return identity;
+                    }
+                    @Override
+                    public String name() {
+                        return name;
+                    }
+                    @Override
+                    public URI photo() {
+                        return URI.create(photo);
+                    }
+                }
+            );
+        } catch (java.io.IOException ex) {
+            throw new CryptedUser.DecryptionException(ex);
+        }
+    }
+
+    /**
+     * XOR array of bytes.
+     * @param input The input to XOR
+     * @return Encrypted output
+     */
+    private static byte[] xor(final byte[] input) {
+        final byte[] output = new byte[input.length];
+        final byte[] secret = Manifests.read("S3Auth-SecurityKey").getBytes();
+        if (secret.length == 0) {
+            throw new IllegalStateException("empty security key");
+        }
+        int spos = 0;
+        for (int pos = 0; pos < input.length; ++pos) {
+            output[pos] = (byte) (input[pos] ^ secret[spos]);
+            ++spos;
+            if (spos >= secret.length) {
+                spos = 0;
+            }
+        }
+        return output;
     }
 
 }

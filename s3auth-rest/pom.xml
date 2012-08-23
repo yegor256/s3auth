@@ -135,8 +135,16 @@
             <artifactId>mockito-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
         </dependency>
     </dependencies>
 
@@ -155,6 +163,8 @@
                                 <S3Auth-Date>${maven.build.timestamp}</S3Auth-Date>
                                 <S3Auth-FbId>${fb.id}</S3Auth-FbId>
                                 <S3Auth-FbSecret>${fb.secret}</S3Auth-FbSecret>
+                                <S3Auth-SecurityKey>${security.key}</S3Auth-SecurityKey>
+                                <S3Auth-SecuritySalt>${security.salt}</S3Auth-SecuritySalt>
                             </manifestEntries>
                         </archive>
                     </configuration>

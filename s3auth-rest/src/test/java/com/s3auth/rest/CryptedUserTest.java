@@ -80,4 +80,31 @@ public final class CryptedUserTest {
         );
     }
 
+    /**
+     * CryptedUser can throw on NULL.
+     * @throws Exception If there is some problem inside
+     */
+    @Test(expected = CryptedUser.DecryptionException.class)
+    public void throwsOnNullInput() throws Exception {
+        CryptedUser.valueOf(null);
+    }
+
+    /**
+     * CryptedUser can throw on invalid input.
+     * @throws Exception If there is some problem inside
+     */
+    @Test(expected = CryptedUser.DecryptionException.class)
+    public void throwsOnBrokenInput() throws Exception {
+        CryptedUser.valueOf("invalid-data");
+    }
+
+    /**
+     * CryptedUser can throw on empty input.
+     * @throws Exception If there is some problem inside
+     */
+    @Test(expected = CryptedUser.DecryptionException.class)
+    public void throwsOnEmptyInput() throws Exception {
+        CryptedUser.valueOf("");
+    }
+
 }
