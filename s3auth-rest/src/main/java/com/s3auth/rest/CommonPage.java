@@ -74,6 +74,7 @@ public class CommonPage extends BasePage<CommonPage, BaseRs> {
                 .up()
         );
         builder.entity(this);
+        builder.type(MediaType.TEXT_XML);
         return builder;
     }
 
