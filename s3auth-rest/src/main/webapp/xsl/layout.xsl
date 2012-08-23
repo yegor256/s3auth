@@ -76,6 +76,7 @@
                             </xsl:attribute>
                             <xsl:text>s3auth.com</xsl:text>
                         </a>
+                        <xsl:apply-templates select="user" />
                     </p>
                     <xsl:call-template name="content" />
                 </div>
@@ -95,6 +96,18 @@
                 <xsl:text>ms</xsl:text>
             </xsl:otherwise>
         </xsl:choose>
+    </xsl:template>
+
+    <xsl:template match="user">
+        <img style="width: 50px; height: 50px;">
+            <xsl:attribute name="src">
+                <xsl:value-of select="photo" />
+            </xsl:attribute>
+            <xsl:attribute name="alt">
+                <xsl:value-of select="name" />
+            </xsl:attribute>
+        </img>
+        <xsl:value-of select="name"/>
     </xsl:template>
 
     <xsl:template match="version">

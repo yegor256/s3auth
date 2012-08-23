@@ -2,6 +2,11 @@
 <?xml-stylesheet type='text/xsl' href='/xsl/index.xsl'?>
 <page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
     <domains />
+    <user>
+        <identity>174723</identity>
+        <name>John Doe</name>
+        <photo>#</photo>
+    </user>
     <version>
         <name>1.0-SNAPSHOT</name>
         <revision>123</revision>
