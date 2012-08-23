@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2012, s3auth.com
  * All rights reserved.
  *
@@ -27,39 +26,18 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns="http://www.w3.org/1999/xhtml"
-    version="2.0" exclude-result-prefixes="xs">
+ */
+package com.s3auth.rest.rexsl.xhtml;
 
-    <xsl:output method="xml" omit-xml-declaration="yes"/>
+import com.rexsl.test.XhtmlMatchers
+import org.hamcrest.MatcherAssert
+import org.hamcrest.Matchers
 
-    <xsl:include href="/xsl/layout.xsl" />
-
-    <xsl:template name="head">
-        <title>
-            <xsl:text>login</xsl:text>
-        </title>
-        <link rel="stylesheet" type="text/css">
-            <xsl:attribute name="href">
-                <xsl:text>/css/entrance.css?</xsl:text>
-                <xsl:value-of select="/page/version/revision"/>
-            </xsl:attribute>
-        </link>
-    </xsl:template>
-
-    <xsl:template name="content">
-        <p>
-            <xsl:text>Hey, please </xsl:text>
-            <a>
-                <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='login']/@href" />
-                </xsl:attribute>
-                <xsl:text>login through Facebook</xsl:text>
-            </a>
-            <xsl:text>!</xsl:text>
-        </p>
-    </xsl:template>
-
-</xsl:stylesheet>
+MatcherAssert.assertThat(
+    rexsl.document,
+    XhtmlMatchers.hasXPaths(
+        '//xhtml:div[@id="version"]',
+        '//xhtml:div[@id="version" and contains(.,"r123")]',
+        '//xhtml:div[@id="version" and contains(.,"16ms")]'
+    )
+)

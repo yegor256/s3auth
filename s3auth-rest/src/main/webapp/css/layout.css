@@ -88,12 +88,6 @@ pre {
     padding-right: 0.4em;
 }
 
-/* fixed block */
-.fixed {
-    white-space: pre;
-    font-size: 1.3em;
-}
-
 /* red text marker */
 .red {
     color: #f24a40;

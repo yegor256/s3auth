@@ -31,6 +31,7 @@ package com.s3auth.rest;
 
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.JaxbGroup;
+import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.s3auth.hosts.Domain;
 import java.util.Collection;
@@ -65,6 +66,7 @@ public final class IndexRs extends BaseRs {
             .build(CommonPage.class)
             .init(this)
             .append(JaxbGroup.build(this.domains(), "domains"))
+            .link(new Link("add", "/add"))
             .render()
             .build();
     }

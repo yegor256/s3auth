@@ -50,7 +50,38 @@
     </xsl:template>
 
     <xsl:template name="content">
-        to do...
+        <p>
+            <xsl:text>Your domains:</xsl:text>
+        </p>
+        <ul>
+            <xsl:apply-templates select="/page/domains/domain"/>
+        </ul>
+        <p>
+            <form method="post">
+                <xsl:attribute name="action">
+                    <xsl:value-of select="/page/links/link[@rel='add']/@href" />
+                </xsl:attribute>
+                <label><xsl:text>Host name:</xsl:text></label>
+                <input name="host" />
+                <label><xsl:text>AWS key:</xsl:text></label>
+                <input name="key" />
+                <label><xsl:text>AWS secret key:</xsl:text></label>
+                <input name="secret" />
+                <label><xsl:text></xsl:text></label>
+                <input type="submit" value="add" />
+            </form>
+        </p>
+    </xsl:template>
+
+    <xsl:template match="domain">
+        <li>
+            <span class="tt"><xsl:value-of select="name"/></span>
+            <xsl:text> (key: </xsl:text>
+            <xsl:value-of select="key"/>
+            <xsl:text>, secret: </xsl:text>
+            <xsl:value-of select="secret"/>
+            <xsl:text>)</xsl:text>
+        </li>
     </xsl:template>
 
 </xsl:stylesheet>

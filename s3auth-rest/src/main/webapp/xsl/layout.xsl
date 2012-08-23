@@ -69,6 +69,14 @@
             <body>
                 <xsl:apply-templates select="version" />
                 <div id="content">
+                    <p>
+                        <a>
+                            <xsl:attribute name="href">
+                                <xsl:value-of select="/page/links/link[@rel='home']/@href" />
+                            </xsl:attribute>
+                            <xsl:text>s3auth.com</xsl:text>
+                        </a>
+                    </p>
                     <xsl:call-template name="content" />
                 </div>
             </body>
