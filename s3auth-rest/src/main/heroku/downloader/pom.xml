@@ -40,13 +40,12 @@
     <packaging>pom</packaging>
     <name>downloader</name>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <uniqueVersion>false</uniqueVersion>
+    <repositories>
+        <repository>
             <id>sonatype.nexus</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
+        </repository>
+    <repositories>
 
     <build>
         <plugins>
