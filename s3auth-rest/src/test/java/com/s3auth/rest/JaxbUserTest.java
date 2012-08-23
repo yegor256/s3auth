@@ -27,18 +27,54 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.s3auth.rest.rexsl.scripts;
+package com.s3auth.rest;
 
-import com.rexsl.test.RestTester
-import javax.ws.rs.core.HttpHeaders
-import javax.ws.rs.core.MediaType
+import com.rexsl.test.JaxbConverter;
+import com.rexsl.test.XhtmlMatchers;
+import com.s3auth.hosts.User;
+import java.net.URI;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
-def auth = RestTester.start(rexsl.home)
-    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-    .get('read home page')
-    .assertStatus(HttpURLConnection.HTTP_OK)
-    .assertXPath("/page/version/revision")
-    .assertXPath("/page/version/name")
-    .assertXPath("/page/version/date")
-    .rel('/page/links/link[@rel="home"]/@href')
-    .get('back to home')
+/**
+ * Test case for {@link JaxbUser}.
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 0.0.1
+ */
+public final class JaxbUserTest {
+
+    /**
+     * JaxbUser can be converted to XML.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void convertsToXml() throws Exception {
+        final JaxbUser obj = new JaxbUser(
+            new User() {
+                @Override
+                public String identity() {
+                    return "nobody";
+                }
+                @Override
+                public String name() {
+                    return "John Doe";
+                }
+                @Override
+                public URI photo() {
+                    return URI.create("#");
+                }
+            }
+        );
+        MatcherAssert.assertThat(
+            JaxbConverter.the(obj),
+            XhtmlMatchers.hasXPaths(
+                "/user[identity='nobody']",
+                "/user[name='John Doe']",
+                "/user[photo='#']"
+            )
+        );
+    }
+
+}

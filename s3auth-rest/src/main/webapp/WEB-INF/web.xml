@@ -72,7 +72,7 @@
         <servlet-class>com.rexsl.trap.ExceptionTrap</servlet-class>
         <init-param>
             <param-name>com.rexsl.trap.Template</param-name>
-            <param-value>com.rexsl.trap.StaticTemplate?uri=/com/netbout/servlets/re.html.vm</param-value>
+            <param-value>com.rexsl.trap.StaticTemplate?uri=/com/s3auth/servlets/exception.html.vm</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>

@@ -64,7 +64,6 @@ public class CommonPage extends BasePage<CommonPage, BaseRs> {
     public final Response.ResponseBuilder render() {
         Response.ResponseBuilder builder = Response.ok();
         this.link(new Link("logout", "/a/out"));
-        this.link(new Link("login", "/a/out"));
         this.append(
             new JaxbBundle("version")
                 .add("name", Manifests.read("S3Auth-Version"))
