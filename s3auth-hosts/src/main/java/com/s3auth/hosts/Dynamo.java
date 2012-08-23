@@ -29,17 +29,6 @@
  */
 package com.s3auth.hosts;
 
-import com.jcabi.log.Logger;
-import com.rexsl.core.Manifests;
-import java.io.Closeable;
-import java.io.IOException;
-import java.net.URI;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.dynamodb.AmazonDynamoDB;
 import com.amazonaws.services.dynamodb.AmazonDynamoDBClient;
@@ -51,6 +40,15 @@ import com.amazonaws.services.dynamodb.model.PutItemRequest;
 import com.amazonaws.services.dynamodb.model.PutItemResult;
 import com.amazonaws.services.dynamodb.model.ScanRequest;
 import com.amazonaws.services.dynamodb.model.ScanResult;
+import com.jcabi.log.Logger;
+import com.rexsl.core.Manifests;
+import java.io.Closeable;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Abstraction on top of DynamoDB SDK.
@@ -60,7 +58,10 @@ import com.amazonaws.services.dynamodb.model.ScanResult;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @checkstyle MultipleStringLiterals (500 lines)
  */
+@SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
 public final class Dynamo implements Closeable {
 
     /**
@@ -99,41 +100,19 @@ public final class Dynamo implements Closeable {
      * @return Map of users and their domains
      * @throws IOException If some IO problem inside
      */
-    public ConcurrentMap<User, Set<Domain>> load() throws IOException {
-        ConcurrentMap<User, Set<Domain>> domains =
-            new ConcurrentHashMap<User, Set<Domain>>();
+    public ConcurrentMap<String, Set<Domain>> load() throws IOException {
+        final ConcurrentMap<String, Set<Domain>> domains =
+            new ConcurrentHashMap<String, Set<Domain>>();
         final ScanResult result = this.client.scan(new ScanRequest(this.table));
         for (final Map<String, AttributeValue> item : result.getItems()) {
-            final User user = new User() {
-                @Override
-                public String identity() {
-                    return item.get("user.identity").getS();
-                }
-                @Override
-                public String name() {
-                    return item.get("user.name").getS();
-                }
-                @Override
-                public URI photo() {
-                    return URI.create(item.get("user.photo").getS());
-                }
-            };
+            final String user = item.get("user.identity").getS();
             domains.putIfAbsent(user, new HashSet<Domain>());
             domains.get(user).add(
-                new Domain() {
-                    @Override
-                    public String name() {
-                        return item.get("domain.name").getS();
-                    }
-                    @Override
-                    public String key() {
-                        return item.get("domain.key").getS();
-                    }
-                    @Override
-                    public String secret() {
-                        return item.get("domain.secret").getS();
-                    }
-                }
+                new DefaultDomain(
+                    item.get("domain.name").getS(),
+                    item.get("domain.key").getS(),
+                    item.get("domain.secret").getS()
+                )
             );
         }
         Logger.debug(this, "#load(): %d items", domains.size());
@@ -146,12 +125,10 @@ public final class Dynamo implements Closeable {
      * @param domain The domain to save
      * @throws IOException If some IO problem inside
      */
-    public void add(final User user, final Domain domain) throws IOException {
-        final Map<String, AttributeValue> attrs =
-            new HashMap<String, AttributeValue>();
-        attrs.put("user.identity", new AttributeValue(user.identity()));
-        attrs.put("user.name", new AttributeValue(user.name()));
-        attrs.put("user.photo", new AttributeValue(user.photo().toString()));
+    public void add(final String user, final Domain domain) throws IOException {
+        final ConcurrentMap<String, AttributeValue> attrs =
+            new ConcurrentHashMap<String, AttributeValue>();
+        attrs.put("user.identity", new AttributeValue(user));
         attrs.put("domain.name", new AttributeValue(domain.name()));
         attrs.put("domain.key", new AttributeValue(domain.key()));
         attrs.put("domain.secret", new AttributeValue(domain.secret()));
@@ -161,7 +138,7 @@ public final class Dynamo implements Closeable {
         Logger.debug(
             this,
             "#add('%s', '%s'): added, %.2f units",
-            user.name(),
+            user,
             domain.name(),
             result.getConsumedCapacityUnits()
         );

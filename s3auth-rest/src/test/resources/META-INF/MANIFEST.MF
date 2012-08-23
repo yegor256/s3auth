@@ -5,3 +5,6 @@ S3Auth-FbId: 123456789
 S3Auth-FbSecret: foo
 S3Auth-SecurityKey: key
 S3Auth-SecuritySalt: salt
+S3Auth-AwsDynamoKey: AKIAIMCAQHQMKEKL4VXA
+S3Auth-AwsDynamoSecret: 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
+S3Auth-AwsDynamoTable: s3auth-test

@@ -37,7 +37,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.URI;
 import org.apache.commons.codec.binary.Base32;
-import org.apache.commons.lang.CharEncoding;
 
 /**
  * Crypted user.

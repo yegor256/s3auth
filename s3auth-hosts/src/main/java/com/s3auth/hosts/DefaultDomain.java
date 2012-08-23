@@ -29,43 +29,100 @@
  */
 package com.s3auth.hosts;
 
-import java.util.Set;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
-
 /**
- * Test case for {@link DynamoHosts}.
+ * Default implementation of domain.
+ *
+ * <p>The class is immutable and thread-safe.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 0.0.1
  */
-public final class DynamoHostsTest {
+public final class DefaultDomain implements Domain {
 
     /**
-     * DynamoHosts can load configuration from XML.
-     * @throws Exception If there is some problem inside
+     * The name.
      */
-    @Test
-    public void loadsDynamoConfiguration() throws Exception {
-        final Hosts hosts = new DynamoHosts();
-        final User user = new UserMocker().mock();
-        final Set<Domain> domains = hosts.domains(user);
-        final Domain domain = new DomainMocker().mock();
-        domains.remove(domain);
-        MatcherAssert.assertThat(
-            hosts.domains(user),
-            Matchers.hasSize(0)
-        );
-        domains.add(domain);
-        MatcherAssert.assertThat(
-            hosts.domains(user),
-            Matchers.hasSize(1)
-        );
-        final Host host = hosts.find(domain.name());
-        MatcherAssert.assertThat(
-            host.authorized(domain.key(), domain.secret()),
-            Matchers.is(true)
-        );
+    private final transient String nam;
+
+    /**
+     * The key.
+     */
+    private final transient String ikey;
+
+    /**
+     * The secret.
+     */
+    private final transient String scrt;
+
+    /**
+     * Public ctor.
+     * @param name Name of it
+     * @param key Key of it
+     * @param secret Secret of it
+     */
+    public DefaultDomain(final String name, final String key,
+        final String secret) {
+        this.nam = name;
+        this.ikey = key;
+        this.scrt = secret;
+    }
+
+    /**
+     * Public ctor.
+     * @param domain The domain
+     */
+    public DefaultDomain(final Domain domain) {
+        this(domain.name(), domain.key(), domain.secret());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return this.nam;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return this.nam.hashCode();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        return this == obj || (obj instanceof Domain
+            && obj.hashCode() == this.hashCode());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String name() {
+        return this.nam;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String key() {
+        return this.ikey;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String secret() {
+        return this.scrt;
     }
 
 }

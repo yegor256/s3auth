@@ -77,7 +77,13 @@ public final class DefaultHost implements Host {
      */
     @Override
     public boolean authorized(final String user, final String password) {
-        final boolean auth = false;
+        boolean auth;
+        if (user.equals(this.domain.key())
+            && password.equals(this.domain.secret())) {
+            auth = true;
+        } else {
+            auth = false;
+        }
         Logger.debug(this, "#authorized('%s', '%s'): %B", user, password, auth);
         return auth;
     }

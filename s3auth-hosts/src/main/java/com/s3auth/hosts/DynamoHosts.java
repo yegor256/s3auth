@@ -37,7 +37,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import com.amazonaws.services.dynamodb.AmazonDynamoDBClient;
 
 /**
  * Collection of hosts, persisted in Amazon DynamoDB.
@@ -64,16 +63,17 @@ public final class DynamoHosts implements Hosts {
     /**
      * Users with their domains.
      */
-    private final transient ConcurrentMap<User, Set<Domain>> users =
-        new ConcurrentHashMap<User, Set<Domain>>();
+    private final transient ConcurrentMap<String, Set<Domain>> users =
+        new ConcurrentHashMap<String, Set<Domain>>();
 
     /**
      * Public ctor.
      * @throws IOException If some IO problem inside
      */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public DynamoHosts() throws IOException {
         this.users.putAll(this.dynamo.load());
-        for (ConcurrentMap.Entry<User, Set<Domain>> entry
+        for (ConcurrentMap.Entry<String, Set<Domain>> entry
             : this.users.entrySet()) {
             for (Domain domain : entry.getValue()) {
                 this.hosts.put(domain.name(), new DefaultHost(domain));
@@ -104,8 +104,8 @@ public final class DynamoHosts implements Hosts {
      */
     @Override
     public Set<Domain> domains(final User user) {
-        this.users.putIfAbsent(user, new HashSet<Domain>());
-        final Set<Domain> set = this.users.get(user);
+        this.users.putIfAbsent(user.identity(), new HashSet<Domain>());
+        final Set<Domain> set = this.users.get(user.identity());
         // @checkstyle AnonInnerLength (100 lines)
         return new AbstractSet<Domain>() {
             @Override
@@ -123,11 +123,11 @@ public final class DynamoHosts implements Hosts {
                     added = false;
                 } else {
                     try {
-                        DynamoHosts.this.dynamo.add(user, domain);
+                        DynamoHosts.this.dynamo.add(user.identity(), domain);
                     } catch (java.io.IOException ex) {
                         throw new IllegalArgumentException(ex);
                     }
-                    set.add(domain);
+                    set.add(new DefaultDomain(domain));
                     DynamoHosts.this.hosts.put(
                         domain.name(),
                         new DefaultHost(domain)
@@ -147,7 +147,7 @@ public final class DynamoHosts implements Hosts {
                         throw new IllegalArgumentException(ex);
                     }
                     DynamoHosts.this.hosts.remove(domain.name());
-                    set.remove(domain);
+                    set.remove(new DefaultDomain(domain));
                     removed = true;
                 } else {
                     removed = false;

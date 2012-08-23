@@ -29,8 +29,6 @@
  */
 package com.s3auth.rest;
 
-import com.rexsl.test.JaxbConverter;
-import com.rexsl.test.XhtmlMatchers;
 import com.s3auth.hosts.User;
 import java.net.URI;
 import org.hamcrest.MatcherAssert;
