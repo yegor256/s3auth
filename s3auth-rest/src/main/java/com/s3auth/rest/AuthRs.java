@@ -83,7 +83,7 @@ public final class AuthRs extends BaseRs {
         );
         return new PageBuilder()
             .stylesheet("/xsl/entrance.xsl")
-            .build(BasePage.class)
+            .build(CommonPage.class)
             .init(this)
             .link(new Link("facebook", fburi))
             .render()
@@ -98,7 +98,7 @@ public final class AuthRs extends BaseRs {
     @Path("/out")
     public Response logout() {
         return new PageBuilder()
-            .build(BasePage.class)
+            .build(CommonPage.class)
             .init(this)
             .render()
             .status(Response.Status.SEE_OTHER)
@@ -140,7 +140,7 @@ public final class AuthRs extends BaseRs {
             }
         };
         return new PageBuilder()
-            .build(BasePage.class)
+            .build(CommonPage.class)
             .init(this)
             .render()
             .status(Response.Status.SEE_OTHER)

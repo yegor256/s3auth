@@ -62,7 +62,7 @@ public final class IndexRs extends BaseRs {
     public Response index() {
         return new PageBuilder()
             .stylesheet("/xsl/index.xsl")
-            .build(BasePage.class)
+            .build(CommonPage.class)
             .init(this)
             .append(JaxbGroup.build(this.domains(), "domains"))
             .render()
@@ -77,7 +77,7 @@ public final class IndexRs extends BaseRs {
      * @return The JAX-RS response
      */
     @POST
-    @Path("/")
+    @Path("/add")
     public Response add(@FormParam("host") final String host,
         @FormParam("key") final String key,
         @FormParam("secret") final String secret) {
@@ -98,7 +98,7 @@ public final class IndexRs extends BaseRs {
             }
         );
         return new PageBuilder()
-            .build(BasePage.class)
+            .build(CommonPage.class)
             .init(this)
             .render()
             .status(Response.Status.SEE_OTHER)
@@ -112,7 +112,7 @@ public final class IndexRs extends BaseRs {
      * @return The JAX-RS response
      */
     @GET
-    @Path("/")
+    @Path("/remove")
     public Response remove(@QueryParam("host") final String host) {
         this.hosts().domains(this.user()).remove(
             new Domain() {
@@ -131,7 +131,7 @@ public final class IndexRs extends BaseRs {
             }
         );
         return new PageBuilder()
-            .build(BasePage.class)
+            .build(CommonPage.class)
             .init(this)
             .render()
             .status(Response.Status.SEE_OTHER)

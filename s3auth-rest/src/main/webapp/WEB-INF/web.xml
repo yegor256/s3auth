@@ -63,6 +63,10 @@
         <url-pattern>/xml/*</url-pattern>
     </servlet-mapping>
 
+    <listener>
+        <listener-class>com.s3auth.servlets.HostsListener</listener-class>
+    </listener>
+
     <servlet>
         <servlet-name>ExceptionTrap</servlet-name>
         <servlet-class>com.rexsl.trap.ExceptionTrap</servlet-class>
