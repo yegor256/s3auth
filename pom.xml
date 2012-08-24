@@ -752,6 +752,7 @@
                     <version since="5 Aug 2012">1.1</version>
                     <configuration>
                         <buildNumberPropertyName>build.number</buildNumberPropertyName>
+                        <timestampPropertyName>timestamp.number</timestampPropertyName>
                         <doCheck>false</doCheck>
                         <doUpdate>false</doUpdate>
                         <getRevisionOnlyOnce>true</getRevisionOnlyOnce>
