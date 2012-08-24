@@ -76,9 +76,7 @@ h1 {
 }
 
 /* any list */
-ul,
-ol {
-    margin-left: 2em;
+ul {
 }
 
     ul li {
