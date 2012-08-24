@@ -755,6 +755,7 @@
                         <doCheck>false</doCheck>
                         <doUpdate>false</doUpdate>
                         <getRevisionOnlyOnce>true</getRevisionOnlyOnce>
+                        <shortRevisionLength>8</shortRevisionLength>
                     </configuration>
                 </plugin>
             </plugins>
