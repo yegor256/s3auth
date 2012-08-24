@@ -78,8 +78,8 @@ final class HttpThread implements Runnable {
      */
     @Override
     public void run() {
-        final long start = System.currentTimeMillis();
         final Socket socket = this.socket();
+        final long start = System.currentTimeMillis();
         try {
             final HttpRequest request = new HttpRequest(socket);
             final Host host = this.host(request);
