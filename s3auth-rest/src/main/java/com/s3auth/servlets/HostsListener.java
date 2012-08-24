@@ -40,6 +40,8 @@ import javax.servlet.ServletContextListener;
  * Application-wide listener that initializes the application on start
  * and shuts it down on stop.
  *
+ * <p>The class is mutable and NOT thread-safe.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1

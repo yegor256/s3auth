@@ -41,6 +41,8 @@ import org.apache.commons.codec.binary.Base32;
 /**
  * Crypted user.
  *
+ * <p>The class is immutable and thread-safe.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1

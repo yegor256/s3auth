@@ -38,6 +38,8 @@ import javax.ws.rs.core.Response;
 /**
  * Error-catching resource.
  *
+ * <p>The class is mutable and NOT thread-safe.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1

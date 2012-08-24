@@ -122,6 +122,8 @@
 
     <xsl:template match="version">
         <div id="version">
+            <xsl:value-of select="name"/>
+            <xsl:text> </xsl:text>
             <xsl:value-of select="revision"/>
             <xsl:text> </xsl:text>
             <xsl:call-template name="millis">

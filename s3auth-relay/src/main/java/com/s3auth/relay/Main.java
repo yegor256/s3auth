@@ -36,6 +36,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * Main entrance to the system.
  *
+ * <p>The class is immutable and thread-safe.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1

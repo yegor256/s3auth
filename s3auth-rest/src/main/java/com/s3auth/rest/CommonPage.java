@@ -43,6 +43,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * Base RESTful page.
  *
+ * <p>The class is mutable and NOT thread-safe.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
