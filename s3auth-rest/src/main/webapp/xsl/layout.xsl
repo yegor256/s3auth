@@ -76,8 +76,8 @@
                             </xsl:attribute>
                             <xsl:text>s3auth.com</xsl:text>
                         </a>
-                        <xsl:apply-templates select="user" />
                     </p>
+                    <xsl:apply-templates select="user" />
                     <xsl:call-template name="content" />
                 </div>
             </body>
@@ -99,22 +99,25 @@
     </xsl:template>
 
     <xsl:template match="user">
-        <img style="width: 50px; height: 50px;">
-            <xsl:attribute name="src">
-                <xsl:value-of select="photo" />
-            </xsl:attribute>
-            <xsl:attribute name="alt">
-                <xsl:value-of select="name" />
-            </xsl:attribute>
-        </img>
-        <xsl:value-of select="name"/>
-        <xsl:text> </xsl:text>
-        <a>
-            <xsl:attribute name="href">
-                <xsl:value-of select="/page/links/link[@rel='logout']/@href" />
-            </xsl:attribute>
-            <xsl:text>logout</xsl:text>
-        </a>
+        <p>
+            <img style="width: 25px; height: 25px;">
+                <xsl:attribute name="src">
+                    <xsl:value-of select="photo" />
+                </xsl:attribute>
+                <xsl:attribute name="alt">
+                    <xsl:value-of select="name" />
+                </xsl:attribute>
+            </img>
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="name"/>
+            <xsl:text> </xsl:text>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='logout']/@href" />
+                </xsl:attribute>
+                <xsl:text>logout</xsl:text>
+            </a>
+        </p>
     </xsl:template>
 
     <xsl:template match="version">
