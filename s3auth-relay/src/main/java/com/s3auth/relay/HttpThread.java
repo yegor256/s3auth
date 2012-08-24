@@ -97,6 +97,10 @@ final class HttpThread implements Runnable {
             final InputStream input = host.fetch(request.requestUri());
             final int bytes = new HttpResponse()
                 .withStatus(HttpURLConnection.HTTP_OK)
+                .withHeader(
+                    "s3auth-time",
+                    Long.toString(System.currentTimeMillis() - start)
+                )
                 .withBody(input)
                 .send(socket);
             Logger.debug(
