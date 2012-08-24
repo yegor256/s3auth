@@ -219,11 +219,13 @@
                                     <arg value="http://relay.s3auth.com/shutdown/${exit.key}"/>
                                 </exec>
                                 <retry retrycount="10">
-                                    <sleep seconds="15"/>
-                                    <exec executable="curl" failonerror="true">
-                                        <arg value="--silent"/>
-                                        <arg value="http://relay.s3auth.com/version"/>
-                                    </exec>
+                                    <sequential>
+                                        <sleep seconds="15"/>
+                                        <exec executable="curl" failonerror="true">
+                                            <arg value="--silent"/>
+                                            <arg value="http://relay.s3auth.com/version"/>
+                                        </exec>
+                                    </sequential>
                                 </retry>
                                 <exec executable="curl" outputproperty="rev.deployed" failonerror="true">
                                     <arg value="--silent"/>
