@@ -119,7 +119,6 @@
 
     <xsl:template match="version">
         <div id="version">
-            <xsl:text> r</xsl:text>
             <xsl:value-of select="revision"/>
             <xsl:text> </xsl:text>
             <xsl:call-template name="millis">
