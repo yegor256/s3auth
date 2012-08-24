@@ -117,6 +117,7 @@ input {
         border: 0;
         width: 60px;
         height: 22px;
+        margin-top: 0.5em;
     }
 
 label {
