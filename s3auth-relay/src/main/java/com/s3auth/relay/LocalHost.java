@@ -52,7 +52,9 @@ final class LocalHost implements Host {
     @Override
     public InputStream fetch(final URI uri) throws IOException {
         String output;
-        if ("/version".equals(uri.toString())) {
+        if ("/".equals(uri.toString())) {
+            output = "see www.s3auth.com";
+        } else if ("/version".equals(uri.toString())) {
             output = Manifests.read("S3Auth-Revision");
         } else {
             throw new HttpException(
