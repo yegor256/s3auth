@@ -57,11 +57,15 @@ public final class DefaultHostTest {
                 .mock()
         );
         MatcherAssert.assertThat(
-            IOUtils.toString(host.fetch(URI.create("index.html"))),
+            IOUtils.toString(host.fetch(URI.create("/index.html"))),
             Matchers.equalTo("<html>hello</html>")
         );
         MatcherAssert.assertThat(
-            IOUtils.toString(host.fetch(URI.create("foo/index.html"))),
+            IOUtils.toString(host.fetch(URI.create("/"))),
+            Matchers.startsWith("<html>hello")
+        );
+        MatcherAssert.assertThat(
+            IOUtils.toString(host.fetch(URI.create("/foo/index.html"))),
             Matchers.equalTo("<html>bye</html>")
         );
     }

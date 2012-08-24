@@ -95,7 +95,10 @@ public final class DefaultHost implements Host {
         S3Object object;
         try {
             object = this.client.getObject(
-                new GetObjectRequest(this.domain.name(), uri.toString())
+                new GetObjectRequest(
+                    this.domain.name(),
+                    this.object(uri)
+                )
             );
         } catch (com.amazonaws.AmazonClientException ex) {
             throw new IOException(ex);
@@ -124,6 +127,22 @@ public final class DefaultHost implements Host {
         }
         Logger.debug(this, "#authorized('%s', '%s'): %B", user, password, auth);
         return auth;
+    }
+
+    /**
+     * Convert URI to S3 object name.
+     * @param uri The URI
+     * @return Object name
+     */
+    private String object(final URI uri) {
+        String name = uri.toString();
+        if (name.isEmpty() || "/".equals(name)) {
+            name = "/index.html";
+        }
+        if (name.charAt(0) == '/') {
+            name = name.substring(1);
+        }
+        return name;
     }
 
 }
