@@ -94,11 +94,18 @@
 
     <xsl:template match="domain">
         <li>
-            <span class="tt"><xsl:value-of select="name"/></span>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:text>http://</xsl:text>
+                    <xsl:value-of select="name"/>
+                    <xsl:text>/</xsl:text>
+                </xsl:attribute>
+                <xsl:value-of select="name"/>
+            </a>
             <xsl:text> (key: </xsl:text>
-            <xsl:value-of select="key"/>
+            <span class="tt"><xsl:value-of select="key"/></span>
             <xsl:text>, secret: </xsl:text>
-            <xsl:value-of select="secret"/>
+            <span class="tt"><xsl:value-of select="secret"/></span>
             <xsl:text>) </xsl:text>
             <a>
                 <xsl:attribute name="href">
