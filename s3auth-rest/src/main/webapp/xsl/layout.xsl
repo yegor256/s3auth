@@ -74,17 +74,21 @@
                             <xsl:attribute name="href">
                                 <xsl:value-of select="/page/links/link[@rel='home']/@href" />
                             </xsl:attribute>
-                            <xsl:text>s3auth.com</xsl:text>
+                            <img src="http://img.s3auth.com/logo.png" alt="s3auth.com" />
                         </a>
                     </p>
                     <xsl:apply-templates select="user" />
                     <xsl:call-template name="content" />
-                    <p>
-                        <xsl:text>It's an open source project, hosted at </xsl:text>
+                    <p style="border-top: 1px solid #ccc; margin-top: 2em; padding-top: 1em;">
+                        <xsl:text>s3auth.com is an open source project, hosted at </xsl:text>
                         <a href="https://github.com/yegor256/s3auth">
                             <xsl:text>github</xsl:text>
                         </a>
-                        <xsl:text>.</xsl:text>
+                        <xsl:text>. We are not affiliated anyhow with </xsl:text>
+                        <a href="http://aws.amazon.com/">
+                            <xsl:text>Amazon Web Services</xsl:text>
+                        </a>
+                        <xsl:text>, although we are providing services for their clients.</xsl:text>
                     </p>
                 </div>
             </body>

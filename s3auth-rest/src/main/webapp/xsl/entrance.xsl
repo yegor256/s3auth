@@ -45,7 +45,7 @@
 
     <xsl:template name="content">
         <h1>
-            <xsl:text>s3auth.com</xsl:text>
+            <xsl:text>Amazon S3 HTTP Basic Auth Gateway</xsl:text>
         </h1>
         <p>
             <xsl:text>

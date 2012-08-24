@@ -63,7 +63,7 @@
             </xsl:otherwise>
         </xsl:choose>
         <p>
-            <xsl:text>Register new domain using the form:</xsl:text>
+            <xsl:text>Register new domain using the form (all fields are mandatory):</xsl:text>
         </p>
         <form method="post">
             <xsl:attribute name="action">
@@ -77,7 +77,7 @@
                 <label><xsl:text>AWS secret key:</xsl:text></label>
                 <input name="secret" size="40" maxlength="40" />
                 <label><xsl:text>&#160;</xsl:text></label>
-                <input type="submit" value="add" />
+                <input class="submit" type="submit" value="" />
             </p>
         </form>
         <p>

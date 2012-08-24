@@ -33,6 +33,7 @@ import com.rexsl.page.JaxbGroup;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.s3auth.hosts.Domain;
+import java.net.HttpURLConnection;
 import java.util.Collection;
 import java.util.LinkedList;
 import javax.ws.rs.FormParam;
@@ -40,6 +41,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 /**
@@ -84,6 +86,13 @@ public final class IndexRs extends BaseRs {
     public Response add(@FormParam("host") final String host,
         @FormParam("key") final String key,
         @FormParam("secret") final String secret) {
+        if (host == null || key == null || secret == null) {
+            throw new WebApplicationException(
+                Response.status(HttpURLConnection.HTTP_SEE_OTHER)
+                    .location(this.uriInfo().getBaseUri())
+                    .build()
+            );
+        }
         this.hosts().domains(this.user()).add(
             new Domain() {
                 @Override
@@ -113,6 +122,13 @@ public final class IndexRs extends BaseRs {
     @GET
     @Path("/remove")
     public Response remove(@QueryParam("host") final String host) {
+        if (host == null) {
+            throw new WebApplicationException(
+                Response.status(HttpURLConnection.HTTP_SEE_OTHER)
+                    .location(this.uriInfo().getBaseUri())
+                    .build()
+            );
+        }
         this.hosts().domains(this.user()).remove(
             new Domain() {
                 @Override
