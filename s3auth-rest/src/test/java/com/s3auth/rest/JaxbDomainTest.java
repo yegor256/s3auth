@@ -70,7 +70,8 @@ public final class JaxbDomainTest {
             XhtmlMatchers.hasXPaths(
                 "/domain[name='localhost']",
                 "/domain[key='ABC']",
-                "/domain[secret='foo']"
+                "/domain[secret='foo']",
+                "/domain/links/link[@rel='remove']"
             )
         );
     }
