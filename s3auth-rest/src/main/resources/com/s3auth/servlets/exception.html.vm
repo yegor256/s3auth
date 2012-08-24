@@ -7,7 +7,7 @@
         <link rel="icon" type="image/gif"
             href="http://img.s3auth.com/favicon.ico?${build.number}"/>
     </head>
-    <body style="padding: 1em;">
+    <body>
         <p>
             <a href="http://www.s3auth.com/">
                 <img src="http://img.s3auth.com/logo.png?${build.number}"/>
@@ -15,7 +15,7 @@
         </p>
         <p>
             <b style="color: red;">
-                Internal application error (r.${build.number}).
+                Internal application error.
             </b>
         </p>
         <p>
@@ -23,6 +23,7 @@
             problem and will work with it as soon as possible. In the
             mean time click "Back" button in your browser and try
             to do something else.
+            Release <span class="tt">${build.number}</span>.
         </p>
         <pre style="display:none;">${text}</pre>
     </body>

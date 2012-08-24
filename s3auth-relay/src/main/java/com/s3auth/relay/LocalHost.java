@@ -49,15 +49,27 @@ import org.apache.commons.io.IOUtils;
 final class LocalHost implements Host {
 
     /**
+     * Shutdown URL.
+     */
+    private static final String SHUTDOWN = String.format(
+        "/shutdown/%s",
+        Manifests.read("S3Auth-ExitKey")
+    );
+
+    /**
      * {@inheritDoc}
      */
     @Override
+    @SuppressWarnings("PMD.DoNotCallSystemExit")
     public InputStream fetch(final URI uri) throws IOException {
         String output;
         if ("/".equals(uri.toString())) {
             output = "see www.s3auth.com";
         } else if ("/version".equals(uri.toString())) {
             output = Manifests.read("S3Auth-Revision");
+        } else if (uri.toString().equals(LocalHost.SHUTDOWN)) {
+            output = "";
+            System.exit(0);
         } else {
             throw new HttpException(
                 HttpURLConnection.HTTP_NOT_FOUND,

@@ -113,6 +113,7 @@ input {
 
     /* any submit button */
     input.submit {
+        display: block;
         cursor: pointer;
         background-image: url('http://img.s3auth.com/submit.png');
         border: 0;

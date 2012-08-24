@@ -87,6 +87,12 @@ final class HttpRequest {
         final BufferedReader reader =
             new BufferedReader(new InputStreamReader(socket.getInputStream()));
         final String top = reader.readLine();
+        if (top == null) {
+            throw new HttpException(
+                HttpURLConnection.HTTP_BAD_REQUEST,
+                "empty request"
+            );
+        }
         final Matcher matcher = HttpRequest.TOP.matcher(top);
         if (!matcher.matches()) {
             throw new HttpException(

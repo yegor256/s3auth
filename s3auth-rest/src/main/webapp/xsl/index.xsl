@@ -76,7 +76,6 @@
                 <input name="key" size="30" maxlength="20" />
                 <label><xsl:text>AWS secret key:</xsl:text></label>
                 <input name="secret" size="40" maxlength="40" />
-                <label><xsl:text>&#160;</xsl:text></label>
                 <input class="submit" type="submit" value="" />
             </p>
         </form>
