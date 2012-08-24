@@ -52,7 +52,7 @@ public final class HttpRequestTest {
         final Socket socket = Mockito.mock(Socket.class);
         Mockito.doReturn(
             IOUtils.toInputStream(
-                "GET /test.html HTTP/1.1\nHost:localhost\nTest:  works\n\nbody"
+                "GET /test.html HTTP/1.1\nHost:local\nAccept:text/plain\n\nbody"
             )
         ).when(socket).getInputStream();
         final HttpRequest request = new HttpRequest(socket);
@@ -62,7 +62,7 @@ public final class HttpRequestTest {
         );
         MatcherAssert.assertThat(
             request.headers().get("Host"),
-            Matchers.hasItem("localhost")
+            Matchers.hasItem("local")
         );
     }
 
