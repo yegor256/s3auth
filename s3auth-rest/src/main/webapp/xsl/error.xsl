@@ -41,16 +41,15 @@
         <title>
             <xsl:text>error</xsl:text>
         </title>
-        <link rel="stylesheet" type="text/css">
-            <xsl:attribute name="href">
-                <xsl:text>/css/error.css?</xsl:text>
-                <xsl:value-of select="/page/version/revision"/>
-            </xsl:attribute>
-        </link>
     </xsl:template>
 
     <xsl:template name="content">
-        oops...
+        <h1>
+            <xsl:text>Page not found</xsl:text>
+        </h1>
+        <p>
+            <xsl:text>Invalid request or page not found.</xsl:text>
+        </p>
     </xsl:template>
 
 </xsl:stylesheet>

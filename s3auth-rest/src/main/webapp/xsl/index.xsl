@@ -39,17 +39,14 @@
 
     <xsl:template name="head">
         <title>
-            <xsl:text>index</xsl:text>
+            <xsl:text>s3auth</xsl:text>
         </title>
-        <link rel="stylesheet" type="text/css">
-            <xsl:attribute name="href">
-                <xsl:text>/css/index.css?</xsl:text>
-                <xsl:value-of select="/page/version/revision"/>
-            </xsl:attribute>
-        </link>
     </xsl:template>
 
     <xsl:template name="content">
+        <h1>
+            <xsl:text>Domains Under Management</xsl:text>
+        </h1>
         <xsl:choose>
             <xsl:when test="/page/domains/domain">
                 <p>

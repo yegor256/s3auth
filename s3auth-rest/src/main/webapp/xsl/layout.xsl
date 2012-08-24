@@ -79,6 +79,13 @@
                     </p>
                     <xsl:apply-templates select="user" />
                     <xsl:call-template name="content" />
+                    <p>
+                        <xsl:text>It's an open source project, hosted at </xsl:text>
+                        <a href="https://github.com/yegor256/s3auth">
+                            <xsl:text>github</xsl:text>
+                        </a>
+                        <xsl:text>.</xsl:text>
+                    </p>
                 </div>
             </body>
         </html>

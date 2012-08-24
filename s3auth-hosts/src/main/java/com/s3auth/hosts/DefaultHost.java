@@ -76,7 +76,7 @@ public final class DefaultHost implements Host {
      */
     @Override
     public String toString() {
-        return String.format("host:%s", this.domain);
+        return String.format("%s", this.domain);
     }
 
     /**

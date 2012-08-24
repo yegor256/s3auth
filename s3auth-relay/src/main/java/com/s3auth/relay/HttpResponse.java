@@ -42,6 +42,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import javax.ws.rs.core.HttpHeaders;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -80,6 +81,19 @@ final class HttpResponse {
      * Body.
      */
     private transient InputStream body;
+
+    /**
+     * Public ctor.
+     */
+    public HttpResponse() {
+        this.withHeader(HttpHeaders.CACHE_CONTROL, "no-cache");
+        this.withHeader(HttpHeaders.EXPIRES, "-1");
+        this.withHeader(
+            HttpHeaders.DATE,
+            String.format("%ta, %1$td %1$tb %1$tY %1$tT %1$tz", new Date())
+        );
+        this.withHeader("Server", HttpResponse.NAME);
+    }
 
     /**
      * Set HTTP status.
@@ -134,16 +148,16 @@ final class HttpResponse {
         final OutputStream stream = socket.getOutputStream();
         final Writer writer = new OutputStreamWriter(stream);
         writer.write(String.format("HTTP/1.1 %d %s\n", this.status, "empty"));
-        writer.write("Pragma: no-cache\n");
-        writer.write("Cache-Control: no-cache\n");
-        writer.write("Expires: -1\n");
-        writer.write(
-            String.format(
-                "Date: %ta, %1$td %1$tb %1$tY %1$tT %1$tz\n",
-                new Date()
-            )
-        );
-        writer.write(String.format("Server: %s\n", HttpResponse.NAME));
+        for (ConcurrentMap.Entry<String, Collection<String>> hdr
+            : this.headers.entrySet()) {
+            for (String value : hdr.getValue()) {
+                writer.write(hdr.getKey());
+                writer.write(": ");
+                writer.write(value);
+                // @checkstyle MultipleStringLiterals (1 line)
+                writer.write("\n");
+            }
+        }
         writer.write("\n");
         writer.flush();
         int bytes = 0;

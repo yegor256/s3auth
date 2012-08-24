@@ -30,6 +30,8 @@
 package com.s3auth.relay;
 
 import java.io.IOException;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 
 /**
  * Exception during HTTP request processing.
@@ -48,36 +50,48 @@ final class HttpException extends IOException {
     private static final long serialVersionUID = 0x7529FA789ED21459L;
 
     /**
-     * HTTP status.
+     * HTTP response.
      */
-    private final transient int status;
+    private final transient HttpResponse resp;
 
     /**
      * Public ctor.
-     * @param stts The status
+     * @param status The status
      * @param cause The cause of it
      */
-    public HttpException(final int stts, final String cause) {
-        super(cause);
-        this.status = stts;
+    public HttpException(final int status, final String cause) {
+        this(
+            new HttpResponse()
+                .withStatus(status)
+                .withBody(cause)
+                .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN)
+        );
     }
 
     /**
      * Public ctor.
-     * @param stts The status
+     * @param status The status
      * @param cause The cause of it
      */
-    public HttpException(final int stts, final Throwable cause) {
-        super(cause);
-        this.status = stts;
+    public HttpException(final int status, final Throwable cause) {
+        this(status, cause.getMessage());
     }
 
     /**
-     * Get HTTP status.
-     * @return The status
+     * Public ctor.
+     * @param response The response
      */
-    public int getStatus() {
-        return this.status;
+    public HttpException(final HttpResponse response) {
+        super();
+        this.resp = response;
+    }
+
+    /**
+     * Build HTTP response.
+     * @return The response
+     */
+    public HttpResponse response() {
+        return this.resp;
     }
 
 }

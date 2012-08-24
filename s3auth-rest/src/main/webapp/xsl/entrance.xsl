@@ -41,15 +41,12 @@
         <title>
             <xsl:text>login</xsl:text>
         </title>
-        <link rel="stylesheet" type="text/css">
-            <xsl:attribute name="href">
-                <xsl:text>/css/entrance.css?</xsl:text>
-                <xsl:value-of select="/page/version/revision"/>
-            </xsl:attribute>
-        </link>
     </xsl:template>
 
     <xsl:template name="content">
+        <h1>
+            <xsl:text>s3auth.com</xsl:text>
+        </h1>
         <p>
             <xsl:text>
                 s3auth.com is a Basic HTTP Auth gateway

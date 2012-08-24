@@ -58,6 +58,8 @@ public final class HostMocker {
         } catch (java.io.IOException ex) {
             throw new IllegalStateException(ex);
         }
+        Mockito.doReturn(true).when(this.host)
+            .authorized(Mockito.anyString(), Mockito.anyString());
     }
 
     /**

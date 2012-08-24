@@ -39,13 +39,12 @@ h1,
 h2,
 h3,
 textarea {
-    font-family: "Helvetica Neue", "HelveticaNeue", "HelveticaNeueRoman",
-        "HelveticaNeue-Roman", "Helvetica Neue Roman", "TeXGyreHerosRegular",
-        "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;
-    font-size: 1em;
+    font-family: verdana, arial, helvetica, clean, sans-serif;
+    font-size: 12px;
+    font-variant: normal;
     font-stretch: normal;
     font-weight: normal;
-    color: #211922;
+    color: black;
     padding: 0;
     margin: 0;
     border: 0;
@@ -54,11 +53,12 @@ textarea {
 
 /* any link */
 a {
-    text-decoration: underline;
+    color: #004B91;
 }
 
     /* any link with a mouse over it */
     a:hover {
+        color: #E47911;
         text-decoration: underline;
     }
 
@@ -66,6 +66,13 @@ a {
 p {
     margin-top: 0.5em;
     margin-bottom: 0.5em;
+}
+
+/* headers */
+h1 {
+    color: #E47911;
+    font-size: 170%;
+    margin: 1.5em 0 1em 0;
 }
 
 /* any list */
@@ -88,11 +95,6 @@ pre {
     padding-right: 0.4em;
 }
 
-/* red text marker */
-.red {
-    color: #f24a40;
-}
-
 /* any input field */
 input {
     border: 0.071em solid #bfbcc1;
@@ -105,14 +107,6 @@ input {
         background-color: #f3f3f1;
         cursor: pointer;
     }
-
-/* any text aread */
-textarea {
-    padding: 1em;
-    border: 0.071em solid #bfbcc1;
-    overflow: hidden;
-    font-family: 'Consolas', 'Menlo', 'Monaco', 'Courier New', monospace;
-}
 
 label {
     margin-top: 0.2em;

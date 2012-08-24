@@ -34,7 +34,10 @@ import com.rexsl.test.RestTester;
 import com.s3auth.hosts.HostsMocker;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
+import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -78,6 +81,14 @@ public final class FacadeTest {
         final Facade facade = new Facade(new HostsMocker().mock(), this.port);
         facade.listen();
         RestTester.start(UriBuilder.fromUri(this.uri).path("/version"))
+            .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
+            .header(
+                HttpHeaders.AUTHORIZATION,
+                String.format(
+                    "Basic %s",
+                    Base64.encodeBase64String("a:b".getBytes())
+                )
+            )
             .get("read version of the Relay")
             .assertStatus(HttpURLConnection.HTTP_OK)
             .assertBody(Matchers.equalTo(Manifests.read("S3Auth-Revision")));
