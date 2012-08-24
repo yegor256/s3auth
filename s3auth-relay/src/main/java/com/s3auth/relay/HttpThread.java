@@ -35,16 +35,11 @@ import com.s3auth.hosts.Hosts;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.Socket;
-import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.ws.rs.core.HttpHeaders;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.CharEncoding;
 
 /**
  * Single HTTP processing thread.
@@ -57,12 +52,6 @@ import org.apache.commons.lang.CharEncoding;
  */
 @SuppressWarnings("PMD.DoNotUseThreads")
 final class HttpThread implements Runnable {
-
-    /**
-     * Authorization header pattern.
-     */
-    private static final Pattern AUTH_PATTERN =
-        Pattern.compile("Basic ([a-zA-Z0-9/]+=*)");
 
     /**
      * Queue of sockets to get from.
@@ -93,7 +82,7 @@ final class HttpThread implements Runnable {
         final Socket socket = this.socket();
         try {
             final HttpRequest request = new HttpRequest(socket);
-            final Host host = this.auth(this.host(request), request);
+            final Host host = this.host(request);
             final InputStream input = host.fetch(request.requestUri());
             final int bytes = new HttpResponse()
                 .withStatus(HttpURLConnection.HTTP_OK)
@@ -174,7 +163,7 @@ final class HttpThread implements Runnable {
             host = new LocalHost();
         } else {
             try {
-                host = this.hosts.find(domain);
+                host = new SecuredHost(this.hosts.find(domain), request);
             } catch (Hosts.NotFoundException ex) {
                 throw new HttpException(
                     HttpURLConnection.HTTP_NOT_FOUND,
@@ -196,68 +185,6 @@ final class HttpThread implements Runnable {
         } catch (java.io.IOException ex) {
             throw new IllegalStateException(ex);
         }
-    }
-
-    /**
-     * Authenticate request and return host.
-     * @param host The host
-     * @param request The request
-     * @return The same host
-     * @throws HttpException If failed
-     */
-    private Host auth(final Host host, final HttpRequest request)
-        throws HttpException {
-        if (!request.headers().containsKey(HttpHeaders.AUTHORIZATION)) {
-            throw new HttpException(
-                new HttpResponse()
-                    .withStatus(HttpURLConnection.HTTP_UNAUTHORIZED)
-                    .withHeader(
-                        HttpHeaders.WWW_AUTHENTICATE,
-                        "Basic realm=\"s3auth\""
-                    )
-            );
-        }
-        final Matcher matcher = HttpThread.AUTH_PATTERN.matcher(
-            request.headers().get(HttpHeaders.AUTHORIZATION).iterator().next()
-        );
-        if (!matcher.matches()) {
-            throw new HttpException(
-                HttpURLConnection.HTTP_BAD_REQUEST,
-                String.format(
-                    "'%s' header is in wrong format",
-                    HttpHeaders.AUTHORIZATION
-                )
-            );
-        }
-        String[] parts;
-        try {
-            parts = URLDecoder.decode(
-                new String(
-                    Base64.decodeBase64(matcher.group(1)),
-                    CharEncoding.UTF_8
-                ),
-                CharEncoding.UTF_8
-            ).split(":", 2);
-        } catch (java.io.UnsupportedEncodingException ex) {
-            throw new IllegalStateException(ex);
-        }
-        if (parts.length != 2) {
-            throw new HttpException(
-                HttpURLConnection.HTTP_BAD_REQUEST,
-                "should be two parts in Basic auth header"
-            );
-        }
-        if (!host.authorized(parts[0], parts[1])) {
-            throw new HttpException(
-                new HttpResponse()
-                    .withStatus(HttpURLConnection.HTTP_UNAUTHORIZED)
-                    .withHeader(
-                        HttpHeaders.WWW_AUTHENTICATE,
-                        "Basic realm=\"try again\""
-                    )
-            );
-        }
-        return host;
     }
 
 }

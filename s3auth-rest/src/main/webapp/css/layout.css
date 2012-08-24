@@ -81,6 +81,15 @@ ol {
     margin-left: 2em;
 }
 
+    ul li {
+        padding-left: 13px;
+        list-style-type: none;
+        background-image: url('http://img.s3auth.com/bullet.png');
+        background-repeat: no-repeat;
+        background-position: 0 .5em;
+        margin-bottom: 0.5em;
+    }
+
 /* fixed font */
 .tt,
 .fixed,
