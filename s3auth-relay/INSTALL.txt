@@ -44,7 +44,7 @@ Create run.sh in /home/ubuntu:
     #!/bin/sh
     while true
     do
-    	mvn test
+    	mvn -U test
     done
 
 Make sure it's executable:
@@ -53,6 +53,6 @@ Make sure it's executable:
 
 Add this to crontab:
 
-    @reboot sudo nohup ~/run.sh &
+    @reboot sudo ~/run.sh >> /home/ubuntu/s3auth.log 2>&1 &
 
 Logout and reboot the server

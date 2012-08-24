@@ -214,14 +214,14 @@
                         </goals>
                         <configuration>
                             <target>
-                                <exec executable="sh" outputproperty="rev.deployed" failonerror="true">
-                                    <arg value="-c"/>
-                                    <arg value="curl -s http://relay.s3auth.com/shutdown/${exit.key}"/>
+                                <exec executable="curl" failonerror="false">
+                                    <arg value="--silent"/>
+                                    <arg value="http://relay.s3auth.com/shutdown/${exit.key}"/>
                                 </exec>
                                 <retry retrycount="5">
-                                    <exec executable="sh" outputproperty="rev.deployed" failonerror="true">
-                                        <arg value="-c"/>
-                                        <arg value="curl -s http://relay.s3auth.com/version"/>
+                                    <exec executable="curl" outputproperty="rev.deployed" failonerror="true">
+                                        <arg value="--silent"/>
+                                        <arg value="http://relay.s3auth.com/version"/>
                                     </exec>
                                 </retry>
                                 <fail message="Revision '${rev.deployed}' deployed instead of '${build.number}'">

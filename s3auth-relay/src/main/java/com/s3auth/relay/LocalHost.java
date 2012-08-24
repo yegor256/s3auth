@@ -29,6 +29,7 @@
  */
 package com.s3auth.relay;
 
+import com.jcabi.log.Logger;
 import com.rexsl.core.Manifests;
 import com.s3auth.hosts.Host;
 import java.io.IOException;
@@ -69,6 +70,7 @@ final class LocalHost implements Host {
             output = Manifests.read("S3Auth-Revision");
         } else if (uri.toString().equals(LocalHost.SHUTDOWN)) {
             output = "";
+            Logger.warn(this, "fetch(%s): shutting down..", uri);
             System.exit(0);
         } else {
             throw new HttpException(
