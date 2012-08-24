@@ -29,44 +29,53 @@
  */
 package com.s3auth.relay;
 
-import com.jcabi.log.Logger;
-import com.s3auth.hosts.DynamoHosts;
-import java.util.concurrent.TimeUnit;
+import java.io.IOException;
 
 /**
- * Main entrance to the system.
+ * Exception during HTTP request processing.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
  */
-public final class Main {
+final class HttpException extends IOException {
 
     /**
-     * It's a utility class.
+     * Serialization marker.
      */
-    private Main() {
-        // intentionally empty
+    private static final long serialVersionUID = 0x7529FA789ED21459L;
+
+    /**
+     * HTTP status.
+     */
+    private final transient int status;
+
+    /**
+     * Public ctor.
+     * @param stts The status
+     * @param cause The cause of it
+     */
+    public HttpException(final int stts, final String cause) {
+        super(cause);
+        this.status = stts;
     }
 
     /**
-     * Entrance.
-     * @param args Optional arguments
-     * @throws Exception If something is wrong
+     * Public ctor.
+     * @param stts The status
+     * @param cause The cause of it
      */
-    public static void main(final String[] args) throws Exception {
-        if (args.length != 1) {
-            throw new IllegalArgumentException(
-                "one argument with port number required"
-            );
-        }
-        final int port = Integer.valueOf(args[0]);
-        final Facade facade = new Facade(new DynamoHosts(), port);
-        facade.listen();
-        Logger.info(Main.class, "started at http://localhost:%d...", port);
-        while (true) {
-            TimeUnit.MINUTES.sleep(1);
-        }
+    public HttpException(final int stts, final Throwable cause) {
+        super(cause);
+        this.status = stts;
+    }
+
+    /**
+     * Get HTTP status.
+     * @return The status
+     */
+    public int getStatus() {
+        return this.status;
     }
 
 }

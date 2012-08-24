@@ -37,6 +37,7 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 
 /**
  * Default implementation of host.
@@ -74,6 +75,14 @@ public final class DefaultHost implements Host {
      * {@inheritDoc}
      */
     @Override
+    public String toString() {
+        return String.format("host:%s", this.domain);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void close() throws IOException {
         // nothing to do
     }
@@ -82,15 +91,15 @@ public final class DefaultHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    public InputStream fetch(final String name) throws IOException {
+    public InputStream fetch(final URI uri) throws IOException {
         final S3Object object = this.client.getObject(
-            new GetObjectRequest(this.domain.name(), name)
+            new GetObjectRequest(this.domain.name(), uri.toString())
         );
         final InputStream stream = object.getObjectContent();
         Logger.debug(
             this,
             "#fetch('%s'): found at %s",
-            name,
+            uri,
             this.domain.name()
         );
         return stream;

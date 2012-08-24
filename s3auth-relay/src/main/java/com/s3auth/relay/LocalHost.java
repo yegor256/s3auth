@@ -29,44 +29,54 @@
  */
 package com.s3auth.relay;
 
-import com.jcabi.log.Logger;
-import com.s3auth.hosts.DynamoHosts;
-import java.util.concurrent.TimeUnit;
+import com.rexsl.core.Manifests;
+import com.s3auth.hosts.Host;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import org.apache.commons.io.IOUtils;
 
 /**
- * Main entrance to the system.
+ * Local host with data.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
  */
-public final class Main {
+final class LocalHost implements Host {
 
     /**
-     * It's a utility class.
+     * {@inheritDoc}
      */
-    private Main() {
-        // intentionally empty
+    @Override
+    public InputStream fetch(final URI uri) throws IOException {
+        String output;
+        if ("/version".equals(uri.toString())) {
+            output = Manifests.read("S3Auth-Revision");
+        } else {
+            throw new HttpException(
+                HttpURLConnection.HTTP_NOT_FOUND,
+                String.format("URI '%s' not found here", uri)
+            );
+        }
+        return IOUtils.toInputStream(output);
     }
 
     /**
-     * Entrance.
-     * @param args Optional arguments
-     * @throws Exception If something is wrong
+     * {@inheritDoc}
      */
-    public static void main(final String[] args) throws Exception {
-        if (args.length != 1) {
-            throw new IllegalArgumentException(
-                "one argument with port number required"
-            );
-        }
-        final int port = Integer.valueOf(args[0]);
-        final Facade facade = new Facade(new DynamoHosts(), port);
-        facade.listen();
-        Logger.info(Main.class, "started at http://localhost:%d...", port);
-        while (true) {
-            TimeUnit.MINUTES.sleep(1);
-        }
+    @Override
+    public boolean authorized(final String user, final String password) {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() {
+        // nothing to do
     }
 
 }

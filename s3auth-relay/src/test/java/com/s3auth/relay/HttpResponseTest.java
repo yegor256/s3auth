@@ -29,44 +29,46 @@
  */
 package com.s3auth.relay;
 
-import com.jcabi.log.Logger;
-import com.s3auth.hosts.DynamoHosts;
-import java.util.concurrent.TimeUnit;
+import java.io.ByteArrayOutputStream;
+import java.net.HttpURLConnection;
+import java.net.Socket;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import org.apache.commons.io.IOUtils;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Main entrance to the system.
- *
+ * Test case for {@link HttpResponse}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 0.0.1
  */
-public final class Main {
+public final class HttpResponseTest {
 
     /**
-     * It's a utility class.
+     * HttpResponse can send correct HTTP response.
+     * @throws Exception If there is some problem inside
      */
-    private Main() {
-        // intentionally empty
-    }
-
-    /**
-     * Entrance.
-     * @param args Optional arguments
-     * @throws Exception If something is wrong
-     */
-    public static void main(final String[] args) throws Exception {
-        if (args.length != 1) {
-            throw new IllegalArgumentException(
-                "one argument with port number required"
-            );
-        }
-        final int port = Integer.valueOf(args[0]);
-        final Facade facade = new Facade(new DynamoHosts(), port);
-        facade.listen();
-        Logger.info(Main.class, "started at http://localhost:%d...", port);
-        while (true) {
-            TimeUnit.MINUTES.sleep(1);
-        }
+    @Test
+    public void sendsDataToSocket() throws Exception {
+        final Socket socket = Mockito.mock(Socket.class);
+        final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        Mockito.doReturn(stream).when(socket).getOutputStream();
+        final int bytes = new HttpResponse()
+            .withStatus(HttpURLConnection.HTTP_NOT_FOUND)
+            .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN)
+            .withBody(IOUtils.toInputStream("hi!"))
+            .send(socket);
+        MatcherAssert.assertThat(bytes, Matchers.greaterThan(0));
+        MatcherAssert.assertThat(
+            new String(stream.toByteArray()),
+            Matchers.allOf(
+                Matchers.startsWith("HTTP/1.1 404"),
+                Matchers.containsString("\n\nhi!")
+            )
+        );
     }
 
 }

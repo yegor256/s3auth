@@ -30,6 +30,7 @@
 package com.s3auth.hosts;
 
 import com.rexsl.core.Manifests;
+import java.net.URI;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -56,11 +57,11 @@ public final class DefaultHostTest {
                 .mock()
         );
         MatcherAssert.assertThat(
-            IOUtils.toString(host.fetch("index.html")),
+            IOUtils.toString(host.fetch(URI.create("index.html"))),
             Matchers.equalTo("<html>hello</html>")
         );
         MatcherAssert.assertThat(
-            IOUtils.toString(host.fetch("foo/index.html")),
+            IOUtils.toString(host.fetch(URI.create("foo/index.html"))),
             Matchers.equalTo("<html>bye</html>")
         );
     }

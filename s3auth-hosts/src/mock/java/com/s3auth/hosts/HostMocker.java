@@ -27,46 +27,45 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.s3auth.relay;
+package com.s3auth.hosts;
 
-import com.jcabi.log.Logger;
-import com.s3auth.hosts.DynamoHosts;
-import java.util.concurrent.TimeUnit;
+import java.net.URI;
+import org.apache.commons.io.IOUtils;
+import org.mockito.Mockito;
 
 /**
- * Main entrance to the system.
+ * Mocker of {@link Host}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
  */
-public final class Main {
+public final class HostMocker {
 
     /**
-     * It's a utility class.
+     * The mock.
      */
-    private Main() {
-        // intentionally empty
+    private final transient Host host = Mockito.mock(Host.class);
+
+    /**
+     * Public ctor.
+     */
+    public HostMocker() {
+        try {
+            Mockito.doReturn(
+                IOUtils.toInputStream("hello")
+            ).when(this.host).fetch(Mockito.any(URI.class));
+        } catch (java.io.IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     /**
-     * Entrance.
-     * @param args Optional arguments
-     * @throws Exception If something is wrong
+     * Mock it.
+     * @return The host
      */
-    public static void main(final String[] args) throws Exception {
-        if (args.length != 1) {
-            throw new IllegalArgumentException(
-                "one argument with port number required"
-            );
-        }
-        final int port = Integer.valueOf(args[0]);
-        final Facade facade = new Facade(new DynamoHosts(), port);
-        facade.listen();
-        Logger.info(Main.class, "started at http://localhost:%d...", port);
-        while (true) {
-            TimeUnit.MINUTES.sleep(1);
-        }
+    public Host mock() {
+        return this.host;
     }
 
 }

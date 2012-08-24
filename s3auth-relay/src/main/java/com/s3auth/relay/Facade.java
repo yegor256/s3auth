@@ -30,9 +30,19 @@
 package com.s3auth.relay;
 
 import com.jcabi.log.Logger;
+import com.jcabi.log.VerboseRunnable;
+import com.jcabi.log.VerboseThreads;
 import com.s3auth.hosts.Hosts;
 import java.io.Closeable;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.TimeUnit;
 
 /**
  * HTTP facade (port listener).
@@ -41,27 +51,101 @@ import java.io.IOException;
  * @version $Id$
  * @since 0.0.1
  */
-public final class Facade implements Closeable {
+@SuppressWarnings("PMD.DoNotUseThreads")
+final class Facade implements Closeable {
 
     /**
-     * Hosts to work with.
+     * How many threads to use.
      */
-    private final transient Hosts hosts;
+    private static final int THREADS =
+        Runtime.getRuntime().availableProcessors() * 8;
+
+    /**
+     * Executor service, with socket openers.
+     */
+    private final transient ScheduledExecutorService frontend =
+        Executors.newSingleThreadScheduledExecutor(new VerboseThreads("front"));
+
+    /**
+     * Executor service, with consuming threads.
+     */
+    private final transient ScheduledExecutorService backend =
+        Executors.newScheduledThreadPool(
+            Facade.THREADS,
+            new VerboseThreads("back")
+        );
+
+    /**
+     * Blocking queue of ready-to-be-processed sockets.
+     */
+    private final transient BlockingQueue<Socket> sockets =
+        new SynchronousQueue<Socket>();
+
+    /**
+     * Server socket.
+     */
+    private final transient ServerSocket server;
 
     /**
      * Public ctor.
-     * @param hsts Hosts
+     * @param hosts Hosts
+     * @param port Port number
+     * @throws IOException If can't initialize
      */
-    public Facade(final Hosts hsts) {
-        this.hosts = hsts;
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    public Facade(final Hosts hosts, final int port)
+        throws IOException {
+        this.server = new ServerSocket(port);
+        for (int thread = 0; thread < Facade.THREADS; ++thread) {
+            this.backend.scheduleWithFixedDelay(
+                new VerboseRunnable(new HttpThread(this.sockets, hosts)),
+                0, 1, TimeUnit.NANOSECONDS
+            );
+        }
+        Logger.debug(this, "#Facade(.., %d): instantiated", port);
     }
 
     /**
-     * Start listening to this port.
-     * @param port Port number
+     * Start listening to the port.
      */
-    public void listen(final int port) {
-        Logger.debug(this, "#listen(%d): started with %s", port, this.hosts);
+    public void listen() {
+        this.frontend.scheduleWithFixedDelay(
+            new VerboseRunnable(
+                // @checkstyle AnonInnerLength (50 lines)
+                new Runnable() {
+                    public void run() {
+                        Socket socket;
+                        try {
+                            socket = Facade.this.server.accept();
+                        } catch (java.io.IOException ex) {
+                            throw new IllegalStateException(ex);
+                        }
+                        try {
+                            final boolean consumed = Facade.this.sockets.offer(
+                                socket, 1, TimeUnit.MILLISECONDS
+                            );
+                            if (!consumed) {
+                                new HttpResponse().withStatus(
+                                    HttpURLConnection.HTTP_GATEWAY_TIMEOUT
+                                ).send(socket);
+                                socket.close();
+                            }
+                        } catch (java.io.IOException ex) {
+                            throw new IllegalStateException(ex);
+                        } catch (InterruptedException ex) {
+                            Thread.currentThread().interrupt();
+                            throw new IllegalStateException(ex);
+                        }
+                        Logger.debug(
+                            this,
+                            "#run(): request from %s",
+                            socket.getRemoteSocketAddress()
+                        );
+                    }
+                }
+            ),
+            0, 1, TimeUnit.NANOSECONDS
+        );
     }
 
     /**
@@ -69,7 +153,33 @@ public final class Facade implements Closeable {
      */
     @Override
     public void close() throws IOException {
+        this.shutdown(this.frontend);
+        this.shutdown(this.backend);
         Logger.debug(this, "#close(): done");
+    }
+
+    /**
+     * Shutdown a service.
+     * @param service The service to shut down
+     */
+    private void shutdown(final ScheduledExecutorService service) {
+        service.shutdown();
+        try {
+            if (service.awaitTermination(1, TimeUnit.SECONDS)) {
+                Logger.debug(this, "#shutdown(): succeeded");
+            } else {
+                Logger.warn(this, "#shutdown(): failed");
+                service.shutdownNow();
+                if (service.awaitTermination(1, TimeUnit.SECONDS)) {
+                    Logger.info(this, "#shutdown(): shutdownNow() succeeded");
+                } else {
+                    Logger.error(this, "#shutdown(): failed to stop threads");
+                }
+            }
+        } catch (InterruptedException ex) {
+            service.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
     }
 
 }
