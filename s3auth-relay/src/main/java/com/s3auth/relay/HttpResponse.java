@@ -134,6 +134,9 @@ final class HttpResponse {
         final OutputStream stream = socket.getOutputStream();
         final Writer writer = new OutputStreamWriter(stream);
         writer.write(String.format("HTTP/1.1 %d %s\n", this.status, "empty"));
+        writer.write("Pragma: no-cache\n");
+        writer.write("Cache-Control: no-cache\n");
+        writer.write("Expires: -1\n");
         writer.write(
             String.format(
                 "Date: %ta, %1$td %1$tb %1$tY %1$tT %1$tz\n",
