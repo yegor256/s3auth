@@ -83,6 +83,13 @@
         </dependency>
         <dependency>
             <groupId>com.rexsl</groupId>
+            <artifactId>rexsl-page</artifactId>
+            <version since="23 Aug 2012">0.3.8</version>
+            <classifier>mock</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.rexsl</groupId>
             <artifactId>rexsl-test</artifactId>
             <version since="23 Aug 2012">0.3.8</version>
         </dependency>

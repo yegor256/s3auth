@@ -33,7 +33,7 @@ import com.rexsl.page.Link;
 import com.s3auth.hosts.Domain;
 import java.util.Collection;
 import java.util.LinkedList;
-import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -57,6 +57,11 @@ public final class JaxbDomain {
     private final transient Domain domain;
 
     /**
+     * The URI info.
+     */
+    private final transient UriInfo info;
+
+    /**
      * Public ctor for JAXB.
      */
     public JaxbDomain() {
@@ -66,9 +71,11 @@ public final class JaxbDomain {
     /**
      * Private ctor.
      * @param dmn The domain
+     * @param inf URI info of the home
      */
-    public JaxbDomain(final Domain dmn) {
+    public JaxbDomain(final Domain dmn, final UriInfo inf) {
         this.domain = dmn;
+        this.info = inf;
     }
 
     /**
@@ -109,7 +116,10 @@ public final class JaxbDomain {
         links.add(
             new Link(
                 "remove",
-                UriBuilder.fromPath("/remove/{name}").build(this.getName())
+                this.info.getBaseUriBuilder().clone()
+                    .path("/remove")
+                    .queryParam("host", "{name}")
+                    .build(this.getName())
             )
         );
         return links;

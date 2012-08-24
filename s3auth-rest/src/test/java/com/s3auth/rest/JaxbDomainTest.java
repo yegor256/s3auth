@@ -29,6 +29,7 @@
  */
 package com.s3auth.rest;
 
+import com.rexsl.page.UriInfoMocker;
 import com.rexsl.test.JaxbConverter;
 import com.rexsl.test.XhtmlMatchers;
 import com.s3auth.hosts.Domain;
@@ -63,7 +64,8 @@ public final class JaxbDomainTest {
                 public String secret() {
                     return "foo";
                 }
-            }
+            },
+            new UriInfoMocker().mock()
         );
         MatcherAssert.assertThat(
             JaxbConverter.the(obj),

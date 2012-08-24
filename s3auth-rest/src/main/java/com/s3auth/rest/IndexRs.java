@@ -119,11 +119,11 @@ public final class IndexRs extends BaseRs {
                 }
                 @Override
                 public String key() {
-                    throw new UnsupportedOperationException();
+                    return "";
                 }
                 @Override
                 public String secret() {
-                    throw new UnsupportedOperationException();
+                    return "";
                 }
             }
         );
@@ -140,7 +140,7 @@ public final class IndexRs extends BaseRs {
     private Collection<JaxbDomain> domains() {
         final Collection<JaxbDomain> domains = new LinkedList<JaxbDomain>();
         for (Domain domain : this.hosts().domains(this.user())) {
-            domains.add(new JaxbDomain(domain));
+            domains.add(new JaxbDomain(domain, this.uriInfo()));
         }
         return domains;
     }
