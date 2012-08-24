@@ -64,7 +64,7 @@ final class HttpRequest {
      * Header line pattern.
      */
     private static final Pattern HEADER =
-        Pattern.compile("([a-zA-Z][a-zA-Z\\-]*): (.*)");
+        Pattern.compile("([a-zA-Z][a-zA-Z\\-]*): *(.*)");
 
     /**
      * URI requested.
