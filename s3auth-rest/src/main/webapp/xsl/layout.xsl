@@ -108,6 +108,13 @@
             </xsl:attribute>
         </img>
         <xsl:value-of select="name"/>
+        <xsl:text> </xsl:text>
+        <a>
+            <xsl:attribute name="href">
+                <xsl:value-of select="/page/links/link[@rel='logout']/@href" />
+            </xsl:attribute>
+            <xsl:text>logout</xsl:text>
+        </a>
     </xsl:template>
 
     <xsl:template match="version">
