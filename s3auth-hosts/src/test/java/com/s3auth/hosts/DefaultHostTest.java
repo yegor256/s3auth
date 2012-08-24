@@ -66,4 +66,20 @@ public final class DefaultHostTest {
         );
     }
 
+    /**
+     * DefaultHost can throw IOException for absent object.
+     * @throws Exception If there is some problem inside
+     */
+    @Test(expected = java.io.IOException.class)
+    public void throwsWhenAbsentResource() throws Exception {
+        final Host host = new DefaultHost(
+            new DomainMocker()
+                .withName("invalid-bucket.s3auth.com")
+                .withKey("foo")
+                .withSecret("invalid-data")
+                .mock()
+        );
+        host.fetch(URI.create("foo.html"));
+    }
+
 }

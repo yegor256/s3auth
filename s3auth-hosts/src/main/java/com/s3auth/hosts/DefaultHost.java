@@ -92,9 +92,14 @@ public final class DefaultHost implements Host {
      */
     @Override
     public InputStream fetch(final URI uri) throws IOException {
-        final S3Object object = this.client.getObject(
-            new GetObjectRequest(this.domain.name(), uri.toString())
-        );
+        S3Object object;
+        try {
+            object = this.client.getObject(
+                new GetObjectRequest(this.domain.name(), uri.toString())
+            );
+        } catch (com.amazonaws.AmazonClientException ex) {
+            throw new IOException(ex);
+        }
         final InputStream stream = object.getObjectContent();
         Logger.debug(
             this,
