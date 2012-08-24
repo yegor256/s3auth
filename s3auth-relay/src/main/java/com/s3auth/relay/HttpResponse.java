@@ -60,7 +60,7 @@ final class HttpResponse {
      * Name of the server we show in HTTP headers.
      */
     private static final String NAME = String.format(
-        "s3auth.com, %s/%s built on %s",
+        "relay.s3auth.com, %s/%s built on %s",
         Manifests.read("S3Auth-Version"),
         Manifests.read("S3Auth-Revision"),
         Manifests.read("S3Auth-Date")
