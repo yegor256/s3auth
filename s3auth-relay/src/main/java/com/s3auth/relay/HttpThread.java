@@ -100,8 +100,10 @@ final class HttpThread implements Runnable {
                 System.currentTimeMillis() - start
             );
         } catch (HttpException ex) {
+            Logger.warn(this, "#run(): %[exception]s", ex);
             this.failure(ex, socket);
         } catch (java.io.IOException ex) {
+            Logger.error(this, "#run(): IO problem: %[exception]s", ex);
             this.failure(
                 new HttpException(
                     HttpURLConnection.HTTP_INTERNAL_ERROR,
