@@ -104,19 +104,16 @@
     </scm>
 
     <distributionManagement>
-        <downloadUrl>https://oss.sonatype.org/content/groups/public</downloadUrl>
-        <repository>
-            <uniqueVersion>false</uniqueVersion>
-            <id>sonatype.nexus</id>
-            <name>Sonatype OSS Repository (for releases)</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-        </repository>
         <snapshotRepository>
+            <id>s3auth.s3</id>
             <uniqueVersion>false</uniqueVersion>
-            <id>sonatype.nexus</id>
-            <name>Sonatype OSS Repository (for snapshots)</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <url>s3://repo.s3auth.com/snapshot</url>
         </snapshotRepository>
+        <repository>
+            <id>s3auth.s3</id>
+            <uniqueVersion>false</uniqueVersion>
+            <url>s3://repo.s3auth.com/release</url>
+        </repository>
         <site>
             <id>s3auth.s3</id>
             <name>s3auth.com Project Site</name>
