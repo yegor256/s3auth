@@ -39,12 +39,25 @@ Install Java & supplementary tools
 
 Copy src/main/production/pom.xml to /home/ubuntu/pom.xml
 
+Create /home/ubuntu/settings.xml:
+
+    <?xml version='1.0'?>
+    <settings>
+     <servers>
+      <server>
+       <id>s3auth.s3</id>
+       <username>..aws-key..</username>
+       <password>..aws-secret..</password>
+      </server>
+     </servers>
+    </settings>
+
 Create run.sh in /home/ubuntu:
 
     #!/bin/sh
     while true
     do
-    	mvn -U test
+    	mvn -U test --settings ./settings.xml
     done
 
 Make sure it's executable:

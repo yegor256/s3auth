@@ -41,8 +41,8 @@
 
     <repositories>
         <repository>
-            <id>sonatype.nexus</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <id>s3auth.s3</id>
+            <url>s3://repo.s3auth.com/snapshot</url>
         </repository>
     </repositories>
 

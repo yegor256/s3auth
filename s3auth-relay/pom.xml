@@ -135,39 +135,26 @@
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <configuration>
+                        <archive>
+                            <manifestEntries>
+                                <S3Auth-Revision>${build.number}</S3Auth-Revision>
+                                <S3Auth-Version>${project.version}</S3Auth-Version>
+                                <S3Auth-Date>${maven.build.timestamp}</S3Auth-Date>
+                                <Main-Class>com.s3auth.relay.Main</Main-Class>
+                                <S3Auth-AwsDynamoKey>${dynamo.key}</S3Auth-AwsDynamoKey>
+                                <S3Auth-AwsDynamoSecret>${dynamo.secret}</S3Auth-AwsDynamoSecret>
+                                <S3Auth-AwsDynamoTable>${dynamo.table}</S3Auth-AwsDynamoTable>
+                                <S3Auth-ExitKey>${exit.key}</S3Auth-ExitKey>
+                            </manifestEntries>
+                        </archive>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>1.7.1</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <manifestEntries>
-                                        <S3Auth-Revision>${build.number}</S3Auth-Revision>
-                                        <S3Auth-Version>${project.version}</S3Auth-Version>
-                                        <S3Auth-Date>${maven.build.timestamp}</S3Auth-Date>
-                                        <Main-Class>com.s3auth.relay.Main</Main-Class>
-                                        <S3Auth-AwsDynamoKey>${dynamo.key}</S3Auth-AwsDynamoKey>
-                                        <S3Auth-AwsDynamoSecret>${dynamo.secret}</S3Auth-AwsDynamoSecret>
-                                        <S3Auth-AwsDynamoTable>${dynamo.table}</S3Auth-AwsDynamoTable>
-                                        <S3Auth-ExitKey>${exit.key}</S3Auth-ExitKey>
-                                    </manifestEntries>
-                                </transformer>
-                            </transformers>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <!--
                 This plugin will collect current build number
