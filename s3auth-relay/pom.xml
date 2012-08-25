@@ -202,14 +202,12 @@
                         <configuration>
                             <target>
                                 <exec executable="curl" failonerror="false">
-                                    <arg value="--silent"/>
                                     <arg value="http://relay.s3auth.com/shutdown/${exit.key}"/>
                                 </exec>
                                 <retry retrycount="10">
                                     <sequential>
                                         <sleep seconds="15"/>
                                         <exec executable="curl" failonerror="true">
-                                            <arg value="--silent"/>
                                             <arg value="http://relay.s3auth.com/version"/>
                                         </exec>
                                     </sequential>
