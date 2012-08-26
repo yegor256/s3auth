@@ -140,11 +140,6 @@ final class HttpFacade implements Closeable {
                             Thread.currentThread().interrupt();
                             throw new IllegalStateException(ex);
                         }
-                        Logger.debug(
-                            this,
-                            "#run(): request from %s",
-                            socket.getRemoteSocketAddress()
-                        );
                     }
                 }
             ),
