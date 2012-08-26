@@ -40,6 +40,10 @@
     <packaging>pom</packaging>
     <description>rev.${build.number}/${timestamp.number}</description>
 
+    <prerequisites>
+        <maven>3.0</maven>
+    </prerequisites>
+
     <build>
         <plugins>
             <plugin>

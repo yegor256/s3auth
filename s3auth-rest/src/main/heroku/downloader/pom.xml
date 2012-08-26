@@ -40,14 +40,39 @@
     <packaging>pom</packaging>
     <name>downloader</name>
 
+    <prerequisites>
+        <maven>3.0</maven>
+    </prerequisites>
+
     <repositories>
         <repository>
-            <id>sonatype.nexus</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <id>s3auth.s3</id>
+            <url>s3://repo.s3auth.com/snapshot</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.s3auth</groupId>
+            <artifactId>s3auth-relay</artifactId>
+            <version s3auth="yes">1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
     <build>
+        <extensions>
+            <extension>
+                <groupId>org.cyclopsgroup</groupId>
+                <artifactId>awss3-maven-wagon</artifactId>
+                <version>0.1</version>
+            </extension>
+        </extensions>
         <plugins>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
