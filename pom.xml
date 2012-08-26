@@ -117,7 +117,7 @@
         <site>
             <id>s3auth.s3</id>
             <name>s3auth.com Project Site</name>
-            <url>s3://maven.s3auth.com/</url>
+            <url>s3://maven.s3auth.com</url>
         </site>
     </distributionManagement>
 
