@@ -30,12 +30,14 @@
 package com.s3auth.relay;
 
 import com.jcabi.log.Logger;
+import com.rexsl.core.Manifests;
 import com.s3auth.hosts.Host;
 import com.s3auth.hosts.Hosts;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.util.Collection;
+import java.util.Date;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentMap;
 import javax.ws.rs.core.HttpHeaders;
@@ -43,6 +45,10 @@ import org.apache.commons.io.IOUtils;
 
 /**
  * Single HTTP processing thread.
+ *
+ * <p>The class is responsible for getting a new socket from a blocking
+ * queue, processing it, and closing the socket. The class is instantiated
+ * by {@link HttpFacade} and is executed by Services Executor routinely.
  *
  * <p>The class is immutable and thread-safe.
  *
@@ -52,6 +58,16 @@ import org.apache.commons.io.IOUtils;
  */
 @SuppressWarnings("PMD.DoNotUseThreads")
 final class HttpThread implements Runnable {
+
+    /**
+     * Name of the server we show in HTTP headers.
+     */
+    private static final String NAME = String.format(
+        "relay.s3auth.com, %s/%s built on %s",
+        Manifests.read("S3Auth-Version"),
+        Manifests.read("S3Auth-Revision"),
+        Manifests.read("S3Auth-Date")
+    );
 
     /**
      * Queue of sockets to get from.
@@ -86,6 +102,16 @@ final class HttpThread implements Runnable {
             final InputStream input = host.fetch(request.requestUri());
             final int bytes = new HttpResponse()
                 .withStatus(HttpURLConnection.HTTP_OK)
+                .withHeader(HttpHeaders.CACHE_CONTROL, "no-cache")
+                .withHeader(HttpHeaders.EXPIRES, "-1")
+                .withHeader(
+                    HttpHeaders.DATE,
+                    String.format(
+                        "%ta, %1$td %1$tb %1$tY %1$tT %1$tz",
+                        new Date()
+                    )
+                )
+                .withHeader("Server", HttpThread.NAME)
                 .withHeader(
                     "s3auth-time",
                     Long.toString(System.currentTimeMillis() - start)
@@ -159,8 +185,7 @@ final class HttpThread implements Runnable {
         }
         final String domain = headers.get(HttpHeaders.HOST).iterator().next();
         Host host;
-        if ("relay.s3auth.com".equals(domain)
-            || domain.startsWith("localhost:")) {
+        if ("relay.s3auth.com".equals(domain)) {
             host = new LocalHost();
         } else {
             try {

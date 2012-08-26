@@ -30,69 +30,44 @@
 package com.s3auth.relay;
 
 import com.rexsl.core.Manifests;
-import com.rexsl.test.RestTester;
-import com.s3auth.hosts.HostsMocker;
-import java.net.HttpURLConnection;
+import com.s3auth.hosts.Host;
 import java.net.URI;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
-import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * Test case for {@link Facade}.
+ * Test case for {@link LocalHost}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class FacadeTest {
+public final class LocalHostTest {
 
     /**
-     * Port to use for facade (defined in pom.xml).
-     */
-    private final transient int port =
-        Integer.valueOf(System.getProperty("http.port"));
-
-    /**
-     * URI of facade home.
-     */
-    private final transient URI uri =
-        URI.create(String.format("http://localhost:%d/", this.port));
-
-    /**
-     * Facade can process parallel requests.
+     * LocalHost can render a simple home page.
      * @throws Exception If there is some problem inside
      */
     @Test
-    @org.junit.Ignore
-    public void handlesParallelHttpRequests() throws Exception {
-        final Facade facade = new Facade(new HostsMocker().mock(), this.port);
-        MatcherAssert.assertThat(facade, Matchers.notNullValue());
+    public void rendersHomePage() throws Exception {
+        final Host host = new LocalHost();
+        MatcherAssert.assertThat(
+            IOUtils.toString(host.fetch(URI.create("/"))),
+            Matchers.notNullValue()
+        );
     }
 
     /**
-     * Facade can report current version.
+     * LocalHost can report current version.
      * @throws Exception If there is some problem inside
      */
     @Test
     public void reportsCurrentVersion() throws Exception {
-        final Facade facade = new Facade(new HostsMocker().mock(), this.port);
-        facade.listen();
-        RestTester.start(UriBuilder.fromUri(this.uri).path("/version"))
-            .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
-            .header(
-                HttpHeaders.AUTHORIZATION,
-                String.format(
-                    "Basic %s",
-                    Base64.encodeBase64String("a:b".getBytes())
-                )
-            )
-            .get("read version of the Relay")
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .assertBody(Matchers.equalTo(Manifests.read("S3Auth-Revision")));
-        facade.close();
+        final Host host = new LocalHost();
+        MatcherAssert.assertThat(
+            IOUtils.toString(host.fetch(URI.create("/version"))),
+            Matchers.equalTo(Manifests.read("S3Auth-Revision"))
+        );
     }
 
 }

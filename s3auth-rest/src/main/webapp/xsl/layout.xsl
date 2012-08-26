@@ -89,6 +89,15 @@
                             <xsl:text>Amazon Web Services</xsl:text>
                         </a>
                         <xsl:text>, although we are providing services for their clients.</xsl:text>
+                        <xsl:text> It is absolutely free of charge, since it is sponsored by </xsl:text>
+                        <a href="http://www.tpc2.com/">
+                            <xsl:text>tpc2.com</xsl:text>
+                        </a>
+                        <xsl:text>. Sea also terms of use, privacy policy and license agreement at </xsl:text>
+                        <a href="http://www.s3auth.com/misc/LICENSE.txt">
+                            <xsl:text>LICENSE.txt</xsl:text>
+                        </a>
+                        <xsl:text>.</xsl:text>
                     </p>
                 </div>
             </body>

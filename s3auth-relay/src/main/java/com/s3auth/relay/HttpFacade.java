@@ -47,14 +47,14 @@ import java.util.concurrent.TimeUnit;
 /**
  * HTTP facade (port listener).
  *
- * <p>The class is immutable and NOT thread-safe.
+ * <p>The class is immutable and thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
  */
 @SuppressWarnings("PMD.DoNotUseThreads")
-final class Facade implements Closeable {
+final class HttpFacade implements Closeable {
 
     /**
      * How many threads to use.
@@ -73,7 +73,7 @@ final class Facade implements Closeable {
      */
     private final transient ScheduledExecutorService backend =
         Executors.newScheduledThreadPool(
-            Facade.THREADS,
+            HttpFacade.THREADS,
             new VerboseThreads("back")
         );
 
@@ -95,16 +95,16 @@ final class Facade implements Closeable {
      * @throws IOException If can't initialize
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public Facade(final Hosts hosts, final int port)
+    public HttpFacade(final Hosts hosts, final int port)
         throws IOException {
         this.server = new ServerSocket(port);
-        for (int thread = 0; thread < Facade.THREADS; ++thread) {
+        for (int thread = 0; thread < HttpFacade.THREADS; ++thread) {
             this.backend.scheduleWithFixedDelay(
                 new VerboseRunnable(new HttpThread(this.sockets, hosts)),
                 0, 1, TimeUnit.NANOSECONDS
             );
         }
-        Logger.debug(this, "#Facade(.., %d): instantiated", port);
+        Logger.debug(this, "#HttpFacade(.., %d): instantiated", port);
     }
 
     /**
@@ -118,14 +118,13 @@ final class Facade implements Closeable {
                     public void run() {
                         Socket socket;
                         try {
-                            socket = Facade.this.server.accept();
+                            socket = HttpFacade.this.server.accept();
                         } catch (java.io.IOException ex) {
                             throw new IllegalStateException(ex);
                         }
                         try {
-                            final boolean consumed = Facade.this.sockets.offer(
-                                socket, 1, TimeUnit.MILLISECONDS
-                            );
+                            final boolean consumed = HttpFacade.this.sockets
+                                .offer(socket, 1, TimeUnit.SECONDS);
                             if (!consumed) {
                                 new HttpResponse().withStatus(
                                     HttpURLConnection.HTTP_GATEWAY_TIMEOUT
@@ -157,6 +156,7 @@ final class Facade implements Closeable {
     public void close() throws IOException {
         this.shutdown(this.frontend);
         this.shutdown(this.backend);
+        this.server.close();
         Logger.debug(this, "#close(): done");
     }
 

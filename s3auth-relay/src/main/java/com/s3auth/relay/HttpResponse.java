@@ -29,7 +29,6 @@
  */
 package com.s3auth.relay;
 
-import com.rexsl.core.Manifests;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -38,16 +37,27 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.util.Collection;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import javax.ws.rs.core.HttpHeaders;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
 
 /**
- * HTTP response.
+ * HTTP response, writable to IO socket.
+ *
+ * <p>It is a Builder design pattern, which can be used as the following:
+ *
+ * <pre>
+ * new HttpResponse()
+ *   .withStatus(200)
+ *   .withHeader("Content-Type", "text/plain")
+ *   .withHeader("Content-Length", "18")
+ *   .withBody("here is my content")
+ *   .send(socket);
+ * </pre>
+ *
+ * <p>By default HTTP status is OK (200) and content is empty.
  *
  * <p>The class is NOT thread-safe.
  *
@@ -56,16 +66,6 @@ import org.apache.commons.io.IOUtils;
  * @since 0.0.1
  */
 final class HttpResponse {
-
-    /**
-     * Name of the server we show in HTTP headers.
-     */
-    private static final String NAME = String.format(
-        "relay.s3auth.com, %s/%s built on %s",
-        Manifests.read("S3Auth-Version"),
-        Manifests.read("S3Auth-Revision"),
-        Manifests.read("S3Auth-Date")
-    );
 
     /**
      * Status.
@@ -82,19 +82,6 @@ final class HttpResponse {
      * Body.
      */
     private transient InputStream body;
-
-    /**
-     * Public ctor.
-     */
-    public HttpResponse() {
-        this.withHeader(HttpHeaders.CACHE_CONTROL, "no-cache");
-        this.withHeader(HttpHeaders.EXPIRES, "-1");
-        this.withHeader(
-            HttpHeaders.DATE,
-            String.format("%ta, %1$td %1$tb %1$tY %1$tT %1$tz", new Date())
-        );
-        this.withHeader("Server", HttpResponse.NAME);
-    }
 
     /**
      * Set HTTP status.

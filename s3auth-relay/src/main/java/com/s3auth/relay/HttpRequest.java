@@ -46,7 +46,18 @@ import java.util.regex.Pattern;
 /**
  * HTTP request.
  *
- * <p>The class is NOT thread-safe.
+ * <p>This class helps us to consume a HTTP request from an IO socket, and
+ * parse its content. This is how it can be used (socket should be opened):
+ *
+ * <pre>
+ * HttpRequest req = new HttpRequest(socket);
+ * String type = req.headers().get("Accept").iterator().next();
+ * URI uri = req.requestUri();
+ * </pre>
+ *
+ * <p>We don't support any other methods except "GET".
+ *
+ * <p>The class is immutable and thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$

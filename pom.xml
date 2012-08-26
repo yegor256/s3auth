@@ -149,7 +149,7 @@
                 <!-- Logging facility, on top of SLF4J. -->
                 <groupId>com.jcabi</groupId>
                 <artifactId>jcabi-log</artifactId>
-                <version since="6 Jun 2012">0.1.9</version>
+                <version since="6 Jun 2012">1.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <!--

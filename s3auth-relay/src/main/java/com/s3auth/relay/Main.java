@@ -63,7 +63,7 @@ public final class Main {
             );
         }
         final int port = Integer.valueOf(args[0]);
-        final Facade facade = new Facade(new DynamoHosts(), port);
+        final HttpFacade facade = new HttpFacade(new DynamoHosts(), port);
         facade.listen();
         Logger.info(Main.class, "started at http://localhost:%d...", port);
         while (true) {
