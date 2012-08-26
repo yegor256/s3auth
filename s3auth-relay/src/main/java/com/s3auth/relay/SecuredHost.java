@@ -141,7 +141,8 @@ final class SecuredHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    public boolean authorized(final String user, final String password) {
+    public boolean authorized(final String user, final String password)
+        throws IOException {
         return this.host.authorized(user, password);
     }
 
