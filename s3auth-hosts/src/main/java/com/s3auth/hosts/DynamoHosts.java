@@ -37,6 +37,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Collection of hosts, persisted in Amazon DynamoDB.
@@ -46,8 +47,19 @@ import java.util.concurrent.ConcurrentSkipListSet;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 public final class DynamoHosts implements Hosts {
+
+    /**
+     * How often to reload from DynamoDB, in milliseconds.
+     */
+    private static final int PERIOD_MS = 1 * 60 * 1000;
+
+    /**
+     * When recent update happened?
+     */
+    private final transient AtomicLong updated = new AtomicLong();
 
     /**
      * Dynamo DB.
@@ -67,30 +79,11 @@ public final class DynamoHosts implements Hosts {
         new ConcurrentHashMap<String, Set<Domain>>();
 
     /**
-     * Public ctor.
-     * @throws IOException If some IO problem inside
-     */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public DynamoHosts() throws IOException {
-        this.users.putAll(this.dynamo.load());
-        for (ConcurrentMap.Entry<String, Set<Domain>> entry
-            : this.users.entrySet()) {
-            for (Domain domain : entry.getValue()) {
-                this.hosts.put(domain.name(), new DefaultHost(domain));
-            }
-        }
-        Logger.debug(
-            this,
-            "#DynamoHosts(): %d host(s) are ready",
-            this.hosts.size()
-        );
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
-    public Host find(final String name) throws Hosts.NotFoundException {
+    public Host find(final String name) throws IOException {
+        this.update();
         final Host host = this.hosts.get(name);
         if (host == null) {
             throw new Hosts.NotFoundException("not found");
@@ -103,7 +96,8 @@ public final class DynamoHosts implements Hosts {
      * {@inheritDoc}
      */
     @Override
-    public Set<Domain> domains(final User user) {
+    public Set<Domain> domains(final User user) throws IOException {
+        this.update();
         this.users.putIfAbsent(
             user.identity(),
             new ConcurrentSkipListSet<Domain>()
@@ -168,6 +162,33 @@ public final class DynamoHosts implements Hosts {
         this.dynamo.close();
         for (Host host : this.hosts.values()) {
             host.close();
+        }
+    }
+
+    /**
+     * Refresh content from Dynamo DB.
+     * @throws IOException If some IO problem inside
+     */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    private void update() throws IOException {
+        synchronized (this.updated) {
+            if (System.currentTimeMillis() - this.updated.get()
+                > DynamoHosts.PERIOD_MS) {
+                this.users.clear();
+                this.users.putAll(this.dynamo.load());
+                for (ConcurrentMap.Entry<String, Set<Domain>> entry
+                    : this.users.entrySet()) {
+                    for (Domain domain : entry.getValue()) {
+                        this.hosts.put(domain.name(), new DefaultHost(domain));
+                    }
+                }
+                Logger.debug(
+                    this,
+                    "#update(): %d host(s) loaded",
+                    this.hosts.size()
+                );
+                this.updated.set(System.currentTimeMillis());
+            }
         }
     }
 

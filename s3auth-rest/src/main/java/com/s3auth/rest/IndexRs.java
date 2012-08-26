@@ -33,6 +33,7 @@ import com.rexsl.page.JaxbGroup;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.s3auth.hosts.Domain;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -59,10 +60,11 @@ public final class IndexRs extends BaseRs {
     /**
      * Get list of all my domains.
      * @return The JAX-RS response
+     * @throws IOException If some IO problem inside
      */
     @GET
     @Path("/")
-    public Response index() {
+    public Response index() throws IOException {
         return new PageBuilder()
             .stylesheet("/xsl/index.xsl")
             .build(CommonPage.class)
@@ -80,12 +82,13 @@ public final class IndexRs extends BaseRs {
      * @param key AWS key
      * @param secret AWS secret
      * @return The JAX-RS response
+     * @throws IOException If some IO problem inside
      */
     @POST
     @Path("/add")
     public Response add(@FormParam("host") final String host,
         @FormParam("key") final String key,
-        @FormParam("secret") final String secret) {
+        @FormParam("secret") final String secret) throws IOException {
         if (host == null || key == null || secret == null) {
             throw new WebApplicationException(
                 Response.status(HttpURLConnection.HTTP_SEE_OTHER)
@@ -118,10 +121,12 @@ public final class IndexRs extends BaseRs {
      * Delete existing domain.
      * @param host The host name
      * @return The JAX-RS response
+     * @throws IOException If some IO problem inside
      */
     @GET
     @Path("/remove")
-    public Response remove(@QueryParam("host") final String host) {
+    public Response remove(@QueryParam("host") final String host)
+        throws IOException {
         if (host == null) {
             throw new WebApplicationException(
                 Response.status(HttpURLConnection.HTTP_SEE_OTHER)
@@ -153,9 +158,10 @@ public final class IndexRs extends BaseRs {
     /**
      * Get list of all my domains.
      * @return List of JAXB domains
+     * @throws IOException If some IO problem inside
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    private Collection<JaxbDomain> domains() {
+    private Collection<JaxbDomain> domains() throws IOException {
         final Collection<JaxbDomain> domains = new LinkedList<JaxbDomain>();
         for (Domain domain : this.hosts().domains(this.user())) {
             domains.add(new JaxbDomain(domain, this.uriInfo()));

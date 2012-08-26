@@ -171,6 +171,11 @@ final class HttpThread implements Runnable {
                     HttpURLConnection.HTTP_NOT_FOUND,
                     ex
                 );
+            } catch (java.io.IOException ex) {
+                throw new HttpException(
+                    HttpURLConnection.HTTP_INTERNAL_ERROR,
+                    ex
+                );
             }
         }
         return host;
