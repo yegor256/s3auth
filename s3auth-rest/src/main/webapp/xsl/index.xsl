@@ -80,6 +80,9 @@
             </p>
         </form>
         <p>
+            <xsl:text>Point a CNAME DNS record of your domain to </xsl:text>
+            <span class="tt">relay.s3auth.com</span>
+            <xsl:text>. </xsl:text>
             <xsl:text>To access the bucket you can use your S3 credentials (key and secret key). Also you can create a </xsl:text>
             <span class="tt">.htpasswd</span>
             <xsl:text> file in the root of the bucket according to </xsl:text>
