@@ -64,7 +64,7 @@
     <inceptionYear>2012</inceptionYear>
 
     <organization>
-        <name>S3Auth Inc.</name>
+        <name>s3auth.com</name>
         <url>http://www.s3auth.com</url>
     </organization>
 
@@ -82,7 +82,7 @@
             <id>1</id>
             <name>Yegor Bugayenko</name>
             <email>yegor@tpc2.com</email>
-            <organization>S2Auth Inc.</organization>
+            <organization>s3auth.com</organization>
             <organizationUrl>http://www.s3auth.com</organizationUrl>
             <roles>
                 <role>Architect</role>
