@@ -32,11 +32,11 @@ package com.s3auth.hosts;
 import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.util.AbstractSet;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * Collection of hosts, persisted in Amazon DynamoDB.
@@ -104,7 +104,10 @@ public final class DynamoHosts implements Hosts {
      */
     @Override
     public Set<Domain> domains(final User user) {
-        this.users.putIfAbsent(user.identity(), new HashSet<Domain>());
+        this.users.putIfAbsent(
+            user.identity(),
+            new ConcurrentSkipListSet<Domain>()
+        );
         final Set<Domain> set = this.users.get(user.identity());
         // @checkstyle AnonInnerLength (100 lines)
         return new AbstractSet<Domain>() {
