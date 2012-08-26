@@ -132,6 +132,10 @@
 
     <repositories>
         <!-- intentionally empty -->
+        <repository>
+            <id>rexsl.snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </repository>
     </repositories>
 
     <pluginRepositories>
