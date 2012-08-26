@@ -39,10 +39,20 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <prerequisites>
+        <maven>3.0</maven>
+    </prerequisites>
+
     <repositories>
         <repository>
             <id>s3auth.s3</id>
             <url>s3://repo.s3auth.com/snapshot</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
@@ -57,13 +67,9 @@
     <build>
         <extensions>
             <extension>
-                <!--
-                Artifacts deployment to Amazon Web Services, S3.
-                @see http://blog.cyclopsgroup.org/2011/06/publish-maven-site-with-amazon-s3-and.html
-                -->
                 <groupId>org.cyclopsgroup</groupId>
                 <artifactId>awss3-maven-wagon</artifactId>
-                <version since="10 July 2011">0.1</version>
+                <version>0.1</version>
             </extension>
         </extensions>
         <plugins>
@@ -82,9 +88,7 @@
                             <executable>java</executable>
                             <arguments>
                                 <argument>-classpath</argument>
-                                <classpath>
-                                    <dependency>com.s3auth:s3auth-relay</dependency>
-                                </classpath>
+                                <classpath />
                                 <argument>com.s3auth.relay.Main</argument>
                                 <argument>80</argument>
                             </arguments>

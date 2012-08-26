@@ -35,7 +35,14 @@ Create a new EC2 instance., with Ubuntu Server 10, 64 bit.
 Install Java & supplementary tools
 
     sudo apt-get update
-    sudo apt-get install openjdk-7-jdk maven2
+    sudo apt-get install openjdk-7-jdk
+    sudo apt-get upgrade
+
+Install Maven 3
+
+    wget http://apache.mirror.versatel.nl/maven/binaries/apache-maven-3.0.4-bin.tar.gz
+    tar xzf apache-maven-3.0.4-bin.tar.gz
+    rm -rf apache-maven-3.0.4-bin.tar.gz
 
 Copy src/main/production/pom.xml to /home/ubuntu/pom.xml
 
@@ -57,7 +64,9 @@ Create run.sh in /home/ubuntu:
     #!/bin/sh
     while true
     do
-    	mvn -U test --settings ./settings.xml
+        export MAVEN_HOME=./apache-maven-3.0.4
+        export MAVEN_OPTS=-Xmx256m
+    	./apache-maven-3.0.4/bin/mvn -U test --settings ./settings.xml
     done
 
 Make sure it's executable:
