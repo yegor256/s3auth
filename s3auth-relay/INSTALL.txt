@@ -35,7 +35,7 @@ Create a new EC2 instance., with Ubuntu Server 10, 64 bit.
 Install Java & supplementary tools
 
     sudo apt-get update
-    sudo apt-get install openjdk-7-jdk
+    sudo apt-get install openjdk-7-jdk mailutils
     sudo apt-get upgrade
 
 Install Maven 3
@@ -64,9 +64,11 @@ Create run.sh in /home/ubuntu:
     #!/bin/sh
     while true
     do
+        mail -s "recent logs" yegor@tpc2.com < ./s3auth.log
+        rm -rf ./s3auth.log
         export MAVEN_HOME=./apache-maven-3.0.4
         export MAVEN_OPTS=-Xmx256m
-    	./apache-maven-3.0.4/bin/mvn -U test --settings ./settings.xml
+    	./apache-maven-3.0.4/bin/mvn -U test --settings ./settings.xml > ./s3auth.log 2>&1
     done
 
 Make sure it's executable:
@@ -75,6 +77,6 @@ Make sure it's executable:
 
 Add this to crontab:
 
-    @reboot sudo ~/run.sh >> /home/ubuntu/s3auth.log 2>&1 &
+    @reboot sudo ~/run.sh &
 
 Logout and reboot the server
