@@ -66,11 +66,11 @@
         <p>
             <xsl:text>For example, try </xsl:text>
             <a href="http://maven.s3auth.com/">maven.s3auth.com</a>
-            <xsl:text>with username </xsl:text>
+            <xsl:text> (with username </xsl:text>
             <span class="tt"><xsl:text>s3auth</xsl:text></span>
             <xsl:text> and password </xsl:text>
             <span class="tt"><xsl:text>s3auth</xsl:text></span>
-            <xsl:text>. You will access Amazon S3 bucket </xsl:text>
+            <xsl:text>). You will access Amazon S3 bucket </xsl:text>
             <span class="tt"><xsl:text>maven.s3auth.com</xsl:text></span>
             <xsl:text>, which is not readable anonymously.</xsl:text>
         </p>
