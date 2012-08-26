@@ -45,7 +45,7 @@
     <bannerLeft>
         <name>s3auth</name>
         <src>http://www.s3auth.com/logo.png</src>
-        <href>http://www.s3auth.com/</href>
+        <href>http://maven.s3auth.com/</href>
     </bannerLeft>
 
     <poweredBy>
