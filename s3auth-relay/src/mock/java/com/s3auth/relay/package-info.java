@@ -27,36 +27,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.s3auth.relay;
-
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
 
 /**
- * Test case for {@link HttpRequest}.
+ * HTTP to S3 relay, mocks.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
+ * @since 0.0.1
  */
-public final class HttpRequestTest {
-
-    /**
-     * HttpRequest can parse HTTP response.
-     * @throws Exception If there is some problem inside
-     */
-    @Test
-    public void parsesHttpRequest() throws Exception {
-        final HttpRequest request = HttpRequestMocker.toRequest(
-            "GET /test.html HTTP/1.1\nHost:local\nAccept:text/plain\n\nbody"
-        );
-        MatcherAssert.assertThat(
-            request.requestUri().toString(),
-            Matchers.equalTo("/test.html")
-        );
-        MatcherAssert.assertThat(
-            request.headers().get("Host"),
-            Matchers.hasItem("local")
-        );
-    }
-
-}
+package com.s3auth.relay;

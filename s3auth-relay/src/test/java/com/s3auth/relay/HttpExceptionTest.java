@@ -29,33 +29,31 @@
  */
 package com.s3auth.relay;
 
+import java.net.HttpURLConnection;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * Test case for {@link HttpRequest}.
+ * Test case for {@link HttpException}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class HttpRequestTest {
+public final class HttpExceptionTest {
 
     /**
-     * HttpRequest can parse HTTP response.
+     * HttpException can be instantiated with a text.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void parsesHttpRequest() throws Exception {
-        final HttpRequest request = HttpRequestMocker.toRequest(
-            "GET /test.html HTTP/1.1\nHost:local\nAccept:text/plain\n\nbody"
+    public void parsesHttpException() throws Exception {
+        final HttpException exp = new HttpException(
+            HttpURLConnection.HTTP_NOT_FOUND,
+            "not found"
         );
         MatcherAssert.assertThat(
-            request.requestUri().toString(),
-            Matchers.equalTo("/test.html")
-        );
-        MatcherAssert.assertThat(
-            request.headers().get("Host"),
-            Matchers.hasItem("local")
+            HttpResponseMocker.toString(exp.response()),
+            Matchers.startsWith("HTTP/1.1 404 Not Found")
         );
     }
 

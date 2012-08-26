@@ -30,17 +30,13 @@
 package com.s3auth.relay;
 
 import com.s3auth.hosts.HostMocker;
-import java.io.ByteArrayOutputStream;
 import java.net.HttpURLConnection;
-import java.net.Socket;
 import java.net.URI;
 import javax.ws.rs.core.HttpHeaders;
-import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 /**
  * Test case for {@link SecuredHost}.
@@ -64,12 +60,12 @@ public final class SecuredHostTest {
             try {
                 new SecuredHost(
                     new HostMocker().mock(),
-                    this.toRequest(http)
+                    HttpRequestMocker.toRequest(http)
                 ).fetch(URI.create("/"));
                 Assert.fail("exception expected");
             } catch (HttpException ex) {
                 MatcherAssert.assertThat(
-                    this.toString(ex.response()),
+                    HttpResponseMocker.toString(ex.response()),
                     Matchers.containsString(HttpHeaders.WWW_AUTHENTICATE)
                 );
             }
@@ -91,12 +87,12 @@ public final class SecuredHostTest {
             try {
                 new SecuredHost(
                     new HostMocker().mock(),
-                    this.toRequest(http)
+                    HttpRequestMocker.toRequest(http)
                 ).fetch(URI.create("/test.html"));
                 Assert.fail("exception expected, but didn't happen");
             } catch (HttpException ex) {
                 MatcherAssert.assertThat(
-                    this.toString(ex.response()),
+                    HttpResponseMocker.toString(ex.response()),
                     Matchers.startsWith(
                         String.format(
                             "HTTP/1.1 %d ",
@@ -106,33 +102,6 @@ public final class SecuredHostTest {
                 );
             }
         }
-    }
-
-    /**
-     * Convert string to request.
-     * @param text The text
-     * @return Requests
-     * @throws Exception If there is some problem inside
-     */
-    private HttpRequest toRequest(final String text) throws Exception {
-        final Socket socket = Mockito.mock(Socket.class);
-        Mockito.doReturn(IOUtils.toInputStream(text))
-            .when(socket).getInputStream();
-        return new HttpRequest(socket);
-    }
-
-    /**
-     * Convert response to string.
-     * @param resp The response
-     * @return Text form
-     * @throws Exception If there is some problem inside
-     */
-    private String toString(final HttpResponse resp) throws Exception {
-        final Socket socket = Mockito.mock(Socket.class);
-        final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        Mockito.doReturn(stream).when(socket).getOutputStream();
-        resp.send(socket);
-        return new String(stream.toByteArray());
     }
 
 }

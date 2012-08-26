@@ -29,34 +29,36 @@
  */
 package com.s3auth.relay;
 
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
+import java.io.ByteArrayOutputStream;
+import java.net.Socket;
+import org.mockito.Mockito;
 
 /**
- * Test case for {@link HttpRequest}.
+ * Mocker of {@link HttpResponse}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class HttpRequestTest {
+public final class HttpResponseMocker {
 
     /**
-     * HttpRequest can parse HTTP response.
+     * It's a unility class at the moment.
+     */
+    private HttpResponseMocker() {
+        // intentionally empty
+    }
+
+    /**
+     * Convert response to string.
+     * @param resp The response
+     * @return Text form
      * @throws Exception If there is some problem inside
      */
-    @Test
-    public void parsesHttpRequest() throws Exception {
-        final HttpRequest request = HttpRequestMocker.toRequest(
-            "GET /test.html HTTP/1.1\nHost:local\nAccept:text/plain\n\nbody"
-        );
-        MatcherAssert.assertThat(
-            request.requestUri().toString(),
-            Matchers.equalTo("/test.html")
-        );
-        MatcherAssert.assertThat(
-            request.headers().get("Host"),
-            Matchers.hasItem("local")
-        );
+    public static String toString(final HttpResponse resp) throws Exception {
+        final Socket socket = Mockito.mock(Socket.class);
+        final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        Mockito.doReturn(stream).when(socket).getOutputStream();
+        resp.send(socket);
+        return new String(stream.toByteArray());
     }
 
 }

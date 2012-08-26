@@ -29,16 +29,13 @@
  */
 package com.s3auth.relay;
 
-import java.io.ByteArrayOutputStream;
 import java.net.HttpURLConnection;
-import java.net.Socket;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 /**
  * Test case for {@link HttpResponse}.
@@ -53,17 +50,13 @@ public final class HttpResponseTest {
      */
     @Test
     public void sendsDataToSocket() throws Exception {
-        final Socket socket = Mockito.mock(Socket.class);
-        final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        Mockito.doReturn(stream).when(socket).getOutputStream();
-        final int bytes = new HttpResponse()
-            .withStatus(HttpURLConnection.HTTP_NOT_FOUND)
-            .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN)
-            .withBody(IOUtils.toInputStream("hi!"))
-            .send(socket);
-        MatcherAssert.assertThat(bytes, Matchers.greaterThan(0));
         MatcherAssert.assertThat(
-            new String(stream.toByteArray()),
+            HttpResponseMocker.toString(
+                new HttpResponse()
+                    .withStatus(HttpURLConnection.HTTP_NOT_FOUND)
+                    .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN)
+                    .withBody(IOUtils.toInputStream("hi!"))
+            ),
             Matchers.allOf(
                 Matchers.startsWith("HTTP/1.1 404"),
                 Matchers.containsString("\n\nhi!")
