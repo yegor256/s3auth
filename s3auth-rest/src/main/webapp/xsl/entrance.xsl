@@ -56,12 +56,23 @@
         <p>
             <xsl:text>
                 Point your test.example.com CNAME to relay.s3auth.com,
-                and register this domain here. You will be able to
-                access bucket's content in browser with HTTP basic auth.
+                and register the domain here. You will be able to
+                access bucket's content in a browser with HTTP basic auth.
                 Your bucket will be accessible using your Amazon IAM credentials
                 and with custom user/password pairs in your .htpasswd file
                 (similar to Apache HTTP Server).
             </xsl:text>
+        </p>
+        <p>
+            <xsl:text>For example, try </xsl:text>
+            <a href="http://maven.s3auth.com/">maven.s3auth.com</a>
+            <xsl:text>with username </xsl:text>
+            <span class="tt"><xsl:text>s3auth</xsl:text></span>
+            <xsl:text> and password </xsl:text>
+            <span class="tt"><xsl:text>s3auth</xsl:text></span>
+            <xsl:text>. You will access Amazon S3 bucket </xsl:text>
+            <span class="tt"><xsl:text>maven.s3auth.com</xsl:text></span>
+            <xsl:text>, which is not readable anonymously.</xsl:text>
         </p>
         <p>
             <xsl:text>To start, please </xsl:text>
@@ -69,7 +80,7 @@
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='login']/@href" />
                 </xsl:attribute>
-                <xsl:text>login through Facebook</xsl:text>
+                <xsl:text>login via Facebook</xsl:text>
             </a>
             <xsl:text>!</xsl:text>
         </p>
