@@ -88,7 +88,7 @@ public final class DynamoHosts implements Hosts {
         if (host == null) {
             throw new Hosts.NotFoundException(
                 String.format(
-                    "host '%s' not found, register it at www.s3auth.com"m
+                    "host '%s' not found, register it at www.s3auth.com",
                     name
                 )
             );
