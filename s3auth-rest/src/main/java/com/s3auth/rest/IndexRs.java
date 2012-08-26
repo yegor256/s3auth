@@ -100,15 +100,15 @@ public final class IndexRs extends BaseRs {
             new Domain() {
                 @Override
                 public String name() {
-                    return host;
+                    return host.trim();
                 }
                 @Override
                 public String key() {
-                    return key;
+                    return key.trim();
                 }
                 @Override
                 public String secret() {
-                    return secret;
+                    return secret.trim();
                 }
             }
         );
