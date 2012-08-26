@@ -62,7 +62,7 @@ import java.util.concurrent.ConcurrentMap;
  * @checkstyle MultipleStringLiterals (500 lines)
  */
 @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-public final class Dynamo implements Closeable {
+final class Dynamo implements Closeable {
 
     /**
      * AWS client.

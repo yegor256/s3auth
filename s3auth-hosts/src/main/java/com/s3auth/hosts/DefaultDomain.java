@@ -38,7 +38,7 @@ package com.s3auth.hosts;
  * @version $Id$
  * @since 0.0.1
  */
-public final class DefaultDomain implements Domain {
+final class DefaultDomain implements Domain {
 
     /**
      * The name.

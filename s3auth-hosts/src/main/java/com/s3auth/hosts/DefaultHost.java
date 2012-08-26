@@ -48,7 +48,7 @@ import java.net.URI;
  * @version $Id$
  * @since 0.0.1
  */
-public final class DefaultHost implements Host {
+final class DefaultHost implements Host {
 
     /**
      * AWS client.
