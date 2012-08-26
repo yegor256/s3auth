@@ -58,7 +58,8 @@ public interface Host extends Closeable {
      * @param user User name
      * @param password Password
      * @return Yes or no
+     * @throws IOException If some error with I/O inside
      */
-    boolean authorized(String user, String password);
+    boolean authorized(String user, String password) throws IOException;
 
 }

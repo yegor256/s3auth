@@ -55,11 +55,11 @@ public final class HostMocker {
             Mockito.doReturn(
                 IOUtils.toInputStream("hello")
             ).when(this.host).fetch(Mockito.any(URI.class));
+            Mockito.doReturn(true).when(this.host)
+                .authorized(Mockito.anyString(), Mockito.anyString());
         } catch (java.io.IOException ex) {
             throw new IllegalStateException(ex);
         }
-        Mockito.doReturn(true).when(this.host)
-            .authorized(Mockito.anyString(), Mockito.anyString());
     }
 
     /**

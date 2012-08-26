@@ -61,6 +61,11 @@ public final class DefaultHost implements Host {
     private final transient Domain domain;
 
     /**
+     * Htpasswd file abstraction.
+     */
+    private final transient Htpasswd htpasswd;
+
+    /**
      * Public ctor.
      * @param dmn The domain
      */
@@ -69,6 +74,7 @@ public final class DefaultHost implements Host {
         this.client = new AmazonS3Client(
             new BasicAWSCredentials(this.domain.key(), this.domain.secret())
         );
+        this.htpasswd = new Htpasswd(this);
     }
 
     /**
@@ -117,13 +123,14 @@ public final class DefaultHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    public boolean authorized(final String user, final String password) {
+    public boolean authorized(final String user, final String password)
+        throws IOException {
         boolean auth;
         if (user.equals(this.domain.key())
             && password.equals(this.domain.secret())) {
             auth = true;
         } else {
-            auth = false;
+            auth = this.htpasswd.authorized(user, password);
         }
         Logger.debug(this, "#authorized('%s', '%s'): %B", user, password, auth);
         return auth;
