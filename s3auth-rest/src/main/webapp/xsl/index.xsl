@@ -80,11 +80,14 @@
             </p>
         </form>
         <p>
-            <xsl:text>
-                In the future we'll support .htpasswd files inside
-                S3 buckets. At the moment the only credentials you can use
-                are your AWS credentials (key and secret).
+            <xsl:text>To access the bucket you can use your S3 credentials (key and secret key). Also you can create a </xsl:text>
+            <span class="tt">.htpasswd</span>
+            <xsl:text> file in the root of the bucket according to </xsl:text>
             </xsl:text>
+            <a href="http://httpd.apache.org/docs/2.2/misc/password_encryptions.html">
+                <xsl:text>Apache HTTP Server format</xsl:text>
+            </a>
+            <xsl:text> (we support only SHA1 and PLAIN TEXT algorithms at the moment).</xsl:text>
         </p>
     </xsl:template>
 

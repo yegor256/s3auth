@@ -57,8 +57,10 @@
             <xsl:text>
                 Point your test.example.com CNAME to relay.s3auth.com,
                 and register this domain here. You will be able to
-                access bucket's content in browser with HTTP basic auth
-                (using your Amazon credentials).
+                access bucket's content in browser with HTTP basic auth.
+                Your bucket will be accessible using your Amazon IAM credentials
+                and with custom user/password pairs in your .htpasswd file
+                (similar to Apache HTTP Server).
             </xsl:text>
         </p>
         <p>
