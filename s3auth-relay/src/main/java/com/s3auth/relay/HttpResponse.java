@@ -43,6 +43,7 @@ import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import javax.ws.rs.core.HttpHeaders;
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -143,11 +144,18 @@ final class HttpResponse {
      * @param socket The socket to write to
      * @return How many bytes were actually sent
      * @throws IOException If some IO problem inside
+     * @see http://stackoverflow.com/questions/8179547
      */
     public int send(final Socket socket) throws IOException {
         final OutputStream stream = socket.getOutputStream();
         final Writer writer = new OutputStreamWriter(stream);
-        writer.write(String.format("HTTP/1.1 %d %s\n", this.status, "empty"));
+        writer.write(
+            String.format(
+                "HTTP/1.1 %d %s\n",
+                this.status,
+                HttpStatus.getStatusText(this.status)
+            )
+        );
         for (ConcurrentMap.Entry<String, Collection<String>> hdr
             : this.headers.entrySet()) {
             for (String value : hdr.getValue()) {
