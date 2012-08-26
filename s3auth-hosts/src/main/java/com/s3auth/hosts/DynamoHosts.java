@@ -86,7 +86,12 @@ public final class DynamoHosts implements Hosts {
         this.update();
         final Host host = this.hosts.get(name);
         if (host == null) {
-            throw new Hosts.NotFoundException("not found");
+            throw new Hosts.NotFoundException(
+                String.format(
+                    "host '%s' not found, register it at www.s3auth.com"m
+                    name
+                )
+            );
         }
         Logger.debug(this, "#find('%s'): found", name);
         return host;
