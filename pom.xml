@@ -71,7 +71,7 @@
     <licenses>
         <license>
             <name>GNU</name>
-            <url>http://www.s3auth.com/LICENSE.txt</url>
+            <url>http://www.s3auth.com/misc/LICENSE.txt</url>
             <distribution>site</distribution>
             <comments>read the licenese</comments>
         </license>

@@ -44,7 +44,7 @@
 
     <properties>
         <heroku.repo>git@heroku.com:s3auth-rest.git</heroku.repo>
-        <heroku.ping>http://www.s3auth.com/a/version</heroku.ping>
+        <heroku.ping>http://www.s3auth.com/misc/version</heroku.ping>
     </properties>
 
     <dependencies>
