@@ -30,6 +30,7 @@
 package com.s3auth.rest;
 
 import com.rexsl.page.PageBuilder;
+import java.net.HttpURLConnection;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -59,6 +60,7 @@ public final class ErrorRs extends BaseRs {
             .build(CommonPage.class)
             .init(this)
             .render()
+            .status(HttpURLConnection.HTTP_NOT_FOUND)
             .build();
     }
 

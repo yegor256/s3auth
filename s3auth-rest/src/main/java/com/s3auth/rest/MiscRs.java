@@ -66,11 +66,11 @@ public final class MiscRs extends BaseRs {
      * @throws IOException If fails with I/O
      */
     @GET
-    @Path("/LICENSE\\.txt")
+    @Path("/LICENSE.txt")
     @Produces(MediaType.TEXT_PLAIN)
     public String license() throws IOException {
         return IOUtils.toString(
-            this.getClass().getResourceAsStream("LICENSE.txt")
+            this.getClass().getResourceAsStream("/LICENSE.txt")
         );
     }
 
