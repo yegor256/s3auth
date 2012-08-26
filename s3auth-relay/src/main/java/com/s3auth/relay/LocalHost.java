@@ -41,11 +41,18 @@ import org.apache.commons.io.IOUtils;
 /**
  * Local host with data.
  *
+ * <p>It's a specific implementation of {@link Host}, which processes requests
+ * that should not go to Amazon S3, but should stay within this server. Mostly
+ * for deployment automation purposes. The class is instantiated by
+ * {@link HttpThread} according to the information in {@code "Host"}
+ * HTTP header.
+ *
  * <p>The class is immutable and thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
+ * @see HttpThread
  */
 final class LocalHost implements Host {
 

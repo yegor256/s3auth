@@ -44,11 +44,16 @@ import org.apache.commons.lang.CharEncoding;
 /**
  * Single HTTP processing thread.
  *
+ * <p>It's a wrapper around {@link Host}, that adds HTTP Basic Auth mechanism
+ * to a normal HTTP request processing. The class is instantiated in
+ * {@link HttpThread}.
+ *
  * <p>The class is immutable and thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
+ * @see HttpThread
  */
 final class SecuredHost implements Host {
 

@@ -47,11 +47,14 @@ import java.util.concurrent.TimeUnit;
 /**
  * HTTP facade (port listener).
  *
+ * <p>The class is instantiated in {@link Main}, once per application run.
+ *
  * <p>The class is immutable and thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
+ * @see Main
  */
 @SuppressWarnings("PMD.DoNotUseThreads")
 final class HttpFacade implements Closeable {
