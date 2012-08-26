@@ -83,7 +83,6 @@
             <xsl:text>To access the bucket you can use your S3 credentials (key and secret key). Also you can create a </xsl:text>
             <span class="tt">.htpasswd</span>
             <xsl:text> file in the root of the bucket according to </xsl:text>
-            </xsl:text>
             <a href="http://httpd.apache.org/docs/2.2/misc/password_encryptions.html">
                 <xsl:text>Apache HTTP Server format</xsl:text>
             </a>
