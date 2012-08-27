@@ -1,5 +1,5 @@
  ------
- s3auth.com, Hosts lib
+ s3auth.com Persistence Layer
  ------
  Yegor Bugayenko
  ------
@@ -34,6 +34,11 @@
 ~~ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 ~~ OF THE POSSIBILITY OF SUCH DAMAGE.
 
-s3auth.com, Hosts lib
+Persistence Layer
 
-  To be continued...
+  <<<s3auth-host>>> is a persistence layer of the application. It wraps
+  in a object-oriented way the data we have in Amazon DynamoDB and the
+  information we fetch from Amazon S3:
+
+[../texry/classes-hosts.png] UML class diagram of s3auth-hosts
+

@@ -1,5 +1,5 @@
  ------
- s3auth.com
+ relay.s3auth.com
  ------
  Yegor Bugayenko
  ------
@@ -34,6 +34,8 @@
 ~~ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 ~~ OF THE POSSIBILITY OF SUCH DAMAGE.
 
-relay.s3auth.com, Standalone Relay
+Standalone HTTP-to-S3 Relay
 
-  To be continued...
+  <<<s3auth-relay>>> is a relay between HTTP and Amazon S3:
+
+[../texry/classes-relay.png] UML class diagram of s3auth-relay

@@ -55,7 +55,7 @@ Architecture of s3auth.com
   <<<s3auth-hosts>>> exposes a number of interfaces and just one class
   {{{./s3auth-hosts/apidocs/com/s3auth/hosts/DynamoHosts.html}<<<DynamoHosts>>>}},
   which implements {{{./s3auth-hosts/apidocs/com/s3auth/hosts/Hosts.html}<<<Hosts>>>}}
-  interface. As the name explains, we persistent user data in Amazon DynamoDB.
+  interface. As the name explains, we persist user data in Amazon DynamoDB.
 
 [texry/classes-hosts.png] UML class diagram of s3auth-hosts
 
