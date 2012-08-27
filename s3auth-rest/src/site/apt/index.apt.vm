@@ -1,5 +1,5 @@
  ------
- rest.s3auth.com
+ Account Management Web Front of s3auth.com
  ------
  Yegor Bugayenko
  ------
@@ -34,6 +34,9 @@
 ~~ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 ~~ OF THE POSSIBILITY OF SUCH DAMAGE.
 
-www.s3auth.com, Amazon S3 HTTP Basic Auth gateway, Web front
+Account Management Web Front of s3auth.com
 
-  To be continued...
+  This diagram should explain what it does:
+
+[../texry/packages.png] UML package diagram of s3auth
+
