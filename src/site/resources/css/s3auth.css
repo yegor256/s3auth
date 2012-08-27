@@ -29,12 +29,20 @@
  */
 
 body {
-    font-size: 16px;
+    font-size: 12px;
 }
 
 body, li, p, td, select, input {
-    font-family: 'Trebuchet MS', Verdana, Arial, Serif !important;
+    font-family: verdana, arial, helvetica, clean, sans-serif;
 }
+
+a {
+    color: #004B91;
+}
+    a:hover {
+        color: #E47911;
+        text-decoration: underline;
+    }
 
 tt, pre {
     background-color: #eee;
@@ -62,15 +70,15 @@ li {
     color: inherit;
 }
 h2 {
-    font-weight: normal;
-    font-size: 1.5em;
-    color: #2276A4;
+    color: #E47911;
+    font-size: 170%;
+    margin: 1.5em 0 1em 0;
 }
 h3 {
     font-weight: normal;
     font-size: 1.2em;
     background: none;
-    color: #2276A4;
+    color: #E47911;
     padding: 1em 0em;
 }
 table {
@@ -86,7 +94,7 @@ table.bodyTable th {
 }
 table.bodyTable th {
     font-weight: normal;
-    background-color: #2276A4;
+    color: #E47911;
 }
 table.bodyTable tr.a {
     background-color: white;
