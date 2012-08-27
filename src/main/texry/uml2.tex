@@ -1,0 +1,160 @@
+%%
+%% Copyright (c) 2012, s3auth.com
+%% All rights reserved.
+%%
+%% Redistribution and use in source and binary forms, with or without
+%% modification, are permitted provided that the following conditions
+%% are met: 1) Redistributions of source code must retain the above
+%% copyright notice, this list of conditions and the following
+%% disclaimer. 2) Redistributions in binary form must reproduce the above
+%% copyright notice, this list of conditions and the following
+%% disclaimer in the documentation and/or other materials provided
+%% with the distribution. 3) Neither the name of the s3auth.com nor
+%% the names of its contributors may be used to endorse or promote
+%% products derived from this software without specific prior written
+%% permission.
+%%
+%% THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+%% "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+%% NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+%% FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+%% THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+%% INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+%% (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+%% SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+%% HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+%% STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+%% ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+%% OF THE POSSIBILITY OF SUCH DAMAGE.
+%%
+\tikzstyle{uml2} = [
+    fill=rupBody,
+    draw=rupBorder,
+    font={\ttfamily},
+]
+\tikzstyle{uml2-class} = [ % class in class diagram
+    uml2,
+    rectangle split,
+    rectangle split parts=3,
+    % rectangle split every empty part={},% delete existing height, depth and width
+    inner sep=0.1cm,
+    rectangle split empty part height=0.1cm,
+    text width=3cm,
+    text centered,
+    text justified,
+]
+\tikzstyle{uml2-object} = [ % instance/object in class diagram
+    uml2,
+    inner sep=0.1cm,
+    text width=3cm,
+    text centered,
+    text justified,
+]
+\tikzstyle{uml2-package} = [ % package
+    uml2,
+    text centered,
+    text justified,
+]
+\tikzstyle{uml2-comment} = [ % comment in class diagram
+    font={\small\ttfamily},
+    fill=white,
+    midway,
+    inner sep=0cm,
+]
+\tikzstyle{uml2-cardinality} = [ % cardinality
+    font={\footnotesize\ttfamily}
+]
+%
+\newcommand{\tikzpic}[1]{
+    \tikz \node [scale=0.75] {\begin{tikzpicture}#1\end{tikzpicture}};
+}
+% [1]: name of component
+% [2]: style, if necessary
+\newcommand{\addComponentIco}[2]{
+    \node[uml2, rectangle, below left=0.1cm of #1.north east,
+        inner sep=0cm, minimum width=0.3cm, minimum height=0.3cm, #2] (#1-icon) {};
+    \node[uml2, rectangle, below=0.05cm of #1-icon.north west,
+        inner sep=0cm, minimum width=0.2cm, minimum height=0.075cm, #2]{};
+    \node[uml2, rectangle, above=0.05cm of #1-icon.south west,
+        inner sep=0cm, minimum width=0.2cm, minimum height=0.075cm, #2]{};
+}
+% [1]: name of artifact
+% [2]: style, if necessary
+\newcommand{\addArtifactIco}[2]{
+    \node[uml2, rectangle, below left=0.1cm of #1.north east,
+        inner sep=0cm, minimum width=0.3cm, minimum height=0.3cm, #2] (#1-icon) {};
+}
+% [1]: entity name
+% [2]: title of the component
+% [3]: the stereotype
+% [4]: width of the text
+% [5]: additional style, if necessary
+\newcommand{\umlRectangle}[5]{
+    \node [uml2, text width=#4, minimum height=1.2cm, #5] (#1) {
+        \parbox{#4}{
+            \centering
+            {\color{gray}\small<{}<#3>{}>}\linebreak
+            #2
+        }
+    };
+}
+% [1]: entity name
+% [2]: title of the interface
+% [3]: style
+\newcommand{\umlInterface}[3]{
+    \node [uml2, circle, minimum width=0.15cm, #3] (#1) {};
+    \node [font={\ttfamily}, below=0mm of #1.south] {
+        \parbox{2cm}{
+            \centering
+            #2
+        }
+    };
+}
+% [1]: name of the port to create
+% [2]: center of the port
+% [3]: style
+\newcommand{\addPort}[3]{
+    \node[uml2, rectangle,
+        inner sep=0cm, minimum width=0.3cm, minimum height=0.3cm, #3] (#1)  at (#2) {};
+}
+% [1]: entity name
+% [2]: title of the component
+% [3]: width of the text
+% [4]: additional style, if necessary
+\newcommand{\umlNode}[4]{
+    \node [inner sep=0cm, #4] (#1) {
+        \begin{tikzpicture}
+            \node [uml2, text width=#3, minimum height=1.2cm] (#1) {
+                \parbox{#3}{
+                    \centering
+                    #2
+                }
+            };
+            \path (#1.north west) +(0.2,0.2) coordinate (#1-cornerA);
+            \path (#1.north east) +(0.2,0.2) coordinate (#1-cornerB);
+            \path (#1.south east) +(0.2,0.2) coordinate (#1-cornerC);
+            \path [uml2]
+                (#1.north west)
+                -- (#1-cornerA)
+                -- (#1-cornerB)
+                -- (#1-cornerC)
+                -- (#1.south east)
+                -- (#1.north east)
+                -- cycle;
+            \path [uml2] (#1.north east) -- (#1-cornerB);
+        \end{tikzpicture}
+    };
+}
+% #1 - TIKZ name of the element
+% #2 - text to render
+% #3 - coordinates/styles
+\newcommand{\umlActor}[3]{
+    \node [outer sep=-1mm, #3] (#1) {
+        \tikz \draw [uml2, fill=white] (0,0) -- +(0,-0.5) % body
+            -- +(-0.5,-1) % left leg
+            +(0,-0.5) -- +(0.5,-1) % right leg
+            +(-0.5,-0.1) -- +(0.5,-0.1) % hands
+            +(0,+0.25) circle (0.25) %head
+            +(0,-1) node [anchor=north] {#2};
+    };
+}

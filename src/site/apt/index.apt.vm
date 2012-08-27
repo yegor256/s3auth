@@ -36,4 +36,4 @@
 
 s3auth.com, Amazon S3 HTTP Basic Auth gateway
 
-  Read more about {{{./modules/index.html}modules}}.
+  Read more about {{{./architecture.html}architecture}}.

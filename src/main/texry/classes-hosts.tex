@@ -1,0 +1,90 @@
+%%
+%% Copyright (c) 2012, s3auth.com
+%% All rights reserved.
+%%
+%% Redistribution and use in source and binary forms, with or without
+%% modification, are permitted provided that the following conditions
+%% are met: 1) Redistributions of source code must retain the above
+%% copyright notice, this list of conditions and the following
+%% disclaimer. 2) Redistributions in binary form must reproduce the above
+%% copyright notice, this list of conditions and the following
+%% disclaimer in the documentation and/or other materials provided
+%% with the distribution. 3) Neither the name of the s3auth.com nor
+%% the names of its contributors may be used to endorse or promote
+%% products derived from this software without specific prior written
+%% permission.
+%%
+%% THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+%% "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+%% NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+%% FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+%% THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+%% INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+%% (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+%% SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+%% HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+%% STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+%% ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+%% OF THE POSSIBILITY OF SUCH DAMAGE.
+%%
+\documentclass{article}
+\input{header.tex}
+\input{uml2.tex}
+\begin{document}
+\tikzpic{
+    %
+    % Hosts
+    \node [uml2-class, text width=2.5cm] (Hosts)
+        {Hosts\nodepart{two}find(String)\linebreak domains(User)};
+    %
+    % DynamoHosts
+    \node [uml2-class, below=1cm of Hosts] (DynamoHosts)
+        {DynamoHosts\nodepart{two}find(String)\linebreak domains(User)};
+    \draw [-open triangle 60] (DynamoHosts) -- (Hosts);
+    %
+    % Dynamo
+    \node [uml2-class, right=2cm of DynamoHosts, text width=3.5cm] (Dynamo)
+        {Dynamo\nodepart{two}load()\linebreak add(String,Domain)\linebreak remove(Domain)};
+    \draw [diamond-] (DynamoHosts)
+        --
+        node [uml2-cardinality, near start, above=0.1cm] {1}
+        (Dynamo)
+        node [uml2-cardinality, near end, above=0.1cm] {1};
+    %
+    % User
+    \node [uml2-class, below left=1cm of DynamoHosts, text width=2.3cm] (User)
+        {User\nodepart{two}identity()\linebreak name()\linebreak photo()};
+    \draw [diamond-] (DynamoHosts)
+        --
+        node [uml2-cardinality, near start, right=0.1cm] {1}
+        (User)
+        node [uml2-cardinality, near end, left=0.1cm] {*};
+    %
+    % Host
+    \node [uml2-class, below right=1cm of DynamoHosts, text width=5cm] (Host)
+        {Host\nodepart{two}fetch(URI)\linebreak authorized(String,String)};
+    \draw [diamond-] (DynamoHosts)
+        --
+        node [uml2-cardinality, near start, left=0.1cm] {1}
+        (Host)
+        node [uml2-cardinality, near end, right=0.1cm] {*};
+    %
+    % Htpasswd
+    \node [uml2-class, below=1cm of Host, text width=5cm] (Htpasswd)
+        {Htpasswd\nodepart{two}authorized(String,String)};
+    \draw [diamond-] (Host)
+        --
+        node [uml2-cardinality, near start, left=0.1cm] {1}
+        (Htpasswd)
+        node [uml2-cardinality, near end, right=0.1cm] {1};
+    %
+    % Domain
+    \node [uml2-class, left=1cm of User, text width=2cm] (Domain)
+        {Domain\nodepart{two}name()\linebreak key()\linebreak secret()};
+    \draw [diamond-] (User)
+        --
+        node [uml2-cardinality, near start, above=0.1cm] {1}
+        (Domain)
+        node [uml2-cardinality, near end, below=0.1cm] {*};
+}
+\end{document}

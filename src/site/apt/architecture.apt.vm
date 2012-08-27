@@ -1,0 +1,74 @@
+ ------
+ Architecture of s3auth.com
+ ------
+ Yegor Bugayenko
+ ------
+ 2012-08-27
+ ------
+
+~~ Copyright (c) 2012, s3auth.com
+~~ All rights reserved.
+~~
+~~ Redistribution and use in source and binary forms, with or without
+~~ modification, are permitted provided that the following conditions
+~~ are met: 1) Redistributions of source code must retain the above
+~~ copyright notice, this list of conditions and the following
+~~ disclaimer. 2) Redistributions in binary form must reproduce the above
+~~ copyright notice, this list of conditions and the following
+~~ disclaimer in the documentation and/or other materials provided
+~~ with the distribution. 3) Neither the name of the s3auth.com nor
+~~ the names of its contributors may be used to endorse or promote
+~~ products derived from this software without specific prior written
+~~ permission.
+~~
+~~ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+~~ "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+~~ NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+~~ FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+~~ THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+~~ INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+~~ (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+~~ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+~~ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+~~ STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+~~ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+~~ OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Architecture of s3auth.com
+
+  The system consists of three modules:
+
+   * <<<s3auth-hosts>>> is responsible for data persistence, downloading
+     of S3 data objects on demand, and authorization of users through
+     <<<.htpasswd>>> mechanism;
+
+   * <<<s3auth-rest>>> is a web front-end that enables manipulation with
+     configuration data and user authentication
+
+   * <<<s3auth-relay>>> is a custom HTTP web server that sends HTTP requests
+     through to <<<s3auth-hosts>>>.
+
+  High-level packages diagram explains how these modules depends on each other:
+
+[texry/packages.png] UML package diagram
+
+  <<<s3auth-hosts>>> exposes a number of interfaces and just one class
+  {{{./s3auth-hosts/apidocs/com/s3auth/hosts/DynamoHosts.html}<<<DynamoHosts>>>}},
+  which implements {{{./s3auth-hosts/apidocs/com/s3auth/hosts/Hosts.html}<<<Hosts>>>}}
+  interface. As the name explains, we persistent user data in Amazon DynamoDB.
+
+[texry/classes-hosts.png] UML class diagram of s3auth-hosts
+
+  <<<s3auth-rest>>> is a collection of JAX-RS resources, JAXB-annotated
+  entities, XSL pages, Groovy end-to-end tests
+  - all managed by Jetty web server, enhanced with
+  {{{http://www.rexsl.com/}ReXSL framework}}. The only class it uses is
+  {{{./s3auth-hosts/apidocs/com/s3auth/hosts/DynamoHosts.html}<<<DynamoHosts>>>}},
+  which it instantiates inside a servlet listener.
+
+  <<<s3auth-relay>>> is a custom multi-threaded web server, runnable as a JAR from
+  a command line. Again, it uses
+  {{{./s3auth-hosts/apidocs/com/s3auth/hosts/DynamoHosts.html}<<<DynamoHosts>>>}}
+  to get access to our persistence layer.
+
+[texry/classes-relay.png] UML class diagram of s3auth-relay

@@ -640,8 +640,40 @@
                         <shortRevisionLength>8</shortRevisionLength>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>com.texry</groupId>
+                    <artifactId>texry-maven-plugin</artifactId>
+                    <version since="23 Mar 2012">1.0-SNAPSHOT</version>
+                    <configuration>
+                        <closures>
+                            <file>header.tex</file>
+                            <file>uml2.tex</file>
+                        </closures>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>com.texry</groupId>
+                <artifactId>texry-maven-plugin</artifactId>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <file>packages.tex</file>
+                                <file>classes-relay.tex</file>
+                                <file>classes-hosts.tex</file>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
 </project>

@@ -1,0 +1,95 @@
+%%
+%% Copyright (c) 2012, s3auth.com
+%% All rights reserved.
+%%
+%% Redistribution and use in source and binary forms, with or without
+%% modification, are permitted provided that the following conditions
+%% are met: 1) Redistributions of source code must retain the above
+%% copyright notice, this list of conditions and the following
+%% disclaimer. 2) Redistributions in binary form must reproduce the above
+%% copyright notice, this list of conditions and the following
+%% disclaimer in the documentation and/or other materials provided
+%% with the distribution. 3) Neither the name of the s3auth.com nor
+%% the names of its contributors may be used to endorse or promote
+%% products derived from this software without specific prior written
+%% permission.
+%%
+%% THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+%% "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+%% NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+%% FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+%% THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+%% INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+%% (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+%% SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+%% HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+%% STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+%% ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+%% OF THE POSSIBILITY OF SUCH DAMAGE.
+%%
+\documentclass{article}
+\input{header.tex}
+\input{uml2.tex}
+\begin{document}
+\tikzpic{
+    %
+    % HOSTS
+    \umlRectangle{hosts}{s3auth-hosts}{package}{2.9cm}{}
+    %
+    % Dynamo SDK
+    \umlRectangle{dynamo}{Amazon DynamoDB SDK}{package}{3cm}{below=1cm of hosts, fill=white}
+    \draw [-triangle 60, dashed] (hosts) -- (dynamo);
+    %
+    % ENCRYPTION LIBS
+    \umlRectangle{enc}{Encryption Libs}{package}{3cm}{below left=1cm of hosts, fill=white}
+    \draw [-triangle 60, dashed] (hosts) -- (enc);
+    %
+    % S3 SDK
+    \umlRectangle{s3}{Amazon S3 SDK}{package}{2.5cm}{below right=1cm of hosts, fill=white}
+    \draw [-triangle 60, dashed] (hosts) -- (s3);
+    %
+    % RELAY
+    \umlRectangle{relay}{s3auth-relay}{package}{2.5cm}{above left=1cm of hosts}
+    \draw [-triangle 60, dashed] (relay) -- (hosts);
+    %
+    % REST
+    \umlRectangle{rest}{s3auth-rest}{package}{2.5cm}{above right=1cm of hosts}
+    \draw [-triangle 60, dashed] (rest) -- (hosts);
+    %
+    % REXSL
+    \umlRectangle{rexsl}{ReXSL}{package}{2.5cm}{above=1cm of rest, fill=white}
+    \draw [-triangle 60, dashed] (rexsl) -- (rest);
+    %
+    % JETTY
+    \umlRectangle{jetty}{Jetty Server}{package}{2.5cm}{above=1cm of rexsl, fill=white}
+    \draw [-triangle 60, dashed] (jetty) -- (rexsl);
+    %
+    % SAXON
+    \umlRectangle{saxon}{Saxon}{package}{2.5cm}{above right=1cm of rexsl, fill=white}
+    \draw [-triangle 60, dashed] (rexsl) -- (saxon);
+    %
+    % JERSEY
+    \umlRectangle{jersey}{JAX-RS Jersey}{package}{2.5cm}{right=1cm of rexsl, fill=white}
+    \draw [-triangle 60, dashed] (rexsl) -- (jersey);
+    %
+    % JAXB
+    \umlRectangle{jaxb}{JAXB implementation}{package}{2.5cm}{below right=1cm of rexsl, fill=white}
+    \draw [-triangle 60, dashed] (rexsl) -- (jaxb);
+    %
+    % USER
+    \umlActor{user}{Web User}{above=1cm of jetty}
+    \draw [-triangle 60, dashed] (user) -- (jetty);
+    %
+    % HTTP BROWSER
+    \umlActor{browser}{HTTP Browser}{above=1cm of relay}
+    \draw [-triangle 60, dashed] (browser) -- (relay);
+    %
+    % AMAZON DYNAMO
+    \umlActor{aws-dynamo}{Amazon DynamoDB}{below=1cm of dynamo}
+    \draw [-triangle 60, dashed] (dynamo) -- (aws-dynamo);
+    %
+    % AMAZON S3
+    \umlActor{aws-s3}{Amazon S3}{below=1cm of s3}
+    \draw [-triangle 60, dashed] (s3) -- (aws-s3);
+}
+\end{document}

@@ -82,6 +82,7 @@
         </links>
         <menu name="Overview">
             <item name="Introduction" href="index.html" />
+            <item name="Architecture" href="architecture.html" />
         </menu>
         <menu ref="modules" />
         <menu ref="reports" />
