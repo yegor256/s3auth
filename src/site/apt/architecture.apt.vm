@@ -1,5 +1,5 @@
  ------
- Architecture of s3auth.com
+ s3auth.com High-Level Architecture
  ------
  Yegor Bugayenko
  ------
@@ -34,21 +34,24 @@
 ~~ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 ~~ OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Architecture of s3auth.com
+s3auth.com High-Level Architecture
 
-  The system consists of three modules:
+  The system consists of three Maven modules:
 
-   * <<<s3auth-hosts>>> is responsible for data persistence, downloading
-     of S3 data objects on demand, and authorization of users through
-     <<<.htpasswd>>> mechanism;
+   * <<<s3auth-hosts>>> is responsible for 1) data persistence, 2) downloading
+     of S3 data objects on demand, and 3) authorization of users through
+     <<<.htpasswd>>> encryption mechanism;
 
-   * <<<s3auth-rest>>> is a web front-end that enables manipulation with
-     configuration data and user authentication
+   * <<<s3auth-rest>>> is a web front-end that manipulates with
+     user accounts and supplementary HTML pages (at
+     {{{http://www.s3auth.com}http://www.s3auth.com}}).
 
-   * <<<s3auth-relay>>> is a custom HTTP web server that sends HTTP requests
-     through to <<<s3auth-hosts>>>.
+   * <<<s3auth-relay>>> is an HTTP web server that 1) consumes HTTP requests,
+     2) authenticates users, and 3) responds to them using the
+     data retrieved from <<<s3auth-hosts>>> (at
+     {{{http://relay.s3auth.com}http://relay.s3auth.com}}).
 
-  High-level packages diagram explains how these modules depends on each other:
+  This UML class/package diagram explains how these modules depend on each other:
 
 [texry/packages.png] UML package diagram
 
@@ -72,3 +75,4 @@ Architecture of s3auth.com
   to get access to our persistence layer.
 
 [texry/classes-relay.png] UML class diagram of s3auth-relay
+
