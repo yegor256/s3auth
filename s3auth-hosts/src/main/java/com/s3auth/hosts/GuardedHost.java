@@ -81,6 +81,9 @@ final class GuardedHost implements Host {
      */
     @Override
     public InputStream fetch(final URI uri) throws IOException {
+        if (uri.toString().matches("^/?\\.htpasswd$")) {
+            throw new IOException(".htpasswd is a protected object");
+        }
         return this.host.fetch(uri);
     }
 
