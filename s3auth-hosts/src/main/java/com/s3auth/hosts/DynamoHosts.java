@@ -135,39 +135,20 @@ public final class DynamoHosts implements Hosts {
             }
             @Override
             public boolean add(final Domain domain) {
-                boolean added;
-                if (DynamoHosts.this.hosts.containsKey(domain.name())) {
-                    added = false;
-                } else {
-                    try {
-                        DynamoHosts.this.dynamo.add(user.identity(), domain);
-                    } catch (java.io.IOException ex) {
-                        throw new IllegalArgumentException(ex);
-                    }
+                boolean added = false;
+                if (DynamoHosts.this.add(user.identity(), domain)) {
                     set.add(DynamoHosts.normalize(domain));
-                    DynamoHosts.this.hosts.put(
-                        domain.name(),
-                        new DefaultHost(DynamoHosts.normalize(domain))
-                    );
                     added = true;
                 }
                 return added;
             }
             @Override
             public boolean remove(final Object obj) {
-                boolean removed;
+                boolean removed = false;
                 final Domain domain = Domain.class.cast(obj);
-                if (DynamoHosts.this.hosts.containsKey(domain.name())) {
-                    try {
-                        DynamoHosts.this.dynamo.remove(domain);
-                    } catch (java.io.IOException ex) {
-                        throw new IllegalArgumentException(ex);
-                    }
-                    DynamoHosts.this.hosts.remove(domain.name());
+                if (DynamoHosts.this.remove(domain)) {
                     set.remove(DynamoHosts.normalize(domain));
                     removed = true;
-                } else {
-                    removed = false;
                 }
                 return removed;
             }
@@ -186,7 +167,7 @@ public final class DynamoHosts implements Hosts {
     }
 
     /**
-     * Refresh content from Dynamo DB.
+     * Refresh content from Dynamo DB into local variables.
      * @throws IOException If some IO problem inside
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
@@ -196,19 +177,16 @@ public final class DynamoHosts implements Hosts {
                 > DynamoHosts.PERIOD_MS) {
                 this.users.clear();
                 this.users.putAll(this.dynamo.load());
-                for (ConcurrentMap.Entry<String, Set<Domain>> entry
-                    : this.users.entrySet()) {
-                    for (Domain domain : entry.getValue()) {
-                        this.hosts.put(
-                            domain.name(),
-                            new DefaultHost(DynamoHosts.normalize(domain))
-                        );
+                for (String user : this.users.keySet()) {
+                    for (Domain domain : this.users.get(user)) {
+                        this.add(user, domain);
                     }
                 }
                 Logger.debug(
                     this,
-                    "#update(): %d host(s) loaded",
-                    this.hosts.size()
+                    "#update(): %d host(s), %d user(s) loaded",
+                    this.hosts.size(),
+                    this.users.size()
                 );
                 this.updated.set(System.currentTimeMillis());
             }
@@ -230,6 +208,52 @@ public final class DynamoHosts implements Hosts {
             normalized = new DefaultBucket(new DefaultDomain(domain));
         }
         return normalized;
+    }
+
+    /**
+     * Add new domain for the given user (this method is NOT thread-safe).
+     * @param user The user
+     * @param domain The domain
+     * @return Item was added (FALSE means that we already had it)
+     */
+    private boolean add(final String user, final Domain domain) {
+        boolean added;
+        if (this.hosts.containsKey(domain.name())) {
+            added = false;
+        } else {
+            try {
+                this.dynamo.add(user, domain);
+            } catch (java.io.IOException ex) {
+                throw new IllegalArgumentException(ex);
+            }
+            this.hosts.put(
+                domain.name(),
+                new DefaultHost(DynamoHosts.normalize(domain))
+            );
+            added = true;
+        }
+        return added;
+    }
+
+    /**
+     * Remove this domain (this method is NOT thread-safe).
+     * @param domain The domain
+     * @return Item was removed (FALSE means that we didn't have it)
+     */
+    private boolean remove(final Domain domain) {
+        boolean removed;
+        if (this.hosts.containsKey(domain.name())) {
+            try {
+                this.dynamo.remove(domain);
+            } catch (java.io.IOException ex) {
+                throw new IllegalArgumentException(ex);
+            }
+            this.hosts.remove(domain.name());
+            removed = true;
+        } else {
+            removed = false;
+        }
+        return removed;
     }
 
 }
