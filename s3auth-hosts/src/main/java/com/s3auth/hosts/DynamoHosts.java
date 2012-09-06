@@ -228,7 +228,7 @@ public final class DynamoHosts implements Hosts {
             }
             this.hosts.put(
                 domain.name(),
-                new DefaultHost(DynamoHosts.normalize(domain))
+                new GuardedHost(new DefaultHost(DynamoHosts.normalize(domain)))
             );
             added = true;
         }
