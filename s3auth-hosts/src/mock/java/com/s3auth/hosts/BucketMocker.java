@@ -29,44 +29,79 @@
  */
 package com.s3auth.hosts;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.util.Set;
-import java.util.concurrent.ConcurrentMap;
+import com.amazonaws.services.s3.AmazonS3;
+import org.mockito.Mockito;
 
 /**
- * Abstraction on top of DynamoDB SDK.
- *
- * <p>Implementation must be immutable and thread-safe.
+ * Mocker of {@link Bucket}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
- * @checkstyle MultipleStringLiterals (500 lines)
  */
-interface Dynamo extends Closeable {
+public final class BucketMocker {
 
     /**
-     * Load all data from DynamoDB.
-     * @return Map of users and their domains
-     * @throws IOException If some IO problem inside
+     * The mock.
      */
-    ConcurrentMap<String, Set<Domain>> load() throws IOException;
+    private final transient Bucket bucket = Mockito.mock(Bucket.class);
 
     /**
-     * Save to DynamoDB.
-     * @param user Who is the owner
-     * @param domain The domain to save
-     * @throws IOException If some IO problem inside
+     * Public ctor.
      */
-    void add(String user, Domain domain) throws IOException;
+    public BucketMocker() {
+        this.withName("localhost");
+        this.withKey("ABCDEF");
+        this.withSecret("nosecret");
+        this.withClient(Mockito.mock(AmazonS3.class));
+    }
 
     /**
-     * Delete from DynamoDB.
-     * @param domain The domain to save
-     * @throws IOException If some IO problem inside
+     * With this name.
+     * @param name The name
+     * @return This object
      */
-    void remove(Domain domain) throws IOException;
+    public BucketMocker withName(final String name) {
+        Mockito.doReturn(name).when(this.bucket).name();
+        return this;
+    }
+
+    /**
+     * With this key.
+     * @param key The key
+     * @return This object
+     */
+    public BucketMocker withKey(final String key) {
+        Mockito.doReturn(key).when(this.bucket).key();
+        return this;
+    }
+
+    /**
+     * With this secret.
+     * @param secret The secret
+     * @return This object
+     */
+    public BucketMocker withSecret(final String secret) {
+        Mockito.doReturn(secret).when(this.bucket).secret();
+        return this;
+    }
+
+    /**
+     * With this client.
+     * @param client The client
+     * @return This object
+     */
+    public BucketMocker withClient(final AmazonS3 client) {
+        Mockito.doReturn(client).when(this.bucket).client();
+        return this;
+    }
+
+    /**
+     * Mock it.
+     * @return The bucket
+     */
+    public Bucket mock() {
+        return this.bucket;
+    }
 
 }

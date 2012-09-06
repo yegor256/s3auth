@@ -29,9 +29,6 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.jcabi.log.Logger;
@@ -40,7 +37,7 @@ import java.io.InputStream;
 import java.net.URI;
 
 /**
- * Default implementation of host.
+ * Default implementation of {@link Host}.
  *
  * <p>The class is immutable and thread-safe.
  *
@@ -51,14 +48,9 @@ import java.net.URI;
 final class DefaultHost implements Host {
 
     /**
-     * AWS client.
+     * The S3 bucket.
      */
-    private final transient AmazonS3 client;
-
-    /**
-     * The domain.
-     */
-    private final transient Domain domain;
+    private final transient Bucket bucket;
 
     /**
      * Htpasswd file abstraction.
@@ -67,13 +59,10 @@ final class DefaultHost implements Host {
 
     /**
      * Public ctor.
-     * @param dmn The domain
+     * @param bckt The S3 bucket to use
      */
-    public DefaultHost(final Domain dmn) {
-        this.domain = dmn;
-        this.client = new AmazonS3Client(
-            new BasicAWSCredentials(this.domain.key(), this.domain.secret())
-        );
+    public DefaultHost(final Bucket bckt) {
+        this.bucket = bckt;
         this.htpasswd = new Htpasswd(this);
     }
 
@@ -82,7 +71,7 @@ final class DefaultHost implements Host {
      */
     @Override
     public String toString() {
-        return String.format("%s", this.domain);
+        return String.format("%s", this.bucket);
     }
 
     /**
@@ -100,21 +89,29 @@ final class DefaultHost implements Host {
     public InputStream fetch(final URI uri) throws IOException {
         S3Object object;
         try {
-            object = this.client.getObject(
+            object = this.bucket.client().getObject(
                 new GetObjectRequest(
-                    this.domain.name(),
+                    this.bucket.name(),
                     this.object(uri)
                 )
             );
         } catch (com.amazonaws.AmazonClientException ex) {
-            throw new IOException(ex);
+            throw new IOException(
+                String.format(
+                    "failed to fetch '%s' from '%s' (key=%s)",
+                    uri,
+                    this.bucket.name(),
+                    this.bucket.key()
+                ),
+                ex
+            );
         }
         final InputStream stream = object.getObjectContent();
         Logger.debug(
             this,
             "#fetch('%s'): found at %s",
             uri,
-            this.domain.name()
+            this.bucket.name()
         );
         return stream;
     }
@@ -126,8 +123,8 @@ final class DefaultHost implements Host {
     public boolean authorized(final String user, final String password)
         throws IOException {
         boolean auth;
-        if (user.equals(this.domain.key())
-            && password.equals(this.domain.secret())) {
+        if (user.equals(this.bucket.key())
+            && password.equals(this.bucket.secret())) {
             auth = true;
         } else {
             auth = this.htpasswd.authorized(user, password);

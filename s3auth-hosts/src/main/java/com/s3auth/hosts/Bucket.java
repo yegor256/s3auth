@@ -29,44 +29,23 @@
  */
 package com.s3auth.hosts;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.util.Set;
-import java.util.concurrent.ConcurrentMap;
+import com.amazonaws.services.s3.AmazonS3;
 
 /**
- * Abstraction on top of DynamoDB SDK.
+ * Single Amazon S3 bucket.
  *
  * <p>Implementation must be immutable and thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 0.0.1
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
- * @checkstyle MultipleStringLiterals (500 lines)
+ * @since 0.0.2
  */
-interface Dynamo extends Closeable {
+public interface Bucket extends Domain {
 
     /**
-     * Load all data from DynamoDB.
-     * @return Map of users and their domains
-     * @throws IOException If some IO problem inside
+     * Get amazon client.
+     * @return The client
      */
-    ConcurrentMap<String, Set<Domain>> load() throws IOException;
-
-    /**
-     * Save to DynamoDB.
-     * @param user Who is the owner
-     * @param domain The domain to save
-     * @throws IOException If some IO problem inside
-     */
-    void add(String user, Domain domain) throws IOException;
-
-    /**
-     * Delete from DynamoDB.
-     * @param domain The domain to save
-     * @throws IOException If some IO problem inside
-     */
-    void remove(Domain domain) throws IOException;
+    AmazonS3 client();
 
 }

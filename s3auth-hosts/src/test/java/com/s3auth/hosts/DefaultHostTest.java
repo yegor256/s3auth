@@ -50,11 +50,13 @@ public final class DefaultHostTest {
     @Test
     public void loadsAmazonResources() throws Exception {
         final Host host = new DefaultHost(
-            new DomainMocker()
-                .withName("junit.s3auth.com")
-                .withKey(Manifests.read("S3Auth-AwsDynamoKey"))
-                .withSecret(Manifests.read("S3Auth-AwsDynamoSecret"))
-                .mock()
+            new DefaultBucket(
+                new DomainMocker()
+                    .withName("junit.s3auth.com")
+                    .withKey(Manifests.read("S3Auth-AwsDynamoKey"))
+                    .withSecret(Manifests.read("S3Auth-AwsDynamoSecret"))
+                    .mock()
+            )
         );
         MatcherAssert.assertThat(
             IOUtils.toString(host.fetch(URI.create("/index.html"))),
@@ -77,11 +79,13 @@ public final class DefaultHostTest {
     @Test(expected = java.io.IOException.class)
     public void throwsWhenAbsentResource() throws Exception {
         final Host host = new DefaultHost(
-            new DomainMocker()
-                .withName("invalid-bucket.s3auth.com")
-                .withKey("foo")
-                .withSecret("invalid-data")
-                .mock()
+            new DefaultBucket(
+                new DomainMocker()
+                    .withName("invalid-bucket.s3auth.com")
+                    .withKey("foo")
+                    .withSecret("invalid-data")
+                    .mock()
+            )
         );
         host.fetch(URI.create("foo.html"));
     }

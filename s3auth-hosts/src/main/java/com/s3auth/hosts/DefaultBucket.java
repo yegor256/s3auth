@@ -29,44 +29,95 @@
  */
 package com.s3auth.hosts;
 
-import java.io.Closeable;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.jcabi.log.Logger;
 import java.io.IOException;
-import java.util.Set;
-import java.util.concurrent.ConcurrentMap;
+import java.io.InputStream;
+import java.net.URI;
 
 /**
- * Abstraction on top of DynamoDB SDK.
+ * Default implementation of {@link Bucket}.
  *
- * <p>Implementation must be immutable and thread-safe.
+ * <p>The class is immutable and thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
- * @checkstyle MultipleStringLiterals (500 lines)
  */
-interface Dynamo extends Closeable {
+final class DefaultBucket implements Bucket {
 
     /**
-     * Load all data from DynamoDB.
-     * @return Map of users and their domains
-     * @throws IOException If some IO problem inside
+     * The domain.
      */
-    ConcurrentMap<String, Set<Domain>> load() throws IOException;
+    private final transient Domain domain;
 
     /**
-     * Save to DynamoDB.
-     * @param user Who is the owner
-     * @param domain The domain to save
-     * @throws IOException If some IO problem inside
+     * Public ctor.
+     * @param dmn The domain
      */
-    void add(String user, Domain domain) throws IOException;
+    public DefaultBucket(final Domain dmn) {
+        this.domain = dmn;
+    }
 
     /**
-     * Delete from DynamoDB.
-     * @param domain The domain to save
-     * @throws IOException If some IO problem inside
+     * {@inheritDoc}
      */
-    void remove(Domain domain) throws IOException;
+    @Override
+    public AmazonS3 client() {
+        return new AmazonS3Client(
+            new BasicAWSCredentials(this.domain.key(), this.domain.secret())
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return this.domain.toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        return this.domain.hashCode();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        return this == obj || (obj instanceof Domain
+            && obj.hashCode() == this.hashCode());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String name() {
+        return this.domain.name();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String key() {
+        return this.domain.key();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String secret() {
+        return this.domain.secret();
+    }
 
 }

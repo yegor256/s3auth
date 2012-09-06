@@ -36,7 +36,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -64,7 +64,7 @@ public final class DynamoHosts implements Hosts {
     /**
      * Dynamo DB.
      */
-    private final transient Dynamo dynamo = new Dynamo();
+    private final transient Dynamo dynamo;
 
     /**
      * Domains with their hosts.
@@ -77,6 +77,21 @@ public final class DynamoHosts implements Hosts {
      */
     private final transient ConcurrentMap<String, Set<Domain>> users =
         new ConcurrentHashMap<String, Set<Domain>>();
+
+    /**
+     * Default ctor.
+     */
+    public DynamoHosts() {
+        this(new DefaultDynamo());
+    }
+
+    /**
+     * Default ctor.
+     * @param dnm The dynamo abstract
+     */
+    public DynamoHosts(final Dynamo dnm) {
+        this.dynamo = dnm;
+    }
 
     /**
      * {@inheritDoc}
@@ -93,7 +108,7 @@ public final class DynamoHosts implements Hosts {
                 )
             );
         }
-        Logger.debug(this, "#find('%s'): found", name);
+        Logger.debug(this, "#find('%s'): found %[type]s", name, host);
         return host;
     }
 
@@ -105,7 +120,7 @@ public final class DynamoHosts implements Hosts {
         this.update();
         this.users.putIfAbsent(
             user.identity(),
-            new ConcurrentSkipListSet<Domain>()
+            new CopyOnWriteArraySet<Domain>()
         );
         final Set<Domain> set = this.users.get(user.identity());
         // @checkstyle AnonInnerLength (100 lines)
@@ -129,10 +144,10 @@ public final class DynamoHosts implements Hosts {
                     } catch (java.io.IOException ex) {
                         throw new IllegalArgumentException(ex);
                     }
-                    set.add(new DefaultDomain(domain));
+                    set.add(DynamoHosts.normalize(domain));
                     DynamoHosts.this.hosts.put(
                         domain.name(),
-                        new DefaultHost(domain)
+                        new DefaultHost(DynamoHosts.normalize(domain))
                     );
                     added = true;
                 }
@@ -149,7 +164,7 @@ public final class DynamoHosts implements Hosts {
                         throw new IllegalArgumentException(ex);
                     }
                     DynamoHosts.this.hosts.remove(domain.name());
-                    set.remove(new DefaultDomain(domain));
+                    set.remove(DynamoHosts.normalize(domain));
                     removed = true;
                 } else {
                     removed = false;
@@ -184,7 +199,10 @@ public final class DynamoHosts implements Hosts {
                 for (ConcurrentMap.Entry<String, Set<Domain>> entry
                     : this.users.entrySet()) {
                     for (Domain domain : entry.getValue()) {
-                        this.hosts.put(domain.name(), new DefaultHost(domain));
+                        this.hosts.put(
+                            domain.name(),
+                            new DefaultHost(DynamoHosts.normalize(domain))
+                        );
                     }
                 }
                 Logger.debug(
@@ -195,6 +213,23 @@ public final class DynamoHosts implements Hosts {
                 this.updated.set(System.currentTimeMillis());
             }
         }
+    }
+
+    /**
+     * Normalize domain, into a common type.
+     * @param domain The domain to normalize
+     * @return Normalized domain
+     */
+    private static Bucket normalize(final Domain domain) {
+        Bucket normalized;
+        if (domain instanceof Bucket) {
+            normalized = Bucket.class.cast(domain);
+        } else if (domain instanceof DefaultDomain) {
+            normalized = new DefaultBucket(domain);
+        } else {
+            normalized = new DefaultBucket(new DefaultDomain(domain));
+        }
+        return normalized;
     }
 
 }

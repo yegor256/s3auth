@@ -29,44 +29,42 @@
  */
 package com.s3auth.hosts;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.util.Set;
-import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentHashMap;
+import org.mockito.Mockito;
 
 /**
- * Abstraction on top of DynamoDB SDK.
- *
- * <p>Implementation must be immutable and thread-safe.
+ * Mocker of {@link Dynamo}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
- * @checkstyle MultipleStringLiterals (500 lines)
  */
-interface Dynamo extends Closeable {
+public final class DynamoMocker {
 
     /**
-     * Load all data from DynamoDB.
-     * @return Map of users and their domains
-     * @throws IOException If some IO problem inside
+     * The mock.
      */
-    ConcurrentMap<String, Set<Domain>> load() throws IOException;
+    private final transient Dynamo dynamo = Mockito.mock(Dynamo.class);
 
     /**
-     * Save to DynamoDB.
-     * @param user Who is the owner
-     * @param domain The domain to save
-     * @throws IOException If some IO problem inside
+     * Public ctor.
      */
-    void add(String user, Domain domain) throws IOException;
+    public DynamoMocker() {
+        try {
+            Mockito.doReturn(new ConcurrentHashMap<String, Set<Domain>>())
+                .when(this.dynamo).load();
+        } catch (java.io.IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
 
     /**
-     * Delete from DynamoDB.
-     * @param domain The domain to save
-     * @throws IOException If some IO problem inside
+     * Mock it.
+     * @return The dynamo
      */
-    void remove(Domain domain) throws IOException;
+    public Dynamo mock() {
+        return this.dynamo;
+    }
 
 }
