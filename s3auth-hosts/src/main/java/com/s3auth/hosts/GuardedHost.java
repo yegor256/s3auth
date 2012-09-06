@@ -29,9 +29,6 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
-import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;

@@ -32,10 +32,6 @@ package com.s3auth.hosts;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.jcabi.log.Logger;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
 
 /**
  * Default implementation of {@link Bucket}.

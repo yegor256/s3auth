@@ -49,6 +49,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @since 0.0.1
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public final class DynamoHosts implements Hosts {
 
     /**

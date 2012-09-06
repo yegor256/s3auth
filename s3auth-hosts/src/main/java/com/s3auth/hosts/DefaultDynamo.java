@@ -42,7 +42,6 @@ import com.amazonaws.services.dynamodb.model.ScanRequest;
 import com.amazonaws.services.dynamodb.model.ScanResult;
 import com.jcabi.log.Logger;
 import com.rexsl.core.Manifests;
-import java.io.Closeable;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
