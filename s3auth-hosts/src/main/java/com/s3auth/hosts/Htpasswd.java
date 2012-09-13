@@ -184,7 +184,10 @@ final class Htpasswd {
             final Matcher matcher = Htpasswd.Md5.PATTERN.matcher(hash);
             boolean matches;
             if (matcher.matches()) {
-                throw new IOException("MD5 hashes are not supported yet");
+                throw new IOException(
+                    // @checkstyle LineLength (1 line)
+                    "MD5 hashes are not supported yet, try to use plain text, or SHA1 as explained at http://httpd.apache.org/docs/2.2/misc/password_encryptions.html"
+                );
             } else {
                 matches = false;
             }
