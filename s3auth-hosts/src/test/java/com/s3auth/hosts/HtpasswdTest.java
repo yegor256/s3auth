@@ -72,6 +72,32 @@ public final class HtpasswdTest {
             ).authorized("john", "victory"),
             Matchers.is(true)
         );
+        MatcherAssert.assertThat(
+            new Htpasswd(
+                this.host("william:{SHA}qUqP5cyxm6YcTAhz05Hph5gvu9M=")
+            ).authorized("william", "invalid-pwd"),
+            Matchers.is(false)
+        );
+    }
+
+    /**
+     * Htpasswd can manage apache hashes, with PLAIN/TEXT algorithm.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void understandsPlainTextHashValues() throws Exception {
+        MatcherAssert.assertThat(
+            new Htpasswd(
+                this.host("erik:super-secret-password-\u0433")
+            ).authorized("erik", "super-secret-password-\u0433"),
+            Matchers.is(true)
+        );
+        MatcherAssert.assertThat(
+            new Htpasswd(
+                this.host("nick:secret-password-\u0433")
+            ).authorized("nick", "incorrect-password"),
+            Matchers.is(false)
+        );
     }
 
     /**
