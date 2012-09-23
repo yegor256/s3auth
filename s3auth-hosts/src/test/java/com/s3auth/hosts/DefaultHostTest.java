@@ -59,7 +59,7 @@ public final class DefaultHostTest {
             )
         );
         MatcherAssert.assertThat(
-            IOUtils.toString(host.fetch(URI.create("/index.html"))),
+            IOUtils.toString(host.fetch(URI.create("/index.html?query"))),
             Matchers.equalTo("<html>hello</html>")
         );
         MatcherAssert.assertThat(
