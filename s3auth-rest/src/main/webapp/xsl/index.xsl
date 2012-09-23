@@ -79,17 +79,58 @@
                 <input class="submit" type="submit" value="" />
             </p>
         </form>
+        <h1>
+            <xsl:text>Instructions</xsl:text>
+        </h1>
         <p>
-            <xsl:text>Point a CNAME DNS record of your domain to </xsl:text>
-            <span class="tt">relay.s3auth.com</span>
-            <xsl:text>. </xsl:text>
-            <xsl:text>To access the bucket you can use your S3 credentials (key and secret key). Also you can create a </xsl:text>
-            <span class="tt">.htpasswd</span>
-            <xsl:text> file in the root of the bucket according to </xsl:text>
+            <xsl:text>1. Point a CNAME DNS record of your domain to </xsl:text>
+            <span class="tt"><xsl:text>relay.s3auth.com</xsl:text></span>
+            <xsl:text> (domain and bucket name should be identical) and wait for DNS to propagate.</xsl:text>
+        </p>
+        <p>
+            <xsl:text>2. Create a new user in Amazon IAM and attach new custom policy to it:</xsl:text>
+        </p>
+        <pre><![CDATA[{
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["s3:Get*", "s3:List*"],
+      "Resource": "arn:aws:s3:::your.bucket.name"
+    }
+  ]
+}]]></pre>
+        <p>
+            <xsl:text>3. Register your domain, IAM key, and IAM secret key here, using the form above.</xsl:text>
+        </p>
+        <p>
+            <xsl:text>4. Generate </xsl:text>
+            <span class="tt"><xsl:text>.htpasswd</xsl:text></span>
+            <xsl:text> file in </xsl:text>
             <a href="http://httpd.apache.org/docs/2.2/misc/password_encryptions.html">
                 <xsl:text>Apache HTTP Server format</xsl:text>
             </a>
-            <xsl:text> (we support only SHA1 and PLAIN TEXT algorithms at the moment).</xsl:text>
+            <xsl:text> (we support only SHA1 and PLAIN TEXT algorithms at the moment) using </xsl:text>
+            <a href="http://httpd.apache.org/docs/2.2/programs/htpasswd.html">
+                <xsl:text>htpasswd</xsl:text>
+            </a>
+            <xsl:text> tool:</xsl:text>
+        </p>
+        <pre><![CDATA[htpasswd -nbs user password]]></pre>
+        <p>
+            <xsl:text>5. Upload it to the root of your bucket.</xsl:text>
+        </p>
+        <p>
+            <xsl:text>6. Upload your files to the bucket and access them in any web browser
+                using the credentials specified in the </xsl:text>
+            <span class="tt"><xsl:text>.htpasswd</xsl:text></span>
+            <xsl:text> file.</xsl:text>
+        </p>
+        <p>
+            <xsl:text>If any problems don't hesitate to submit a ticket to </xsl:text>
+            <a href="https://github.com/yegor256/s3auth/issues">
+                <xsl:text>github</xsl:text>
+            </a>
+            <xsl:text>, we'll do our best to help.</xsl:text>
         </p>
     </xsl:template>
 

@@ -102,6 +102,12 @@ pre {
     padding-right: 0.4em;
 }
 
+/* fixed font blocks */
+pre {
+    padding: 1em;
+    width: 50em;
+}
+
 /* any input field */
 input {
     border: solid 1px #666;
