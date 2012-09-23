@@ -139,7 +139,7 @@ final class DefaultHost implements Host {
      * @return Object name
      */
     private String object(final URI uri) {
-        String name = uri.toString();
+        String name = uri.getPath();
         if (name.isEmpty() || "/".equals(name)) {
             name = "/index.html";
         }
