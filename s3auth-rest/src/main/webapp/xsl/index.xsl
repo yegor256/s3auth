@@ -94,8 +94,11 @@
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": ["s3:Get*", "s3:List*"],
-      "Resource": "arn:aws:s3:::your.bucket.name"
+      "Action": "s3:GetObject",
+      "Resource": [
+        "arn:aws:s3:::bucket-1.example.com",
+        "arn:aws:s3:::bucket-2.example.com"
+      ]
     }
   ]
 }]]></pre>
