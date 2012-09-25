@@ -99,8 +99,8 @@
                         <a href="http://aws.amazon.com/">
                             <xsl:text>Amazon Web Services</xsl:text>
                         </a>
-                        <xsl:text>, although we are providing services for their clients.</xsl:text>
-                        <xsl:text> It is absolutely free of charge, since it is sponsored by </xsl:text>
+                        <xsl:text>, although we provide service for their clients.</xsl:text>
+                        <xsl:text> The service is absolutely free of charge, since it is sponsored by </xsl:text>
                         <a href="http://www.tpc2.com/">
                             <xsl:text>tpc2.com</xsl:text>
                         </a>
