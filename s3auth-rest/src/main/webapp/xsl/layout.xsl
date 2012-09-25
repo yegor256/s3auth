@@ -44,7 +44,7 @@
             <head>
                 <meta charset="UTF-8" />
                 <meta name="description" content="HTTP Basic Authentication gateway for Amazon S3 buckets" />
-                <meta name="keywords" content="S3 Basic Auth, Amazon S3 Auth, S3 Auth, S3 HTTP Auth" />
+                <meta name="keywords" content="S3 Basic Auth, Amazon S3 Auth, S3 Auth, S3 HTTP Auth, S3 Basic Authentication" />
                 <meta name="author" content="s3auth.com" />
                 <link rel="stylesheet" type="text/css" media="all">
                     <xsl:attribute name="href">
