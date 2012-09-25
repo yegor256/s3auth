@@ -34,7 +34,6 @@ import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.s3auth.hosts.Domain;
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.util.Collection;
 import java.util.LinkedList;
 import javax.ws.rs.FormParam;
@@ -42,7 +41,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 /**
@@ -90,10 +88,9 @@ public final class IndexRs extends BaseRs {
         @FormParam("key") final String key,
         @FormParam("secret") final String secret) throws IOException {
         if (host == null || key == null || secret == null) {
-            throw new WebApplicationException(
-                Response.status(HttpURLConnection.HTTP_SEE_OTHER)
-                    .location(this.uriInfo().getBaseUri())
-                    .build()
+            FlashCookie.forward(
+                this.uriInfo().getBaseUri(),
+                "all fields are mandatory"
             );
         }
         this.hosts().domains(this.user()).add(
@@ -114,6 +111,12 @@ public final class IndexRs extends BaseRs {
         );
         return Response.status(Response.Status.SEE_OTHER)
             .location(this.uriInfo().getBaseUri())
+            .cookie(
+                new FlashCookie(
+                    String.format("added '%s' host to collection", host),
+                    FlashCookie.Color.GREEN
+                )
+            )
             .build();
     }
 
@@ -128,10 +131,9 @@ public final class IndexRs extends BaseRs {
     public Response remove(@QueryParam("host") final String host)
         throws IOException {
         if (host == null) {
-            throw new WebApplicationException(
-                Response.status(HttpURLConnection.HTTP_SEE_OTHER)
-                    .location(this.uriInfo().getBaseUri())
-                    .build()
+            FlashCookie.forward(
+                this.uriInfo().getBaseUri(),
+                "'host' query param is mandatory"
             );
         }
         this.hosts().domains(this.user()).remove(
@@ -152,6 +154,12 @@ public final class IndexRs extends BaseRs {
         );
         return Response.status(Response.Status.SEE_OTHER)
             .location(this.uriInfo().getBaseUri())
+            .cookie(
+                new FlashCookie(
+                    String.format("removed '%s' host from collection", host),
+                    FlashCookie.Color.GREEN
+                )
+            )
             .build();
     }
 

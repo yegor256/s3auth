@@ -31,6 +31,7 @@ package com.s3auth.rest;
 
 import com.jcabi.log.Logger;
 import com.rexsl.page.BaseResource;
+import com.rexsl.page.JaxbBundle;
 import com.s3auth.hosts.Hosts;
 import com.s3auth.hosts.User;
 import javax.servlet.ServletContext;
@@ -66,6 +67,11 @@ public class BaseRs extends BaseResource {
     private transient String icookie;
 
     /**
+     * Flash message from previous page.
+     */
+    private transient FlashCookie flash;
+
+    /**
      * Set cookie. Should be called by JAX-RS implemenation
      * because of {@code &#64;CookieParam} annotation.
      * @param cookie The cookie to set
@@ -74,6 +80,18 @@ public class BaseRs extends BaseResource {
     public final void setCookie(final String cookie) {
         if (cookie != null) {
             this.icookie = cookie;
+        }
+    }
+
+    /**
+     * Set flash cookie. Should be called by JAX-RS implemenation
+     * because of {@code &#64;CookieParam} annotation.
+     * @param cookie The cookie to set
+     */
+    @CookieParam(FlashCookie.NAME)
+    public final void setFlash(final String cookie) {
+        if (cookie != null && !cookie.isEmpty()) {
+            this.flash = new FlashCookie(cookie);
         }
     }
 
@@ -89,6 +107,32 @@ public class BaseRs extends BaseResource {
         this.ihosts = (Hosts) context.getAttribute("com.s3auth.HOSTS");
         if (this.ihosts == null) {
             throw new IllegalStateException("HOSTS is not initialized");
+        }
+    }
+
+    /**
+     * Render something extra to the page.
+     * @param page The page to render into
+     */
+    public final void render(final CommonPage page) {
+        if (this.flash != null) {
+            page.append(
+                new JaxbBundle("flash")
+                    .add("message", this.flash.message())
+                    .up()
+                    .add("color", this.flash.color())
+                    .up()
+            );
+        }
+    }
+
+    /**
+     * Render something extra to the builder.
+     * @param builder Response builder
+     */
+    public final void render(final Response.ResponseBuilder builder) {
+        if (this.flash != null) {
+            this.flash.clean(builder, this.uriInfo().getBaseUri());
         }
     }
 

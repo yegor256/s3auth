@@ -45,7 +45,22 @@
     <properties>
         <heroku.repo>git@heroku.com:s3auth-rest.git</heroku.repo>
         <heroku.ping>http://www.s3auth.com/misc/version</heroku.ping>
+        <rexsl.version since="23 Aug 2012">1.0-SNAPSHOT</rexsl.version>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>rexsl.snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>rexsl.snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <dependencies>
         <dependency>
@@ -67,31 +82,31 @@
         <dependency>
             <groupId>com.rexsl</groupId>
             <artifactId>rexsl-standalone</artifactId>
-            <version since="23 Aug 2012">0.3.8</version>
+            <version>${rexsl.version}</version>
             <classifier>bin</classifier>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.rexsl</groupId>
             <artifactId>rexsl-core</artifactId>
-            <version since="23 Aug 2012">0.3.8</version>
+            <version>${rexsl.version}</version>
         </dependency>
         <dependency>
             <groupId>com.rexsl</groupId>
             <artifactId>rexsl-page</artifactId>
-            <version since="23 Aug 2012">0.3.8</version>
+            <version>${rexsl.version}</version>
         </dependency>
         <dependency>
             <groupId>com.rexsl</groupId>
             <artifactId>rexsl-page</artifactId>
-            <version since="23 Aug 2012">0.3.8</version>
+            <version>${rexsl.version}</version>
             <classifier>mock</classifier>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.rexsl</groupId>
             <artifactId>rexsl-test</artifactId>
-            <version since="23 Aug 2012">0.3.8</version>
+            <version>${rexsl.version}</version>
         </dependency>
         <dependency>
             <!--
@@ -226,7 +241,7 @@
             <plugin>
                 <groupId>com.rexsl</groupId>
                 <artifactId>rexsl-maven-plugin</artifactId>
-                <version since="22 Aug 2012">0.3.8</version>
+                <version>${rexsl.version}</version>
                 <configuration>
                     <systemPropertyVariables>
                         <log4j.configuration>file:${basedir}/src/test/resources/log4j.properties</log4j.configuration>

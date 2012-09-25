@@ -89,6 +89,7 @@
                         </a>
                     </p>
                     <xsl:apply-templates select="user" />
+                    <xsl:apply-templates select="flash" />
                     <xsl:call-template name="content" />
                     <p style="border-top: 1px solid #ccc; margin-top: 2em; padding-top: 1em;">
                         <xsl:text>s3auth.com is an open source project, hosted at </xsl:text>
@@ -160,6 +161,15 @@
             <xsl:call-template name="millis">
                 <xsl:with-param name="millis" select="/page/millis" />
             </xsl:call-template>
+        </div>
+    </xsl:template>
+
+    <xsl:template match="flash">
+        <div id="flash">
+            <xsl:attribute name="class">
+                <xsl:value-of select="color"/>
+            </xsl:attribute>
+            <xsl:value-of select="message"/>
         </div>
     </xsl:template>
 

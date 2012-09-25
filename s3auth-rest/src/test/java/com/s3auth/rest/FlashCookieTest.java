@@ -29,61 +29,52 @@
  */
 package com.s3auth.rest;
 
-import com.rexsl.core.Manifests;
-import com.rexsl.page.BasePage;
-import com.rexsl.page.JaxbBundle;
-import com.rexsl.page.Link;
-import com.s3auth.hosts.User;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.ws.rs.core.NewCookie;
+import org.hamcrest.CustomMatcher;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Base RESTful page.
- *
- * <p>The class is mutable and NOT thread-safe.
- *
+ * Test case for {@link FlashCookie}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
  */
-@XmlRootElement(name = "page")
-@XmlAccessorType(XmlAccessType.NONE)
-public class CommonPage extends BasePage<CommonPage, BaseRs> {
+public final class FlashCookieTest {
 
     /**
-     * Set authenticated user.
-     * @param user The user
-     * @return Itself
+     * FlashCookie can be converted to cookie.
+     * @throws Exception If there is some problem inside
      */
-    public final CommonPage authenticated(final User user) {
-        this.link(new Link("logout", "/a/out"));
-        this.append(new JaxbUser(user));
-        return this;
-    }
-
-    /**
-     * Render it.
-     * @return JAX-RS response
-     */
-    public final Response.ResponseBuilder render() {
-        BaseRs.class.cast(this.home()).render(this);
-        final Response.ResponseBuilder builder = Response.ok();
-        this.append(
-            new JaxbBundle("version")
-                .add("name", Manifests.read("S3Auth-Version"))
-                .up()
-                .add("revision", Manifests.read("S3Auth-Revision"))
-                .up()
-                .add("date", Manifests.read("S3Auth-Date"))
-                .up()
+    @Test
+    public void convertsToCookie() throws Exception {
+        final String msg = "\u0433, Hi!";
+        final NewCookie flash = new FlashCookie(msg, FlashCookie.Color.GREEN);
+        MatcherAssert.assertThat(
+            flash.toString(),
+            Matchers.allOf(
+                Matchers.containsString("s3auth-flash="),
+                Matchers.containsString("Path=/")
+            )
         );
-        builder.entity(this);
-        builder.type(MediaType.TEXT_XML);
-        BaseRs.class.cast(this.home()).render(builder);
-        return builder;
+        MatcherAssert.assertThat(
+            new FlashCookie(flash.getValue()),
+            Matchers.allOf(
+                Matchers.hasProperty(
+                    "name",
+                    Matchers.equalTo(FlashCookie.NAME)
+                ),
+                new CustomMatcher<FlashCookie>("valid flash cookie") {
+                    @Override
+                    public boolean matches(final Object obj) {
+                        final FlashCookie flash = FlashCookie.class.cast(obj);
+                        return flash.message().equals(msg)
+                            && flash.color().equals(FlashCookie.Color.GREEN);
+                    }
+                }
+            )
+        );
     }
 
 }
