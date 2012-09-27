@@ -42,8 +42,10 @@ Manifests.append(new File(rexsl.basedir, 'src/test/resources/META-INF/MANIFEST.M
 def user = new CryptedUser(new UserMocker().mock())
 def cookie = BaseRs.COOKIE + '=' + user
 def host = 'test.s3auth.com'
+def key = 'AKIAJFWVOY5KEEPZNZXA'
+def secret = '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'
 
-RestTester.start(rexsl.home)
+def home = RestTester.start(rexsl.home)
     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
     .header(HttpHeaders.COOKIE, cookie)
     .get('read home page')
@@ -51,20 +53,25 @@ RestTester.start(rexsl.home)
     .assertXPath('/page/version/revision')
     .assertXPath('/page/version/name')
     .assertXPath('/page/version/date')
-    .rel('/page/links/link[@rel="add"]/@href')
+if (!home.nodes("//domain[name='${host}']").isEmpty()) {
+    home.rel("//domain[name='${host}']/links/link[@rel='remove']/@href")
+        .header(HttpHeaders.COOKIE, cookie)
+        .get('remove pre-registered domain')
+        .assertStatus(HttpURLConnection.HTTP_SEE_OTHER)
+}
+
+home.rel('/page/links/link[@rel="add"]/@href')
     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
     .header(HttpHeaders.COOKIE, cookie)
     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-    .post('add new domain', "host=${host}&key=ABC&secret=foo")
+    .post("add new domain ${host}", "host=${host}%20%20&key=%20${key}%20&secret=${secret}")
     .assertStatus(HttpURLConnection.HTTP_SEE_OTHER)
     .follow()
     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
     .header(HttpHeaders.COOKIE, cookie)
     .get('read home page again')
     .assertStatus(HttpURLConnection.HTTP_OK)
-    .assertXPath("/page/domains/domain[name='${host}']")
-    .assertXPath('/page/domains/domain[key="ABC"]')
-    .assertXPath('/page/domains/domain[secret="foo"]')
+    .assertXPath("/page/domains/domain[name='${host}' and key='${key}' and secret='${secret}']")
     .rel("/page/domains/domain[name='${host}']/links/link[@rel='remove']/@href")
     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
     .header(HttpHeaders.COOKIE, cookie)

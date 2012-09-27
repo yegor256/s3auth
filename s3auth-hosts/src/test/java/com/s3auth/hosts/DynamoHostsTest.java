@@ -74,6 +74,50 @@ public final class DynamoHostsTest {
     }
 
     /**
+     * DynamoHosts can reject duplicates.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void rejectsDuplicatesFromDifferentUsers() throws Exception {
+        final Hosts hosts = new DynamoHosts();
+        final Domain domain = new DomainMocker().withName("ibm.com").mock();
+        final User first = new UserMocker().mock();
+        final User second = new UserMocker().mock();
+        hosts.domains(first).remove(domain);
+        MatcherAssert.assertThat(
+            hosts.domains(first).add(domain),
+            Matchers.is(true)
+        );
+        MatcherAssert.assertThat(
+            hosts.domains(second).add(domain),
+            Matchers.is(false)
+        );
+        hosts.close();
+    }
+
+    /**
+     * DynamoHosts can protect domains against removal.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void protectsDomainsAgainstRemoval() throws Exception {
+        final Hosts hosts = new DynamoHosts();
+        final Domain domain = new DomainMocker().withName("yahoo.com").mock();
+        final User first = new UserMocker().mock();
+        final User second = new UserMocker().mock();
+        hosts.domains(first).remove(domain);
+        MatcherAssert.assertThat(
+            hosts.domains(first).add(domain),
+            Matchers.is(true)
+        );
+        MatcherAssert.assertThat(
+            hosts.domains(second).remove(domain),
+            Matchers.is(false)
+        );
+        hosts.close();
+    }
+
+    /**
      * DynamoHosts can block calls to .htpasswd.
      * @throws Exception If there is some problem inside
      */

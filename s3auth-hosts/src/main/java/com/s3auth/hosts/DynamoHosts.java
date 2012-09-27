@@ -154,7 +154,7 @@ public final class DynamoHosts implements Hosts {
             public boolean remove(final Object obj) {
                 boolean removed = false;
                 final Domain domain = Domain.class.cast(obj);
-                if (DynamoHosts.this.remove(domain)) {
+                if (DynamoHosts.this.remove(user.identity(), domain)) {
                     set.remove(DynamoHosts.normalize(domain));
                     removed = true;
                 }
@@ -245,12 +245,14 @@ public final class DynamoHosts implements Hosts {
 
     /**
      * Remove this domain (this method is NOT thread-safe).
+     * @param user Who is removing it
      * @param domain The domain
      * @return Item was removed (FALSE means that we didn't have it)
      */
-    private boolean remove(final Domain domain) {
+    private boolean remove(final String user, final Domain domain) {
         boolean removed;
-        if (this.hosts.containsKey(domain.name())) {
+        if (this.hosts.containsKey(domain.name())
+            && this.users.get(user).contains(domain)) {
             try {
                 this.dynamo.remove(domain);
             } catch (java.io.IOException ex) {

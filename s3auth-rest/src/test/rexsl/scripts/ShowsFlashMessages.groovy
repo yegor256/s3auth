@@ -59,7 +59,10 @@ home.rel('/page/links/link[@rel="add"]/@href')
     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
     .header(HttpHeaders.COOKIE, cookie)
     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-    .post('add new domain', "host=${host}&key=ABCDEF&secret=foo")
+    .post(
+        "add new domain ${host}",
+        "host=${host}&key=AKIAJFWVOY5KEEZNZXAQ&secret=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"
+    )
     .assertStatus(HttpURLConnection.HTTP_SEE_OTHER)
     .assertHeader(
         HttpHeaders.SET_COOKIE,

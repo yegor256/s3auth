@@ -43,19 +43,9 @@ import javax.validation.constraints.NotNull;
 final class DefaultDomain implements Domain {
 
     /**
-     * The name.
+     * The original domain.
      */
-    private final transient String nam;
-
-    /**
-     * The key.
-     */
-    private final transient String ikey;
-
-    /**
-     * The secret.
-     */
-    private final transient String scrt;
+    private final transient Domain origin;
 
     /**
      * Public ctor.
@@ -63,13 +53,24 @@ final class DefaultDomain implements Domain {
      * @param key Key of it
      * @param secret Secret of it
      */
-    public DefaultDomain(
-        final String name,
-        final String key,
+    public DefaultDomain(final String name, final String key,
         final String secret) {
-        this.nam = name.trim();
-        this.ikey = key.trim();
-        this.scrt = secret.trim();
+        this(
+            new Domain() {
+                @Override
+                public String name() {
+                    return name.trim();
+                }
+                @Override
+                public String key() {
+                    return key.trim();
+                }
+                @Override
+                public String secret() {
+                    return secret.trim();
+                }
+            }
+        );
     }
 
     /**
@@ -77,7 +78,7 @@ final class DefaultDomain implements Domain {
      * @param domain The domain
      */
     public DefaultDomain(@NotNull final Domain domain) {
-        this(domain.name(), domain.key(), domain.secret());
+        this.origin = domain;
     }
 
     /**
@@ -85,7 +86,7 @@ final class DefaultDomain implements Domain {
      */
     @Override
     public String toString() {
-        return this.nam;
+        return this.origin.name();
     }
 
     /**
@@ -93,7 +94,7 @@ final class DefaultDomain implements Domain {
      */
     @Override
     public int hashCode() {
-        return this.nam.hashCode();
+        return this.origin.hashCode();
     }
 
     /**
@@ -111,7 +112,7 @@ final class DefaultDomain implements Domain {
     @Override
     @NotNull
     public String name() {
-        return this.nam;
+        return this.origin.name();
     }
 
     /**
@@ -120,7 +121,7 @@ final class DefaultDomain implements Domain {
     @Override
     @NotNull
     public String key() {
-        return this.ikey;
+        return this.origin.key();
     }
 
     /**
@@ -129,7 +130,7 @@ final class DefaultDomain implements Domain {
     @Override
     @NotNull
     public String secret() {
-        return this.scrt;
+        return this.origin.secret();
     }
 
 }
