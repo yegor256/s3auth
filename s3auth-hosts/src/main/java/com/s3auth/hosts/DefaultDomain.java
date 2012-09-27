@@ -59,15 +59,15 @@ final class DefaultDomain implements Domain {
             new Domain() {
                 @Override
                 public String name() {
-                    return name.trim();
+                    return name;
                 }
                 @Override
                 public String key() {
-                    return key.trim();
+                    return key;
                 }
                 @Override
                 public String secret() {
-                    return secret.trim();
+                    return secret;
                 }
             }
         );
@@ -94,7 +94,7 @@ final class DefaultDomain implements Domain {
      */
     @Override
     public int hashCode() {
-        return this.origin.hashCode();
+        return this.origin.name().hashCode();
     }
 
     /**
@@ -103,7 +103,7 @@ final class DefaultDomain implements Domain {
     @Override
     public boolean equals(final Object obj) {
         return this == obj || (obj instanceof Domain
-            && obj.hashCode() == this.hashCode());
+            && Domain.class.cast(obj).name().equals(this.name()));
     }
 
     /**
@@ -112,7 +112,7 @@ final class DefaultDomain implements Domain {
     @Override
     @NotNull
     public String name() {
-        return this.origin.name();
+        return this.origin.name().trim();
     }
 
     /**
@@ -121,7 +121,7 @@ final class DefaultDomain implements Domain {
     @Override
     @NotNull
     public String key() {
-        return this.origin.key();
+        return this.origin.key().trim();
     }
 
     /**
@@ -130,7 +130,7 @@ final class DefaultDomain implements Domain {
     @Override
     @NotNull
     public String secret() {
-        return this.origin.secret();
+        return this.origin.secret().trim();
     }
 
 }

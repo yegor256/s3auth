@@ -36,6 +36,7 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import java.net.URI;
 import java.util.Set;
 import org.apache.commons.io.IOUtils;
+import org.hamcrest.CustomMatcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
@@ -46,32 +47,9 @@ import org.mockito.Mockito;
  * Test case for {@link DynamoHosts}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 public final class DynamoHostsTest {
-
-    /**
-     * DynamoHosts can load configuration from XML.
-     * @throws Exception If there is some problem inside
-     */
-    @Test
-    public void loadsDynamoConfiguration() throws Exception {
-        final Hosts hosts = new DynamoHosts();
-        final User user = new UserMocker().mock();
-        final Set<Domain> domains = hosts.domains(user);
-        final Domain domain = new DomainMocker().mock();
-        domains.remove(domain);
-        MatcherAssert.assertThat(domains.add(domain), Matchers.is(true));
-        MatcherAssert.assertThat(
-            hosts.domains(user),
-            Matchers.hasSize(Matchers.greaterThan(0))
-        );
-        final Host host = hosts.find(domain.name());
-        MatcherAssert.assertThat(
-            host.authorized(domain.key(), domain.secret()),
-            Matchers.is(true)
-        );
-        hosts.close();
-    }
 
     /**
      * DynamoHosts can reject duplicates.
@@ -79,10 +57,10 @@ public final class DynamoHostsTest {
      */
     @Test
     public void rejectsDuplicatesFromDifferentUsers() throws Exception {
-        final Hosts hosts = new DynamoHosts();
+        final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
         final Domain domain = new DomainMocker().withName("ibm.com").mock();
-        final User first = new UserMocker().mock();
-        final User second = new UserMocker().mock();
+        final User first = new UserMocker().withIdentity("7743").mock();
+        final User second = new UserMocker().withIdentity("7746").mock();
         hosts.domains(first).remove(domain);
         MatcherAssert.assertThat(
             hosts.domains(first).add(domain),
@@ -101,10 +79,10 @@ public final class DynamoHostsTest {
      */
     @Test
     public void protectsDomainsAgainstRemoval() throws Exception {
-        final Hosts hosts = new DynamoHosts();
+        final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
         final Domain domain = new DomainMocker().withName("yahoo.com").mock();
-        final User first = new UserMocker().mock();
-        final User second = new UserMocker().mock();
+        final User first = new UserMocker().withIdentity("5543").mock();
+        final User second = new UserMocker().withIdentity("5546").mock();
         hosts.domains(first).remove(domain);
         MatcherAssert.assertThat(
             hosts.domains(first).add(domain),
@@ -113,6 +91,41 @@ public final class DynamoHostsTest {
         MatcherAssert.assertThat(
             hosts.domains(second).remove(domain),
             Matchers.is(false)
+        );
+        hosts.close();
+    }
+
+    /**
+     * DynamoHosts can clean/trim domain properties.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void trimsDomainProperties() throws Exception {
+        final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
+        final Domain domain = new DomainMocker()
+            .withName(" google.com ")
+            .withKey(" AKI56FXVOY5FEEZNZXAQ   ")
+            .withSecret("  ZFomiC6OObi6gD2J1QQcaW1evMUfqv5fVkpDImI9 ")
+            .mock();
+        final User first = new UserMocker().withIdentity("8989").mock();
+        hosts.domains(first).remove(domain);
+        MatcherAssert.assertThat(
+            hosts.domains(first).add(domain),
+            Matchers.is(true)
+        );
+        MatcherAssert.assertThat(
+            hosts.domains(first),
+            Matchers.hasItem(
+                new CustomMatcher<Domain>("trimmed values") {
+                    @Override
+                    public boolean matches(final Object obj) {
+                        final Domain domain = Domain.class.cast(obj);
+                        return "google.com".equals(domain.name())
+                            && "AKI56FXVOY5FEEZNZXAQ".equals(domain.key())
+                            && domain.secret().startsWith("ZFomiC6OObi");
+                    }
+                }
+            )
         );
         hosts.close();
     }
@@ -148,7 +161,7 @@ public final class DynamoHostsTest {
      */
     @Test(expected = javax.validation.ConstraintViolationException.class)
     public void rejectsInvalidUserNames() throws Exception {
-        final Hosts hosts = new DynamoHosts();
+        final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
         final User user = new UserMocker().withIdentity("broken name").mock();
         try {
             hosts.domains(user);
@@ -163,7 +176,7 @@ public final class DynamoHostsTest {
      */
     @Test
     public void rejectsBrokenDomains() throws Exception {
-        final Hosts hosts = new DynamoHosts();
+        final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
         final User user = new UserMocker().mock();
         final Domain[] domains = new Domain[] {
             new DomainMocker().withName("").mock(),

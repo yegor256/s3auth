@@ -136,7 +136,7 @@ public final class IndexRs extends BaseRs {
     @Path("/remove")
     public Response remove(@QueryParam("host") final String host)
         throws IOException {
-        this.hosts().domains(this.user()).remove(
+        final boolean removed = this.hosts().domains(this.user()).remove(
             new Domain() {
                 @Override
                 public String name() {
@@ -152,6 +152,15 @@ public final class IndexRs extends BaseRs {
                 }
             }
         );
+        if (!removed) {
+            FlashCookie.forward(
+                this.uriInfo().getBaseUri(),
+                String.format(
+                    "failed to remove '%s' host",
+                    host
+                )
+            );
+        }
         return Response.status(Response.Status.SEE_OTHER)
             .location(this.uriInfo().getBaseUri())
             .cookie(

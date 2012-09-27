@@ -114,7 +114,7 @@ final class DefaultDynamo implements Dynamo {
                 )
             );
         }
-        Logger.info(this, "#load(): %d items", domains.size());
+        Logger.info(this, "#load(): %d domain(s)", domains.size());
         return domains;
     }
 
@@ -135,7 +135,7 @@ final class DefaultDynamo implements Dynamo {
         );
         Logger.info(
             this,
-            "#add('%s', '%s'): added, %.2f units",
+            "#add('%s', '%s'): added, %.2f unit(s)",
             user,
             domain.name(),
             result.getConsumedCapacityUnits()
@@ -154,7 +154,7 @@ final class DefaultDynamo implements Dynamo {
         );
         Logger.info(
             this,
-            "#remove('%s'): removed, %.2f units",
+            "#remove('%s'): removed, %.2f unit(s)",
             domain.name(),
             result.getConsumedCapacityUnits()
         );

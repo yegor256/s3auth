@@ -27,41 +27,18 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.s3auth.rest;
+package com.s3auth.rest.rexsl.scripts
 
-import com.rexsl.page.BaseResource;
-import javax.validation.ConstraintViolationException;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
+import com.rexsl.test.RestTester
+import javax.ws.rs.core.HttpHeaders
+import javax.ws.rs.core.MediaType
+import javax.ws.rs.core.UriBuilder
 
-/**
- * Maps constraint violations to JAX-RS responses.
- *
- * <p>The class is mutable and NOT thread-safe.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 0.0.1
- */
-@Provider
-public final class ConstraintsMapper extends BaseResource
-    implements ExceptionMapper<ConstraintViolationException> {
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Response toResponse(final ConstraintViolationException violation) {
-        return Response.status(Response.Status.SEE_OTHER)
-            .location(this.uriInfo().getBaseUri())
-            .cookie(
-                new FlashCookie(
-                    violation.getMessage(),
-                    FlashCookie.Color.RED
-                )
-            )
-            .build();
-    }
-
-}
+RestTester.start(UriBuilder.fromUri(rexsl.home).path('/a'))
+    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
+    .header(HttpHeaders.USER_AGENT, 'Chrome/10.0')
+    .get('read entrance page')
+    .assertStatus(HttpURLConnection.HTTP_OK)
+    .assertXPath('/page/version/revision')
+    .assertXPath('/page/version/name')
+    .assertXPath('/page/version/date')

@@ -82,7 +82,7 @@ final class DefaultBucket implements Bucket {
      */
     @Override
     public int hashCode() {
-        return this.domain.hashCode();
+        return this.domain.name().hashCode();
     }
 
     /**
@@ -91,7 +91,7 @@ final class DefaultBucket implements Bucket {
     @Override
     public boolean equals(final Object obj) {
         return this == obj || (obj instanceof Domain
-            && obj.hashCode() == this.hashCode());
+            && Domain.class.cast(obj).name().equals(this.name()));
     }
 
     /**

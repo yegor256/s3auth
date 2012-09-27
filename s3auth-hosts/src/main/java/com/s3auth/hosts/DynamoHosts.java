@@ -144,8 +144,9 @@ public final class DynamoHosts implements Hosts {
             @Override
             public boolean add(@NotNull @Valid final Domain domain) {
                 boolean added = false;
-                if (DynamoHosts.this.add(user.identity(), domain)) {
-                    set.add(DynamoHosts.normalize(domain));
+                final Domain normal = DynamoHosts.normalize(domain);
+                if (DynamoHosts.this.add(user.identity(), normal)) {
+                    set.add(normal);
                     added = true;
                 }
                 return added;
@@ -153,9 +154,11 @@ public final class DynamoHosts implements Hosts {
             @Override
             public boolean remove(final Object obj) {
                 boolean removed = false;
-                final Domain domain = Domain.class.cast(obj);
+                final Domain domain = DynamoHosts.normalize(
+                    Domain.class.cast(obj)
+                );
                 if (DynamoHosts.this.remove(user.identity(), domain)) {
-                    set.remove(DynamoHosts.normalize(domain));
+                    set.remove(domain);
                     removed = true;
                 }
                 return removed;
@@ -190,7 +193,7 @@ public final class DynamoHosts implements Hosts {
                         this.add(user, domain);
                     }
                 }
-                Logger.debug(
+                Logger.info(
                     this,
                     "#update(): %d host(s), %d user(s) loaded",
                     this.hosts.size(),
@@ -227,6 +230,7 @@ public final class DynamoHosts implements Hosts {
     private boolean add(final String user, final Domain domain) {
         boolean added;
         if (this.hosts.containsKey(domain.name())) {
+            Logger.warn(this, "#add('%s', '%s'): no need", user, domain);
             added = false;
         } else {
             try {
@@ -261,6 +265,13 @@ public final class DynamoHosts implements Hosts {
             this.hosts.remove(domain.name());
             removed = true;
         } else {
+            Logger.warn(
+                this,
+                "#remove('%s', '%s'/%[type]s): no need",
+                user,
+                domain,
+                domain
+            );
             removed = false;
         }
         return removed;

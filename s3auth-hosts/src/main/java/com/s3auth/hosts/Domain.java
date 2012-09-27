@@ -93,7 +93,7 @@ public interface Domain {
                     "domain name is mandatory and can't be NULL"
                 ).addConstraintViolation();
                 isValid = false;
-            } else if (!domain.name().matches("[a-zA-Z0-9\\-\\.]+")) {
+            } else if (!domain.name().matches("\\s*[a-zA-Z0-9\\-\\.]+\\s*")) {
                 ctx.buildConstraintViolationWithTemplate(
                     String.format("invalid domain name '%s'", domain.name())
                 ).addNode("name").addConstraintViolation();
@@ -104,7 +104,7 @@ public interface Domain {
                     "AWS key is mandatory and can't be NULL"
                 ).addConstraintViolation();
                 isValid = false;
-            } else if (!domain.key().matches("[A-Z0-9]{20}")) {
+            } else if (!domain.key().matches("\\s*[A-Z0-9]{20}\\s*")) {
                 ctx.buildConstraintViolationWithTemplate(
                     String.format("invalid AWS key '%s'", domain.key())
                 ).addNode("key").addConstraintViolation();
@@ -115,7 +115,8 @@ public interface Domain {
                     "AWS secret key is mandatory and can't be NULL"
                 ).addConstraintViolation();
                 isValid = false;
-            } else if (!domain.secret().matches("[a-zA-Z0-9\\+/]{40}")) {
+            } else if (!domain.secret()
+                .matches("\\s*[a-zA-Z0-9\\+/]{40}\\s*")) {
                 ctx.buildConstraintViolationWithTemplate(
                     String.format("invalid AWS secret '%s'", domain.secret())
                 ).addNode("secret").addConstraintViolation();

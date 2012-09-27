@@ -27,41 +27,31 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.s3auth.rest;
+package com.s3auth.hosts;
 
-import com.rexsl.page.BaseResource;
-import javax.validation.ConstraintViolationException;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Maps constraint violations to JAX-RS responses.
- *
- * <p>The class is mutable and NOT thread-safe.
- *
+ * Test case for {@link DefaultDynamo}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 0.0.1
  */
-@Provider
-public final class ConstraintsMapper extends BaseResource
-    implements ExceptionMapper<ConstraintViolationException> {
+public final class DefaultDynamoTest {
 
     /**
-     * {@inheritDoc}
+     * DefaultDynamo can load configuration.
+     * @throws Exception If there is some problem inside
      */
-    @Override
-    public Response toResponse(final ConstraintViolationException violation) {
-        return Response.status(Response.Status.SEE_OTHER)
-            .location(this.uriInfo().getBaseUri())
-            .cookie(
-                new FlashCookie(
-                    violation.getMessage(),
-                    FlashCookie.Color.RED
-                )
-            )
-            .build();
+    @Test
+    public void loadsDynamoConfiguration() throws Exception {
+        final Dynamo dynamo = new DefaultDynamo();
+        MatcherAssert.assertThat(
+            dynamo.load(),
+            Matchers.notNullValue()
+        );
+        dynamo.close();
     }
 
 }
