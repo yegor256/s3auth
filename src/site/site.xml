@@ -56,7 +56,7 @@
     <body>
         <head>
             <link href="/css/s3auth.css" rel="stylesheet" type="text/css" />
-            <link href="http://img.s3auth.com/favicon.gif" rel="shortcut icon" />
+            <link href="http://img.s3auth.com/favicon.ico" rel="shortcut icon" />
             <link type="text/css"
                 href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css"
                 rel="stylesheet" />

@@ -36,11 +36,13 @@ import com.s3auth.hosts.Domain;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -84,16 +86,17 @@ public final class IndexRs extends BaseRs {
      */
     @POST
     @Path("/add")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response add(@FormParam("host") final String host,
         @FormParam("key") final String key,
         @FormParam("secret") final String secret) throws IOException {
         if (host == null || key == null || secret == null) {
             FlashCookie.forward(
                 this.uriInfo().getBaseUri(),
-                "all fields are mandatory"
+                "'host', 'key', and 'secret' form fields are mandatory"
             );
         }
-        this.hosts().domains(this.user()).add(
+        final boolean added = this.hosts().domains(this.user()).add(
             new Domain() {
                 @Override
                 public String name() {
@@ -109,6 +112,15 @@ public final class IndexRs extends BaseRs {
                 }
             }
         );
+        if (!added) {
+            FlashCookie.forward(
+                this.uriInfo().getBaseUri(),
+                String.format(
+                    "host '%s' is already registered in the system",
+                    host
+                )
+            );
+        }
         return Response.status(Response.Status.SEE_OTHER)
             .location(this.uriInfo().getBaseUri())
             .cookie(

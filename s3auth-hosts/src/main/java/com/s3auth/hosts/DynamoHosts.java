@@ -38,6 +38,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicLong;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 /**
  * Collection of hosts, persisted in Amazon DynamoDB.
@@ -90,7 +93,7 @@ public final class DynamoHosts implements Hosts {
      * Default ctor.
      * @param dnm The dynamo abstract
      */
-    public DynamoHosts(final Dynamo dnm) {
+    public DynamoHosts(@NotNull final Dynamo dnm) {
         this.dynamo = dnm;
     }
 
@@ -98,7 +101,10 @@ public final class DynamoHosts implements Hosts {
      * {@inheritDoc}
      */
     @Override
-    public Host find(final String name) throws IOException {
+    public Host find(
+        @NotNull(message = "host name can't be NULL")
+        @Pattern(regexp = "[a-zA-Z0-9\\-\\.]+", message = "invalid host name")
+        final String name) throws IOException {
         this.update();
         final Host host = this.hosts.get(name);
         if (host == null) {
@@ -117,7 +123,8 @@ public final class DynamoHosts implements Hosts {
      * {@inheritDoc}
      */
     @Override
-    public Set<Domain> domains(final User user) throws IOException {
+    public Set<Domain> domains(
+        @NotNull @Valid final User user) throws IOException {
         this.update();
         this.users.putIfAbsent(
             user.identity(),
@@ -135,7 +142,7 @@ public final class DynamoHosts implements Hosts {
                 return set.iterator();
             }
             @Override
-            public boolean add(final Domain domain) {
+            public boolean add(@NotNull @Valid final Domain domain) {
                 boolean added = false;
                 if (DynamoHosts.this.add(user.identity(), domain)) {
                     set.add(DynamoHosts.normalize(domain));

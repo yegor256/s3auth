@@ -32,6 +32,7 @@ package com.s3auth.hosts;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import javax.validation.constraints.NotNull;
 
 /**
  * A {@link Host} that doesn't allow fetching of certain objects.
@@ -53,7 +54,7 @@ final class GuardedHost implements Host {
      * Public ctor.
      * @param hst Original host
      */
-    public GuardedHost(final Host hst) {
+    public GuardedHost(@NotNull final Host hst) {
         this.host = hst;
     }
 
@@ -77,7 +78,7 @@ final class GuardedHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    public InputStream fetch(final URI uri) throws IOException {
+    public InputStream fetch(@NotNull final URI uri) throws IOException {
         if (uri.toString().matches("^/?\\.htpasswd$")) {
             throw new IOException(".htpasswd is a protected object");
         }
@@ -88,7 +89,8 @@ final class GuardedHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    public boolean authorized(final String user, final String password)
+    public boolean authorized(@NotNull final String user,
+        @NotNull final String password)
         throws IOException {
         return this.host.authorized(user, password);
     }

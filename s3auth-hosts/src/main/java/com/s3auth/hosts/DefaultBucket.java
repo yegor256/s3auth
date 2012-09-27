@@ -32,6 +32,7 @@ package com.s3auth.hosts;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import javax.validation.constraints.NotNull;
 
 /**
  * Default implementation of {@link Bucket}.
@@ -53,7 +54,7 @@ final class DefaultBucket implements Bucket {
      * Public ctor.
      * @param dmn The domain
      */
-    public DefaultBucket(final Domain dmn) {
+    public DefaultBucket(@NotNull final Domain dmn) {
         this.domain = dmn;
     }
 
@@ -61,6 +62,7 @@ final class DefaultBucket implements Bucket {
      * {@inheritDoc}
      */
     @Override
+    @NotNull
     public AmazonS3 client() {
         return new AmazonS3Client(
             new BasicAWSCredentials(this.domain.key(), this.domain.secret())
@@ -96,6 +98,7 @@ final class DefaultBucket implements Bucket {
      * {@inheritDoc}
      */
     @Override
+    @NotNull
     public String name() {
         return this.domain.name();
     }
@@ -104,6 +107,7 @@ final class DefaultBucket implements Bucket {
      * {@inheritDoc}
      */
     @Override
+    @NotNull
     public String key() {
         return this.domain.key();
     }
@@ -112,6 +116,7 @@ final class DefaultBucket implements Bucket {
      * {@inheritDoc}
      */
     @Override
+    @NotNull
     public String secret() {
         return this.domain.secret();
     }

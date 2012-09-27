@@ -50,9 +50,19 @@ public final class UserMocker {
      * Public ctor.
      */
     public UserMocker() {
-        Mockito.doReturn("1234567").when(this.user).identity();
+        this.withIdentity("1234567");
         Mockito.doReturn("John Doe").when(this.user).name();
         Mockito.doReturn(URI.create("#")).when(this.user).photo();
+    }
+
+    /**
+     * With provided identity.
+     * @param identity The identity
+     * @return This object
+     */
+    public UserMocker withIdentity(final String identity) {
+        Mockito.doReturn(identity).when(this.user).identity();
+        return this;
     }
 
     /**

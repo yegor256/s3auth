@@ -38,6 +38,7 @@ import java.util.Set;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -95,6 +96,48 @@ public final class DynamoHostsTest {
         final Host host = hosts.find(bucket.name());
         hosts.close();
         host.fetch(URI.create("/.htpasswd"));
+    }
+
+    /**
+     * DynamoHosts can reject invalid user names.
+     * @throws Exception If there is some problem inside
+     */
+    @Test(expected = javax.validation.ConstraintViolationException.class)
+    public void rejectsInvalidUserNames() throws Exception {
+        final Hosts hosts = new DynamoHosts();
+        final User user = new UserMocker().withIdentity("broken name").mock();
+        try {
+            hosts.domains(user);
+        } finally {
+            hosts.close();
+        }
+    }
+
+    /**
+     * DynamoHosts can reject broken domains.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void rejectsBrokenDomains() throws Exception {
+        final Hosts hosts = new DynamoHosts();
+        final User user = new UserMocker().mock();
+        final Domain[] domains = new Domain[] {
+            new DomainMocker().withName("").mock(),
+            new DomainMocker().withName("invalid domain name").mock(),
+            new DomainMocker().withKey("").mock(),
+            new DomainMocker().withSecret("").mock(),
+            new DomainMocker().withKey("broken-key").mock(),
+            new DomainMocker().withSecret("broken-secret").mock(),
+        };
+        for (Domain domain : domains) {
+            try {
+                hosts.domains(user).add(domain);
+                Assert.fail(String.format("exception expected for %s", domain));
+            } catch (javax.validation.ValidationException ex) {
+                MatcherAssert.assertThat(ex, Matchers.notNullValue());
+            }
+        }
+        hosts.close();
     }
 
 }

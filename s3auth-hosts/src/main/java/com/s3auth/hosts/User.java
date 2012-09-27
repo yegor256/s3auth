@@ -29,7 +29,16 @@
  */
 package com.s3auth.hosts;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.net.URI;
+import javax.validation.Constraint;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+import javax.validation.Payload;
 
 /**
  * Single user.
@@ -40,7 +49,55 @@ import java.net.URI;
  * @version $Id$
  * @since 0.0.1
  */
+@User.Valid
 public interface User {
+
+    @Target(ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    @Constraint(validatedBy = User.Validator.class)
+    @Documented
+    public @interface Valid {
+        /**
+         * Message of the validation error.
+         */
+        String message() default "invalid user";
+        /**
+         * Groups.
+         */
+        Class<?>[] groups() default { };
+        /**
+         * Payload.
+         */
+        Class<? extends Payload>[] payload() default { };
+    }
+
+    /**
+     * Validator of User.
+     */
+    class Validator implements ConstraintValidator<User.Valid, User> {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void initialize(final User.Valid annotation) {
+            //nothing to do
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean isValid(final User user,
+            final ConstraintValidatorContext ctx) {
+            boolean isValid = true;
+            if (!user.identity().matches("\\d+")) {
+                ctx.buildConstraintViolationWithTemplate("invalid FB id")
+                    .addNode("identity")
+                    .addConstraintViolation();
+                isValid = false;
+            }
+            return isValid;
+        }
+    }
 
     /**
      * Unique number of it.

@@ -50,7 +50,8 @@ RestTester.start(rexsl.home)
     .rel('/page/links/link[@rel="add"]/@href')
     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
     .header(HttpHeaders.COOKIE, cookie)
-    .post('submit incomplete form', 'host=test-3.s3auth.com')
+    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
+    .post('submit incomplete form', 'host=test-3.s3auth.com&key=&secret=')
     .assertStatus(HttpURLConnection.HTTP_SEE_OTHER)
     .assertHeader(
         HttpHeaders.SET_COOKIE,

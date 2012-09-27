@@ -29,6 +29,8 @@
  */
 package com.s3auth.hosts;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Default implementation of domain.
  *
@@ -61,7 +63,9 @@ final class DefaultDomain implements Domain {
      * @param key Key of it
      * @param secret Secret of it
      */
-    public DefaultDomain(final String name, final String key,
+    public DefaultDomain(
+        final String name,
+        final String key,
         final String secret) {
         this.nam = name;
         this.ikey = key;
@@ -72,7 +76,7 @@ final class DefaultDomain implements Domain {
      * Public ctor.
      * @param domain The domain
      */
-    public DefaultDomain(final Domain domain) {
+    public DefaultDomain(@NotNull final Domain domain) {
         this(domain.name(), domain.key(), domain.secret());
     }
 
@@ -105,6 +109,7 @@ final class DefaultDomain implements Domain {
      * {@inheritDoc}
      */
     @Override
+    @NotNull
     public String name() {
         return this.nam;
     }
@@ -113,6 +118,7 @@ final class DefaultDomain implements Domain {
      * {@inheritDoc}
      */
     @Override
+    @NotNull
     public String key() {
         return this.ikey;
     }
@@ -121,6 +127,7 @@ final class DefaultDomain implements Domain {
      * {@inheritDoc}
      */
     @Override
+    @NotNull
     public String secret() {
         return this.scrt;
     }

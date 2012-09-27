@@ -42,15 +42,23 @@ Manifests.append(new File(rexsl.basedir, 'src/test/resources/META-INF/MANIFEST.M
 
 def user = new CryptedUser(new UserMocker().mock())
 def cookie = BaseRs.COOKIE + '=' + user
+def host = 'test-2.s3auth.com'
 
-RestTester.start(rexsl.home)
+def home = RestTester.start(rexsl.home)
     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
     .header(HttpHeaders.COOKIE, cookie)
     .get('read home page')
-    .rel('/page/links/link[@rel="add"]/@href')
+if (!home.nodes("//domain[name='${host}']").isEmpty()) {
+    home.rel("//domain[name='${host}']/links/link[@rel='remove']/@href")
+        .header(HttpHeaders.COOKIE, cookie)
+        .get('remove pre-registered domain')
+        .assertStatus(HttpURLConnection.HTTP_SEE_OTHER)
+}
+
+home.rel('/page/links/link[@rel="add"]/@href')
     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
     .header(HttpHeaders.COOKIE, cookie)
-    .post('add new domain', 'host=test-2.s3auth.com&key=ABCDEF&secret=foo')
+    .post('add new domain', "host=${host}&key=ABCDEF&secret=foo")
     .assertStatus(HttpURLConnection.HTTP_SEE_OTHER)
     .assertHeader(
         HttpHeaders.SET_COOKIE,

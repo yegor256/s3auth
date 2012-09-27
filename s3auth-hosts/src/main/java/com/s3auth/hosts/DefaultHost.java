@@ -35,6 +35,7 @@ import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import javax.validation.constraints.NotNull;
 
 /**
  * Default implementation of {@link Host}.
@@ -61,7 +62,7 @@ final class DefaultHost implements Host {
      * Public ctor.
      * @param bckt The S3 bucket to use
      */
-    public DefaultHost(final Bucket bckt) {
+    public DefaultHost(@NotNull final Bucket bckt) {
         this.bucket = bckt;
         this.htpasswd = new Htpasswd(this);
     }
@@ -86,7 +87,7 @@ final class DefaultHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    public InputStream fetch(final URI uri) throws IOException {
+    public InputStream fetch(@NotNull final URI uri) throws IOException {
         S3Object object;
         try {
             object = this.bucket.client().getObject(
@@ -120,7 +121,8 @@ final class DefaultHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    public boolean authorized(final String user, final String password)
+    public boolean authorized(@NotNull final String user,
+        @NotNull final String password)
         throws IOException {
         boolean auth;
         if (user.equals(this.bucket.key())

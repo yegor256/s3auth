@@ -29,6 +29,16 @@
  */
 package com.s3auth.hosts;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import javax.validation.Constraint;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+import javax.validation.Payload;
+
 /**
  * Configuration of a single domain.
  *
@@ -38,7 +48,67 @@ package com.s3auth.hosts;
  * @version $Id$
  * @since 0.0.1
  */
+@Domain.Valid
 public interface Domain {
+
+    @Target(ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    @Constraint(validatedBy = Domain.Validator.class)
+    @Documented
+    public @interface Valid {
+        /**
+         * Message of the validation error.
+         */
+        String message() default "invalid domain";
+        /**
+         * Groups.
+         */
+        Class<?>[] groups() default { };
+        /**
+         * Payload.
+         */
+        Class<? extends Payload>[] payload() default { };
+    }
+
+    /**
+     * Validator of Domain.
+     */
+    class Validator implements ConstraintValidator<Domain.Valid, Domain> {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void initialize(final Domain.Valid annotation) {
+            //nothing to do
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean isValid(final Domain domain,
+            final ConstraintValidatorContext ctx) {
+            boolean isValid = true;
+            if (!domain.name().matches("[a-zA-Z0-9\\-\\.]+")) {
+                ctx.buildConstraintViolationWithTemplate(
+                    String.format("invalid domain name '%s'", domain.name())
+                ).addNode("name").addConstraintViolation();
+                isValid = false;
+            }
+            if (!domain.key().matches("[A-Z0-9]{20}")) {
+                ctx.buildConstraintViolationWithTemplate(
+                    String.format("invalid AWS key '%s'", domain.key())
+                ).addNode("key").addConstraintViolation();
+                isValid = false;
+            }
+            if (!domain.secret().matches("[a-zA-Z0-9\\+/]{40}")) {
+                ctx.buildConstraintViolationWithTemplate(
+                    String.format("invalid AWS secret '%s'", domain.secret())
+                ).addNode("secret").addConstraintViolation();
+                isValid = false;
+            }
+            return isValid;
+        }
+    }
 
     /**
      * Name of domain.

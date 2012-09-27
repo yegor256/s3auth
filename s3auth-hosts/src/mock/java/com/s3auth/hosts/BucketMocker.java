@@ -51,8 +51,8 @@ public final class BucketMocker {
      */
     public BucketMocker() {
         this.withName("localhost");
-        this.withKey("ABCDEF");
-        this.withSecret("nosecret");
+        this.withKey("AKIAJFWVOY5KEEZNZXAQ");
+        this.withSecret("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");
         this.withClient(Mockito.mock(AmazonS3.class));
     }
 

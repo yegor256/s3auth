@@ -48,6 +48,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import javax.validation.constraints.NotNull;
 
 /**
  * Abstraction on top of DynamoDB SDK.
@@ -121,7 +122,8 @@ final class DefaultDynamo implements Dynamo {
      * {@inheritDoc}
      */
     @Override
-    public void add(final String user, final Domain domain) throws IOException {
+    public void add(@NotNull final String user,
+        @NotNull final Domain domain) throws IOException {
         final ConcurrentMap<String, AttributeValue> attrs =
             new ConcurrentHashMap<String, AttributeValue>();
         attrs.put("user.identity", new AttributeValue(user));
@@ -144,7 +146,7 @@ final class DefaultDynamo implements Dynamo {
      * {@inheritDoc}
      */
     @Override
-    public void remove(final Domain domain) throws IOException {
+    public void remove(@NotNull final Domain domain) throws IOException {
         final DeleteItemResult result = this.client.deleteItem(
             new DeleteItemRequest(
                 this.table, new Key(new AttributeValue(domain.name()))

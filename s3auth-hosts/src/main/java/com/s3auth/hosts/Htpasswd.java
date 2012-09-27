@@ -37,6 +37,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.validation.constraints.NotNull;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
@@ -89,7 +90,7 @@ final class Htpasswd {
      * Public ctor.
      * @param hst The host to work with
      */
-    public Htpasswd(final Host hst) {
+    public Htpasswd(@NotNull final Host hst) {
         this.host = hst;
     }
 
@@ -100,7 +101,8 @@ final class Htpasswd {
      * @return Yes or no
      * @throws IOException If some error inside
      */
-    public boolean authorized(final String user, final String password)
+    public boolean authorized(@NotNull final String user,
+        @NotNull final String password)
         throws IOException {
         final ConcurrentMap<String, String> users = this.fetch();
         return users.containsKey(user)
