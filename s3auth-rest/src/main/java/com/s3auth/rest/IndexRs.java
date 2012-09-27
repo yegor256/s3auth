@@ -90,25 +90,19 @@ public final class IndexRs extends BaseRs {
     public Response add(@FormParam("host") final String host,
         @FormParam("key") final String key,
         @FormParam("secret") final String secret) throws IOException {
-        if (host == null || key == null || secret == null) {
-            FlashCookie.forward(
-                this.uriInfo().getBaseUri(),
-                "'host', 'key', and 'secret' form fields are mandatory"
-            );
-        }
         final boolean added = this.hosts().domains(this.user()).add(
             new Domain() {
                 @Override
                 public String name() {
-                    return host.trim();
+                    return host;
                 }
                 @Override
                 public String key() {
-                    return key.trim();
+                    return key;
                 }
                 @Override
                 public String secret() {
-                    return secret.trim();
+                    return secret;
                 }
             }
         );
@@ -142,12 +136,6 @@ public final class IndexRs extends BaseRs {
     @Path("/remove")
     public Response remove(@QueryParam("host") final String host)
         throws IOException {
-        if (host == null) {
-            FlashCookie.forward(
-                this.uriInfo().getBaseUri(),
-                "'host' query param is mandatory"
-            );
-        }
         this.hosts().domains(this.user()).remove(
             new Domain() {
                 @Override
@@ -156,11 +144,11 @@ public final class IndexRs extends BaseRs {
                 }
                 @Override
                 public String key() {
-                    return "";
+                    throw new UnsupportedOperationException();
                 }
                 @Override
                 public String secret() {
-                    return "";
+                    throw new UnsupportedOperationException();
                 }
             }
         );

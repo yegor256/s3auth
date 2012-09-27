@@ -67,9 +67,9 @@ final class DefaultDomain implements Domain {
         final String name,
         final String key,
         final String secret) {
-        this.nam = name;
-        this.ikey = key;
-        this.scrt = secret;
+        this.nam = name.trim();
+        this.ikey = key.trim();
+        this.scrt = secret.trim();
     }
 
     /**

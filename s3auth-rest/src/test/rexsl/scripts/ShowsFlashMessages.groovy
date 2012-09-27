@@ -58,6 +58,7 @@ if (!home.nodes("//domain[name='${host}']").isEmpty()) {
 home.rel('/page/links/link[@rel="add"]/@href')
     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
     .header(HttpHeaders.COOKIE, cookie)
+    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
     .post('add new domain', "host=${host}&key=ABCDEF&secret=foo")
     .assertStatus(HttpURLConnection.HTTP_SEE_OTHER)
     .assertHeader(
