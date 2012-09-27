@@ -131,7 +131,7 @@
     </properties>
 
     <repositories>
-        <!-- intentionally empty -->
+        <!-- intentionally empty (should be) -->
         <repository>
             <id>rexsl.snapshots</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
@@ -139,7 +139,11 @@
     </repositories>
 
     <pluginRepositories>
-        <!-- intentionally empty -->
+        <!-- intentionally empty (should be) -->
+        <pluginRepository>
+            <id>rexsl.snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </pluginRepository>
     </pluginRepositories>
 
     <dependencyManagement>
