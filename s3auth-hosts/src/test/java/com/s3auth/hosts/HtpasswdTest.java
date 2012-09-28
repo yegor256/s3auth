@@ -119,6 +119,20 @@ public final class HtpasswdTest {
     }
 
     /**
+     * Htpasswd can ignore broken lines.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void ignoresBrokenLines() throws Exception {
+        MatcherAssert.assertThat(
+            new Htpasswd(
+                this.host("william:")
+            ).authorized("william", "some-pwd-9"),
+            Matchers.is(false)
+        );
+    }
+
+    /**
      * Create host that fetches the provided htpasswd content.
      * @param htpasswd The content to fetch
      * @return The host
