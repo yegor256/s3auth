@@ -126,7 +126,10 @@ final class Htpasswd {
                     if (line.isEmpty()) {
                         continue;
                     }
-                    final String[] parts = line.trim().split(":");
+                    final String[] parts = line.trim().split(":", 2);
+                    if (parts.length != 2) {
+                        continue;
+                    }
                     this.map.put(parts[0].trim(), parts[1].trim());
                 }
                 this.updated.set(System.currentTimeMillis());
