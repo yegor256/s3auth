@@ -155,7 +155,7 @@ public class BaseRs extends BaseResource {
                     .clone()
                     .path("/a")
                     .build(),
-                ex.getMessage()
+                ex
             );
         }
     }

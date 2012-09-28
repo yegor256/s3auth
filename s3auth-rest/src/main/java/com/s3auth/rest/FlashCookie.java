@@ -157,6 +157,17 @@ public final class FlashCookie extends NewCookie {
     }
 
     /**
+     * Throw an exception that will forward to the page with an error message.
+     * @param uri The URI to forward to
+     * @param cause The cause of this problem
+     * @return The exception to throw
+     */
+    public static WebApplicationException forward(@NotNull final URI uri,
+        @NotNull final Exception cause) {
+        return FlashCookie.forward(uri, cause.getMessage());
+    }
+
+    /**
      * Remove us from the builder.
      * @param builder The builder
      * @param base Base URI
