@@ -126,8 +126,8 @@ public final class HtpasswdTest {
     public void ignoresBrokenLines() throws Exception {
         MatcherAssert.assertThat(
             new Htpasswd(
-                this.host("william:")
-            ).authorized("william", "some-pwd-9"),
+                this.host("bobby:")
+            ).authorized("bobby", "some-pwd-9"),
             Matchers.is(false)
         );
     }
