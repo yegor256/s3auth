@@ -30,12 +30,11 @@
 package com.s3auth.rest;
 
 import com.rexsl.page.UriInfoMocker;
-import java.util.HashSet;
-import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Test case for {@link ConstraintsMapper}.
@@ -52,14 +51,13 @@ public final class ConstraintsMapperTest {
     @Test
     public void convertsExceptionToResponse() throws Exception {
         final ConstraintsMapper mapper = new ConstraintsMapper();
+        final ConstraintViolationException cex =
+            Mockito.mock(ConstraintViolationException.class);
+        Mockito.doReturn("hello, world!").when(cex).getMessage();
         mapper.setUriInfo(new UriInfoMocker().mock());
         MatcherAssert.assertThat(
-            mapper.toResponse(
-                new ConstraintViolationException(
-                    new HashSet<ConstraintViolation<?>>()
-                )
-            ),
-            Matchers.hasToString(Matchers.containsString(""))
+            mapper.toResponse(cex).getEntity(),
+            Matchers.hasToString(Matchers.containsString("hello"))
         );
     }
 

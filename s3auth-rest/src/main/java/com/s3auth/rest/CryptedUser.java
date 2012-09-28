@@ -36,6 +36,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.URI;
+import javax.validation.constraints.NotNull;
 import org.apache.commons.codec.binary.Base32;
 
 /**
@@ -76,14 +77,14 @@ public final class CryptedUser implements User {
          * Public ctor.
          * @param cause The cause of it
          */
-        public DecryptionException(final String cause) {
+        public DecryptionException(@NotNull final String cause) {
             super(cause);
         }
         /**
          * Public ctor.
          * @param cause The cause of it
          */
-        public DecryptionException(final Throwable cause) {
+        public DecryptionException(@NotNull final Throwable cause) {
             super(cause);
         }
     }
@@ -92,7 +93,7 @@ public final class CryptedUser implements User {
      * Public ctor.
      * @param usr The user to encapsulate
      */
-    public CryptedUser(final User usr) {
+    public CryptedUser(@NotNull final User usr) {
         this.user = usr;
     }
 

@@ -32,6 +32,7 @@ package com.s3auth.rest;
 import com.rexsl.misc.CookieBuilder;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
@@ -82,7 +83,7 @@ public final class FlashCookie extends NewCookie {
      * Public ctor, from a cookie encoded text.
      * @param text The text
      */
-    public FlashCookie(final String text) {
+    public FlashCookie(@NotNull final String text) {
         super(FlashCookie.NAME, text);
         String[] parts;
         try {
@@ -106,7 +107,8 @@ public final class FlashCookie extends NewCookie {
      * @param message The message
      * @param color The color
      */
-    public FlashCookie(final String message, final Color color) {
+    public FlashCookie(@NotNull final String message,
+        @NotNull final Color color) {
         super(FlashCookie.NAME, FlashCookie.encode(message, color));
         this.msg = message;
         this.clr = color;
@@ -141,7 +143,8 @@ public final class FlashCookie extends NewCookie {
      * @param uri The URI to forward to
      * @param message The message to show as error
      */
-    public static void forward(final URI uri, final String message) {
+    public static void forward(@NotNull final URI uri,
+        @NotNull final String message) {
         throw new WebApplicationException(
             Response.status(HttpURLConnection.HTTP_SEE_OTHER)
                 .location(uri)
@@ -155,7 +158,8 @@ public final class FlashCookie extends NewCookie {
      * @param builder The builder
      * @param base Base URI
      */
-    public void clean(final Response.ResponseBuilder builder, final URI base) {
+    public void clean(@NotNull final Response.ResponseBuilder builder,
+        @NotNull final URI base) {
         builder.cookie(new CookieBuilder(base).name(FlashCookie.NAME).build());
     }
 

@@ -61,6 +61,7 @@ public final class ConstraintsMapper extends BaseResource
                     FlashCookie.Color.RED
                 )
             )
+            .entity(violation.getMessage())
             .build();
     }
 
