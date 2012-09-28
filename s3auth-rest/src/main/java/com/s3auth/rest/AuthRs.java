@@ -69,7 +69,6 @@ public final class AuthRs extends BaseRs {
                 .fromUri("https://www.facebook.com/dialog/oauth")
                 .queryParam("client_id", "{id}")
                 .queryParam("redirect_uri", "{uri}")
-                .queryParam("scope", "manage_pages")
                 .build(
                     Manifests.read("S3Auth-FbId"),
                     this.redirectUri()
@@ -152,7 +151,6 @@ public final class AuthRs extends BaseRs {
             .queryParam("client_id", "{id}")
             .queryParam("redirect_uri", "{uri}")
             .queryParam("client_secret", "{secret}")
-            .queryParam("scope", "manage_pages")
             .queryParam("code", "{code}")
             .build(
                 Manifests.read("S3Auth-FbId"),
