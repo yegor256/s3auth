@@ -36,7 +36,6 @@ import com.s3auth.hosts.Hosts;
 import com.s3auth.hosts.User;
 import javax.servlet.ServletContext;
 import javax.ws.rs.CookieParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
@@ -151,17 +150,12 @@ public class BaseRs extends BaseResource {
                 this.httpServletRequest().getRequestURI(),
                 ex
             );
-            throw new WebApplicationException(
-                ex,
-                Response.status(Response.Status.TEMPORARY_REDIRECT)
-                    .header("s3auth-error", ex.getMessage())
-                    .location(
-                        this.uriInfo().getBaseUriBuilder()
-                            .clone()
-                            .path("/a")
-                            .build()
-                    )
-                    .build()
+            throw FlashCookie.forward(
+                this.uriInfo().getBaseUriBuilder()
+                    .clone()
+                    .path("/a")
+                    .build(),
+                ex.getMessage()
             );
         }
     }

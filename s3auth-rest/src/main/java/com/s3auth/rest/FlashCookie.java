@@ -142,13 +142,16 @@ public final class FlashCookie extends NewCookie {
      * Throw an exception that will forward to the page with an error message.
      * @param uri The URI to forward to
      * @param message The message to show as error
+     * @return The exception to throw
      */
-    public static void forward(@NotNull final URI uri,
+    public static WebApplicationException forward(@NotNull final URI uri,
         @NotNull final String message) {
-        throw new WebApplicationException(
+        return new WebApplicationException(
             Response.status(HttpURLConnection.HTTP_SEE_OTHER)
                 .location(uri)
                 .cookie(new FlashCookie(message, FlashCookie.Color.RED))
+                .header("s3auth-error", message)
+                .entity(message)
                 .build()
         );
     }

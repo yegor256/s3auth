@@ -107,7 +107,7 @@ public final class IndexRs extends BaseRs {
             }
         );
         if (!added) {
-            FlashCookie.forward(
+            throw FlashCookie.forward(
                 this.uriInfo().getBaseUri(),
                 String.format(
                     "host '%s' is already registered in the system",
@@ -153,7 +153,7 @@ public final class IndexRs extends BaseRs {
             }
         );
         if (!removed) {
-            FlashCookie.forward(
+            throw FlashCookie.forward(
                 this.uriInfo().getBaseUri(),
                 String.format(
                     "failed to remove '%s' host",
