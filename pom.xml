@@ -106,12 +106,10 @@
     <distributionManagement>
         <snapshotRepository>
             <id>s3auth.s3</id>
-            <uniqueVersion>false</uniqueVersion>
             <url>s3://repo.s3auth.com/snapshot</url>
         </snapshotRepository>
         <repository>
             <id>s3auth.s3</id>
-            <uniqueVersion>false</uniqueVersion>
             <url>s3://repo.s3auth.com/release</url>
         </repository>
         <site>
@@ -131,7 +129,6 @@
     </properties>
 
     <repositories>
-        <!-- intentionally empty (should be) -->
         <repository>
             <id>s3auth.s3</id>
             <url>s3://repo.s3auth.com/snapshot</url>
@@ -143,7 +140,6 @@
     </repositories>
 
     <pluginRepositories>
-        <!-- intentionally empty (should be) -->
         <pluginRepository>
             <id>rexsl.snapshots</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
