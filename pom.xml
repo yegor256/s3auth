@@ -507,6 +507,11 @@
                                         <quiet>true</quiet>
                                         <links>
                                             <link>http://download.oracle.com/javaee/6/api/</link>
+                                            <link>http://hamcrest.org/JavaHamcrest/javadoc/1.3/</link>
+                                            <link>http://docs.mockito.googlecode.com/hg/latest/</link>
+                                            <link>http://docs.amazonwebservices.com/AWSJavaSDK/latest/javadoc/</link>
+                                            <link>http://jackson.codehaus.org/javadoc/bean-validation-api/1.0/</link>
+                                            <link>http://www.eclipse.org/aspectj/doc/next/runtime-api/</link>
                                         </links>
                                         <detectLinks>true</detectLinks>
                                         <tags>
