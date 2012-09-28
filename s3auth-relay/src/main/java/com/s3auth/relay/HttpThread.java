@@ -40,6 +40,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentMap;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import org.apache.commons.io.IOUtils;
 
@@ -85,7 +86,8 @@ final class HttpThread implements Runnable {
      * @param sckts Sockets to read from
      * @param hsts Hosts
      */
-    public HttpThread(final BlockingQueue<Socket> sckts, final Hosts hsts) {
+    public HttpThread(@NotNull final BlockingQueue<Socket> sckts,
+        @NotNull final Hosts hsts) {
         this.sockets = sckts;
         this.hosts = hsts;
     }

@@ -37,6 +37,7 @@ import java.net.URI;
 import java.net.URLDecoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.CharEncoding;
@@ -78,7 +79,8 @@ final class SecuredHost implements Host {
      * @param hst Original host
      * @param rqst The request
      */
-    public SecuredHost(final Host hst, final HttpRequest rqst) {
+    public SecuredHost(@NotNull final Host hst,
+        @NotNull final HttpRequest rqst) {
         this.host = hst;
         this.request = rqst;
     }
@@ -87,7 +89,7 @@ final class SecuredHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    public InputStream fetch(final URI uri) throws IOException {
+    public InputStream fetch(@NotNull final URI uri) throws IOException {
         if (!this.request.headers().containsKey(HttpHeaders.AUTHORIZATION)) {
             throw new HttpException(
                 new HttpResponse()
@@ -146,7 +148,8 @@ final class SecuredHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    public boolean authorized(final String user, final String password)
+    public boolean authorized(@NotNull final String user,
+        @NotNull final String password)
         throws IOException {
         return this.host.authorized(user, password);
     }

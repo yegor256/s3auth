@@ -42,6 +42,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.validation.constraints.NotNull;
 
 /**
  * HTTP request.
@@ -95,7 +96,7 @@ final class HttpRequest {
      * @throws IOException If some socket problem
      * @see <a href="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>
      */
-    public HttpRequest(final Socket socket) throws IOException {
+    public HttpRequest(@NotNull final Socket socket) throws IOException {
         final BufferedReader reader =
             new BufferedReader(new InputStreamReader(socket.getInputStream()));
         final String top = reader.readLine();

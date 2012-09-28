@@ -40,6 +40,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import javax.validation.constraints.NotNull;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
 
@@ -101,7 +102,7 @@ final class HttpResponse {
      * @return This object
      */
     public HttpResponse withHeader(final String name,
-        final String value) {
+        @NotNull final String value) {
         this.headers.putIfAbsent(name, new LinkedList<String>());
         this.headers.get(name).add(value);
         return this;
@@ -112,7 +113,7 @@ final class HttpResponse {
      * @param stream The stream to get the body from
      * @return This object
      */
-    public HttpResponse withBody(final InputStream stream) {
+    public HttpResponse withBody(@NotNull final InputStream stream) {
         this.body = stream;
         return this;
     }
@@ -122,7 +123,7 @@ final class HttpResponse {
      * @param text Text of the body
      * @return This object
      */
-    public HttpResponse withBody(final String text) {
+    public HttpResponse withBody(@NotNull final String text) {
         this.body = IOUtils.toInputStream(text);
         return this;
     }
@@ -134,7 +135,7 @@ final class HttpResponse {
      * @throws IOException If some IO problem inside
      * @see http://stackoverflow.com/questions/8179547
      */
-    public int send(final Socket socket) throws IOException {
+    public int send(@NotNull final Socket socket) throws IOException {
         final OutputStream stream = socket.getOutputStream();
         final Writer writer = new OutputStreamWriter(stream);
         writer.write(

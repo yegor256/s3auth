@@ -43,6 +43,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
+import javax.validation.constraints.NotNull;
 
 /**
  * HTTP facade (port listener).
@@ -98,7 +99,7 @@ final class HttpFacade implements Closeable {
      * @throws IOException If can't initialize
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public HttpFacade(final Hosts hosts, final int port)
+    public HttpFacade(@NotNull final Hosts hosts, final int port)
         throws IOException {
         this.server = new ServerSocket(port);
         for (int thread = 0; thread < HttpFacade.THREADS; ++thread) {

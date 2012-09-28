@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import javax.validation.constraints.NotNull;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -69,7 +70,7 @@ final class LocalHost implements Host {
      */
     @Override
     @SuppressWarnings("PMD.DoNotCallSystemExit")
-    public InputStream fetch(final URI uri) throws IOException {
+    public InputStream fetch(@NotNull final URI uri) throws IOException {
         String output;
         if ("/".equals(uri.toString())) {
             output = "see www.s3auth.com";
@@ -92,7 +93,8 @@ final class LocalHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    public boolean authorized(final String user, final String password) {
+    public boolean authorized(@NotNull final String user,
+        @NotNull final String password) {
         return true;
     }
 

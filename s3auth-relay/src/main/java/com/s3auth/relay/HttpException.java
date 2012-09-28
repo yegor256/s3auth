@@ -30,6 +30,7 @@
 package com.s3auth.relay;
 
 import java.io.IOException;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
@@ -59,7 +60,7 @@ final class HttpException extends IOException {
      * @param status The status
      * @param cause The cause of it
      */
-    public HttpException(final int status, final String cause) {
+    public HttpException(final int status, @NotNull final String cause) {
         this(
             new HttpResponse()
                 .withStatus(status)
@@ -73,7 +74,7 @@ final class HttpException extends IOException {
      * @param status The status
      * @param cause The cause of it
      */
-    public HttpException(final int status, final Throwable cause) {
+    public HttpException(final int status, @NotNull final Throwable cause) {
         this(status, cause.getMessage());
     }
 
@@ -81,7 +82,7 @@ final class HttpException extends IOException {
      * Public ctor.
      * @param response The response
      */
-    public HttpException(final HttpResponse response) {
+    public HttpException(@NotNull final HttpResponse response) {
         super();
         this.resp = response;
     }
