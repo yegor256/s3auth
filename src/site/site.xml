@@ -82,9 +82,9 @@
             <item name="Built with Maven 2" href="http://maven.apache.org/" />
         </links>
         <menu name="Overview">
-            <item name="Introduction" href="index.html" />
-            <item name="Architecture" href="architecture.html" />
-            <item name="JavaDoc" href="apidocs/index.html" />
+            <item name="Introduction" href="./index.html" />
+            <item name="Architecture" href="./architecture.html" />
+            <item name="JavaDoc" href="./apidocs/index.html" />
         </menu>
         <menu ref="modules" />
         <menu ref="reports" />
