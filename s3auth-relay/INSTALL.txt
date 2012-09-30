@@ -50,6 +50,7 @@ Create /home/ubuntu/settings.xml:
 
     <?xml version='1.0'?>
     <settings>
+     <localRepository>/home/ubuntu/m2-repo</localRepository>
      <servers>
       <server>
        <id>s3auth.s3</id>
@@ -64,13 +65,14 @@ Create run.sh in /home/ubuntu:
     #!/bin/sh
     while true
     do
-        mail -s "recent logs" yegor@tpc2.com < ./s3auth.log
-        rm -rf ./s3auth.log
-        export MAVEN_HOME=./apache-maven-3.0.4
+        mail -s "recent logs" yegor@tpc2.com < /home/ubuntu/s3auth.log
+        rm -rf /home/ubuntu/s3auth.log
+        rm -rf /home/ubuntu/m2-repo
+        export MAVEN_HOME=/home/ubuntu/apache-maven-3.0.4
         export MAVEN_OPTS=-Xmx256m
-    	./apache-maven-3.0.4/bin/mvn --errors --quiet \
-    	    --update-snapshots --settings ./settings.xml \
-    	    test > ./s3auth.log 2>&1
+    	/home/ubuntu/apache-maven-3.0.4/bin/mvn --errors --quiet \
+    	    --update-snapshots --settings /home/ubuntu/settings.xml \
+    	    test > /home/ubuntu/s3auth.log 2>&1
     done
 
 Make sure it's executable:
@@ -79,6 +81,6 @@ Make sure it's executable:
 
 Add this to crontab:
 
-    @reboot sudo ~/run.sh &
+    @reboot sudo /home/ubuntu/run.sh &
 
 Logout and reboot the server
