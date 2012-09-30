@@ -114,7 +114,7 @@ final class DefaultDynamo implements Dynamo {
                 )
             );
         }
-        Logger.info(this, "#load(): %d domain(s)", domains.size());
+        Logger.info(this, "#load(): %d user(s)", domains.size());
         return domains;
     }
 

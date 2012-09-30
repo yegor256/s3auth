@@ -67,7 +67,6 @@ Create run.sh in /home/ubuntu:
     do
         mail -s "recent logs" yegor@tpc2.com < /home/ubuntu/s3auth.log
         rm -rf /home/ubuntu/s3auth.log
-        rm -rf /home/ubuntu/m2-repo
         export MAVEN_HOME=/home/ubuntu/apache-maven-3.0.4
         export MAVEN_OPTS=-Xmx256m
     	/home/ubuntu/apache-maven-3.0.4/bin/mvn --errors --quiet \
