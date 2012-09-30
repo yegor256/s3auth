@@ -222,6 +222,7 @@
                     <showVersion>false</showVersion>
                     <streamLogs>true</streamLogs>
                     <postBuildHookScript>verify.groovy</postBuildHookScript>
+                    <settingsFile>${project.build.outputDirectory}/invoker/settings.xml</settingsFile>
                 </configuration>
                 <executions>
                     <execution>
@@ -246,6 +247,17 @@
                             <target>
                                 <copy file="${basedir}/src/main/production/pom.xml"
                                     todir="${project.build.outputDirectory}/invoker/relay"/>
+                                <echo file="${project.build.outputDirectory}/invoker/settings.xml"><![CDATA[
+                                    <settings>
+                                     <servers>
+                                      <server>
+                                       <id>s3auth.s3</id>
+                                       <username>${aws.key}</username>
+                                       <password>${aws.secret}</password>
+                                      </server>
+                                     </servers>
+                                    </settings>
+                                ]]></echo>
                                 <echo file="${project.build.outputDirectory}/invoker/relay/verify.groovy">
                                     def log = new File(basedir, 'build.log')
                                     assert log.text.contains('java.net.BindException: Permission denied')
