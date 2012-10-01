@@ -119,6 +119,7 @@ public final class IndexRs extends BaseRs {
             .location(this.uriInfo().getBaseUri())
             .cookie(
                 new FlashCookie(
+                    this.uriInfo().getBaseUri(),
                     String.format("added '%s' host to collection", host),
                     FlashCookie.Color.GREEN
                 )
@@ -165,6 +166,7 @@ public final class IndexRs extends BaseRs {
             .location(this.uriInfo().getBaseUri())
             .cookie(
                 new FlashCookie(
+                    this.uriInfo().getBaseUri(),
                     String.format("removed '%s' host from collection", host),
                     FlashCookie.Color.GREEN
                 )

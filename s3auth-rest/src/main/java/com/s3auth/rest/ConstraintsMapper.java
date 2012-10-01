@@ -57,6 +57,7 @@ public final class ConstraintsMapper extends BaseResource
             .location(this.uriInfo().getBaseUri())
             .cookie(
                 new FlashCookie(
+                    this.uriInfo().getBaseUri(),
                     violation.getMessage(),
                     FlashCookie.Color.RED
                 )

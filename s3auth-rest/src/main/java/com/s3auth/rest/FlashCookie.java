@@ -104,12 +104,19 @@ public final class FlashCookie extends NewCookie {
 
     /**
      * Public ctor, from exact values.
+     * @param base Base URI where we're using it
      * @param message The message
      * @param color The color
      */
-    public FlashCookie(@NotNull final String message,
+    public FlashCookie(@NotNull final URI base, @NotNull final String message,
         @NotNull final Color color) {
-        super(FlashCookie.NAME, FlashCookie.encode(message, color));
+        super(
+            new CookieBuilder(base)
+                .name(FlashCookie.NAME)
+                .value(FlashCookie.encode(message, color))
+                .temporary()
+                .build()
+        );
         this.msg = message;
         this.clr = color;
     }
@@ -149,7 +156,7 @@ public final class FlashCookie extends NewCookie {
         return new WebApplicationException(
             Response.status(HttpURLConnection.HTTP_SEE_OTHER)
                 .location(uri)
-                .cookie(new FlashCookie(message, FlashCookie.Color.RED))
+                .cookie(new FlashCookie(uri, message, FlashCookie.Color.RED))
                 .header("s3auth-error", message)
                 .entity(message)
                 .build()

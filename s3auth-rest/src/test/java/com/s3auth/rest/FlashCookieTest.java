@@ -29,6 +29,7 @@
  */
 package com.s3auth.rest;
 
+import java.net.URI;
 import javax.ws.rs.core.NewCookie;
 import org.hamcrest.CustomMatcher;
 import org.hamcrest.MatcherAssert;
@@ -50,7 +51,11 @@ public final class FlashCookieTest {
     @Test
     public void convertsToCookie() throws Exception {
         final String msg = "\u0433, Hi!";
-        final NewCookie flash = new FlashCookie(msg, FlashCookie.Color.GREEN);
+        final NewCookie flash = new FlashCookie(
+            new URI("#base"),
+            msg,
+            FlashCookie.Color.GREEN
+        );
         MatcherAssert.assertThat(
             flash.toString(),
             Matchers.allOf(
