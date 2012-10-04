@@ -83,7 +83,7 @@ public class CommonPage extends BasePage<CommonPage, BaseRs> {
         );
         builder.entity(this);
         builder.type(MediaType.TEXT_XML);
-        builder.type(HttpHeaders.VARY, "Cookie");
+        builder.header(HttpHeaders.VARY, "Cookie");
         BaseRs.class.cast(this.home()).render(builder);
         return builder;
     }
