@@ -34,6 +34,7 @@ import com.rexsl.page.BasePage;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;
 import com.s3auth.hosts.User;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -82,6 +83,7 @@ public class CommonPage extends BasePage<CommonPage, BaseRs> {
         );
         builder.entity(this);
         builder.type(MediaType.TEXT_XML);
+        builder.type(HttpHeaders.VARY, "Cookie");
         BaseRs.class.cast(this.home()).render(builder);
         return builder;
     }
