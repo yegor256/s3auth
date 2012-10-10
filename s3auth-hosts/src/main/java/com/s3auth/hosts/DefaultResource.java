@@ -92,18 +92,6 @@ final class DefaultResource implements Resource {
                 meta.getContentType()
             )
         );
-        headers.add(
-            DefaultResource.header(
-                HttpHeaders.CACHE_CONTROL,
-                meta.getCacheControl()
-            )
-        );
-        headers.add(
-            DefaultResource.header(
-                HttpHeaders.CONTENT_ENCODING,
-                meta.getContentEncoding()
-            )
-        );
         return headers;
     }
 
