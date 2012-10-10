@@ -114,7 +114,7 @@ final class DefaultResource implements Resource {
      * @return Full HTTP header string
      */
     public static String header(final String name, final String value) {
-        return String.format("%s: %d", name, value);
+        return String.format("%s: %s", name, value);
     }
 
 }
