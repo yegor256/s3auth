@@ -117,30 +117,9 @@ final class HttpFacade implements Closeable {
     public void listen() {
         this.frontend.scheduleWithFixedDelay(
             new VerboseRunnable(
-                // @checkstyle AnonInnerLength (50 lines)
                 new Runnable() {
                     public void run() {
-                        Socket socket;
-                        try {
-                            socket = HttpFacade.this.server.accept();
-                        } catch (java.io.IOException ex) {
-                            throw new IllegalStateException(ex);
-                        }
-                        try {
-                            final boolean consumed = HttpFacade.this.sockets
-                                .offer(socket, 1, TimeUnit.SECONDS);
-                            if (!consumed) {
-                                new HttpResponse().withStatus(
-                                    HttpURLConnection.HTTP_GATEWAY_TIMEOUT
-                                ).send(socket);
-                                socket.close();
-                            }
-                        } catch (java.io.IOException ex) {
-                            throw new IllegalStateException(ex);
-                        } catch (InterruptedException ex) {
-                            Thread.currentThread().interrupt();
-                            throw new IllegalStateException(ex);
-                        }
+                        HttpFacade.this.process();
                     }
                 }
             ),
@@ -157,6 +136,40 @@ final class HttpFacade implements Closeable {
         this.shutdown(this.backend);
         this.server.close();
         Logger.debug(this, "#close(): done");
+    }
+
+    /**
+     * Process one socket.
+     */
+    private void process() {
+        Socket socket;
+        try {
+            socket = this.server.accept();
+        } catch (java.io.IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+        try {
+            final boolean consumed = this.sockets
+                .offer(socket, 1, TimeUnit.SECONDS);
+            if (!consumed) {
+                new HttpResponse()
+                    .withStatus(HttpURLConnection.HTTP_GATEWAY_TIMEOUT)
+                    .withBody(
+                        String.format(
+                            "%d sockets in queue, %d remaining capacity",
+                            this.sockets.size(),
+                            this.sockets.remainingCapacity()
+                        )
+                    )
+                    .send(socket);
+                socket.close();
+            }
+        } catch (java.io.IOException ex) {
+            throw new IllegalStateException(ex);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException(ex);
+        }
     }
 
     /**
