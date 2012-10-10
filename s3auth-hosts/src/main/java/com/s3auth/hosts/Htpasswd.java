@@ -30,6 +30,7 @@
 package com.s3auth.hosts;
 
 import com.jcabi.log.Logger;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,7 +41,6 @@ import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.io.IOUtils;
 
 /**
  * Htpasswd file abstraction.
@@ -50,6 +50,7 @@ import org.apache.commons.io.IOUtils;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 final class Htpasswd {
 
@@ -102,8 +103,7 @@ final class Htpasswd {
      * @throws IOException If some error inside
      */
     public boolean authorized(@NotNull final String user,
-        @NotNull final String password)
-        throws IOException {
+        @NotNull final String password) throws IOException {
         final ConcurrentMap<String, String> users = this.fetch();
         return users.containsKey(user)
             && Htpasswd.matches(users.get(user), password);
@@ -119,9 +119,7 @@ final class Htpasswd {
             if (System.currentTimeMillis() - this.updated.get()
                 > Htpasswd.PERIOD_MS) {
                 this.map.clear();
-                final String[] lines = IOUtils.toString(
-                    this.host.fetch(URI.create("/.htpasswd"))
-                ).trim().split("\n");
+                final String[] lines = this.content().split("\n");
                 for (String line : lines) {
                     if (line.isEmpty()) {
                         continue;
@@ -136,6 +134,23 @@ final class Htpasswd {
             }
         }
         return this.map;
+    }
+
+    /**
+     * Fetch the .htpasswd file, or returns empty string if it's absent.
+     * @return Content of .htpasswd file, or empty
+     */
+    private String content() {
+        String content;
+        try {
+            final Resource res = this.host.fetch(URI.create("/.htpasswd"));
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            res.writeTo(baos);
+            content = baos.toString().trim();
+        } catch (IOException ex) {
+            content = "";
+        }
+        return content;
     }
 
     /**

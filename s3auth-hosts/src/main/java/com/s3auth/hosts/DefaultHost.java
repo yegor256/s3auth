@@ -30,10 +30,8 @@
 package com.s3auth.hosts;
 
 import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
 import com.jcabi.log.Logger;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import javax.validation.constraints.NotNull;
 
@@ -87,13 +85,15 @@ final class DefaultHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    public InputStream fetch(@NotNull final URI uri) throws IOException {
-        S3Object object;
+    public Resource fetch(@NotNull final URI uri) throws IOException {
+        Resource resource;
         try {
-            object = this.bucket.client().getObject(
-                new GetObjectRequest(
-                    this.bucket.name(),
-                    this.object(uri)
+            resource = new DefaultResource(
+                this.bucket.client().getObject(
+                    new GetObjectRequest(
+                        this.bucket.name(),
+                        this.object(uri)
+                    )
                 )
             );
         } catch (com.amazonaws.AmazonClientException ex) {
@@ -107,14 +107,13 @@ final class DefaultHost implements Host {
                 ex
             );
         }
-        final InputStream stream = object.getObjectContent();
         Logger.debug(
             this,
             "#fetch('%s'): found at %s",
             uri,
             this.bucket.name()
         );
-        return stream;
+        return resource;
     }
 
     /**

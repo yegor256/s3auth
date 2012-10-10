@@ -31,8 +31,8 @@ package com.s3auth.relay;
 
 import com.rexsl.core.Manifests;
 import com.s3auth.hosts.Host;
+import com.s3auth.hosts.ResourceMocker;
 import java.net.URI;
-import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -52,7 +52,7 @@ public final class LocalHostTest {
     public void rendersHomePage() throws Exception {
         final Host host = new LocalHost();
         MatcherAssert.assertThat(
-            IOUtils.toString(host.fetch(URI.create("/"))),
+            ResourceMocker.toString(host.fetch(URI.create("/"))),
             Matchers.notNullValue()
         );
     }
@@ -65,7 +65,7 @@ public final class LocalHostTest {
     public void reportsCurrentVersion() throws Exception {
         final Host host = new LocalHost();
         MatcherAssert.assertThat(
-            IOUtils.toString(host.fetch(URI.create("/version"))),
+            ResourceMocker.toString(host.fetch(URI.create("/version"))),
             Matchers.equalTo(Manifests.read("S3Auth-Revision"))
         );
     }

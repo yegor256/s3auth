@@ -30,7 +30,6 @@
 package com.s3auth.hosts;
 
 import java.net.URI;
-import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -140,9 +139,8 @@ public final class HtpasswdTest {
      */
     private Host host(final String htpasswd) throws Exception {
         final Host host = new HostMocker().mock();
-        Mockito.doReturn(
-            IOUtils.toInputStream(htpasswd)
-        ).when(host).fetch(URI.create("/.htpasswd"));
+        Mockito.doReturn(new ResourceMocker().withContent(htpasswd).mock())
+            .when(host).fetch(URI.create("/.htpasswd"));
         return host;
     }
 

@@ -29,12 +29,18 @@
  */
 package com.s3auth.hosts;
 
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.S3Object;
 import java.io.IOException;
-import java.net.URI;
-import javax.validation.constraints.NotNull;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Collection;
+import java.util.LinkedList;
+import javax.ws.rs.core.HttpHeaders;
+import org.apache.commons.io.IOUtils;
 
 /**
- * A {@link Host} that doesn't allow fetching of certain objects.
+ * Default implementation of {@link Resource}.
  *
  * <p>The class is immutable and thread-safe.
  *
@@ -42,55 +48,73 @@ import javax.validation.constraints.NotNull;
  * @version $Id$
  * @since 0.0.1
  */
-final class GuardedHost implements Host {
+final class DefaultResource implements Resource {
 
     /**
-     * The original host.
+     * The object to work with.
      */
-    private final transient Host host;
+    private final transient S3Object object;
 
     /**
      * Public ctor.
-     * @param hst Original host
+     * @param obj S3 object
      */
-    public GuardedHost(@NotNull final Host hst) {
-        this.host = hst;
+    public DefaultResource(final S3Object obj) {
+        this.object = obj;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return this.host.toString();
+    public void writeTo(final OutputStream output) throws IOException {
+        final InputStream input = this.object.getObjectContent();
+        IOUtils.copy(input, output);
+        input.close();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void close() throws IOException {
-        this.host.close();
+    public Collection<String> headers() {
+        final ObjectMetadata meta = this.object.getObjectMetadata();
+        final Collection<String> headers = new LinkedList<String>();
+        headers.add(
+            DefaultResource.header(
+                HttpHeaders.CONTENT_LENGTH,
+                Long.toString(meta.getContentLength())
+            )
+        );
+        headers.add(
+            DefaultResource.header(
+                HttpHeaders.CONTENT_TYPE,
+                meta.getContentType()
+            )
+        );
+        headers.add(
+            DefaultResource.header(
+                HttpHeaders.CACHE_CONTROL,
+                meta.getCacheControl()
+            )
+        );
+        headers.add(
+            DefaultResource.header(
+                HttpHeaders.CONTENT_ENCODING,
+                meta.getContentEncoding()
+            )
+        );
+        return headers;
     }
 
     /**
-     * {@inheritDoc}
+     * Create a HTTP header from name and value.
+     * @param name Name of the header
+     * @param value The value
+     * @return Full HTTP header string
      */
-    @Override
-    public Resource fetch(@NotNull final URI uri) throws IOException {
-        if (uri.toString().matches("^/?\\.htpasswd$")) {
-            throw new IOException(".htpasswd is a protected object");
-        }
-        return this.host.fetch(uri);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean authorized(@NotNull final String user,
-        @NotNull final String password) throws IOException {
-        return this.host.authorized(user, password);
+    public static String header(final String name, final String value) {
+        return String.format("%s: %d", name, value);
     }
 
 }

@@ -31,7 +31,6 @@ package com.s3auth.hosts;
 
 import com.rexsl.core.Manifests;
 import java.net.URI;
-import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -59,15 +58,15 @@ public final class DefaultHostTest {
             )
         );
         MatcherAssert.assertThat(
-            IOUtils.toString(host.fetch(URI.create("/index.html?query"))),
+            ResourceMocker.toString(host.fetch(URI.create("/index.html?q"))),
             Matchers.equalTo("<html>hello</html>")
         );
         MatcherAssert.assertThat(
-            IOUtils.toString(host.fetch(URI.create("/"))),
+            ResourceMocker.toString(host.fetch(URI.create("/"))),
             Matchers.startsWith("<html>hello")
         );
         MatcherAssert.assertThat(
-            IOUtils.toString(host.fetch(URI.create("/foo/index.html"))),
+            ResourceMocker.toString(host.fetch(URI.create("/foo/index.html"))),
             Matchers.equalTo("<html>bye</html>")
         );
     }

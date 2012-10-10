@@ -32,10 +32,13 @@ package com.s3auth.relay;
 import com.jcabi.log.Logger;
 import com.rexsl.core.Manifests;
 import com.s3auth.hosts.Host;
+import com.s3auth.hosts.Resource;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
 import javax.validation.constraints.NotNull;
 import org.apache.commons.io.IOUtils;
 
@@ -70,7 +73,7 @@ final class LocalHost implements Host {
      */
     @Override
     @SuppressWarnings("PMD.DoNotCallSystemExit")
-    public InputStream fetch(@NotNull final URI uri) throws IOException {
+    public Resource fetch(@NotNull final URI uri) throws IOException {
         String output;
         if ("/".equals(uri.toString())) {
             output = "see www.s3auth.com";
@@ -86,7 +89,17 @@ final class LocalHost implements Host {
                 String.format("URI '%s' not found here", uri)
             );
         }
-        return IOUtils.toInputStream(output);
+        final String body = output;
+        return new Resource() {
+            @Override
+            public void writeTo(final OutputStream stream) throws IOException {
+                IOUtils.write(body, stream);
+            }
+            @Override
+            public Collection<String> headers() {
+                return new ArrayList<String>();
+            }
+        };
     }
 
     /**

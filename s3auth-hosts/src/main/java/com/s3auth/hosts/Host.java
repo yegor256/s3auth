@@ -31,7 +31,6 @@ package com.s3auth.hosts;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 
 /**
@@ -51,7 +50,7 @@ public interface Host extends Closeable {
      * @return The stream
      * @throws IOException If some error with I/O inside
      */
-    InputStream fetch(URI uri) throws IOException;
+    Resource fetch(URI uri) throws IOException;
 
     /**
      * Can this user login in with this credentials?

@@ -29,44 +29,80 @@
  */
 package com.s3auth.hosts;
 
-import java.net.URI;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import org.apache.commons.io.IOUtils;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 /**
- * Mocker of {@link Host}.
+ * Mocker of {@link Resource}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
  */
-public final class HostMocker {
+public final class ResourceMocker {
 
     /**
      * The mock.
      */
-    private final transient Host host = Mockito.mock(Host.class);
+    private final transient Resource resource = Mockito.mock(Resource.class);
 
     /**
      * Public ctor.
      */
-    public HostMocker() {
+    public ResourceMocker() {
+        this.withContent("no content");
+    }
+
+    /**
+     * With this content.
+     * @param content The content
+     * @return This object
+     */
+    public ResourceMocker withContent(final String content) {
         try {
-            Mockito.doReturn(new ResourceMocker().withContent("hello").mock())
-                .when(this.host)
-                .fetch(Mockito.any(URI.class));
-            Mockito.doReturn(true).when(this.host)
-                .authorized(Mockito.anyString(), Mockito.anyString());
+            Mockito.doAnswer(
+                new Answer<Void>() {
+                    public Void answer(final InvocationOnMock invocation)
+                        throws Exception {
+                        final OutputStream output = OutputStream.class.cast(
+                            invocation.getArguments()[0]
+                        );
+                        IOUtils.write(content, output);
+                        return null;
+                    }
+                }
+            ).when(this.resource).writeTo(Mockito.any(OutputStream.class));
         } catch (java.io.IOException ex) {
             throw new IllegalStateException(ex);
         }
+        return this;
+    }
+
+    /**
+     * Convert resource to string.
+     * @param res The resource
+     * @return Its text
+     */
+    public static String toString(final Resource res) {
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            res.writeTo(baos);
+        } catch (java.io.IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+        return baos.toString();
     }
 
     /**
      * Mock it.
-     * @return The host
+     * @return The resource
      */
-    public Host mock() {
-        return this.host;
+    public Resource mock() {
+        return this.resource;
     }
 
 }

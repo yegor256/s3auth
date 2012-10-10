@@ -30,8 +30,8 @@
 package com.s3auth.relay;
 
 import com.s3auth.hosts.Host;
+import com.s3auth.hosts.Resource;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URLDecoder;
@@ -89,7 +89,7 @@ final class SecuredHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    public InputStream fetch(@NotNull final URI uri) throws IOException {
+    public Resource fetch(@NotNull final URI uri) throws IOException {
         if (!this.request.headers().containsKey(HttpHeaders.AUTHORIZATION)) {
             throw new HttpException(
                 new HttpResponse()

@@ -29,13 +29,14 @@
  */
 package com.s3auth.relay;
 
+import com.s3auth.hosts.Resource;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
@@ -70,6 +71,11 @@ import org.apache.commons.io.IOUtils;
 final class HttpResponse {
 
     /**
+     * EOL.
+     */
+    private static final String EOL = "\n";
+
+    /**
      * Status.
      */
     private transient int status = HttpURLConnection.HTTP_OK;
@@ -77,13 +83,13 @@ final class HttpResponse {
     /**
      * HTTP headers.
      */
-    private final transient ConcurrentMap<String, Collection<String>> headers =
+    private final transient ConcurrentMap<String, Collection<String>> hdrs =
         new ConcurrentHashMap<String, Collection<String>>();
 
     /**
-     * Body.
+     * Resource to deliver.
      */
-    private transient InputStream body;
+    private transient Resource body;
 
     /**
      * Set HTTP status.
@@ -103,18 +109,18 @@ final class HttpResponse {
      */
     public HttpResponse withHeader(final String name,
         @NotNull final String value) {
-        this.headers.putIfAbsent(name, new LinkedList<String>());
-        this.headers.get(name).add(value);
+        this.hdrs.putIfAbsent(name, new LinkedList<String>());
+        this.hdrs.get(name).add(value);
         return this;
     }
 
     /**
      * With this HTTP body.
-     * @param stream The stream to get the body from
+     * @param res The resource to get the body from
      * @return This object
      */
-    public HttpResponse withBody(@NotNull final InputStream stream) {
-        this.body = stream;
+    public HttpResponse withBody(@NotNull final Resource res) {
+        this.body = res;
         return this;
     }
 
@@ -124,7 +130,16 @@ final class HttpResponse {
      * @return This object
      */
     public HttpResponse withBody(@NotNull final String text) {
-        this.body = IOUtils.toInputStream(text);
+        this.body = new Resource() {
+            @Override
+            public void writeTo(final OutputStream stream) throws IOException {
+                IOUtils.write(text, stream);
+            }
+            @Override
+            public Collection<String> headers() {
+                return new ArrayList<String>();
+            }
+        };
         return this;
     }
 
@@ -140,29 +155,34 @@ final class HttpResponse {
         final Writer writer = new OutputStreamWriter(stream);
         writer.write(
             String.format(
-                "HTTP/1.1 %d %s\n",
+                "HTTP/1.1 %d %s%s",
                 this.status,
-                HttpStatus.getStatusText(this.status)
+                HttpStatus.getStatusText(this.status),
+                HttpResponse.EOL
             )
         );
         for (ConcurrentMap.Entry<String, Collection<String>> hdr
-            : this.headers.entrySet()) {
+            : this.hdrs.entrySet()) {
             for (String value : hdr.getValue()) {
                 writer.write(hdr.getKey());
                 writer.write(": ");
                 writer.write(value);
-                // @checkstyle MultipleStringLiterals (1 line)
-                writer.write("\n");
+                writer.write(HttpResponse.EOL);
             }
         }
-        writer.write("\n");
-        writer.flush();
-        int bytes = 0;
         if (this.body != null) {
-            bytes = IOUtils.copy(this.body, stream);
+            for (String hdr : this.body.headers()) {
+                writer.write(hdr);
+                writer.write(HttpResponse.EOL);
+            }
+        }
+        writer.write(HttpResponse.EOL);
+        writer.flush();
+        if (this.body != null) {
+            this.body.writeTo(stream);
         }
         writer.close();
-        return bytes;
+        return 0;
     }
 
 }

@@ -33,7 +33,7 @@ import com.jcabi.log.Logger;
 import com.rexsl.core.Manifests;
 import com.s3auth.hosts.Host;
 import com.s3auth.hosts.Hosts;
-import java.io.InputStream;
+import com.s3auth.hosts.Resource;
 import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.util.Collection;
@@ -102,7 +102,7 @@ final class HttpThread implements Runnable {
         try {
             final HttpRequest request = new HttpRequest(socket);
             final Host host = this.host(request);
-            final InputStream input = host.fetch(request.requestUri());
+            final Resource resource = host.fetch(request.requestUri());
             final int bytes = new HttpResponse()
                 .withStatus(HttpURLConnection.HTTP_OK)
                 .withHeader(HttpHeaders.CACHE_CONTROL, "no-cache")
@@ -119,7 +119,7 @@ final class HttpThread implements Runnable {
                     "s3auth-time",
                     Long.toString(System.currentTimeMillis() - start)
                 )
-                .withBody(input)
+                .withBody(resource)
                 .send(socket);
             Logger.debug(
                 this,

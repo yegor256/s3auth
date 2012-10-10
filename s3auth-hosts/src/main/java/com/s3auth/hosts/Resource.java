@@ -29,44 +29,33 @@
  */
 package com.s3auth.hosts;
 
-import java.net.URI;
-import org.mockito.Mockito;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Collection;
 
 /**
- * Mocker of {@link Host}.
+ * Found resource.
+ *
+ * <p>Implementation must be immutable and thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
  */
-public final class HostMocker {
+public interface Resource {
 
     /**
-     * The mock.
+     * Write its content to the writer.
+     * @param stream The stream to write to
+     * @throws IOException If some error with I/O inside
      */
-    private final transient Host host = Mockito.mock(Host.class);
+    void writeTo(OutputStream stream) throws IOException;
 
     /**
-     * Public ctor.
+     * Get a collection of all necessary HTTP headers for this resource.
+     * @return Collection of HTTP headers
+     * @throws IOException If some error with I/O inside
      */
-    public HostMocker() {
-        try {
-            Mockito.doReturn(new ResourceMocker().withContent("hello").mock())
-                .when(this.host)
-                .fetch(Mockito.any(URI.class));
-            Mockito.doReturn(true).when(this.host)
-                .authorized(Mockito.anyString(), Mockito.anyString());
-        } catch (java.io.IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-    }
-
-    /**
-     * Mock it.
-     * @return The host
-     */
-    public Host mock() {
-        return this.host;
-    }
+    Collection<String> headers() throws IOException;
 
 }

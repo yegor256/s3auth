@@ -32,7 +32,6 @@ package com.s3auth.relay;
 import java.net.HttpURLConnection;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -55,7 +54,7 @@ public final class HttpResponseTest {
                 new HttpResponse()
                     .withStatus(HttpURLConnection.HTTP_NOT_FOUND)
                     .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN)
-                    .withBody(IOUtils.toInputStream("hi!"))
+                    .withBody("hi!")
             ),
             Matchers.allOf(
                 Matchers.startsWith("HTTP/1.1 404"),
