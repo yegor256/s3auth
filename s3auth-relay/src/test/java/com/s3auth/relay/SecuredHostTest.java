@@ -130,7 +130,7 @@ public final class SecuredHostTest {
                     }
                     @Override
                     public void close() {
-                        // nothing to do
+                        throw new UnsupportedOperationException();
                     }
                 },
                 HttpRequestMocker.toRequest(
