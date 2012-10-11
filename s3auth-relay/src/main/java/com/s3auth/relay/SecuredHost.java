@@ -139,6 +139,7 @@ final class SecuredHost implements Host {
                         HttpHeaders.WWW_AUTHENTICATE,
                         "Basic realm=\"try again\""
                     )
+                    .withBody(this.host.toString())
             );
         }
         return this.host.fetch(uri);
