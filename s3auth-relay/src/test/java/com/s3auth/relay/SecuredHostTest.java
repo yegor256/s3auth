@@ -29,7 +29,9 @@
  */
 package com.s3auth.relay;
 
+import com.s3auth.hosts.Host;
 import com.s3auth.hosts.HostMocker;
+import com.s3auth.hosts.Resource;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import javax.ws.rs.core.HttpHeaders;
@@ -101,6 +103,46 @@ public final class SecuredHostTest {
                     )
                 );
             }
+        }
+    }
+
+    /**
+     * SecuredHost can report {@code Host#toString()} when authorization fails.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void reportsToStringWhenAuthorizationFails() throws Exception {
+        try {
+            new SecuredHost(
+                new Host() {
+                    @Override
+                    public String toString() {
+                        return "hello, world!";
+                    }
+                    @Override
+                    public boolean authorized(final String user,
+                        final String pwd) {
+                        return false;
+                    }
+                    @Override
+                    public Resource fetch(final URI uri) {
+                        throw new UnsupportedOperationException();
+                    }
+                    @Override
+                    public void close() {
+                        // nothing to do
+                    }
+                },
+                HttpRequestMocker.toRequest(
+                    "GET / HTTP/1.1\nAuthorization: Basic dGVzdDp0ZXN0\n\n"
+                )
+            ).fetch(URI.create("/test-request.html"));
+            Assert.fail("authorization failed expected, but didn't happen");
+        } catch (HttpException ex) {
+            MatcherAssert.assertThat(
+                HttpResponseMocker.toString(ex.response()),
+                Matchers.containsString("hello")
+            );
         }
     }
 
