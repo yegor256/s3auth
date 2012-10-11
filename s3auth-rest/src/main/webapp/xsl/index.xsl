@@ -96,8 +96,8 @@
       "Effect": "Allow",
       "Action": "s3:GetObject",
       "Resource": [
-        "arn:aws:s3:::bucket-1.example.com",
-        "arn:aws:s3:::bucket-2.example.com"
+        "arn:aws:s3:::bucket-1.example.com/*",
+        "arn:aws:s3:::bucket-2.example.com/*"
       ]
     }
   ]
