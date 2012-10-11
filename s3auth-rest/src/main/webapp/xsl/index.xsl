@@ -128,8 +128,73 @@
             <span class="tt"><xsl:text>.htpasswd</xsl:text></span>
             <xsl:text> file.</xsl:text>
         </p>
+        <h1>
+            <xsl:text>Troubleshooting</xsl:text>
+        </h1>
         <p>
-            <xsl:text>If any problems don't hesitate to submit a ticket to </xsl:text>
+            <xsl:text>You can't authorize yourself with a username/password combination configured in </xsl:text>
+            <span class="tt"><xsl:text>.htpasswd</xsl:text></span>
+            <xsl:text> and on every attempt browser says "try again" and asks for credentials. </xsl:text>
+            <xsl:text>There are two possible causes:</xsl:text>
+        </p>
+        <ol>
+            <li>
+                <xsl:text>Password is wrong. Encode it with </xsl:text>
+                <a href="http://aspirine.org/htpasswd_en.html">
+                    <xsl:text>this online tool</xsl:text>
+                </a>
+                <xsl:text> (using SHA-1 algorithm) and try again in 10 minutes (not earlier).</xsl:text>
+            </li>
+            <li>
+                <xsl:text>S3 permissions are not granted and we simply can't read your </xsl:text>
+                <span class="tt"><xsl:text>.htpasswd</xsl:text></span>
+                <xsl:text> file. Make sure your IAM user has permission policy attached, as explained above.</xsl:text>
+            </li>
+        </ol>
+        <p>
+            <xsl:text>In order to investigate further and see what the system knows about your </xsl:text>
+            <span class="tt"><xsl:text>.htpasswd</xsl:text></span>
+            <xsl:text> file make an HTTP request from a command line:</xsl:text>
+        </p>
+        <pre><![CDATA[$ curl -v -H "Authorization: Basic am9lOnNlY3JldA==" http://maven.s3auth.com/index.html
+* About to connect() to maven.s3auth.com port 80 (#0)
+*   Trying 23.21.39.250...
+* connected
+* Connected to maven.s3auth.com (23.21.39.250) port 80 (#0)
+> GET /index.html HTTP/1.1
+> User-Agent: curl/7.24.0 (x86_64-apple-darwin12.0) libcurl/7.24.0 OpenSSL/0.9.8r zlib/1.2.5
+> Host: maven.s3auth.com
+> Accept: */*
+> Authorization: Basic am9lOnNlY3JldA==
+>
+< HTTP/1.1 401 Unauthorized
+< WWW-Authenticate: Basic realm="try again"
+< Content-Type: text/plain
+< Content-Length: 59
+<
+* Connection #0 to host maven.s3auth.com left intact
+maven.s3auth.com with .htpasswd(3 user(s) updated 2min ago)]]></pre>
+        <p>
+            <xsl:text>Pay attention to the last line, it contains information from the relay.</xsl:text>
+            <span class="tt"><xsl:text>am9lOnNlY3JldA==</xsl:text></span>
+            <xsl:text> is a </xsl:text>
+            <a href="http://en.wikipedia.org/wiki/Base64">
+                <xsl:text>Base64 encoded</xsl:text>
+            </a>
+            <xsl:text> version of </xsl:text>
+            <span class="tt"><xsl:text>joe:secret</xsl:text></span>
+            <xsl:text>, where </xsl:text>
+            <span class="tt"><xsl:text>joe</xsl:text></span>
+            <xsl:text> is a user name and </xsl:text>
+            <span class="tt"><xsl:text>secret</xsl:text></span>
+            <xsl:text> is a password (this is how </xsl:text>
+            <a href="http://en.wikipedia.org/wiki/Basic_access_authentication">
+                <xsl:text>HTTP Basic Authentication</xsl:text>
+            </a>
+            <xsl:text> works).</xsl:text>
+        </p>
+        <p>
+            <xsl:text>If any other problems don't hesitate to submit a ticket to </xsl:text>
             <a href="https://github.com/yegor256/s3auth/issues">
                 <xsl:text>github</xsl:text>
             </a>
