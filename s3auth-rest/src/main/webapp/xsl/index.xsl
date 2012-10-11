@@ -134,7 +134,7 @@
         <p>
             <xsl:text>You can't authorize yourself with a username/password combination configured in </xsl:text>
             <span class="tt"><xsl:text>.htpasswd</xsl:text></span>
-            <xsl:text> and on every attempt browser says "try again" and asks for credentials. </xsl:text>
+            <xsl:text> and on every attempt browser says "try again" and asks for credentials? </xsl:text>
             <xsl:text>There are two possible causes:</xsl:text>
         </p>
         <ol>
@@ -154,7 +154,7 @@
         <p>
             <xsl:text>In order to investigate further and see what the system knows about your </xsl:text>
             <span class="tt"><xsl:text>.htpasswd</xsl:text></span>
-            <xsl:text> file make an HTTP request from a command line:</xsl:text>
+            <xsl:text> file make an HTTP request from command line:</xsl:text>
         </p>
         <pre><![CDATA[$ curl -v -H "Authorization: Basic am9lOnNlY3JldA==" http://maven.s3auth.com/index.html
 * About to connect() to maven.s3auth.com port 80 (#0)
@@ -162,7 +162,7 @@
 * connected
 * Connected to maven.s3auth.com (23.21.39.250) port 80 (#0)
 > GET /index.html HTTP/1.1
-> User-Agent: curl/7.24.0 (x86_64-apple-darwin12.0) libcurl/7.24.0 OpenSSL/0.9.8r zlib/1.2.5
+> User-Agent: curl/7.24.0 (x86_64-apple-darwin12.0)
 > Host: maven.s3auth.com
 > Accept: */*
 > Authorization: Basic am9lOnNlY3JldA==
@@ -175,7 +175,8 @@
 * Connection #0 to host maven.s3auth.com left intact
 maven.s3auth.com with .htpasswd(3 user(s) updated 2min ago)]]></pre>
         <p>
-            <xsl:text>Pay attention to the last line, it contains information from the relay.</xsl:text>
+            <xsl:text>Pay attention to the last line, it contains information from the relay:</xsl:text>
+            <xsl:text> how many users discovered in the file and when was it retrieved last time from S3 bucket.</xsl:text>
             <span class="tt"><xsl:text>am9lOnNlY3JldA==</xsl:text></span>
             <xsl:text> is a </xsl:text>
             <a href="http://en.wikipedia.org/wiki/Base64">
@@ -194,7 +195,7 @@ maven.s3auth.com with .htpasswd(3 user(s) updated 2min ago)]]></pre>
             <xsl:text> works).</xsl:text>
         </p>
         <p>
-            <xsl:text>Another way to check is to try to open </xsl:text>
+            <xsl:text>Another way to check is to open </xsl:text>
             <span class="tt"><xsl:text>http://&lt;your-domain&gt;/.htpasswd</xsl:text></span>
             <xsl:text> in a browser (no authorization required).</xsl:text>
             <xsl:text> If everything is fine you'll see how many bytes are there in the file</xsl:text>
