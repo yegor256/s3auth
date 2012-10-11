@@ -99,10 +99,11 @@ final class DefaultHost implements Host {
         } catch (com.amazonaws.AmazonClientException ex) {
             throw new IOException(
                 String.format(
-                    "failed to fetch '%s' from '%s' (key=%s)",
+                    "failed to fetch '%s' from '%s' (key=%s), %s",
                     uri,
                     this.bucket.name(),
-                    this.bucket.key()
+                    this.bucket.key(),
+                    ex.getMessage()
                 ),
                 ex
             );
