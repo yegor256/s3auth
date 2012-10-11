@@ -34,13 +34,9 @@ import com.rexsl.core.Manifests;
 import com.s3auth.hosts.Host;
 import com.s3auth.hosts.Resource;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
 import javax.validation.constraints.NotNull;
-import org.apache.commons.io.IOUtils;
 
 /**
  * Local host with data.
@@ -90,6 +86,14 @@ final class LocalHost implements Host {
             );
         }
         return new Resource.PlainText(output);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isHidden(@NotNull final URI uri) {
+        return false;
     }
 
     /**

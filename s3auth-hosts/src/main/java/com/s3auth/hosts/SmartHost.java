@@ -33,6 +33,7 @@ import com.jcabi.log.Logger;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -46,6 +47,11 @@ import javax.validation.constraints.NotNull;
  * @since 0.0.1
  */
 final class SmartHost implements Host {
+
+    /**
+     * Pattern for htpasswd matching.
+     */
+    private static final Pattern HTPASSWD = Pattern.compile("^/?\\.htpasswd$");
 
     /**
      * The original host.
@@ -82,7 +88,7 @@ final class SmartHost implements Host {
     @Override
     public Resource fetch(@NotNull final URI uri) throws IOException {
         Resource resource;
-        if (uri.toString().matches("^/?\\.htpasswd$")) {
+        if (SmartHost.HTPASSWD.matcher(uri.toString()).matches()) {
             String text;
             try {
                 final Resource htpasswd = this.host.fetch(uri);
@@ -100,6 +106,14 @@ final class SmartHost implements Host {
             resource = this.host.fetch(uri);
         }
         return resource;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isHidden(@NotNull final URI uri) {
+        return !SmartHost.HTPASSWD.matcher(uri.toString()).matches();
     }
 
     /**

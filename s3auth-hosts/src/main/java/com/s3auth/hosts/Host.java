@@ -53,6 +53,14 @@ public interface Host extends Closeable {
     Resource fetch(URI uri) throws IOException;
 
     /**
+     * This URI require authentication?
+     * @param uri Which URI we're trying to access
+     * @return Yes or no
+     * @throws IOException If some error with I/O inside
+     */
+    boolean isHidden(URI uri) throws IOException;
+
+    /**
      * Can this user login in with this credentials?
      * @param user User name
      * @param password Password

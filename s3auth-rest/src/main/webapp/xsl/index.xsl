@@ -194,6 +194,14 @@ maven.s3auth.com with .htpasswd(3 user(s) updated 2min ago)]]></pre>
             <xsl:text> works).</xsl:text>
         </p>
         <p>
+            <xsl:text>Another way to check is to try to open </xsl:text>
+            <span class="tt"><xsl:text>http://&lt;your-domain&gt;/.htpasswd</xsl:text></span>
+            <xsl:text> in a browser (no authorization required).</xsl:text>
+            <xsl:text> If everything is fine you'll see how many bytes are there in the file</xsl:text>
+            <xsl:text> retrieved from your S3 bucket. Otherwise you'll get an exception stacktrace, which </xsl:text>
+            <xsl:text> should help to understand the problem.</xsl:text>
+        </p>
+        <p>
             <xsl:text>If any other problems don't hesitate to submit a ticket to </xsl:text>
             <a href="https://github.com/yegor256/s3auth/issues">
                 <xsl:text>github</xsl:text>

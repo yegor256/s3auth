@@ -121,9 +121,16 @@ final class DefaultHost implements Host {
      * {@inheritDoc}
      */
     @Override
+    public boolean isHidden(@NotNull final URI uri) {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public boolean authorized(@NotNull final String user,
-        @NotNull final String password)
-        throws IOException {
+        @NotNull final String password) throws IOException {
         boolean auth;
         if (user.equals(this.bucket.key())
             && password.equals(this.bucket.secret())) {
@@ -131,7 +138,13 @@ final class DefaultHost implements Host {
         } else {
             auth = this.htpasswd.authorized(user, password);
         }
-        Logger.debug(this, "#authorized('%s', '%s'): %B", user, password, auth);
+        Logger.debug(
+            this,
+            "#authorized('%s', '%s'): %B",
+            user,
+            password,
+            auth
+        );
         return auth;
     }
 

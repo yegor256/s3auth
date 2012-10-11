@@ -36,15 +36,12 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.Socket;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.core.HttpHeaders;
 import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.io.IOUtils;
 
 /**
  * HTTP response, writable to IO socket.

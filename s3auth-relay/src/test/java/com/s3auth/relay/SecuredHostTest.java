@@ -114,10 +114,15 @@ public final class SecuredHostTest {
     public void reportsToStringWhenAuthorizationFails() throws Exception {
         try {
             new SecuredHost(
+                // @checkstyle AnonInnerLength (50 lines)
                 new Host() {
                     @Override
                     public String toString() {
                         return "hello, world!";
+                    }
+                    @Override
+                    public boolean isHidden(final URI uri) {
+                        return true;
                     }
                     @Override
                     public boolean authorized(final String user,

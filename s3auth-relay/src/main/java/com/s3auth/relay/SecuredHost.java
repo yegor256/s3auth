@@ -90,6 +90,47 @@ final class SecuredHost implements Host {
      */
     @Override
     public Resource fetch(@NotNull final URI uri) throws IOException {
+        Resource res;
+        if (this.isHidden(uri)) {
+            res = this.secured(uri);
+        } else {
+            res = this.host.fetch(uri);
+        }
+        return res;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isHidden(@NotNull final URI uri) throws IOException {
+        return this.host.isHidden(uri);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean authorized(@NotNull final String user,
+        @NotNull final String password) throws IOException {
+        return this.host.authorized(user, password);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void close() throws IOException {
+        this.host.close();
+    }
+
+    /**
+     * Fetch this URI in a secure way.
+     * @param uri The URI to fetch
+     * @return Fetched resource
+     * @throws IOException If some IO problem inside
+     */
+    private Resource secured(final URI uri) throws IOException {
         if (!this.request.headers().containsKey(HttpHeaders.AUTHORIZATION)) {
             throw new HttpException(
                 new HttpResponse()
@@ -131,7 +172,7 @@ final class SecuredHost implements Host {
                 "should be two parts in Basic auth header"
             );
         }
-        if (!this.host.authorized(parts[0], parts[1])) {
+        if (!this.authorized(parts[0], parts[1])) {
             throw new HttpException(
                 new HttpResponse()
                     .withStatus(HttpURLConnection.HTTP_UNAUTHORIZED)
@@ -143,24 +184,6 @@ final class SecuredHost implements Host {
             );
         }
         return this.host.fetch(uri);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean authorized(@NotNull final String user,
-        @NotNull final String password)
-        throws IOException {
-        return this.host.authorized(user, password);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void close() throws IOException {
-        this.host.close();
     }
 
 }

@@ -54,8 +54,12 @@ public final class HostMocker {
             Mockito.doReturn(new ResourceMocker().withContent("hello").mock())
                 .when(this.host)
                 .fetch(Mockito.any(URI.class));
+            Mockito.doReturn(true).when(this.host).authorized(
+                Mockito.anyString(),
+                Mockito.anyString()
+            );
             Mockito.doReturn(true).when(this.host)
-                .authorized(Mockito.anyString(), Mockito.anyString());
+                .isHidden(Mockito.any(URI.class));
         } catch (java.io.IOException ex) {
             throw new IllegalStateException(ex);
         }
