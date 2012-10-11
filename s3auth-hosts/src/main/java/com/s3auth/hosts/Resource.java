@@ -31,7 +31,10 @@ package com.s3auth.hosts;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.Collection;
+import javax.ws.rs.core.HttpHeaders;
+import org.apache.commons.io.IOUtils;
 
 /**
  * Found resource.
@@ -43,6 +46,47 @@ import java.util.Collection;
  * @since 0.0.1
  */
 public interface Resource {
+
+    /**
+     * Simple resource made out of plain text.
+     */
+    class PlainText implements Resource {
+        /**
+         * Plain text to show.
+         */
+        private final transient String text;
+        /**
+         * Public ctor.
+         * @param txt The text to show
+         */
+        public PlainText(final String txt) {
+            this.text = txt;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void writeTo(final OutputStream stream) throws IOException {
+            IOUtils.write(this.text, stream);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Collection<String> headers() {
+            return Arrays.asList(
+                String.format(
+                    "%s: text/plain",
+                    HttpHeaders.CONTENT_TYPE
+                ),
+                String.format(
+                    "%s: %d",
+                    HttpHeaders.CONTENT_LENGTH,
+                    this.text.getBytes().length
+                )
+            );
+        }
+    }
 
     /**
      * Write its content to the writer.

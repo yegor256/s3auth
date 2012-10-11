@@ -29,12 +29,15 @@
  */
 package com.s3auth.hosts;
 
+import com.jcabi.log.Logger;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import javax.validation.constraints.NotNull;
 
 /**
- * A {@link Host} that doesn't allow fetching of certain objects.
+ * A {@link Host} that adds extra information on top of bucket's
+ * original content.
  *
  * <p>The class is immutable and thread-safe.
  *
@@ -42,7 +45,7 @@ import javax.validation.constraints.NotNull;
  * @version $Id$
  * @since 0.0.1
  */
-final class GuardedHost implements Host {
+final class SmartHost implements Host {
 
     /**
      * The original host.
@@ -53,7 +56,7 @@ final class GuardedHost implements Host {
      * Public ctor.
      * @param hst Original host
      */
-    public GuardedHost(@NotNull final Host hst) {
+    public SmartHost(@NotNull final Host hst) {
         this.host = hst;
     }
 
@@ -78,10 +81,25 @@ final class GuardedHost implements Host {
      */
     @Override
     public Resource fetch(@NotNull final URI uri) throws IOException {
+        Resource resource;
         if (uri.toString().matches("^/?\\.htpasswd$")) {
-            throw new IOException(".htpasswd is a protected object");
+            String text;
+            try {
+                final Resource htpasswd = this.host.fetch(uri);
+                final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                htpasswd.writeTo(baos);
+                text = String.format(
+                    "%d byte(s)",
+                    baos.toByteArray().length
+                );
+            } catch (java.io.IOException ex) {
+                text = Logger.format("%[exception]s", ex);
+            }
+            resource = new Resource.PlainText(text);
+        } else {
+            resource = this.host.fetch(uri);
         }
-        return this.host.fetch(uri);
+        return resource;
     }
 
     /**

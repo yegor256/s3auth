@@ -89,17 +89,7 @@ final class LocalHost implements Host {
                 String.format("URI '%s' not found here", uri)
             );
         }
-        final String body = output;
-        return new Resource() {
-            @Override
-            public void writeTo(final OutputStream stream) throws IOException {
-                IOUtils.write(body, stream);
-            }
-            @Override
-            public Collection<String> headers() {
-                return new ArrayList<String>();
-            }
-        };
+        return new Resource.PlainText(output);
     }
 
     /**

@@ -29,19 +29,11 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
-import java.net.URI;
-import java.util.Set;
-import org.apache.commons.io.IOUtils;
 import org.hamcrest.CustomMatcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 /**
  * Test case for {@link DynamoHosts}.
@@ -128,31 +120,6 @@ public final class DynamoHostsTest {
             )
         );
         hosts.close();
-    }
-
-    /**
-     * DynamoHosts can block calls to .htpasswd.
-     * @throws Exception If there is some problem inside
-     */
-    @Test(expected = java.io.IOException.class)
-    public void blocksFetchingOfSystemResources() throws Exception {
-        final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
-        final User user = new UserMocker().mock();
-        final Set<Domain> domains = hosts.domains(user);
-        final S3Object object = Mockito.mock(S3Object.class);
-        Mockito.doReturn(
-            new S3ObjectInputStream(IOUtils.toInputStream(""), null)
-        ).when(object).getObjectContent();
-        final AmazonS3 client = Mockito.mock(AmazonS3.class);
-        Mockito.doReturn(object).when(client)
-            .getObject(Mockito.any(GetObjectRequest.class));
-        final Bucket bucket = new BucketMocker()
-            .withName("mocked-bucket")
-            .withClient(client).mock();
-        MatcherAssert.assertThat(domains.add(bucket), Matchers.is(true));
-        final Host host = hosts.find(bucket.name());
-        hosts.close();
-        host.fetch(URI.create("/.htpasswd"));
     }
 
     /**

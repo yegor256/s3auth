@@ -131,26 +131,7 @@ final class HttpResponse {
      * @return This object
      */
     public HttpResponse withBody(@NotNull final String text) {
-        this.body = new Resource() {
-            @Override
-            public void writeTo(final OutputStream stream) throws IOException {
-                IOUtils.write(text, stream);
-            }
-            @Override
-            public Collection<String> headers() {
-                return Arrays.asList(
-                    String.format(
-                        "%s: text/plain",
-                        HttpHeaders.CONTENT_TYPE
-                    ),
-                    String.format(
-                        "%s: %d",
-                        HttpHeaders.CONTENT_LENGTH,
-                        text.getBytes().length
-                    )
-                );
-            }
-        };
+        this.body = new Resource.PlainText(text);
         return this;
     }
 

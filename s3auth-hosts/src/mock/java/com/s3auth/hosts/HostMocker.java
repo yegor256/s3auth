@@ -62,6 +62,23 @@ public final class HostMocker {
     }
 
     /**
+     * With this content for this URI.
+     * @param uri The URI to match
+     * @param content The content to return
+     * @return This object
+     */
+    public HostMocker withContent(final URI uri, final String content) {
+        try {
+            Mockito.doReturn(new ResourceMocker().withContent(content).mock())
+                .when(this.host)
+                .fetch(uri);
+        } catch (java.io.IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+        return this;
+    }
+
+    /**
      * Mock it.
      * @return The host
      */
