@@ -160,6 +160,12 @@ final class Htpasswd {
             res.writeTo(baos);
             content = baos.toString().trim();
         } catch (IOException ex) {
+            Logger.warn(
+                this,
+                "#content(): failed to fetch .htpasswd from %s: %s",
+                this.host,
+                ex.getMessage()
+            );
             content = "";
         }
         return content;
