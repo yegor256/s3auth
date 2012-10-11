@@ -89,4 +89,16 @@ public final class DefaultHostTest {
         host.fetch(URI.create("foo.html"));
     }
 
+    /**
+     * DefaultHost can show some stats in {@code #toString()}.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void showsStatsInToString() throws Exception {
+        MatcherAssert.assertThat(
+            new DefaultHost(new BucketMocker().mock()),
+            Matchers.hasToString(Matchers.notNullValue())
+        );
+    }
+
 }

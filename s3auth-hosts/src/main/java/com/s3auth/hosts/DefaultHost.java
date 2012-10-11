@@ -70,7 +70,7 @@ final class DefaultHost implements Host {
      */
     @Override
     public String toString() {
-        return String.format("%s", this.bucket);
+        return String.format("%s with %s", this.bucket, this.htpasswd);
     }
 
     /**

@@ -43,6 +43,18 @@ import org.mockito.Mockito;
 public final class HtpasswdTest {
 
     /**
+     * Htpasswd can show some stats in {@code #toString()}.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void showsStatsInToString() throws Exception {
+        MatcherAssert.assertThat(
+            new Htpasswd(this.host("peter-pen:hello")),
+            Matchers.hasToString(Matchers.notNullValue())
+        );
+    }
+
+    /**
      * Htpasswd can manage apache hashes, with MD5 algorithm.
      * @throws Exception If there is some problem inside
      * @todo #1 This is not implemented yet

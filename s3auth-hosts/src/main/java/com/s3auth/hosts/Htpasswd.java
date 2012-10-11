@@ -96,6 +96,18 @@ final class Htpasswd {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return Logger.format(
+            ".htpasswd(%d user(s) updated %[ms]s ago)",
+            this.map.size(),
+            System.currentTimeMillis() - this.updated.get()
+        );
+    }
+
+    /**
      * Can this user login in with this credentials?
      * @param user User name
      * @param password Password
