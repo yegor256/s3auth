@@ -36,12 +36,13 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.core.HttpHeaders;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
 
@@ -137,7 +138,17 @@ final class HttpResponse {
             }
             @Override
             public Collection<String> headers() {
-                return new ArrayList<String>();
+                return Arrays.asList(
+                    String.format(
+                        "%s: text/plain",
+                        HttpHeaders.CONTENT_TYPE
+                    ),
+                    String.format(
+                        "%s: %d",
+                        HttpHeaders.CONTENT_LENGTH,
+                        text.getBytes().length
+                    )
+                );
             }
         };
         return this;
