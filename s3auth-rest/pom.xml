@@ -43,8 +43,6 @@
     <name>s3auth-rest</name>
 
     <properties>
-        <heroku.repo>git@heroku.com:s3auth-rest.git</heroku.repo>
-        <heroku.ping>http://www.s3auth.com/misc/version</heroku.ping>
         <rexsl.version since="23 Aug 2012">1.0-SNAPSHOT</rexsl.version>
     </properties>
 
@@ -275,7 +273,7 @@
             <plugin>
                 <groupId>com.jcabi</groupId>
                 <artifactId>jcabi-heroku-maven-plugin</artifactId>
-                <version since="20 Oct 2012">0.4</version>
+                <version since="22 Oct 2012">0.4.1</version>
                 <executions>
                     <execution>
                         <id>deploy-to-heroku</id>
