@@ -29,14 +29,11 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import javax.validation.constraints.NotNull;
 import org.apache.commons.lang.StringUtils;
@@ -91,10 +88,11 @@ final class DefaultHost implements Host {
      * {@inheritDoc}
      */
     @Override
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public Resource fetch(@NotNull final URI uri) throws IOException {
         Resource resource = null;
         final Collection<String> errors = new LinkedList<String>();
-        for (ObjectName name : this.names(uri)) {
+        for (DefaultHost.ObjectName name : this.names(uri)) {
             try {
                 resource = new DefaultResource(
                     this.bucket.client().getObject(
@@ -183,12 +181,13 @@ final class DefaultHost implements Host {
      * @param uri The URI
      * @return Object names
      */
-    private Collection<ObjectName> names(final URI uri) {
+    private Collection<DefaultHost.ObjectName> names(final URI uri) {
         final String name = StringUtils.strip(uri.getPath(), "/");
-        final Collection<ObjectName> names = new LinkedList<ObjectName>();
+        final Collection<DefaultHost.ObjectName> names =
+            new LinkedList<DefaultHost.ObjectName>();
         if (!name.isEmpty()) {
             names.add(
-                new ObjectName() {
+                new DefaultHost.ObjectName() {
                     @Override
                     public String get() {
                         return name;
@@ -201,7 +200,7 @@ final class DefaultHost implements Host {
             );
         }
         names.add(
-            new ObjectName() {
+            new DefaultHost.ObjectName() {
                 @Override
                 public String get() {
                     final StringBuilder text = new StringBuilder(name);

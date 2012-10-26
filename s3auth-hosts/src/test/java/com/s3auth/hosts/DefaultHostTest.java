@@ -34,8 +34,9 @@ import com.amazonaws.services.s3.model.BucketWebsiteConfiguration;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -48,6 +49,7 @@ import org.mockito.stubbing.Answer;
  * Test case for {@link DefaultHost}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 public final class DefaultHostTest {
 
@@ -76,21 +78,24 @@ public final class DefaultHostTest {
                 }
             }
         ).when(aws).getObject(Mockito.any(GetObjectRequest.class));
-        Mockito.doReturn(new BucketWebsiteConfiguration("index.htm"))
+        final String suffix = "index.htm";
+        Mockito.doReturn(new BucketWebsiteConfiguration(suffix))
             .when(aws).getBucketWebsiteConfiguration(Mockito.anyString());
         final Host host = new DefaultHost(
             new BucketMocker().withClient(aws).mock()
         );
-        final Map<String, String> paths = new HashMap<String, String>() {
-            private static final long serialVersionUID = 0x75294A7898F21489L;
-            {
-                this.put("/test/a/a/alpha.html?q", "test/a/a/alpha.html");
-                this.put("", "index.htm");
-                this.put("/", "index.htm");
-                this.put("/dir/index.html", "dir/index.html");
-                this.put("/dir/", "dir/index.htm");
-            }
-        };
+        @SuppressWarnings("PMD.NonStaticInitializer")
+        final ConcurrentMap<String, String> paths =
+            new ConcurrentHashMap<String, String>() {
+                private static final long serialVersionUID = 1L;
+                {
+                    this.put("/test/a/a/alpha.html?q", "test/a/a/alpha.html");
+                    this.put("", suffix);
+                    this.put("/", suffix);
+                    this.put("/dir/index.html", "dir/index.html");
+                    this.put("/dir/", String.format("dir/%s", suffix));
+                }
+            };
         for (Map.Entry<String, String> path : paths.entrySet()) {
             MatcherAssert.assertThat(
                 ResourceMocker.toString(host.fetch(URI.create(path.getKey()))),
