@@ -43,11 +43,12 @@ import org.junit.Test;
 public final class DefaultHostTest {
 
     /**
-     * DefaultHost can load resource from S3.
+     * DefaultHost can load resource from S3 (credentials are defined in the
+     * {@code /src/test/resources/META-INF/MANIFEST.MF} file).
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void loadsAmazonResources() throws Exception {
+    public void loadsAmazonResourcesFromLiveTable() throws Exception {
         final Host host = new DefaultHost(
             new DefaultBucket(
                 new DomainMocker()
@@ -66,7 +67,7 @@ public final class DefaultHostTest {
             Matchers.startsWith("<html>hello")
         );
         MatcherAssert.assertThat(
-            ResourceMocker.toString(host.fetch(URI.create("/foo/index.html"))),
+            ResourceMocker.toString(host.fetch(URI.create("/foo"))),
             Matchers.equalTo("<html>bye</html>")
         );
     }
