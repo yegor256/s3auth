@@ -199,29 +199,56 @@ final class DefaultHost implements Host {
                 }
             );
         }
-        names.add(
-            new DefaultHost.ObjectName() {
-                @Override
-                public String get() {
-                    final StringBuilder text = new StringBuilder(name);
-                    if (text.length() > 0) {
-                        text.append('/');
-                    }
-                    text.append(
-                        DefaultHost.this.bucket.client()
-                            .getBucketWebsiteConfiguration(
-                                DefaultHost.this.bucket.name()
-                            ).getIndexDocumentSuffix()
-                    );
-                    return text.toString();
-                }
-                @Override
-                public String toString() {
-                    return String.format("%s+suffix", name);
-                }
-            }
-        );
+        names.add(new DefaultHost.NameWithSuffix(name));
         return names;
+    }
+
+    /**
+     * Object name with a suffix from a bucket.
+     */
+    private final class NameWithSuffix implements DefaultHost.ObjectName {
+        /**
+         * Original name.
+         */
+        private final transient String origin;
+        /**
+         * Public ctor.
+         * @param name The original name
+         */
+        public NameWithSuffix(final String name) {
+            this.origin = name;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String get() {
+            String suffix = null;
+            try {
+                suffix = DefaultHost.this.bucket.client()
+                    .getBucketWebsiteConfiguration(
+                        DefaultHost.this.bucket.name()
+                    ).getIndexDocumentSuffix();
+            } catch (com.amazonaws.AmazonClientException ex) {
+                suffix = "";
+            }
+            if (suffix == null || suffix.isEmpty()) {
+                suffix = "index.html";
+            }
+            final StringBuilder text = new StringBuilder(this.origin);
+            if (text.length() > 0) {
+                text.append('/');
+            }
+            text.append(suffix);
+            return text.toString();
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            return String.format("%s+suffix", this.origin);
+        }
     }
 
 }

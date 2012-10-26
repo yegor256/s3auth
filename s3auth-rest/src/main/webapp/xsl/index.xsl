@@ -94,7 +94,7 @@
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": "s3:GetObject",
+      "Action": ["s3:GetObject", "s3:GetBucketWebsite"]
       "Resource": [
         "arn:aws:s3:::bucket-1.example.com/*",
         "arn:aws:s3:::bucket-2.example.com/*"
