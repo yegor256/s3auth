@@ -30,6 +30,7 @@
 package com.s3auth.hosts;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.BucketWebsiteConfiguration;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import java.net.URI;
@@ -60,17 +61,23 @@ public final class DefaultHostTest {
         Mockito.doAnswer(
             new Answer<S3Object>() {
                 public S3Object answer(final InvocationOnMock invocation) {
-                    final GetObjectRequest req = GetObjectRequest.class.cast(
+                    final String key = GetObjectRequest.class.cast(
                         invocation.getArguments()[0]
-                    );
+                    ).getKey();
+                    if (key.matches(".*dir/?$")) {
+                        throw new com.amazonaws.AmazonClientException(
+                            String.format("%s not found", key)
+                        );
+                    }
                     final S3Object object = new S3Object();
-                    object.setObjectContent(
-                        IOUtils.toInputStream(req.getKey())
-                    );
+                    object.setObjectContent(IOUtils.toInputStream(key));
+                    object.setKey(key);
                     return object;
                 }
             }
         ).when(aws).getObject(Mockito.any(GetObjectRequest.class));
+        Mockito.doReturn(new BucketWebsiteConfiguration("index.htm"))
+            .when(aws).getBucketWebsiteConfiguration(Mockito.anyString());
         final Host host = new DefaultHost(
             new BucketMocker().withClient(aws).mock()
         );
@@ -78,9 +85,10 @@ public final class DefaultHostTest {
             private static final long serialVersionUID = 0x75294A7898F21489L;
             {
                 this.put("/test/a/a/alpha.html?q", "test/a/a/alpha.html");
+                this.put("", "index.htm");
                 this.put("/", "index.htm");
-                this.put("/foo/index.html", "foo/index.html");
-                this.put("/foo/", "foo/index.htm");
+                this.put("/dir/index.html", "dir/index.html");
+                this.put("/dir/", "dir/index.htm");
             }
         };
         for (Map.Entry<String, String> path : paths.entrySet()) {

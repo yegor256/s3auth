@@ -29,6 +29,7 @@
  */
 package com.s3auth.hosts;
 
+import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.jcabi.log.Logger;
 import java.io.IOException;
@@ -92,16 +93,14 @@ final class DefaultHost implements Host {
     @Override
     public Resource fetch(@NotNull final URI uri) throws IOException {
         Resource resource = null;
-        final Iterator<String> names = this.objects(uri);
         final Collection<String> errors = new LinkedList<String>();
-        while (names.hasNext()) {
-            final String name = names.next();
+        for (ObjectName name : this.names(uri)) {
             try {
                 resource = new DefaultResource(
                     this.bucket.client().getObject(
                         new GetObjectRequest(
                             this.bucket.name(),
-                            name
+                            name.get()
                         )
                     )
                 );
@@ -129,9 +128,10 @@ final class DefaultHost implements Host {
         }
         Logger.debug(
             this,
-            "#fetch('%s'): found at %s",
+            "#fetch('%s'): found at %s as %s",
             uri,
-            this.bucket.name()
+            this.bucket.name(),
+            resource
         );
         return resource;
     }
@@ -168,9 +168,9 @@ final class DefaultHost implements Host {
     }
 
     /**
-     * Name generator.
+     * Name of an S3 Object, context dependent.
      */
-    private interface Name {
+    private interface ObjectName {
         /**
          * Returns a name of S3 object.
          * @return The name
@@ -183,34 +183,46 @@ final class DefaultHost implements Host {
      * @param uri The URI
      * @return Object names
      */
-    private Iterator<String> objects(final URI uri) {
+    private Collection<ObjectName> names(final URI uri) {
         final String name = StringUtils.strip(uri.getPath(), "/");
-        final Collection<Name> names = new LinkedList<Name>();
+        final Collection<ObjectName> names = new LinkedList<ObjectName>();
         if (!name.isEmpty()) {
             names.add(
-                new Name() {
+                new ObjectName() {
                     @Override
                     public String get() {
+                        return name;
+                    }
+                    @Override
+                    public String toString() {
                         return name;
                     }
                 }
             );
         }
-        final Iterator<Name> origin = names.iterator();
-        return new Iterator<String>() {
-            @Override
-            public boolean hasNext() {
-                return origin.hasNext();
+        names.add(
+            new ObjectName() {
+                @Override
+                public String get() {
+                    final StringBuilder text = new StringBuilder(name);
+                    if (text.length() > 0) {
+                        text.append('/');
+                    }
+                    text.append(
+                        DefaultHost.this.bucket.client()
+                            .getBucketWebsiteConfiguration(
+                                DefaultHost.this.bucket.name()
+                            ).getIndexDocumentSuffix()
+                    );
+                    return text.toString();
+                }
+                @Override
+                public String toString() {
+                    return String.format("%s+suffix", name);
+                }
             }
-            @Override
-            public String next() {
-                return origin.next().get();
-            }
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
+        );
+        return names;
     }
 
 }

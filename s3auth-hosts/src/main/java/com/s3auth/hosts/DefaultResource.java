@@ -67,6 +67,14 @@ final class DefaultResource implements Resource {
      * {@inheritDoc}
      */
     @Override
+    public String toString() {
+        return this.object.getKey();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void writeTo(final OutputStream output) throws IOException {
         final InputStream input = this.object.getObjectContent();
         IOUtils.copy(input, output);
