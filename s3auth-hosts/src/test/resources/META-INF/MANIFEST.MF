@@ -1,3 +1,0 @@
-S3Auth-AwsDynamoKey: AKIAIMCAQHQMKEKL4VXA
-S3Auth-AwsDynamoSecret: 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
-S3Auth-AwsDynamoTable: s3auth-test

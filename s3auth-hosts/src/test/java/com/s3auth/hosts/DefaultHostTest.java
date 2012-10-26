@@ -29,11 +29,19 @@
  */
 package com.s3auth.hosts;
 
-import com.rexsl.core.Manifests;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
+import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 /**
  * Test case for {@link DefaultHost}.
@@ -43,33 +51,44 @@ import org.junit.Test;
 public final class DefaultHostTest {
 
     /**
-     * DefaultHost can load resource from S3 (credentials are defined in the
-     * {@code /src/test/resources/META-INF/MANIFEST.MF} file).
+     * DefaultHost can load resource from S3.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void loadsAmazonResourcesFromLiveTable() throws Exception {
+    public void loadsAmazonResourcesFrom() throws Exception {
+        final AmazonS3 aws = Mockito.mock(AmazonS3.class);
+        Mockito.doAnswer(
+            new Answer<S3Object>() {
+                public S3Object answer(final InvocationOnMock invocation) {
+                    final GetObjectRequest req = GetObjectRequest.class.cast(
+                        invocation.getArguments()[0]
+                    );
+                    final S3Object object = new S3Object();
+                    object.setObjectContent(
+                        IOUtils.toInputStream(req.getKey())
+                    );
+                    return object;
+                }
+            }
+        ).when(aws).getObject(Mockito.any(GetObjectRequest.class));
         final Host host = new DefaultHost(
-            new DefaultBucket(
-                new DomainMocker()
-                    .withName("junit.s3auth.com")
-                    .withKey(Manifests.read("S3Auth-AwsDynamoKey"))
-                    .withSecret(Manifests.read("S3Auth-AwsDynamoSecret"))
-                    .mock()
-            )
+            new BucketMocker().withClient(aws).mock()
         );
-        MatcherAssert.assertThat(
-            ResourceMocker.toString(host.fetch(URI.create("/index.html?q"))),
-            Matchers.equalTo("<html>hello</html>")
-        );
-        MatcherAssert.assertThat(
-            ResourceMocker.toString(host.fetch(URI.create("/"))),
-            Matchers.startsWith("<html>hello")
-        );
-        MatcherAssert.assertThat(
-            ResourceMocker.toString(host.fetch(URI.create("/foo"))),
-            Matchers.equalTo("<html>bye</html>")
-        );
+        final Map<String, String> paths = new HashMap<String, String>() {
+            private static final long serialVersionUID = 0x75294A7898F21489L;
+            {
+                this.put("/index.html?q", "index.htm");
+                this.put("/", "index.htm");
+                this.put("/foo/index.html", "foo/index.html");
+                this.put("/foo/", "foo/index.htm");
+            }
+        };
+        for (Map.Entry<String, String> path : paths.entrySet()) {
+            MatcherAssert.assertThat(
+                ResourceMocker.toString(host.fetch(URI.create(path.getKey()))),
+                Matchers.equalTo(path.getValue())
+            );
+        }
     }
 
     /**

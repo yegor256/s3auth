@@ -72,19 +72,31 @@ final class DefaultDynamo implements Dynamo {
     /**
      * Table name.
      */
-    private final transient String table =
-        Manifests.read("S3Auth-AwsDynamoTable");
+    private final transient String table;
 
     /**
      * Public ctor.
      */
     public DefaultDynamo() {
-        this.client = new AmazonDynamoDBClient(
-            new BasicAWSCredentials(
-                Manifests.read("S3Auth-AwsDynamoKey"),
-                Manifests.read("S3Auth-AwsDynamoSecret")
-            )
+        this(
+            new AmazonDynamoDBClient(
+                new BasicAWSCredentials(
+                    Manifests.read("S3Auth-AwsDynamoKey"),
+                    Manifests.read("S3Auth-AwsDynamoSecret")
+                )
+            ),
+            Manifests.read("S3Auth-AwsDynamoTable")
         );
+    }
+
+    /**
+     * Ctor for unit tests.
+     * @param clnt The client to Dynamo DB
+     * @param tbl Table name
+     */
+    protected DefaultDynamo(final AmazonDynamoDB clnt, final String tbl) {
+        this.client = clnt;
+        this.table = tbl;
     }
 
     /**

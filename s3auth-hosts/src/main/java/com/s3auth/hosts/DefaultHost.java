@@ -33,7 +33,11 @@ import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import javax.validation.constraints.NotNull;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Default implementation of {@link Host}.
@@ -86,26 +90,34 @@ final class DefaultHost implements Host {
      */
     @Override
     public Resource fetch(@NotNull final URI uri) throws IOException {
-        Resource resource;
-        try {
-            resource = new DefaultResource(
-                this.bucket.client().getObject(
-                    new GetObjectRequest(
-                        this.bucket.name(),
-                        this.object(uri)
+        Resource resource = null;
+        final Collection<String> names = this.objects(uri);
+        final Collection<String> errors = new ArrayList<String>(names.size());
+        for (String name : names) {
+            try {
+                resource = new DefaultResource(
+                    this.bucket.client().getObject(
+                        new GetObjectRequest(
+                            this.bucket.name(),
+                            name
+                        )
                     )
-                )
-            );
-        } catch (com.amazonaws.AmazonClientException ex) {
+                );
+            } catch (com.amazonaws.AmazonClientException ex) {
+                errors.add(ex.getMessage());
+            }
+        }
+        if (resource == null) {
             throw new IOException(
-                String.format(
-                    "failed to fetch '%s' from '%s' (key=%s), %s",
+                Logger.format(
+                    // @checkstyle LineLength (1 line)
+                    "failed to fetch %s as %[list]s from '%s' (key=%s), %[list]s",
                     uri,
+                    names,
                     this.bucket.name(),
                     this.bucket.key(),
-                    ex.getMessage()
-                ),
-                ex
+                    errors
+                )
             );
         }
         Logger.debug(
@@ -149,19 +161,17 @@ final class DefaultHost implements Host {
     }
 
     /**
-     * Convert URI to S3 object name.
+     * Convert URI to all possible S3 object names (in order of importance).
      * @param uri The URI
-     * @return Object name
+     * @return Object names
      */
-    private String object(final URI uri) {
-        String name = uri.getPath();
-        if (name.isEmpty() || "/".equals(name)) {
-            name = "/index.html";
+    private Collection<String> objects(final URI uri) {
+        final Collection<String> names = new LinkedHashSet<String>();
+        final String name = StringUtils.strip(uri.getPath(), "/");
+        if (!name.isEmpty()) {
+            names.add(name);
         }
-        if (name.charAt(0) == '/') {
-            name = name.substring(1);
-        }
-        return name;
+        return names;
     }
 
 }

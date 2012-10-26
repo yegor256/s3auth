@@ -29,9 +29,16 @@
  */
 package com.s3auth.hosts;
 
+import com.amazonaws.services.dynamodb.AmazonDynamoDB;
+import com.amazonaws.services.dynamodb.model.AttributeValue;
+import com.amazonaws.services.dynamodb.model.ScanRequest;
+import com.amazonaws.services.dynamodb.model.ScanResult;
+import java.util.LinkedList;
+import java.util.Map;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Test case for {@link DefaultDynamo}.
@@ -46,7 +53,12 @@ public final class DefaultDynamoTest {
      */
     @Test
     public void loadsDynamoConfiguration() throws Exception {
-        final Dynamo dynamo = new DefaultDynamo();
+        final AmazonDynamoDB aws = Mockito.mock(AmazonDynamoDB.class);
+        Mockito.doReturn(
+            new ScanResult()
+                .withItems(new LinkedList<Map<String, AttributeValue>>())
+        ).when(aws).scan(Mockito.any(ScanRequest.class));
+        final Dynamo dynamo = new DefaultDynamo(aws, "table");
         MatcherAssert.assertThat(
             dynamo.load(),
             Matchers.notNullValue()
