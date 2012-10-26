@@ -33,9 +33,10 @@ import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import javax.validation.constraints.NotNull;
 import org.apache.commons.lang.StringUtils;
 
@@ -91,9 +92,10 @@ final class DefaultHost implements Host {
     @Override
     public Resource fetch(@NotNull final URI uri) throws IOException {
         Resource resource = null;
-        final Collection<String> names = this.objects(uri);
-        final Collection<String> errors = new ArrayList<String>(names.size());
-        for (String name : names) {
+        final Iterator<String> names = this.objects(uri);
+        final Collection<String> errors = new LinkedList<String>();
+        while (names.hasNext()) {
+            final String name = names.next();
             try {
                 resource = new DefaultResource(
                     this.bucket.client().getObject(
@@ -103,17 +105,22 @@ final class DefaultHost implements Host {
                         )
                     )
                 );
+                break;
             } catch (com.amazonaws.AmazonClientException ex) {
-                errors.add(ex.getMessage());
+                errors.add(
+                    String.format(
+                        "'%s': %s",
+                        name,
+                        ex.getMessage()
+                    )
+                );
             }
         }
         if (resource == null) {
             throw new IOException(
                 Logger.format(
-                    // @checkstyle LineLength (1 line)
-                    "failed to fetch %s as %[list]s from '%s' (key=%s), %[list]s",
+                    "failed to fetch %s from '%s' (key=%s): %[list]s",
                     uri,
-                    names,
                     this.bucket.name(),
                     this.bucket.key(),
                     errors
@@ -161,17 +168,49 @@ final class DefaultHost implements Host {
     }
 
     /**
+     * Name generator.
+     */
+    private interface Name {
+        /**
+         * Returns a name of S3 object.
+         * @return The name
+         */
+        String get();
+    }
+
+    /**
      * Convert URI to all possible S3 object names (in order of importance).
      * @param uri The URI
      * @return Object names
      */
-    private Collection<String> objects(final URI uri) {
-        final Collection<String> names = new LinkedHashSet<String>();
+    private Iterator<String> objects(final URI uri) {
         final String name = StringUtils.strip(uri.getPath(), "/");
+        final Collection<Name> names = new LinkedList<Name>();
         if (!name.isEmpty()) {
-            names.add(name);
+            names.add(
+                new Name() {
+                    @Override
+                    public String get() {
+                        return name;
+                    }
+                }
+            );
         }
-        return names;
+        final Iterator<Name> origin = names.iterator();
+        return new Iterator<String>() {
+            @Override
+            public boolean hasNext() {
+                return origin.hasNext();
+            }
+            @Override
+            public String next() {
+                return origin.next().get();
+            }
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
     }
 
 }

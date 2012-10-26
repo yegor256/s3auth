@@ -77,7 +77,7 @@ public final class DefaultHostTest {
         final Map<String, String> paths = new HashMap<String, String>() {
             private static final long serialVersionUID = 0x75294A7898F21489L;
             {
-                this.put("/index.html?q", "index.htm");
+                this.put("/test/a/a/alpha.html?q", "test/a/a/alpha.html");
                 this.put("/", "index.htm");
                 this.put("/foo/index.html", "foo/index.html");
                 this.put("/foo/", "foo/index.htm");
