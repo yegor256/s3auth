@@ -31,7 +31,7 @@ package com.s3auth.rest;
 
 import com.restfb.DefaultFacebookClient;
 import com.rexsl.core.Manifests;
-import com.rexsl.misc.CookieBuilder;
+import com.rexsl.page.CookieBuilder;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.test.RestTester;

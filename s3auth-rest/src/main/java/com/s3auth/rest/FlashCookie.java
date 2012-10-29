@@ -29,7 +29,7 @@
  */
 package com.s3auth.rest;
 
-import com.rexsl.misc.CookieBuilder;
+import com.rexsl.page.CookieBuilder;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import javax.validation.constraints.NotNull;
