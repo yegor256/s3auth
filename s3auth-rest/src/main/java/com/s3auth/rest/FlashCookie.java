@@ -93,6 +93,11 @@ public final class FlashCookie extends NewCookie {
         } catch (java.io.UnsupportedEncodingException ex) {
             throw new IllegalStateException(ex);
         }
+        if (parts.length != 2) {
+            throw new IllegalArgumentException(
+                String.format("failed to decode cookie '%s'", text)
+            );
+        }
         if (!parts[0].matches("GREEN|RED")) {
             throw new IllegalArgumentException(
                 String.format("invalid cookie '%s'", text)
