@@ -32,6 +32,7 @@ package com.s3auth.rest;
 import com.jcabi.log.Logger;
 import com.rexsl.page.BaseResource;
 import com.rexsl.page.JaxbBundle;
+import com.rexsl.page.Resource;
 import com.s3auth.hosts.Hosts;
 import com.s3auth.hosts.User;
 import javax.servlet.ServletContext;
@@ -49,6 +50,7 @@ import javax.ws.rs.core.Response;
  * @version $Id$
  * @since 0.0.1
  */
+@Resource.Forwarded
 public class BaseRs extends BaseResource {
 
     /**

@@ -385,7 +385,7 @@
                     <plugin>
                         <groupId>com.qulice</groupId>
                         <artifactId>qulice-maven-plugin</artifactId>
-                        <version since="2 Apr 2012">1.0-SNAPSHOT</version>
+                        <version since="29 Oct 2012">0.2</version>
                         <configuration>
                             <license>file:${basedir}/LICENSE.txt</license>
                         </configuration>
@@ -684,7 +684,7 @@
                 <plugin>
                     <groupId>com.texry</groupId>
                     <artifactId>texry-maven-plugin</artifactId>
-                    <version since="23 Mar 2012">1.0-SNAPSHOT</version>
+                    <version since="29 Oct 2012">0.2.1</version>
                     <configuration>
                         <closures>
                             <file>header.tex</file>
