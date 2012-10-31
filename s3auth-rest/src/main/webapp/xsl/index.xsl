@@ -156,26 +156,10 @@
             <span class="tt"><xsl:text>.htpasswd</xsl:text></span>
             <xsl:text> file make an HTTP request from command line:</xsl:text>
         </p>
-        <pre><![CDATA[$ curl -v -H "Authorization: Basic am9lOnNlY3JldA==" http://maven.s3auth.com/index.html
-* About to connect() to maven.s3auth.com port 80 (#0)
-*   Trying 23.21.39.250...
-* connected
-* Connected to maven.s3auth.com (23.21.39.250) port 80 (#0)
-> GET /index.html HTTP/1.1
-> User-Agent: curl/7.24.0 (x86_64-apple-darwin12.0)
-> Host: maven.s3auth.com
-> Accept: */*
-> Authorization: Basic am9lOnNlY3JldA==
->
-< HTTP/1.1 401 Unauthorized
-< WWW-Authenticate: Basic realm="try again"
-< Content-Type: text/plain
-< Content-Length: 59
-<
-* Connection #0 to host maven.s3auth.com left intact
+        <pre><![CDATA[$ curl -H "Authorization: Basic am9lOnNlY3JldA==" http://maven.s3auth.com/index.html
 maven.s3auth.com with .htpasswd(3 user(s) updated 2min ago)]]></pre>
         <p>
-            <xsl:text>Pay attention to the last line, it contains information from the relay:</xsl:text>
+            <xsl:text>The output contains information from the relay:</xsl:text>
             <xsl:text> how many users discovered in the file and when was it retrieved last time from S3 bucket.</xsl:text>
             <span class="tt"><xsl:text>am9lOnNlY3JldA==</xsl:text></span>
             <xsl:text> is a </xsl:text>
