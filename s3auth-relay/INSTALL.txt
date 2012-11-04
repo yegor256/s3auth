@@ -84,5 +84,11 @@ Add this to crontab:
 Configure syslog as explained here:
 
     https://papertrailapp.com/systems/setup
+    
+    Uncomment these lines:
+        $ModLoad imudp
+        $UDPServerRun 514
+        $ModLoad imtcp
+        $InputTCPServerRun 514
 
 Logout and reboot the server
