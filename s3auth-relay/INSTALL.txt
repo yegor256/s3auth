@@ -65,7 +65,6 @@ Create run.sh in /home/ubuntu:
     #!/bin/sh
     while true
     do
-        mail -s "recent logs" yegor@tpc2.com < /home/ubuntu/s3auth.log
         rm -rf /home/ubuntu/s3auth.log
         export MAVEN_HOME=/home/ubuntu/apache-maven-3.0.4
         export MAVEN_OPTS=-Xmx256m
@@ -81,5 +80,9 @@ Make sure it's executable:
 Add this to crontab:
 
     @reboot sudo /home/ubuntu/run.sh &
+
+Configure syslog as explained here:
+
+    https://papertrailapp.com/systems/setup
 
 Logout and reboot the server
