@@ -225,10 +225,14 @@ final class DefaultHost implements Host {
         public String get() {
             String suffix = null;
             try {
-                suffix = DefaultHost.this.bucket.client()
-                    .getBucketWebsiteConfiguration(
-                        DefaultHost.this.bucket.name()
-                    ).getIndexDocumentSuffix();
+                final BucketWebsiteConfiguration conf =
+                    DefaultHost.this.bucket.client()
+                        .getBucketWebsiteConfiguration(
+                            DefaultHost.this.bucket.name()
+                        );
+                if (conf != null) {
+                    suffix = conf.getIndexDocumentSuffix();
+                }
             } catch (com.amazonaws.AmazonClientException ex) {
                 suffix = "";
             }

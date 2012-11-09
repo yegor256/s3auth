@@ -157,13 +157,13 @@
                 <!-- Logging facility, on top of SLF4J. -->
                 <groupId>com.jcabi</groupId>
                 <artifactId>jcabi-log</artifactId>
-                <version since="1 Oct 2012">0.2.1</version>
+                <version since="9 Nov 2012">0.5.2</version>
             </dependency>
             <dependency>
                 <!-- Aspects -->
                 <groupId>com.jcabi</groupId>
                 <artifactId>jcabi-aspects</artifactId>
-                <version since="1 Oct 2012">0.2.1</version>
+                <version since="9 Nov 2012">0.5.2</version>
             </dependency>
             <dependency>
                 <groupId>org.aspectj</groupId>
