@@ -1,1 +1,4 @@
 target/
+src/main/texry/*.pdf
+src/main/texry/*.aux
+src/main/texry/*.gz
