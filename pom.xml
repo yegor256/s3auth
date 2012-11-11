@@ -105,15 +105,15 @@
 
     <distributionManagement>
         <snapshotRepository>
-            <id>s3auth.s3</id>
+            <id>repo.s3auth.com</id>
             <url>s3://repo.s3auth.com/snapshot</url>
         </snapshotRepository>
         <repository>
-            <id>s3auth.s3</id>
+            <id>repo.s3auth.com</id>
             <url>s3://repo.s3auth.com/release</url>
         </repository>
         <site>
-            <id>s3auth.s3</id>
+            <id>maven.s3auth.com</id>
             <name>s3auth.com Project Site</name>
             <url>s3://maven.s3auth.com</url>
         </site>
@@ -130,18 +130,18 @@
 
     <repositories>
         <repository>
-            <id>s3auth.s3</id>
+            <id>repo.s3auth.com</id>
             <url>s3://repo.s3auth.com/snapshot</url>
         </repository>
         <repository>
-            <id>rexsl.snapshots</id>
+            <id>oss.sonatype.org</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </repository>
     </repositories>
 
     <pluginRepositories>
         <pluginRepository>
-            <id>rexsl.snapshots</id>
+            <id>oss.sonatype.org</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </pluginRepository>
     </pluginRepositories>
