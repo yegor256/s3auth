@@ -70,10 +70,9 @@
 
     <licenses>
         <license>
-            <name>GNU</name>
+            <name>BSD</name>
             <url>http://www.s3auth.com/misc/LICENSE.txt</url>
             <distribution>site</distribution>
-            <comments>read the licenese</comments>
         </license>
     </licenses>
 
@@ -91,6 +90,11 @@
             <timezone>+1</timezone>
         </developer>
     </developers>
+
+    <ciManagement>
+        <system>jenkins</system>
+        <url>http://ci.s3auth.com:8080/job/s3auth</url>
+    </ciManagement>
 
     <issueManagement>
         <system>github</system>
