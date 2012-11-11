@@ -37,6 +37,7 @@
     name="s3auth-relay">
 
     <body>
+        <menu ref="parent" />
         <menu name="Overview">
             <item name="Introduction" href="./index.html" />
             <item name="JavaDoc" href="./apidocs/index.html" />

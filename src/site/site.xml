@@ -30,38 +30,31 @@
  *
  * @author Yegor Bugayenko (yegor@s3auth.com)
  -->
-<project xmlns="http://maven.apache.org/DECORATION/1.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0
-    http://maven.apache.org/xsd/decoration-1.0.0.xsd"
-    name="s3auth">
-
+<project xmlns="http://maven.apache.org/DECORATION/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0     http://maven.apache.org/xsd/decoration-1.0.0.xsd" name="s3auth">
     <skin>
         <groupId>com.jcabi</groupId>
         <artifactId>jcabi-maven-skin</artifactId>
-        <version>0.5.2</version>
+        <version>1.0-SNAPSHOT</version>
     </skin>
-
+    <googleAnalyticsAccountId>UA-1963507-21</googleAnalyticsAccountId>
     <bannerLeft>
         <name>s3auth.com</name>
         <src>http://img.s3auth.com/logo.png</src>
         <href>http://maven.s3auth.com/</href>
     </bannerLeft>
-
     <body>
         <head>
-            <link href="http://img.s3auth.com/favicon.ico" rel="shortcut icon" />
+            <link href="http://img.s3auth.com/favicon.ico" rel="shortcut icon"/>
         </head>
         <breadcrumbs>
             <item name="s3auth.com" href="http://maven.s3auth.com"/>
         </breadcrumbs>
         <menu name="Overview">
-            <item name="Introduction" href="./index.html" />
-            <item name="Architecture" href="./architecture.html" />
-            <item name="JavaDoc" href="./apidocs/index.html" />
+            <item name="Introduction" href="./index.html"/>
+            <item name="Architecture" href="./architecture.html"/>
+            <item name="JavaDoc" href="./apidocs/index.html"/>
         </menu>
-        <menu ref="modules" />
-        <menu ref="reports" />
+        <menu ref="modules"/>
+        <menu ref="reports"/>
     </body>
-
 </project>
