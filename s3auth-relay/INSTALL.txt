@@ -65,12 +65,11 @@ Create run.sh in /home/ubuntu:
     #!/bin/sh
     while true
     do
-        rm -rf /home/ubuntu/s3auth.log
         export MAVEN_HOME=/home/ubuntu/apache-maven-3.0.4
         export MAVEN_OPTS=-Xmx256m
-    	/home/ubuntu/apache-maven-3.0.4/bin/mvn --errors --quiet \
+    	$MAVEN_HOME/bin/mvn --errors --quiet \
     	    --update-snapshots --settings /home/ubuntu/settings.xml \
-    	    test > /home/ubuntu/s3auth.log 2>&1
+    	    test 2>&1 | logger -p local0.info -t run.sh
     done
 
 Make sure it's executable:
