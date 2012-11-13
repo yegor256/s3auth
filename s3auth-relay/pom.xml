@@ -251,7 +251,7 @@
                                     <settings>
                                      <servers>
                                       <server>
-                                       <id>s3auth.s3</id>
+                                       <id>repo.s3auth.com</id>
                                        <username>${aws.key}</username>
                                        <password>${aws.secret}</password>
                                       </server>
