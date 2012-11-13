@@ -78,6 +78,7 @@ Make sure it's executable:
 
 Add this to crontab:
 
+    @reboot sudo hostname relay.s3auth.com
     @reboot sudo /home/ubuntu/run.sh &
 
 Configure syslog as explained here:
@@ -89,9 +90,5 @@ Configure syslog as explained here:
         $UDPServerRun 514
         $ModLoad imtcp
         $InputTCPServerRun 514
-
-    Change host name of the server:
-
-        sudo hostname relay.s3auth.com
 
 Logout and reboot the server
