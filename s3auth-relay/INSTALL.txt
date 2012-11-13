@@ -90,4 +90,8 @@ Configure syslog as explained here:
         $ModLoad imtcp
         $InputTCPServerRun 514
 
+    Change host name of the server:
+
+        sudo hostname relay.s3auth.com
+
 Logout and reboot the server
