@@ -53,7 +53,7 @@ Create /home/ubuntu/settings.xml:
      <localRepository>/home/ubuntu/m2-repo</localRepository>
      <servers>
       <server>
-       <id>s3auth.s3</id>
+       <id>repo.s3auth.com</id>
        <username>..aws-key..</username>
        <password>..aws-secret..</password>
       </server>
@@ -84,7 +84,7 @@ Add this to crontab:
 Configure syslog as explained here:
 
     https://papertrailapp.com/systems/setup
-    
+
     Uncomment these lines:
         $ModLoad imudp
         $UDPServerRun 514
