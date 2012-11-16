@@ -65,10 +65,10 @@
 
     <servlet>
         <servlet-name>ExceptionTrap</servlet-name>
-        <servlet-class>com.rexsl.trap.ExceptionTrap</servlet-class>
+        <servlet-class>com.rexsl.core.ExceptionTrap</servlet-class>
         <init-param>
-            <param-name>com.rexsl.trap.Template</param-name>
-            <param-value>com.rexsl.trap.StaticTemplate?uri=/com/s3auth/servlets/exception.html.vm</param-value>
+            <param-name>template</param-name>
+            <param-value>/com/s3auth/servlets/exception.html.vm</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>

@@ -43,7 +43,7 @@
     <name>s3auth-rest</name>
 
     <properties>
-        <rexsl.version since="29 Oct 2012">0.4</rexsl.version>
+        <rexsl.version since="17 Nov 2012">0.4.2</rexsl.version>
     </properties>
 
     <repositories>
