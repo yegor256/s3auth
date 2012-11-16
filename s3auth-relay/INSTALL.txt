@@ -91,7 +91,7 @@ Configure syslog as explained here:
         $ModLoad imtcp
         $InputTCPServerRun 514
 
-    Add these lines:
+    Add these lines at the beginning of the file:
         $EscapeControlCharactersOnReceive off
         $PreserveFQDN on
 
