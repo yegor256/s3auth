@@ -28,24 +28,19 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns="http://www.w3.org/1999/xhtml"
-    version="2.0" exclude-result-prefixes="xs">
-
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:template match="/">
         <!-- see http://stackoverflow.com/questions/3387127 -->
         <xsl:text disable-output-escaping="yes">&lt;!DOCTYPE html&gt;</xsl:text>
-        <xsl:apply-templates select="page" />
+        <xsl:apply-templates select="page"/>
     </xsl:template>
-
     <xsl:template match="page">
         <html lang="en">
             <head>
-                <meta charset="UTF-8" />
-                <meta name="description" content="HTTP Basic Authentication gateway for Amazon S3 buckets" />
-                <meta name="keywords" content="S3 Basic Auth, Amazon S3 Auth, S3 Auth, S3 HTTP Auth, S3 Basic Authentication" />
-                <meta name="author" content="s3auth.com" />
+                <meta charset="UTF-8"/>
+                <meta name="description" content="HTTP Basic Authentication gateway for Amazon S3 buckets"/>
+                <meta name="keywords" content="S3 Basic Auth, Amazon S3 Auth, S3 Auth, S3 HTTP Auth, S3 Basic Authentication"/>
+                <meta name="author" content="s3auth.com"/>
                 <link rel="stylesheet" type="text/css" media="all">
                     <xsl:attribute name="href">
                         <xsl:text>/css/layout.css?</xsl:text>
@@ -58,7 +53,7 @@
                         <xsl:value-of select="/page/version/revision"/>
                     </xsl:attribute>
                 </link>
-                <xsl:call-template name="head" />
+                <xsl:call-template name="head"/>
                 <script type="text/javascript"><![CDATA[
                   var _gaq = _gaq || [];
                   _gaq.push(['_setAccount', 'UA-1963507-21']);
@@ -71,20 +66,19 @@
                 ]]></script>
             </head>
             <body>
-                <xsl:apply-templates select="version" />
+                <xsl:apply-templates select="version"/>
                 <div id="content">
                     <p>
                         <a>
                             <xsl:attribute name="href">
-                                <xsl:value-of select="/page/links/link[@rel='home']/@href" />
+                                <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
                             </xsl:attribute>
-                            <img src="http://img.s3auth.com/logo.png" alt="s3auth.com"
-                                style="width: 180px; height: 32px;"/>
+                            <img src="http://img.s3auth.com/logo.png" alt="s3auth.com" style="width: 180px; height: 32px;"/>
                         </a>
                     </p>
-                    <xsl:apply-templates select="user" />
-                    <xsl:apply-templates select="flash" />
-                    <xsl:call-template name="content" />
+                    <xsl:apply-templates select="user"/>
+                    <xsl:apply-templates select="flash"/>
+                    <xsl:call-template name="content"/>
                     <p style="border-top: 1px solid #ccc; margin-top: 2em; padding-top: 1em;">
                         <xsl:text>s3auth.com is an open source project, hosted at </xsl:text>
                         <a href="https://github.com/yegor256/s3auth">
@@ -99,17 +93,24 @@
                         <a href="http://www.tpc2.com/">
                             <xsl:text>tpc2.com</xsl:text>
                         </a>
-                        <xsl:text>. Sea also terms of use, privacy policy and license agreement at </xsl:text>
+                        <xsl:text> (a </xsl:text>
+                        <a href="http://www.technoparkcorp.com/about/news/year2012/apn">
+                            <xsl:text>Standard Technology Partner</xsl:text>
+                        </a>
+                        <xsl:text> of AWS). </xsl:text>
+                        <xsl:text>Sea also terms of use, privacy policy and license agreement at </xsl:text>
                         <a href="http://www.s3auth.com/misc/LICENSE.txt">
                             <xsl:text>LICENSE.txt</xsl:text>
                         </a>
                         <xsl:text>.</xsl:text>
                     </p>
+                    <p>
+                        <img src="http://img.s3auth.com/apn-logo.png" alt="AWS Partner Network Logo" style="width: 10%;"/>
+                    </p>
                 </div>
             </body>
         </html>
     </xsl:template>
-
     <xsl:template name="millis">
         <xsl:param name="millis" as="xs:integer"/>
         <xsl:choose>
@@ -123,15 +124,14 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-
     <xsl:template match="user">
         <p>
             <img style="width: 25px; height: 25px;">
                 <xsl:attribute name="src">
-                    <xsl:value-of select="photo" />
+                    <xsl:value-of select="photo"/>
                 </xsl:attribute>
                 <xsl:attribute name="alt">
-                    <xsl:value-of select="name" />
+                    <xsl:value-of select="name"/>
                 </xsl:attribute>
             </img>
             <xsl:text> </xsl:text>
@@ -139,13 +139,12 @@
             <xsl:text> </xsl:text>
             <a>
                 <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='logout']/@href" />
+                    <xsl:value-of select="/page/links/link[@rel='logout']/@href"/>
                 </xsl:attribute>
                 <xsl:text>logout</xsl:text>
             </a>
         </p>
     </xsl:template>
-
     <xsl:template match="version">
         <div id="version">
             <xsl:value-of select="name"/>
@@ -153,11 +152,10 @@
             <xsl:value-of select="revision"/>
             <xsl:text> </xsl:text>
             <xsl:call-template name="millis">
-                <xsl:with-param name="millis" select="/page/millis" />
+                <xsl:with-param name="millis" select="/page/millis"/>
             </xsl:call-template>
         </div>
     </xsl:template>
-
     <xsl:template match="flash">
         <div id="flash">
             <xsl:attribute name="class">
@@ -166,5 +164,4 @@
             <xsl:value-of select="message"/>
         </div>
     </xsl:template>
-
 </xsl:stylesheet>

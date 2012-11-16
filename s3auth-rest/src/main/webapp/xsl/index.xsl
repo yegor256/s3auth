@@ -28,21 +28,14 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns="http://www.w3.org/1999/xhtml"
-    version="2.0" exclude-result-prefixes="xs">
-
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
     <xsl:output method="xml" omit-xml-declaration="yes"/>
-
-    <xsl:include href="/xsl/layout.xsl" />
-
+    <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template name="head">
         <title>
             <xsl:text>s3auth</xsl:text>
         </title>
     </xsl:template>
-
     <xsl:template name="content">
         <h1>
             <xsl:text>Domains Under Management</xsl:text>
@@ -67,16 +60,22 @@
         </p>
         <form method="post">
             <xsl:attribute name="action">
-                <xsl:value-of select="/page/links/link[@rel='add']/@href" />
+                <xsl:value-of select="/page/links/link[@rel='add']/@href"/>
             </xsl:attribute>
             <p>
-                <label><xsl:text>Host name (the same as S3 bucket name):</xsl:text></label>
-                <input name="host" />
-                <label><xsl:text>AWS key:</xsl:text></label>
-                <input name="key" size="30" maxlength="20" />
-                <label><xsl:text>AWS secret key:</xsl:text></label>
-                <input name="secret" size="40" maxlength="40" />
-                <input class="submit" type="submit" value="" />
+                <label>
+                    <xsl:text>Host name (the same as S3 bucket name):</xsl:text>
+                </label>
+                <input name="host"/>
+                <label>
+                    <xsl:text>AWS key:</xsl:text>
+                </label>
+                <input name="key" size="30" maxlength="20"/>
+                <label>
+                    <xsl:text>AWS secret key:</xsl:text>
+                </label>
+                <input name="secret" size="40" maxlength="40"/>
+                <input class="submit" type="submit" value=""/>
             </p>
         </form>
         <h1>
@@ -84,7 +83,9 @@
         </h1>
         <p>
             <xsl:text>1. Point a CNAME DNS record of your domain to </xsl:text>
-            <span class="tt"><xsl:text>relay.s3auth.com</xsl:text></span>
+            <span class="tt">
+                <xsl:text>relay.s3auth.com</xsl:text>
+            </span>
             <xsl:text> (domain and bucket name should be identical) and wait for DNS to propagate.</xsl:text>
         </p>
         <p>
@@ -107,7 +108,9 @@
         </p>
         <p>
             <xsl:text>4. Generate </xsl:text>
-            <span class="tt"><xsl:text>.htpasswd</xsl:text></span>
+            <span class="tt">
+                <xsl:text>.htpasswd</xsl:text>
+            </span>
             <xsl:text> file in </xsl:text>
             <a href="http://httpd.apache.org/docs/2.2/misc/password_encryptions.html">
                 <xsl:text>Apache HTTP Server format</xsl:text>
@@ -125,7 +128,9 @@
         <p>
             <xsl:text>6. Upload your files to the bucket and access them in any web browser
                 using the credentials specified in the </xsl:text>
-            <span class="tt"><xsl:text>.htpasswd</xsl:text></span>
+            <span class="tt">
+                <xsl:text>.htpasswd</xsl:text>
+            </span>
             <xsl:text> file.</xsl:text>
         </p>
         <h1>
@@ -133,7 +138,9 @@
         </h1>
         <p>
             <xsl:text>You can't authorize yourself with a username/password combination configured in </xsl:text>
-            <span class="tt"><xsl:text>.htpasswd</xsl:text></span>
+            <span class="tt">
+                <xsl:text>.htpasswd</xsl:text>
+            </span>
             <xsl:text> and on every attempt browser says "try again" and asks for credentials? </xsl:text>
             <xsl:text>There are two possible causes:</xsl:text>
         </p>
@@ -147,13 +154,17 @@
             </li>
             <li>
                 <xsl:text>S3 permissions are not granted and we simply can't read your </xsl:text>
-                <span class="tt"><xsl:text>.htpasswd</xsl:text></span>
+                <span class="tt">
+                    <xsl:text>.htpasswd</xsl:text>
+                </span>
                 <xsl:text> file. Make sure your IAM user has permission policy attached, as explained above.</xsl:text>
             </li>
         </ol>
         <p>
             <xsl:text>In order to investigate further and see what the system knows about your </xsl:text>
-            <span class="tt"><xsl:text>.htpasswd</xsl:text></span>
+            <span class="tt">
+                <xsl:text>.htpasswd</xsl:text>
+            </span>
             <xsl:text> file make an HTTP request from command line:</xsl:text>
         </p>
         <pre><![CDATA[$ curl -H "Authorization: Basic am9lOnNlY3JldA==" http://maven.s3auth.com/index.html
@@ -161,17 +172,25 @@ maven.s3auth.com with .htpasswd(3 user(s) updated 2min ago)]]></pre>
         <p>
             <xsl:text>The output contains information from the relay:</xsl:text>
             <xsl:text> how many users discovered in the file and when was it retrieved last time from S3 bucket.</xsl:text>
-            <span class="tt"><xsl:text>am9lOnNlY3JldA==</xsl:text></span>
+            <span class="tt">
+                <xsl:text>am9lOnNlY3JldA==</xsl:text>
+            </span>
             <xsl:text> is a </xsl:text>
             <a href="http://en.wikipedia.org/wiki/Base64">
                 <xsl:text>Base64 encoded</xsl:text>
             </a>
             <xsl:text> version of </xsl:text>
-            <span class="tt"><xsl:text>joe:secret</xsl:text></span>
+            <span class="tt">
+                <xsl:text>joe:secret</xsl:text>
+            </span>
             <xsl:text>, where </xsl:text>
-            <span class="tt"><xsl:text>joe</xsl:text></span>
+            <span class="tt">
+                <xsl:text>joe</xsl:text>
+            </span>
             <xsl:text> is a user name and </xsl:text>
-            <span class="tt"><xsl:text>secret</xsl:text></span>
+            <span class="tt">
+                <xsl:text>secret</xsl:text>
+            </span>
             <xsl:text> is a password (this is how </xsl:text>
             <a href="http://en.wikipedia.org/wiki/Basic_access_authentication">
                 <xsl:text>HTTP Basic Authentication</xsl:text>
@@ -180,7 +199,9 @@ maven.s3auth.com with .htpasswd(3 user(s) updated 2min ago)]]></pre>
         </p>
         <p>
             <xsl:text>Another way to check is to open </xsl:text>
-            <span class="tt"><xsl:text>http://&lt;your-domain&gt;/.htpasswd</xsl:text></span>
+            <span class="tt">
+                <xsl:text>http://&lt;your-domain&gt;/.htpasswd</xsl:text>
+            </span>
             <xsl:text> in a browser (no authorization required).</xsl:text>
             <xsl:text> If everything is fine you'll see how many bytes are there in the file</xsl:text>
             <xsl:text> retrieved from your S3 bucket. Otherwise you'll get an exception stacktrace, which </xsl:text>
@@ -194,7 +215,6 @@ maven.s3auth.com with .htpasswd(3 user(s) updated 2min ago)]]></pre>
             <xsl:text>, we'll do our best to help.</xsl:text>
         </p>
     </xsl:template>
-
     <xsl:template match="domain">
         <li>
             <a>
@@ -206,17 +226,20 @@ maven.s3auth.com with .htpasswd(3 user(s) updated 2min ago)]]></pre>
                 <xsl:value-of select="name"/>
             </a>
             <xsl:text> (key: </xsl:text>
-            <span class="tt"><xsl:value-of select="key"/></span>
+            <span class="tt">
+                <xsl:value-of select="key"/>
+            </span>
             <xsl:text>, secret: </xsl:text>
-            <span class="tt"><xsl:value-of select="secret"/></span>
+            <span class="tt">
+                <xsl:value-of select="secret"/>
+            </span>
             <xsl:text>) </xsl:text>
             <a>
                 <xsl:attribute name="href">
-                    <xsl:value-of select="links/link[@rel='remove']/@href" />
+                    <xsl:value-of select="links/link[@rel='remove']/@href"/>
                 </xsl:attribute>
                 <xsl:text>delete</xsl:text>
             </a>
         </li>
     </xsl:template>
-
 </xsl:stylesheet>
