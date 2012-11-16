@@ -94,7 +94,7 @@
                             <xsl:text>tpc2.com</xsl:text>
                         </a>
                         <xsl:text> (a </xsl:text>
-                        <a href="http://www.technoparkcorp.com/about/news/year2012/apn">
+                        <a href="https://aws.amazon.com/solution-providers/isv/technopark-corp">
                             <xsl:text>Standard Technology Partner</xsl:text>
                         </a>
                         <xsl:text> of AWS). </xsl:text>
