@@ -125,7 +125,7 @@ final class DefaultHost implements Host {
                 )
             );
         }
-        Logger.debug(
+        Logger.info(
             this,
             "#fetch('%s'): found at %s as %s",
             uri,
@@ -156,7 +156,7 @@ final class DefaultHost implements Host {
         } else {
             auth = this.htpasswd.authorized(user, password);
         }
-        Logger.debug(
+        Logger.info(
             this,
             "#authorized('%s', '%s'): %B",
             user,

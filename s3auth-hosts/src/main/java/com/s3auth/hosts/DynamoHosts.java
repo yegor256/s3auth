@@ -115,7 +115,7 @@ public final class DynamoHosts implements Hosts {
                 )
             );
         }
-        Logger.debug(this, "#find('%s'): found %[type]s", name, host);
+        Logger.info(this, "#find('%s'): found %[type]s", name, host);
         return host;
     }
 
