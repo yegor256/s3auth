@@ -121,9 +121,11 @@ final class HttpThread implements Runnable {
                 )
                 .withBody(resource)
                 .send(socket);
-            Logger.debug(
+            Logger.info(
                 this,
-                "#run(): %d bytes to %s in %[ms]s",
+                "#run(): %s/%s sent %d bytes to %s in %[ms]s",
+                host,
+                resource,
                 bytes,
                 socket.getRemoteSocketAddress(),
                 System.currentTimeMillis() - start

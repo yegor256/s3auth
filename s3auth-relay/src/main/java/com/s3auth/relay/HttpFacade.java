@@ -180,7 +180,7 @@ final class HttpFacade implements Closeable {
         service.shutdown();
         try {
             if (service.awaitTermination(1, TimeUnit.SECONDS)) {
-                Logger.debug(this, "#shutdown(): succeeded");
+                Logger.info(this, "#shutdown(): succeeded");
             } else {
                 Logger.warn(this, "#shutdown(): failed");
                 service.shutdownNow();
