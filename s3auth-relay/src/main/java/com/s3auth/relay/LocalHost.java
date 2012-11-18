@@ -113,4 +113,12 @@ final class LocalHost implements Host {
         // nothing to do
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return "localhost";
+    }
+
 }
