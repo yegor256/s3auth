@@ -40,7 +40,7 @@ import org.hamcrest.Matchers
 
 Manifests.append(new File(rexsl.basedir, 'src/test/resources/META-INF/MANIFEST.MF'))
 
-def user = new CryptedUser(new UserMocker().mock())
+def user = new CryptedUser(new UserMocker().withIdentity("urn:facebook:777").mock())
 def cookie = BaseRs.COOKIE + '=' + user
 def host = 'test-2.s3auth.com'
 

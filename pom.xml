@@ -130,7 +130,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyy-MM-dd</maven.build.timestamp.format>
-        <rexsl.version since="18 Nov 2012">1.0-SNAPSHOT</rexsl.version>
+        <rexsl.version since="18 Nov 2012">0.4.3</rexsl.version>
     </properties>
 
     <repositories>

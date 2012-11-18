@@ -29,7 +29,6 @@
  */
 package com.s3auth.rest;
 
-import com.jcabi.urn.URN;
 import com.s3auth.hosts.User;
 import java.net.URI;
 import javax.xml.bind.annotation.XmlAccessType;

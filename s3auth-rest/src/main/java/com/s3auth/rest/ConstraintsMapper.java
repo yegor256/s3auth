@@ -53,17 +53,10 @@ public final class ConstraintsMapper extends BaseResource
      */
     @Override
     public Response toResponse(final ConstraintViolationException violation) {
-        return Response.status(Response.Status.SEE_OTHER)
-            .location(this.uriInfo().getBaseUri())
-            .cookie(
-                new FlashCookie(
-                    this.uriInfo().getBaseUri(),
-                    violation.getMessage(),
-                    FlashCookie.Color.RED
-                )
-            )
-            .entity(violation.getMessage())
-            .build();
+        return FlashCookie.forward(
+            this.uriInfo().getBaseUri(),
+            violation
+        ).getResponse();
     }
 
 }

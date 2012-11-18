@@ -29,6 +29,7 @@
  */
 package com.s3auth.rest;
 
+import com.jcabi.log.Logger;
 import com.rexsl.page.CookieBuilder;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -159,7 +160,7 @@ public final class FlashCookie extends NewCookie {
     public static WebApplicationException forward(@NotNull final URI uri,
         @NotNull final String message) {
         Logger.debug(
-            this,
+            FlashCookie.class,
             "#forward('%s', '%s'): instantiated",
             uri,
             message
