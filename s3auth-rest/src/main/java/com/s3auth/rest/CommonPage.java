@@ -29,7 +29,7 @@
  */
 package com.s3auth.rest;
 
-import com.rexsl.core.Manifests;
+import com.jcabi.manifests.Manifests;
 import com.rexsl.page.BasePage;
 import com.rexsl.page.JaxbBundle;
 import com.rexsl.page.Link;

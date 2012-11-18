@@ -29,9 +29,9 @@
  */
 package com.s3auth.rest;
 
+import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
 import com.restfb.DefaultFacebookClient;
-import com.rexsl.core.Manifests;
 import com.rexsl.page.CookieBuilder;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;

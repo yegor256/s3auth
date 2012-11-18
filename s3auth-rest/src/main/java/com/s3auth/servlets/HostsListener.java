@@ -30,7 +30,7 @@
 package com.s3auth.servlets;
 
 import com.jcabi.log.Logger;
-import com.rexsl.core.Manifests;
+import com.jcabi.manifests.Manifests;
 import com.s3auth.hosts.DynamoHosts;
 import com.s3auth.hosts.Hosts;
 import javax.servlet.ServletContextEvent;

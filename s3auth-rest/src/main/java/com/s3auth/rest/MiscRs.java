@@ -29,7 +29,7 @@
  */
 package com.s3auth.rest;
 
-import com.rexsl.core.Manifests;
+import com.jcabi.manifests.Manifests;
 import java.io.IOException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

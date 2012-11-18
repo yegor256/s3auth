@@ -29,9 +29,8 @@
  */
 package com.s3auth.rest;
 
-import com.jcabi.log.Logger;
+import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
-import com.rexsl.core.Manifests;
 import com.s3auth.hosts.User;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -81,7 +80,6 @@ public final class CryptedUser implements User {
          */
         public DecryptionException(@NotNull final String cause) {
             super(cause);
-            Logger.debug(this, "DecryptionException(): %s", cause);
         }
         /**
          * Public ctor.
@@ -89,7 +87,6 @@ public final class CryptedUser implements User {
          */
         public DecryptionException(@NotNull final Throwable cause) {
             super(cause);
-            Logger.debug(this, "DecryptionException(): %[exception]s", cause);
         }
     }
 
