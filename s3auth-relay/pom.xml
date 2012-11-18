@@ -28,10 +28,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.s3auth</groupId>
@@ -41,7 +38,6 @@
     <artifactId>s3auth-relay</artifactId>
     <packaging>jar</packaging>
     <name>s3auth-relay</name>
-
     <dependencies>
         <dependency>
             <groupId>com.s3auth</groupId>
@@ -144,7 +140,6 @@
             <scope>runtime</scope>
         </dependency>
     </dependencies>
-
     <build>
         <pluginManagement>
             <plugins>
@@ -245,8 +240,7 @@
                         </goals>
                         <configuration>
                             <target>
-                                <copy file="${basedir}/src/main/production/pom.xml"
-                                    todir="${project.build.outputDirectory}/invoker/relay"/>
+                                <copy file="${basedir}/src/main/production/pom.xml" todir="${project.build.outputDirectory}/invoker/relay"/>
                                 <echo file="${project.build.outputDirectory}/invoker/settings.xml"><![CDATA[
                                     <settings>
                                      <servers>
@@ -297,7 +291,7 @@
                                         <not>
                                             <equals arg1="${build.number}" arg2="${rev.deployed}"/>
                                         </not>
-                                   </condition>
+                                    </condition>
                                 </fail>
                             </target>
                         </configuration>
@@ -306,5 +300,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
