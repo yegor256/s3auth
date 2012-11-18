@@ -66,6 +66,13 @@ public interface Resource {
          * {@inheritDoc}
          */
         @Override
+        public String toString() {
+            return String.format("text-%d-chars", this.text.length());
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
         public void writeTo(final OutputStream stream) throws IOException {
             IOUtils.write(this.text, stream);
         }
