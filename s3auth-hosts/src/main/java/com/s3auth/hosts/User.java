@@ -29,6 +29,7 @@
  */
 package com.s3auth.hosts;
 
+import com.jcabi.urn.URN;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -89,8 +90,15 @@ public interface User {
         public boolean isValid(final User user,
             final ConstraintValidatorContext ctx) {
             boolean isValid = true;
-            if (!user.identity().matches("\\d+")) {
-                ctx.buildConstraintViolationWithTemplate("invalid FB id")
+            if (!"facebook".equals(user.identity().nid())) {
+                ctx.buildConstraintViolationWithTemplate("invalid NID of URN")
+                    // @checkstyle MultipleStringLiterals (1 line)
+                    .addNode("identity")
+                    .addConstraintViolation();
+                isValid = false;
+            }
+            if (!user.identity().nss().matches("\\d+")) {
+                ctx.buildConstraintViolationWithTemplate("invalid NSS of URN")
                     .addNode("identity")
                     .addConstraintViolation();
                 isValid = false;
@@ -100,10 +108,10 @@ public interface User {
     }
 
     /**
-     * Unique number of it.
-     * @return Unique number
+     * Unique name of it.
+     * @return Unique name as URN
      */
-    String identity();
+    URN identity();
 
     /**
      * Full name to display.

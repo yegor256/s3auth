@@ -30,6 +30,7 @@
 package com.s3auth.hosts;
 
 import com.jcabi.log.Logger;
+import com.jcabi.urn.URN;
 import java.io.IOException;
 import java.util.AbstractSet;
 import java.util.Iterator;
@@ -79,8 +80,8 @@ public final class DynamoHosts implements Hosts {
     /**
      * Users with their domains.
      */
-    private final transient ConcurrentMap<String, Set<Domain>> users =
-        new ConcurrentHashMap<String, Set<Domain>>();
+    private final transient ConcurrentMap<URN, Set<Domain>> users =
+        new ConcurrentHashMap<URN, Set<Domain>>();
 
     /**
      * Default ctor.
@@ -188,7 +189,7 @@ public final class DynamoHosts implements Hosts {
                 > DynamoHosts.PERIOD_MS) {
                 this.users.clear();
                 this.users.putAll(this.dynamo.load());
-                for (String user : this.users.keySet()) {
+                for (URN user : this.users.keySet()) {
                     for (Domain domain : this.users.get(user)) {
                         this.add(user, domain);
                     }
@@ -227,7 +228,7 @@ public final class DynamoHosts implements Hosts {
      * @param domain The domain
      * @return Item was added (FALSE means that we already had it)
      */
-    private boolean add(final String user, final Domain domain) {
+    private boolean add(final URN user, final Domain domain) {
         boolean added;
         if (this.hosts.containsKey(domain.name())) {
             Logger.warn(this, "#add('%s', '%s'): no need", user, domain);
@@ -253,7 +254,7 @@ public final class DynamoHosts implements Hosts {
      * @param domain The domain
      * @return Item was removed (FALSE means that we didn't have it)
      */
-    private boolean remove(final String user, final Domain domain) {
+    private boolean remove(final URN user, final Domain domain) {
         boolean removed;
         if (this.hosts.containsKey(domain.name())
             && this.users.get(user).contains(domain)) {

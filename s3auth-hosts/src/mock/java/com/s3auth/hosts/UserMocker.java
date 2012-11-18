@@ -29,6 +29,8 @@
  */
 package com.s3auth.hosts;
 
+import com.jcabi.urn.URN;
+import com.jcabi.urn.URNMocker;
 import java.net.URI;
 import org.mockito.Mockito;
 
@@ -50,7 +52,7 @@ public final class UserMocker {
      * Public ctor.
      */
     public UserMocker() {
-        this.withIdentity("1234567");
+        this.withIdentity(new URNMocker().withNid("facebook").mock());
         Mockito.doReturn("John Doe").when(this.user).name();
         Mockito.doReturn(URI.create("#")).when(this.user).photo();
     }
@@ -60,9 +62,18 @@ public final class UserMocker {
      * @param identity The identity
      * @return This object
      */
-    public UserMocker withIdentity(final String identity) {
+    public UserMocker withIdentity(final URN identity) {
         Mockito.doReturn(identity).when(this.user).identity();
         return this;
+    }
+
+    /**
+     * With provided identity.
+     * @param identity The identity
+     * @return This object
+     */
+    public UserMocker withIdentity(final String identity) {
+        return this.withIdentity(URN.create(identity));
     }
 
     /**

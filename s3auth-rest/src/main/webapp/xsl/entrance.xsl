@@ -74,7 +74,9 @@
         </p>
         <p>
             <xsl:text>For example, try </xsl:text>
-            <a href="http://s3auth:s3auth@maven.s3auth.com/">maven.s3auth.com</a>
+            <span class="tt">
+                <xsl:text>http://maven.s3auth.com/</xsl:text>
+            </span>
             <xsl:text> (with username </xsl:text>
             <span class="tt">
                 <xsl:text>s3auth</xsl:text>

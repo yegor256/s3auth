@@ -148,7 +148,8 @@ public class BaseRs extends BaseResource {
         } catch (CryptedUser.DecryptionException ex) {
             Logger.debug(
                 this,
-                "Decryption failure from %s calling '%s': %[exception]s",
+                "Failed to decrypt '%s' from %s calling '%s': %[exception]s",
+                this.icookie,
                 this.httpServletRequest().getRemoteAddr(),
                 this.httpServletRequest().getRequestURI(),
                 ex
@@ -156,7 +157,7 @@ public class BaseRs extends BaseResource {
             throw new WebApplicationException(
                 ex,
                 Response.status(Response.Status.TEMPORARY_REDIRECT)
-                    .header("s3auth-error", ex.getMessage())
+                    .header("X-S3auth-Error", ex.getMessage())
                     .location(
                         this.uriInfo().getBaseUriBuilder()
                             .clone()

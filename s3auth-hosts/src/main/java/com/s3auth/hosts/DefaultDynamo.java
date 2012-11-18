@@ -41,6 +41,7 @@ import com.amazonaws.services.dynamodb.model.PutItemResult;
 import com.amazonaws.services.dynamodb.model.ScanRequest;
 import com.amazonaws.services.dynamodb.model.ScanResult;
 import com.jcabi.log.Logger;
+import com.jcabi.urn.URN;
 import com.rexsl.core.Manifests;
 import java.io.IOException;
 import java.util.HashSet;
@@ -111,12 +112,12 @@ final class DefaultDynamo implements Dynamo {
      * {@inheritDoc}
      */
     @Override
-    public ConcurrentMap<String, Set<Domain>> load() throws IOException {
-        final ConcurrentMap<String, Set<Domain>> domains =
-            new ConcurrentHashMap<String, Set<Domain>>();
+    public ConcurrentMap<URN, Set<Domain>> load() throws IOException {
+        final ConcurrentMap<URN, Set<Domain>> domains =
+            new ConcurrentHashMap<URN, Set<Domain>>();
         final ScanResult result = this.client.scan(new ScanRequest(this.table));
         for (final Map<String, AttributeValue> item : result.getItems()) {
-            final String user = item.get("user.identity").getS();
+            final URN user = URN.create(item.get("user.urn").getS());
             domains.putIfAbsent(user, new HashSet<Domain>());
             domains.get(user).add(
                 new DefaultDomain(
@@ -134,11 +135,11 @@ final class DefaultDynamo implements Dynamo {
      * {@inheritDoc}
      */
     @Override
-    public void add(@NotNull final String user,
+    public void add(@NotNull final URN user,
         @NotNull final Domain domain) throws IOException {
         final ConcurrentMap<String, AttributeValue> attrs =
             new ConcurrentHashMap<String, AttributeValue>();
-        attrs.put("user.identity", new AttributeValue(user));
+        attrs.put("user.urn", new AttributeValue(user.toString()));
         attrs.put("domain.name", new AttributeValue(domain.name()));
         attrs.put("domain.key", new AttributeValue(domain.key()));
         attrs.put("domain.secret", new AttributeValue(domain.secret()));

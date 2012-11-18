@@ -70,6 +70,15 @@
             <artifactId>jcabi-log</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-urn</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-urn</artifactId>
+            <classifier>mock</classifier>
+        </dependency>
+        <dependency>
             <groupId>com.rexsl</groupId>
             <artifactId>rexsl-core</artifactId>
             <version since="23 Aug 2012">0.3.8</version>

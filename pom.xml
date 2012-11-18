@@ -164,6 +164,19 @@
                 <version since="9 Nov 2012">0.5.2</version>
             </dependency>
             <dependency>
+                <!-- Uniform Resource Name -->
+                <groupId>com.jcabi</groupId>
+                <artifactId>jcabi-urn</artifactId>
+                <version since="18 Nov 2012">1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <!-- Uniform Resource Name -->
+                <groupId>com.jcabi</groupId>
+                <artifactId>jcabi-urn</artifactId>
+                <version since="18 Nov 2012">1.0-SNAPSHOT</version>
+                <classifier>mock</classifier>
+            </dependency>
+            <dependency>
                 <!-- Aspects -->
                 <groupId>com.jcabi</groupId>
                 <artifactId>jcabi-aspects</artifactId>

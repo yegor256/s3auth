@@ -59,6 +59,15 @@
             <artifactId>jcabi-log</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-urn</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-urn</artifactId>
+            <classifier>mock</classifier>
+        </dependency>
+        <dependency>
             <groupId>com.s3auth</groupId>
             <artifactId>s3auth-hosts</artifactId>
             <version s3auth="yes">1.0-SNAPSHOT</version>

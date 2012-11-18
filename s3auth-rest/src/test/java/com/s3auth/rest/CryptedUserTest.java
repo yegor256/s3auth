@@ -29,6 +29,8 @@
  */
 package com.s3auth.rest;
 
+import com.jcabi.urn.URN;
+import com.jcabi.urn.URNMocker;
 import com.s3auth.hosts.User;
 import java.net.URI;
 import org.hamcrest.MatcherAssert;
@@ -50,11 +52,11 @@ public final class CryptedUserTest {
     @Test
     public void convertsToTextAndBack() throws Exception {
         final String name = "John Doe, \u0433";
-        final String identity = "somebody";
+        final URN identity = new URNMocker().mock();
         final CryptedUser user = new CryptedUser(
             new User() {
                 @Override
-                public String identity() {
+                public URN identity() {
                     return identity;
                 }
                 @Override

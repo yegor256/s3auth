@@ -29,6 +29,7 @@
  */
 package com.s3auth.rest;
 
+import com.jcabi.urn.URN;
 import com.restfb.DefaultFacebookClient;
 import com.rexsl.core.Manifests;
 import com.rexsl.page.CookieBuilder;
@@ -114,8 +115,10 @@ public final class AuthRs extends BaseRs {
         final com.restfb.types.User fbuser = this.fetch(this.token(code));
         final User user = new User() {
             @Override
-            public String identity() {
-                return fbuser.getId();
+            public URN identity() {
+                return URN.create(
+                    String.format("urn:facebook:%d", fbuser.getId())
+                );
             }
             @Override
             public String name() {

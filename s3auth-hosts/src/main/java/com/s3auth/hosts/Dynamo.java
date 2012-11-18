@@ -29,6 +29,7 @@
  */
 package com.s3auth.hosts;
 
+import com.jcabi.urn.URN;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Set;
@@ -52,7 +53,7 @@ interface Dynamo extends Closeable {
      * @return Map of users and their domains
      * @throws IOException If some IO problem inside
      */
-    ConcurrentMap<String, Set<Domain>> load() throws IOException;
+    ConcurrentMap<URN, Set<Domain>> load() throws IOException;
 
     /**
      * Save to DynamoDB.
@@ -60,7 +61,7 @@ interface Dynamo extends Closeable {
      * @param domain The domain to save
      * @throws IOException If some IO problem inside
      */
-    void add(String user, Domain domain) throws IOException;
+    void add(URN user, Domain domain) throws IOException;
 
     /**
      * Delete from DynamoDB.

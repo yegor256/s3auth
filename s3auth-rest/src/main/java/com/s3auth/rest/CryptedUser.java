@@ -29,6 +29,8 @@
  */
 package com.s3auth.rest;
 
+import com.jcabi.log.Logger;
+import com.jcabi.urn.URN;
 import com.rexsl.core.Manifests;
 import com.s3auth.hosts.User;
 import java.io.ByteArrayInputStream;
@@ -79,6 +81,7 @@ public final class CryptedUser implements User {
          */
         public DecryptionException(@NotNull final String cause) {
             super(cause);
+            Logger.debug(this, "DecryptionException(): %s", cause);
         }
         /**
          * Public ctor.
@@ -86,6 +89,7 @@ public final class CryptedUser implements User {
          */
         public DecryptionException(@NotNull final Throwable cause) {
             super(cause);
+            Logger.debug(this, "DecryptionException(): %[exception]s", cause);
         }
     }
 
@@ -101,7 +105,7 @@ public final class CryptedUser implements User {
      * {@inheritDoc}
      */
     @Override
-    public String identity() {
+    public URN identity() {
         return this.user.identity();
     }
 
@@ -129,7 +133,7 @@ public final class CryptedUser implements User {
         final ByteArrayOutputStream data = new ByteArrayOutputStream();
         try {
             final DataOutputStream stream = new DataOutputStream(data);
-            stream.writeUTF(this.identity());
+            stream.writeUTF(this.identity().toString());
             stream.writeUTF(this.name());
             stream.writeUTF(this.photo().toString());
             stream.writeUTF(CryptedUser.SALT);
@@ -157,7 +161,7 @@ public final class CryptedUser implements User {
             new ByteArrayInputStream(CryptedUser.xor(bytes))
         );
         try {
-            final String identity = stream.readUTF();
+            final URN identity = URN.create(stream.readUTF());
             final String name = stream.readUTF();
             final String photo = stream.readUTF();
             if (!CryptedUser.SALT.equals(stream.readUTF())) {
@@ -166,7 +170,7 @@ public final class CryptedUser implements User {
             return new CryptedUser(
                 new User() {
                     @Override
-                    public String identity() {
+                    public URN identity() {
                         return identity;
                     }
                     @Override

@@ -29,6 +29,7 @@
  */
 package com.s3auth.rest;
 
+import com.jcabi.urn.URN;
 import com.rexsl.test.JaxbConverter;
 import com.rexsl.test.XhtmlMatchers;
 import com.s3auth.hosts.User;
@@ -53,8 +54,8 @@ public final class JaxbUserTest {
         final JaxbUser obj = new JaxbUser(
             new User() {
                 @Override
-                public String identity() {
-                    return "nobody";
+                public URN identity() {
+                    return URN.create("urn:facebook:555");
                 }
                 @Override
                 public String name() {
@@ -69,7 +70,7 @@ public final class JaxbUserTest {
         MatcherAssert.assertThat(
             JaxbConverter.the(obj),
             XhtmlMatchers.hasXPaths(
-                "/user[identity='nobody']",
+                "/user[identity='urn:facebook:555']",
                 "/user[name='John Doe']",
                 "/user[photo='#']"
             )

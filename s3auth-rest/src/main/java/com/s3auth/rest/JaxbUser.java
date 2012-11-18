@@ -29,6 +29,7 @@
  */
 package com.s3auth.rest;
 
+import com.jcabi.urn.URN;
 import com.s3auth.hosts.User;
 import java.net.URI;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -75,7 +76,7 @@ public final class JaxbUser {
      */
     @XmlElement
     public String getIdentity() {
-        return this.user.identity();
+        return this.user.identity().toString();
     }
 
     /**

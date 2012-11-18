@@ -51,8 +51,12 @@ public final class DynamoHostsTest {
     public void rejectsDuplicatesFromDifferentUsers() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
         final Domain domain = new DomainMocker().withName("ibm.com").mock();
-        final User first = new UserMocker().withIdentity("7743").mock();
-        final User second = new UserMocker().withIdentity("7746").mock();
+        final User first = new UserMocker()
+            .withIdentity("urn:facebook:7743")
+            .mock();
+        final User second = new UserMocker()
+            .withIdentity("urn:facebook:7746")
+            .mock();
         hosts.domains(first).remove(domain);
         MatcherAssert.assertThat(
             hosts.domains(first).add(domain),
@@ -73,8 +77,12 @@ public final class DynamoHostsTest {
     public void protectsDomainsAgainstRemoval() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
         final Domain domain = new DomainMocker().withName("yahoo.com").mock();
-        final User first = new UserMocker().withIdentity("5543").mock();
-        final User second = new UserMocker().withIdentity("5546").mock();
+        final User first = new UserMocker()
+            .withIdentity("urn:facebook:5543")
+            .mock();
+        final User second = new UserMocker()
+            .withIdentity("urn:facebook:5546")
+            .mock();
         hosts.domains(first).remove(domain);
         MatcherAssert.assertThat(
             hosts.domains(first).add(domain),
@@ -99,7 +107,9 @@ public final class DynamoHostsTest {
             .withKey(" AKI56FXVOY5FEEZNZXAQ   ")
             .withSecret("  ZFomiC6OObi6gD2J1QQcaW1evMUfqv5fVkpDImI9 ")
             .mock();
-        final User first = new UserMocker().withIdentity("8989").mock();
+        final User first = new UserMocker()
+            .withIdentity("urn:facebook:8989")
+            .mock();
         hosts.domains(first).remove(domain);
         MatcherAssert.assertThat(
             hosts.domains(first).add(domain),
@@ -129,7 +139,9 @@ public final class DynamoHostsTest {
     @Test(expected = javax.validation.ConstraintViolationException.class)
     public void rejectsInvalidUserNames() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
-        final User user = new UserMocker().withIdentity("broken name").mock();
+        final User user = new UserMocker()
+            .withIdentity("urn:unknown:4254353")
+            .mock();
         try {
             hosts.domains(user);
         } finally {
