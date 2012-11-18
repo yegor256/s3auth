@@ -29,7 +29,7 @@
  */
 package com.s3auth.rest.rexsl.scripts
 
-import com.rexsl.core.Manifests
+import com.jcabi.manifests.Manifests
 import com.rexsl.test.RestTester
 import com.s3auth.hosts.UserMocker
 import com.s3auth.rest.BaseRs
