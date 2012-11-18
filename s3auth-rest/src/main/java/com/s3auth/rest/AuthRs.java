@@ -117,7 +117,7 @@ public final class AuthRs extends BaseRs {
             @Override
             public URN identity() {
                 return URN.create(
-                    String.format("urn:facebook:%d", fbuser.getId())
+                    String.format("urn:facebook:%s", fbuser.getId())
                 );
             }
             @Override
