@@ -29,7 +29,7 @@
  */
 package com.s3auth.relay;
 
-import com.rexsl.core.Manifests;
+import com.jcabi.manifests.Manifests;
 import com.s3auth.hosts.Host;
 import com.s3auth.hosts.ResourceMocker;
 import java.net.URI;
