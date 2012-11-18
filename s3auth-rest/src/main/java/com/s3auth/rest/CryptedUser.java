@@ -158,7 +158,7 @@ public final class CryptedUser implements User {
             new ByteArrayInputStream(CryptedUser.xor(bytes))
         );
         try {
-            final URN identity = URN.create(stream.readUTF());
+            final URN identity = new URN(stream.readUTF());
             final String name = stream.readUTF();
             final String photo = stream.readUTF();
             if (!CryptedUser.SALT.equals(stream.readUTF())) {
@@ -180,6 +180,8 @@ public final class CryptedUser implements User {
                     }
                 }
             );
+        } catch (java.net.URISyntaxException ex) {
+            throw new CryptedUser.DecryptionException(ex);
         } catch (java.io.IOException ex) {
             throw new CryptedUser.DecryptionException(ex);
         }
