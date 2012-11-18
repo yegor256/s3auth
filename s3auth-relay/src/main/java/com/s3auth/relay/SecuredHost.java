@@ -125,6 +125,14 @@ final class SecuredHost implements Host {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return this.host.toString();
+    }
+
+    /**
      * Fetch this URI in a secure way.
      * @param uri The URI to fetch
      * @return Fetched resource
