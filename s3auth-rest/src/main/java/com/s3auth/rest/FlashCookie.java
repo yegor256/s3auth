@@ -158,11 +158,17 @@ public final class FlashCookie extends NewCookie {
      */
     public static WebApplicationException forward(@NotNull final URI uri,
         @NotNull final String message) {
+        Logger.debug(
+            this,
+            "#forward('%s', '%s'): instantiated",
+            uri,
+            message
+        );
         return new WebApplicationException(
             Response.status(HttpURLConnection.HTTP_SEE_OTHER)
                 .location(uri)
                 .cookie(new FlashCookie(uri, message, FlashCookie.Color.RED))
-                .header("s3auth-error", message)
+                .header("X-S3auth-Error", message)
                 .entity(message)
                 .build()
         );
