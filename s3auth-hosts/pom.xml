@@ -81,7 +81,7 @@
         <dependency>
             <groupId>com.rexsl</groupId>
             <artifactId>rexsl-core</artifactId>
-            <version since="23 Aug 2012">0.3.8</version>
+            <version>${rexsl.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>

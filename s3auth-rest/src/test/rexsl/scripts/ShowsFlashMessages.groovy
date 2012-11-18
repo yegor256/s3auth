@@ -48,6 +48,7 @@ def home = RestTester.start(rexsl.home)
     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
     .header(HttpHeaders.COOKIE, cookie)
     .get('read home page')
+    .assertStatus(HttpURLConnection.HTTP_OK)
 if (!home.nodes("//domain[name='${host}']").isEmpty()) {
     home.rel("//domain[name='${host}']/links/link[@rel='remove']/@href")
         .header(HttpHeaders.COOKIE, cookie)

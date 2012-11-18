@@ -38,9 +38,6 @@
     <artifactId>s3auth-rest</artifactId>
     <packaging>war</packaging>
     <name>s3auth-rest</name>
-    <properties>
-        <rexsl.version since="18 Nov 2012">1.0-SNAPSHOT</rexsl.version>
-    </properties>
     <repositories>
         <repository>
             <id>oss.sonatype.org</id>
@@ -279,7 +276,7 @@
             <plugin>
                 <groupId>com.jcabi</groupId>
                 <artifactId>jcabi-heroku-maven-plugin</artifactId>
-                <version since="13 Nov 2012">1.0-SNAPSHOT</version>
+                <version since="18 Nov 2012">0.6</version>
                 <executions>
                     <execution>
                         <id>deploy-to-heroku</id>
