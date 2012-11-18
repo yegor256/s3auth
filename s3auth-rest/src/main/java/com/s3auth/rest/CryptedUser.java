@@ -48,6 +48,7 @@ import org.apache.commons.codec.binary.Base32;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 public final class CryptedUser implements User {
 
