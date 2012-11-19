@@ -92,12 +92,12 @@
             <xsl:text>, which is not readable anonymously otherwise.</xsl:text>
         </p>
         <p>
-            <xsl:text>To start, please </xsl:text>
+            <xsl:text>To start, login </xsl:text>
             <a>
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='facebook-auth']/@href"/>
                 </xsl:attribute>
-                <xsl:text>login via Facebook</xsl:text>
+                <xsl:text>via Facebook</xsl:text>
             </a>
             <xsl:text> or </xsl:text>
             <a>
