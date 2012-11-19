@@ -105,8 +105,8 @@ public final class GoogleRs extends BaseRs {
                     GoogleRs.encode(
                         this.uriInfo().getBaseUriBuilder()
                             .clone()
-                            .path(FacebookRs.class)
-                            .path(FacebookRs.class, "callback")
+                            .path(GoogleRs.class)
+                            .path(GoogleRs.class, "callback")
                             .build()
                             .toString()
                     ),
