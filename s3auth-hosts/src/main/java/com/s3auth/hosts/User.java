@@ -90,7 +90,8 @@ public interface User {
         public boolean isValid(final User user,
             final ConstraintValidatorContext ctx) {
             boolean isValid = true;
-            if (!"facebook".equals(user.identity().nid())) {
+            if (!"facebook".equals(user.identity().nid())
+                && !"google".equals(user.identity().nid())) {
                 ctx.buildConstraintViolationWithTemplate("invalid NID of URN")
                     // @checkstyle MultipleStringLiterals (1 line)
                     .addNode("identity")

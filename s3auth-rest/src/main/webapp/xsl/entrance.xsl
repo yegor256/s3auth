@@ -95,9 +95,16 @@
             <xsl:text>To start, please </xsl:text>
             <a>
                 <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='login']/@href"/>
+                    <xsl:value-of select="/page/links/link[@rel='facebook-auth']/@href"/>
                 </xsl:attribute>
                 <xsl:text>login via Facebook</xsl:text>
+            </a>
+            <xsl:text> or </xsl:text>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='google-auth']/@href"/>
+                </xsl:attribute>
+                <xsl:text>via Google</xsl:text>
             </a>
             <xsl:text>!</xsl:text>
         </p>

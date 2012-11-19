@@ -10,7 +10,9 @@
         <link href="http://localhost:9099/a/?" rel="self" type="text/xml"/>
         <link href="http://localhost:9099/?" rel="home" type="text/xml"/>
         <link href="https://www.facebook.com/dialog/oauth?client_id=123456789&amp;redirect_uri=http://localhost:9099/a/fb"
-            rel="login" type="text/xml"/>
+            rel="facebook-auth" type="text/xml"/>
+        <link href="https://accounts.google.com/o/oauth2/auth"
+            rel="google-auth" type="text/xml"/>
     </links>
     <millis>16</millis>
 </page>
