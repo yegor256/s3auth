@@ -107,6 +107,7 @@ public final class GoogleRs extends BaseRs {
                         Manifests.read("S3Auth-GoogleId"),
                         this.uriInfo().getBaseUriBuilder()
                             .clone()
+                            .path(FacebookRs.class)
                             .path(FacebookRs.class, "callback")
                             .build(),
                         Manifests.read("S3Auth-GoogleSecret"),

@@ -114,6 +114,7 @@ public final class FacebookRs extends BaseRs {
                 Manifests.read("S3Auth-FbId"),
                 this.uriInfo().getBaseUriBuilder()
                     .clone()
+                    .path(FacebookRs.class)
                     .path(FacebookRs.class, "callback")
                     .build(),
                 Manifests.read("S3Auth-FbSecret"),
