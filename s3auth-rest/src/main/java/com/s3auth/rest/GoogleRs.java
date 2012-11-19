@@ -37,6 +37,7 @@ import com.rexsl.test.RestTester;
 import com.s3auth.hosts.User;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URLEncoder;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
@@ -44,6 +45,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import org.apache.commons.lang.CharEncoding;
 
 /**
  * Google-related resources.
@@ -96,23 +98,21 @@ public final class GoogleRs extends BaseRs {
             )
             .post(
                 "getting access_token from Google",
-                UriBuilder
-                    .fromPath("")
-                    .queryParam("client_id", "{id}")
-                    .queryParam("redirect_uri", "{uri}")
-                    .queryParam("client_secret", "{secret}")
-                    .queryParam("grant_type", "authorization_code")
-                    .queryParam("code", "{code}")
-                    .build(
-                        Manifests.read("S3Auth-GoogleId"),
+                String.format(
+                    // @checkstyle LineLength (1 line)
+                    "client_id=%s&redirect_uri=%s&client_secret=%s&grant_type=authorization_code&code=%s",
+                    GoogleRs.encode(Manifests.read("S3Auth-GoogleId")),
+                    GoogleRs.encode(
                         this.uriInfo().getBaseUriBuilder()
                             .clone()
                             .path(FacebookRs.class)
                             .path(FacebookRs.class, "callback")
-                            .build(),
-                        Manifests.read("S3Auth-GoogleSecret"),
-                        code
-                    )
+                            .build()
+                            .toString()
+                    ),
+                    GoogleRs.encode(Manifests.read("S3Auth-GoogleSecret")),
+                    GoogleRs.encode(code)
+                )
             )
             .assertStatus(HttpURLConnection.HTTP_OK)
             .json("access_token")
@@ -147,6 +147,19 @@ public final class GoogleRs extends BaseRs {
                 return URI.create(json.json("picture").get(0));
             }
         };
+    }
+
+    /**
+     * URL encode given text.
+     * @param text The text to encode
+     * @return Encoded
+     */
+    private static String encode(final String text) {
+        try {
+            return URLEncoder.encode(text, CharEncoding.UTF_8);
+        } catch (java.io.UnsupportedEncodingException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
 }
