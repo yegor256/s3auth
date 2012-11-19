@@ -105,7 +105,9 @@
                         <xsl:text>.</xsl:text>
                     </p>
                     <p>
-                        <img src="http://img.s3auth.com/apn-logo.png" alt="AWS Partner Network Logo" style="width: 10%;"/>
+                        <a href="https://aws.amazon.com/solution-providers/isv/technopark-corp">
+                            <img src="http://img.s3auth.com/apn-logo.png" alt="AWS Partner Network Logo" style="border: 0; width: 8%;"/>
+                        </a>
                     </p>
                 </div>
             </body>
