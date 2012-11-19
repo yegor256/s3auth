@@ -37,6 +37,23 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
+        <p>
+            <xsl:text>To start, login using one of your accounts at:</xsl:text>
+        </p>
+        <p>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='facebook-auth']/@href"/>
+                </xsl:attribute>
+                <img class="icon" src="http://img.s3auth.com/icons/facebook.png"/>
+            </a>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='google-auth']/@href"/>
+                </xsl:attribute>
+                <img class="icon" src="http://img.s3auth.com/icons/google.png"/>
+            </a>
+        </p>
         <h1>
             <xsl:text>Amazon S3 HTTP Basic Auth Gateway</xsl:text>
         </h1>
@@ -90,23 +107,6 @@
                 <xsl:text>maven.s3auth.com</xsl:text>
             </span>
             <xsl:text>, which is not readable anonymously otherwise.</xsl:text>
-        </p>
-        <p>
-            <xsl:text>To start, login </xsl:text>
-            <a>
-                <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='facebook-auth']/@href"/>
-                </xsl:attribute>
-                <xsl:text>via Facebook</xsl:text>
-            </a>
-            <xsl:text> or </xsl:text>
-            <a>
-                <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='google-auth']/@href"/>
-                </xsl:attribute>
-                <xsl:text>via Google</xsl:text>
-            </a>
-            <xsl:text>!</xsl:text>
         </p>
     </xsl:template>
 </xsl:stylesheet>

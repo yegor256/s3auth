@@ -164,3 +164,7 @@ label {
     color: gray;
 }
 
+img.icon {
+    margin-right: 0.5em;
+}
+
