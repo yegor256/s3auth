@@ -73,6 +73,7 @@ public final class AuthRs extends BaseRs {
                             Manifests.read("S3Auth-FbId"),
                             this.uriInfo().getBaseUriBuilder()
                                 .clone()
+                                .path(FacebookRs.class)
                                 .path(FacebookRs.class, "callback")
                                 .build()
                         )
@@ -85,6 +86,7 @@ public final class AuthRs extends BaseRs {
                         .fromUri("https://accounts.google.com/o/oauth2/auth")
                         .queryParam("client_id", "{id}")
                         .queryParam("redirect_uri", "{uri}")
+                        .queryParam("response_type", "code")
                         .queryParam(
                             "scope",
                             "https://www.googleapis.com/auth/userinfo.profile"
@@ -93,6 +95,7 @@ public final class AuthRs extends BaseRs {
                             Manifests.read("S3Auth-GoogleId"),
                             this.uriInfo().getBaseUriBuilder()
                                 .clone()
+                                .path(GoogleRs.class)
                                 .path(GoogleRs.class, "callback")
                                 .build()
                         )
