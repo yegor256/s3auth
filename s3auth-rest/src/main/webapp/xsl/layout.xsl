@@ -106,7 +106,7 @@
                     </p>
                     <p>
                         <a href="https://aws.amazon.com/solution-providers/isv/technopark-corp">
-                            <img src="http://img.s3auth.com/apn-logo.png" alt="AWS Partner Network Logo" style="border: 0; width: 8%;"/>
+                            <img src="http://img.s3auth.com/apn-logo.png" alt="AWS Partner Network Logo" style="width: 8%;"/>
                         </a>
                     </p>
                 </div>
@@ -138,6 +138,20 @@
             </img>
             <xsl:text> </xsl:text>
             <xsl:value-of select="name"/>
+            <img style="margin-left: 0.5em;">
+                <xsl:attribute name="src">
+                    <xsl:text>http://img.s3auth.com/icons/</xsl:text>
+                    <xsl:choose>
+                        <xsl:when test="starts-with(identity, 'urn:facebook:')">
+                            <xsl:text>facebook</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="starts-with(identity, 'urn:google:')">
+                            <xsl:text>google</xsl:text>
+                        </xsl:when>
+                    </xsl:choose>
+                    <xsl:text>-small.png</xsl:text>
+                </xsl:attribute>
+            </img>
             <xsl:text> </xsl:text>
             <a>
                 <xsl:attribute name="href">
