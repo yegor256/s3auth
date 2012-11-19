@@ -73,7 +73,7 @@
                             <xsl:attribute name="href">
                                 <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
                             </xsl:attribute>
-                            <img src="http://img.s3auth.com/logo.png" alt="s3auth.com" style="width: 180px; height: 32px;"/>
+                            <img src="http://img.s3auth.com/logo.png" alt="s3auth.com logo" style="width: 180px; height: 32px;"/>
                         </a>
                     </p>
                     <xsl:apply-templates select="user"/>
@@ -138,7 +138,7 @@
             </img>
             <xsl:text> </xsl:text>
             <xsl:value-of select="name"/>
-            <img style="margin-left: 0.5em;">
+            <img style="margin-left: 0.5em;" alt="account type">
                 <xsl:attribute name="src">
                     <xsl:text>http://img.s3auth.com/icons/</xsl:text>
                     <xsl:choose>

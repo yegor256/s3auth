@@ -45,13 +45,13 @@
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='facebook-auth']/@href"/>
                 </xsl:attribute>
-                <img class="icon" src="http://img.s3auth.com/icons/facebook.png"/>
+                <img class="icon" src="http://img.s3auth.com/icons/facebook.png" alt="facebook icon"/>
             </a>
             <a>
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='google-auth']/@href"/>
                 </xsl:attribute>
-                <img class="icon" src="http://img.s3auth.com/icons/google.png"/>
+                <img class="icon" src="http://img.s3auth.com/icons/google.png" alt="google icon"/>
             </a>
         </p>
         <h1>
