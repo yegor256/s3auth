@@ -33,8 +33,6 @@ import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
 import com.restfb.DefaultFacebookClient;
 import com.rexsl.page.CookieBuilder;
-import com.rexsl.page.Link;
-import com.rexsl.page.PageBuilder;
 import com.rexsl.test.RestTester;
 import com.s3auth.hosts.User;
 import java.net.HttpURLConnection;

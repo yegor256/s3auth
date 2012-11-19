@@ -30,18 +30,11 @@
 package com.s3auth.rest;
 
 import com.jcabi.manifests.Manifests;
-import com.jcabi.urn.URN;
-import com.restfb.DefaultFacebookClient;
 import com.rexsl.page.CookieBuilder;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
-import com.rexsl.test.RestTester;
-import com.s3auth.hosts.User;
-import java.net.HttpURLConnection;
-import java.net.URI;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
@@ -92,7 +85,10 @@ public final class AuthRs extends BaseRs {
                         .fromUri("https://accounts.google.com/o/oauth2/auth")
                         .queryParam("client_id", "{id}")
                         .queryParam("redirect_uri", "{uri}")
-                        .queryParam("scope", "https://www.googleapis.com/auth/userinfo.profile")
+                        .queryParam(
+                            "scope",
+                            "https://www.googleapis.com/auth/userinfo.profile"
+                        )
                         .build(
                             Manifests.read("S3Auth-GoogleId"),
                             this.uriInfo().getBaseUriBuilder()

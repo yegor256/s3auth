@@ -31,10 +31,7 @@ package com.s3auth.rest;
 
 import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
-import com.restfb.DefaultFacebookClient;
 import com.rexsl.page.CookieBuilder;
-import com.rexsl.page.Link;
-import com.rexsl.page.PageBuilder;
 import com.rexsl.test.JsonDocument;
 import com.rexsl.test.RestTester;
 import com.s3auth.hosts.User;
@@ -92,7 +89,7 @@ public final class GoogleRs extends BaseRs {
      */
     private String token(final String code) {
         return RestTester
-            .start(URI.create("https://accounts.google.com//o/oauth2/token"))
+            .start(URI.create("https://accounts.google.com/o/oauth2/token"))
             .header(
                 HttpHeaders.CONTENT_TYPE,
                 MediaType.APPLICATION_FORM_URLENCODED
@@ -132,8 +129,7 @@ public final class GoogleRs extends BaseRs {
             .queryParam("alt", "json")
             .queryParam("access_token", "{token}")
             .build(token);
-        final JsonDocument json = RestTester.start(uri)
-            .get("retrieve user info");
+        final JsonDocument json = RestTester.start(uri).get("user info");
         return new User() {
             @Override
             public URN identity() {
