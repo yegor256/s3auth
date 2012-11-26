@@ -251,7 +251,7 @@ final class Htpasswd {
             boolean matches;
             if (matcher.matches()) {
                 final String required = Base64.encodeBase64String(
-                    DigestUtils.sha(password)
+                    DigestUtils.sha1(password)
                 );
                 matches = matcher.group(1).equals(required);
                 Logger.debug(

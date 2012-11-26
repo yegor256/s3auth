@@ -38,6 +38,7 @@ import com.s3auth.hosts.User;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URLEncoder;
+import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
@@ -131,6 +132,7 @@ public final class GoogleRs extends BaseRs {
             .queryParam("access_token", "{token}")
             .build(token);
         final JsonDocument json = RestTester.start(uri).get("user info");
+        // @checkstyle AnonInnerLength (50 lines)
         return new User() {
             @Override
             public URN identity() {
@@ -144,7 +146,14 @@ public final class GoogleRs extends BaseRs {
             }
             @Override
             public URI photo() {
-                return URI.create(json.json("picture").get(0));
+                final List<String> pics = json.json("picture");
+                URI photo;
+                if (pics.isEmpty()) {
+                    photo = URI.create(pics.get(0));
+                } else {
+                    photo = URI.create("http://img.s3auth.com/unknown.png");
+                }
+                return photo;
             }
         };
     }
