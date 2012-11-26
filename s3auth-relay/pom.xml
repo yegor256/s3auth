@@ -139,7 +139,7 @@
                     <configuration>
                         <archive>
                             <manifestEntries>
-                                <S3Auth-Revision>${build.number}</S3Auth-Revision>
+                                <S3Auth-Revision>${buildNumber}</S3Auth-Revision>
                                 <S3Auth-Version>${project.version}</S3Auth-Version>
                                 <S3Auth-Date>${maven.build.timestamp}</S3Auth-Date>
                                 <Main-Class>com.s3auth.relay.Main</Main-Class>
@@ -154,22 +154,6 @@
             </plugins>
         </pluginManagement>
         <plugins>
-            <plugin>
-                <!--
-                This plugin will collect current build number
-                from Subversion and save it into Maven property "build.number".
-                -->
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>buildnumber-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>create</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
@@ -269,10 +253,10 @@
                                     <arg value="--silent"/>
                                     <arg value="http://relay.s3auth.com/version"/>
                                 </exec>
-                                <fail message="Revision '${rev.deployed}' deployed instead of '${build.number}'">
+                                <fail message="Revision '${rev.deployed}' deployed instead of '${buildNumber}'">
                                     <condition>
                                         <not>
-                                            <equals arg1="${build.number}" arg2="${rev.deployed}"/>
+                                            <equals arg1="${buildNumber}" arg2="${rev.deployed}"/>
                                         </not>
                                     </condition>
                                 </fail>

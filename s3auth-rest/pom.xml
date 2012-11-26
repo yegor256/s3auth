@@ -196,7 +196,7 @@
                         <warSourceExcludes>js/**, css/**, xsl/**</warSourceExcludes>
                         <archive>
                             <manifestEntries>
-                                <S3Auth-Revision>${build.number}</S3Auth-Revision>
+                                <S3Auth-Revision>${buildNumber}</S3Auth-Revision>
                                 <S3Auth-Version>${project.version}</S3Auth-Version>
                                 <S3Auth-Date>${maven.build.timestamp}</S3Auth-Date>
                                 <S3Auth-FbId>${fb.id}</S3Auth-FbId>
