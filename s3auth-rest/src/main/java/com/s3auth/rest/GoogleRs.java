@@ -149,9 +149,9 @@ public final class GoogleRs extends BaseRs {
                 final List<String> pics = json.json("picture");
                 URI photo;
                 if (pics.isEmpty()) {
-                    photo = URI.create(pics.get(0));
-                } else {
                     photo = URI.create("http://img.s3auth.com/unknown.png");
+                } else {
+                    photo = URI.create(pics.get(0));
                 }
                 return photo;
             }
