@@ -29,6 +29,7 @@
  */
 package com.s3auth.hosts;
 
+import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
 import java.io.IOException;
@@ -102,6 +103,7 @@ public final class DynamoHosts implements Hosts {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(Loggable.DEBUG)
     public Host find(
         @NotNull(message = "host name can't be NULL")
         @Pattern(regexp = "[a-zA-Z0-9\\-\\.]+", message = "invalid host name")
@@ -124,6 +126,7 @@ public final class DynamoHosts implements Hosts {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(Loggable.DEBUG)
     public Set<Domain> domains(
         @NotNull @Valid final User user) throws IOException {
         this.update();
@@ -171,6 +174,7 @@ public final class DynamoHosts implements Hosts {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(Loggable.DEBUG)
     public void close() throws IOException {
         this.dynamo.close();
         for (Host host : this.hosts.values()) {

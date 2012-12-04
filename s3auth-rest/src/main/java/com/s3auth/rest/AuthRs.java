@@ -29,6 +29,7 @@
  */
 package com.s3auth.rest;
 
+import com.jcabi.aspects.Loggable;
 import com.jcabi.manifests.Manifests;
 import com.rexsl.page.CookieBuilder;
 import com.rexsl.page.Link;
@@ -57,6 +58,7 @@ public final class AuthRs extends BaseRs {
      */
     @GET
     @Path("/")
+    @Loggable(Loggable.DEBUG)
     public Response entrance() {
         return new PageBuilder()
             .stylesheet("/xsl/entrance.xsl")
@@ -111,6 +113,7 @@ public final class AuthRs extends BaseRs {
      */
     @GET
     @Path("/out")
+    @Loggable(Loggable.DEBUG)
     public Response logout() {
         return Response.status(Response.Status.SEE_OTHER)
             .location(this.uriInfo().getBaseUri())

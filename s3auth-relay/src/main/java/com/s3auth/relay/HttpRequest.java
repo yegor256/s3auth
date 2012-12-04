@@ -29,6 +29,7 @@
  */
 package com.s3auth.relay;
 
+import com.jcabi.aspects.Loggable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -96,6 +97,7 @@ final class HttpRequest {
      * @throws IOException If some socket problem
      * @see <a href="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>
      */
+    @Loggable(Loggable.DEBUG)
     public HttpRequest(@NotNull final Socket socket) throws IOException {
         final BufferedReader reader =
             new BufferedReader(new InputStreamReader(socket.getInputStream()));

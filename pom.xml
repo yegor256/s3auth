@@ -116,6 +116,7 @@
         </site>
     </distributionManagement>
     <properties>
+        <jcabi.version>0.7.2</jcabi.version>
         <rexsl.version since="26 Nov 2012">0.4.4</rexsl.version>
     </properties>
     <repositories>
@@ -219,7 +220,7 @@
                     <artifactId>buildnumber-maven-plugin</artifactId>
                     <version since="5 Aug 2012">1.1</version>
                     <configuration>
-                        <buildNumberPropertyName>build.number</buildNumberPropertyName>
+                        <buildNumberPropertyName>buildNumber</buildNumberPropertyName>
                         <timestampPropertyName>timestamp.number</timestampPropertyName>
                         <doCheck>false</doCheck>
                         <doUpdate>false</doUpdate>

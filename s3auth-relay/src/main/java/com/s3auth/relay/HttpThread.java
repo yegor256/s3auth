@@ -29,6 +29,7 @@
  */
 package com.s3auth.relay;
 
+import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.s3auth.hosts.Host;
@@ -96,6 +97,7 @@ final class HttpThread implements Runnable {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(Loggable.DEBUG)
     public void run() {
         final Socket socket = this.socket();
         final long start = System.currentTimeMillis();

@@ -29,6 +29,7 @@
  */
 package com.s3auth.hosts;
 
+import com.jcabi.aspects.Loggable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
@@ -73,6 +74,7 @@ public interface Resource {
          * {@inheritDoc}
          */
         @Override
+        @Loggable(Loggable.DEBUG)
         public void writeTo(final OutputStream stream) throws IOException {
             IOUtils.write(this.text, stream);
         }

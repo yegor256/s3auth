@@ -29,6 +29,7 @@
  */
 package com.s3auth.relay;
 
+import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.s3auth.hosts.Host;
@@ -69,6 +70,7 @@ final class LocalHost implements Host {
      */
     @Override
     @SuppressWarnings("PMD.DoNotCallSystemExit")
+    @Loggable(Loggable.DEBUG)
     public Resource fetch(@NotNull final URI uri) throws IOException {
         String output;
         if ("/".equals(uri.toString())) {

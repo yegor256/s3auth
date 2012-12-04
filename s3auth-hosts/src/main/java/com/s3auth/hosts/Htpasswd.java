@@ -29,6 +29,7 @@
  */
 package com.s3auth.hosts;
 
+import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -114,6 +115,7 @@ final class Htpasswd {
      * @return Yes or no
      * @throws IOException If some error inside
      */
+    @Loggable(Loggable.DEBUG)
     public boolean authorized(@NotNull final String user,
         @NotNull final String password) throws IOException {
         final ConcurrentMap<String, String> users = this.fetch();
@@ -126,6 +128,7 @@ final class Htpasswd {
      * @return Map of users
      * @throws IOException If some error inside
      */
+    @Loggable(Loggable.DEBUG)
     private ConcurrentMap<String, String> fetch() throws IOException {
         synchronized (this.updated) {
             if (System.currentTimeMillis() - this.updated.get()
@@ -152,6 +155,7 @@ final class Htpasswd {
      * Fetch the .htpasswd file, or returns empty string if it's absent.
      * @return Content of .htpasswd file, or empty
      */
+    @Loggable(Loggable.DEBUG)
     private String content() {
         String content;
         try {
@@ -178,6 +182,7 @@ final class Htpasswd {
      * @return TRUE if they match
      * @throws IOException If some error inside
      */
+    @Loggable(Loggable.DEBUG)
     private static boolean matches(final String hash, final String password)
         throws IOException {
         boolean matches = false;

@@ -29,6 +29,7 @@
  */
 package com.s3auth.rest;
 
+import com.jcabi.aspects.Loggable;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
 import com.restfb.DefaultFacebookClient;
@@ -63,6 +64,7 @@ public final class FacebookRs extends BaseRs {
      */
     @GET
     @Path("/callback")
+    @Loggable(Loggable.DEBUG)
     public Response callback(@QueryParam("code") final String code) {
         if (code == null) {
             throw new IllegalArgumentException("'code' is mandatory");

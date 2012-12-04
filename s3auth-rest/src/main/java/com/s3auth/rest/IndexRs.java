@@ -29,6 +29,7 @@
  */
 package com.s3auth.rest;
 
+import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbGroup;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
@@ -64,6 +65,7 @@ public final class IndexRs extends BaseRs {
      */
     @GET
     @Path("/")
+    @Loggable(Loggable.DEBUG)
     public Response index() throws IOException {
         return new PageBuilder()
             .stylesheet("/xsl/index.xsl")
@@ -87,6 +89,7 @@ public final class IndexRs extends BaseRs {
     @POST
     @Path("/add")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Loggable(Loggable.DEBUG)
     public Response add(@FormParam("host") final String host,
         @FormParam("key") final String key,
         @FormParam("secret") final String secret) throws IOException {
@@ -135,6 +138,7 @@ public final class IndexRs extends BaseRs {
      */
     @GET
     @Path("/remove")
+    @Loggable(Loggable.DEBUG)
     public Response remove(@QueryParam("host") final String host)
         throws IOException {
         final boolean removed = this.hosts().domains(this.user()).remove(

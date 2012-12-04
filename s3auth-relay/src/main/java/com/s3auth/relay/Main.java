@@ -29,6 +29,7 @@
  */
 package com.s3auth.relay;
 
+import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.s3auth.hosts.DynamoHosts;
 import java.util.concurrent.TimeUnit;
@@ -56,6 +57,7 @@ public final class Main {
      * @param args Optional arguments
      * @throws Exception If something is wrong
      */
+    @Loggable(Loggable.INFO)
     public static void main(final String[] args) throws Exception {
         if (args.length != 1) {
             throw new IllegalArgumentException(

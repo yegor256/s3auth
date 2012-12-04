@@ -29,6 +29,7 @@
  */
 package com.s3auth.relay;
 
+import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.jcabi.log.VerboseRunnable;
 import com.jcabi.log.VerboseThreads;
@@ -131,16 +132,17 @@ final class HttpFacade implements Closeable {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(Loggable.DEBUG)
     public void close() throws IOException {
         this.shutdown(this.frontend);
         this.shutdown(this.backend);
         this.server.close();
-        Logger.debug(this, "#close(): done");
     }
 
     /**
      * Process one socket.
      */
+    @Loggable(Loggable.DEBUG)
     private void process() {
         Socket socket;
         try {
@@ -176,6 +178,7 @@ final class HttpFacade implements Closeable {
      * Shutdown a service.
      * @param service The service to shut down
      */
+    @Loggable(Loggable.DEBUG)
     private void shutdown(final ScheduledExecutorService service) {
         service.shutdown();
         try {

@@ -29,6 +29,7 @@
  */
 package com.s3auth.servlets;
 
+import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.s3auth.hosts.DynamoHosts;
@@ -65,8 +66,8 @@ public final class HostsListener implements ServletContextListener {
      * {@link com.netbout.rest.BaseRs#setServletContext(ServletContext)}.
      */
     @Override
+    @Loggable(Loggable.DEBUG)
     public void contextInitialized(final ServletContextEvent event) {
-        final long start = System.nanoTime();
         try {
             Manifests.append(event.getServletContext());
             this.hosts = new DynamoHosts();
@@ -80,19 +81,14 @@ public final class HostsListener implements ServletContextListener {
         }
         event.getServletContext()
             .setAttribute("com.s3auth.HOSTS", this.hosts);
-        Logger.info(
-            this,
-            "contextInitialized(): done in %[nano]s",
-            System.nanoTime() - start
-        );
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
+    @Loggable(Loggable.DEBUG)
     public void contextDestroyed(final ServletContextEvent event) {
-        final long start = System.nanoTime();
         if (this.hosts == null) {
             Logger.warn(this, "#contextDestroyed(): Hosts is null");
         } else {
@@ -108,8 +104,7 @@ public final class HostsListener implements ServletContextListener {
         }
         Logger.info(
             this,
-            "#contextDestroyed(): done in %[nano]s (app was alive for %[ms]s)",
-            System.nanoTime() - start,
+            "#contextDestroyed(): app was alive for %[ms]s",
             System.currentTimeMillis() - this.started
         );
         org.apache.log4j.LogManager.shutdown();

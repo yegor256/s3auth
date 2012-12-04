@@ -40,6 +40,7 @@ import com.amazonaws.services.dynamodb.model.PutItemRequest;
 import com.amazonaws.services.dynamodb.model.PutItemResult;
 import com.amazonaws.services.dynamodb.model.ScanRequest;
 import com.amazonaws.services.dynamodb.model.ScanResult;
+import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
@@ -112,6 +113,7 @@ final class DefaultDynamo implements Dynamo {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(Loggable.INFO)
     public ConcurrentMap<URN, Set<Domain>> load() throws IOException {
         final ConcurrentMap<URN, Set<Domain>> domains =
             new ConcurrentHashMap<URN, Set<Domain>>();
@@ -135,6 +137,7 @@ final class DefaultDynamo implements Dynamo {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(Loggable.DEBUG)
     public void add(@NotNull final URN user,
         @NotNull final Domain domain) throws IOException {
         final ConcurrentMap<String, AttributeValue> attrs =
@@ -159,6 +162,7 @@ final class DefaultDynamo implements Dynamo {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(Loggable.DEBUG)
     public void remove(@NotNull final Domain domain) throws IOException {
         final DeleteItemResult result = this.client.deleteItem(
             new DeleteItemRequest(

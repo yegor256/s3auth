@@ -29,6 +29,7 @@
  */
 package com.s3auth.rest;
 
+import com.jcabi.aspects.Loggable;
 import com.jcabi.manifests.Manifests;
 import java.io.IOException;
 import javax.ws.rs.GET;
@@ -56,6 +57,7 @@ public final class MiscRs extends BaseRs {
     @GET
     @Path("/version")
     @Produces(MediaType.TEXT_PLAIN)
+    @Loggable(Loggable.DEBUG)
     public String version() {
         return Manifests.read("S3Auth-Revision");
     }
@@ -68,6 +70,7 @@ public final class MiscRs extends BaseRs {
     @GET
     @Path("/LICENSE.txt")
     @Produces(MediaType.TEXT_PLAIN)
+    @Loggable(Loggable.DEBUG)
     public String license() throws IOException {
         return IOUtils.toString(
             this.getClass().getResourceAsStream("/LICENSE.txt")

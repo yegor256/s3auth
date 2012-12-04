@@ -29,6 +29,7 @@
  */
 package com.s3auth.rest;
 
+import com.jcabi.aspects.Loggable;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
 import com.s3auth.hosts.User;
@@ -127,6 +128,7 @@ public final class CryptedUser implements User {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(Loggable.DEBUG)
     public String toString() {
         final ByteArrayOutputStream data = new ByteArrayOutputStream();
         try {
@@ -149,6 +151,7 @@ public final class CryptedUser implements User {
      * @return Instance of the class
      * @throws CryptedUser.DecryptionException If can't decrypt
      */
+    @Loggable(Loggable.DEBUG)
     public static CryptedUser valueOf(final String txt)
         throws CryptedUser.DecryptionException {
         if (txt == null) {

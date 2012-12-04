@@ -29,6 +29,7 @@
  */
 package com.s3auth.hosts;
 
+import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -86,6 +87,7 @@ final class SmartHost implements Host {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(Loggable.DEBUG)
     public Resource fetch(@NotNull final URI uri) throws IOException {
         Resource resource;
         if (SmartHost.HTPASSWD.matcher(uri.toString()).matches()) {

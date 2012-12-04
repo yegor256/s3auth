@@ -29,6 +29,7 @@
  */
 package com.s3auth.relay;
 
+import com.jcabi.aspects.Loggable;
 import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
@@ -82,6 +83,7 @@ final class HttpException extends IOException {
      * Public ctor.
      * @param response The response
      */
+    @Loggable(Loggable.DEBUG)
     public HttpException(@NotNull final HttpResponse response) {
         super();
         this.resp = response;

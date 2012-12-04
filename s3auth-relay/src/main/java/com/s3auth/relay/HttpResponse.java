@@ -29,6 +29,7 @@
  */
 package com.s3auth.relay;
 
+import com.jcabi.aspects.Loggable;
 import com.s3auth.hosts.Resource;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -48,14 +49,12 @@ import org.apache.commons.httpclient.HttpStatus;
  *
  * <p>It is a Builder design pattern, which can be used as the following:
  *
- * <pre>
- * new HttpResponse()
+ * <pre> new HttpResponse()
  *   .withStatus(200)
  *   .withHeader("Content-Type", "text/plain")
  *   .withHeader("Content-Length", "18")
  *   .withBody("here is my content")
- *   .send(socket);
- * </pre>
+ *   .send(socket);</pre>
  *
  * <p>By default HTTP status is OK (200) and content is empty.
  *
@@ -139,6 +138,7 @@ final class HttpResponse {
      * @throws IOException If some IO problem inside
      * @see http://stackoverflow.com/questions/8179547
      */
+    @Loggable(Loggable.DEBUG)
     public int send(@NotNull final Socket socket) throws IOException {
         final OutputStream stream = socket.getOutputStream();
         final Writer writer = new OutputStreamWriter(stream);

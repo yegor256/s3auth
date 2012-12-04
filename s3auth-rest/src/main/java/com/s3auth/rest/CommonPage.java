@@ -29,6 +29,7 @@
  */
 package com.s3auth.rest;
 
+import com.jcabi.aspects.Loggable;
 import com.jcabi.manifests.Manifests;
 import com.rexsl.page.BasePage;
 import com.rexsl.page.JaxbBundle;
@@ -59,6 +60,7 @@ public class CommonPage extends BasePage<CommonPage, BaseRs> {
      * @param user The user
      * @return Itself
      */
+    @Loggable(Loggable.DEBUG)
     public final CommonPage authenticated(final User user) {
         this.link(new Link("logout", "/a/out"));
         this.append(new JaxbUser(user));
@@ -69,6 +71,7 @@ public class CommonPage extends BasePage<CommonPage, BaseRs> {
      * Render it.
      * @return JAX-RS response
      */
+    @Loggable(Loggable.DEBUG)
     public final Response.ResponseBuilder render() {
         BaseRs.class.cast(this.home()).render(this);
         final Response.ResponseBuilder builder = Response.ok();
