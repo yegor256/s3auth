@@ -47,7 +47,7 @@
     <parent>
         <groupId>com.jcabi</groupId>
         <artifactId>parent</artifactId>
-        <version>0.2</version>
+        <version>0.7.3</version>
     </parent>
     <groupId>com.s3auth</groupId>
     <artifactId>s3auth</artifactId>
@@ -116,7 +116,6 @@
         </site>
     </distributionManagement>
     <properties>
-        <jcabi.version>0.7.2</jcabi.version>
         <rexsl.version since="26 Nov 2012">0.4.4</rexsl.version>
     </properties>
     <repositories>
