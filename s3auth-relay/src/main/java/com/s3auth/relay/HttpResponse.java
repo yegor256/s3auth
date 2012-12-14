@@ -86,7 +86,7 @@ final class HttpResponse {
     /**
      * Resource to deliver.
      */
-    private transient Resource body;
+    private transient Resource body = new Resource.PlainText("");
 
     /**
      * Set HTTP status.
@@ -159,17 +159,13 @@ final class HttpResponse {
                 writer.write(HttpResponse.EOL);
             }
         }
-        if (this.body != null) {
-            for (String hdr : this.body.headers()) {
-                writer.write(hdr);
-                writer.write(HttpResponse.EOL);
-            }
+        for (String hdr : this.body.headers()) {
+            writer.write(hdr);
+            writer.write(HttpResponse.EOL);
         }
         writer.write(HttpResponse.EOL);
         writer.flush();
-        if (this.body != null) {
-            this.body.writeTo(stream);
-        }
+        this.body.writeTo(stream);
         writer.close();
         return 0;
     }
