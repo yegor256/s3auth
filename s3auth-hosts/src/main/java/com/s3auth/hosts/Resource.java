@@ -75,8 +75,9 @@ public interface Resource {
          */
         @Override
         @Loggable(Loggable.DEBUG)
-        public void writeTo(final OutputStream stream) throws IOException {
+        public long writeTo(final OutputStream stream) throws IOException {
             IOUtils.write(this.text, stream);
+            return this.text.getBytes().length;
         }
         /**
          * {@inheritDoc}
@@ -100,9 +101,10 @@ public interface Resource {
     /**
      * Write its content to the writer.
      * @param stream The stream to write to
+     * @return How many bytes were written
      * @throws IOException If some error with I/O inside
      */
-    void writeTo(OutputStream stream) throws IOException;
+    long writeTo(OutputStream stream) throws IOException;
 
     /**
      * Get a collection of all necessary HTTP headers for this resource.

@@ -75,10 +75,11 @@ final class DefaultResource implements Resource {
      * {@inheritDoc}
      */
     @Override
-    public void writeTo(final OutputStream output) throws IOException {
+    public long writeTo(final OutputStream output) throws IOException {
         final InputStream input = this.object.getObjectContent();
-        IOUtils.copy(input, output);
+        final int bytes = IOUtils.copy(input, output);
         input.close();
+        return (long) bytes;
     }
 
     /**

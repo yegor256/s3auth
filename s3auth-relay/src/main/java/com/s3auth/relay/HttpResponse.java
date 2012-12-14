@@ -139,7 +139,8 @@ final class HttpResponse {
      * @see http://stackoverflow.com/questions/8179547
      */
     @Loggable(Loggable.DEBUG)
-    public int send(@NotNull final Socket socket) throws IOException {
+    public long send(@NotNull final Socket socket) throws IOException {
+        long bytes = 0;
         final OutputStream stream = socket.getOutputStream();
         final Writer writer = new OutputStreamWriter(stream);
         writer.write(
@@ -165,9 +166,9 @@ final class HttpResponse {
         }
         writer.write(HttpResponse.EOL);
         writer.flush();
-        this.body.writeTo(stream);
+        bytes += this.body.writeTo(stream);
         writer.close();
-        return 0;
+        return bytes;
     }
 
 }

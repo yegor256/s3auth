@@ -105,7 +105,7 @@ final class HttpThread implements Runnable {
             final HttpRequest request = new HttpRequest(socket);
             final Host host = this.host(request);
             final Resource resource = host.fetch(request.requestUri());
-            final int bytes = new HttpResponse()
+            final long bytes = new HttpResponse()
                 .withStatus(HttpURLConnection.HTTP_OK)
                 .withHeader(HttpHeaders.CACHE_CONTROL, "no-cache")
                 .withHeader(HttpHeaders.EXPIRES, "-1")
