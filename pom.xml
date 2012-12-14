@@ -51,7 +51,7 @@
     </parent>
     <groupId>com.s3auth</groupId>
     <artifactId>s3auth</artifactId>
-    <version s3auth="yes">1.0-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>s3auth</name>
     <modules>
@@ -98,7 +98,7 @@
     <scm>
         <connection>scm:git:git@github.com:yegor256/s3auth.git</connection>
         <developerConnection>scm:git:git@github.com:yegor256/s3auth.git</developerConnection>
-        <url>scm:git:git@github.com:yegor256/s3auth.git</url>
+        <url>https://github.com/yegor256/s3auth</url>
     </scm>
     <distributionManagement>
         <snapshotRepository>
@@ -124,24 +124,6 @@
             <url>s3://repo.s3auth.com/snapshot</url>
         </repository>
     </repositories>
-    <dependencies>
-        <dependency>
-            <groupId>com.jcabi</groupId>
-            <artifactId>jcabi-aspects</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjrt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-        </dependency>
-    </dependencies>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -177,56 +159,9 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    <profiles>
-        <profile>
-            <id>qulice</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.ning.maven.plugins</groupId>
-                        <artifactId>maven-duplicate-finder-plugin</artifactId>
-                        <version>1.0.3</version>
-                        <configuration>
-                            <failBuildInCaseOfConflict>true</failBuildInCaseOfConflict>
-                            <checkTestClasspath>false</checkTestClasspath>
-                            <ignoredResources>
-                                <ignoredResource>META-INF/.*</ignoredResource>
-                            </ignoredResources>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <!-- https://github.com/ning/maven-duplicate-finder-plugin/issues/12 -->
-                                <phase>verify-never</phase>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
     <build>
         <pluginManagement>
             <plugins>
-                <plugin>
-                    <!--
-                    This plugin will collect current build number
-                    from Git and save it into Maven property "build.number".
-                    -->
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>buildnumber-maven-plugin</artifactId>
-                    <version>1.1</version>
-                    <configuration>
-                        <buildNumberPropertyName>buildNumber</buildNumberPropertyName>
-                        <timestampPropertyName>timestamp.number</timestampPropertyName>
-                        <doCheck>false</doCheck>
-                        <doUpdate>false</doUpdate>
-                        <getRevisionOnlyOnce>true</getRevisionOnlyOnce>
-                        <shortRevisionLength>8</shortRevisionLength>
-                    </configuration>
-                </plugin>
                 <plugin>
                     <groupId>com.texry</groupId>
                     <artifactId>texry-maven-plugin</artifactId>
@@ -257,28 +192,6 @@
                                 <file>classes-hosts.tex</file>
                             </sources>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>aspectj-maven-plugin</artifactId>
-                <version>1.4</version>
-                <configuration>
-                    <aspectLibraries>
-                        <aspectLibrary>
-                            <groupId>com.jcabi</groupId>
-                            <artifactId>jcabi-aspects</artifactId>
-                        </aspectLibrary>
-                    </aspectLibraries>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>weave-classes</id>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
