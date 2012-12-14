@@ -59,7 +59,7 @@
             <extension>
                 <groupId>org.kuali.maven.wagons</groupId>
                 <artifactId>maven-s3-wagon</artifactId>
-                <version since="20 Sep 2012">1.1.14</version>
+                <version>1.1.14</version>
             </extension>
         </extensions>
         <plugins>

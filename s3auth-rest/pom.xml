@@ -117,7 +117,7 @@
             -->
             <groupId>com.restfb</groupId>
             <artifactId>restfb</artifactId>
-            <version since="10 Nov 2011">1.6.9</version>
+            <version>1.6.11</version>
         </dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>
@@ -127,14 +127,14 @@
             <!-- JAX-RS implementation, from ReXSL -->
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-core</artifactId>
-            <version since="22 Aug 2012">1.12</version>
+            <version>1.16</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <!-- JAXB 2.0 API. -->
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
-            <version since="2 Sep 2011">2.0</version>
+            <version>2.2.7</version>
             <exclusions>
                 <exclusion>
                     <groupId>javax.xml.bind</groupId>
@@ -182,7 +182,7 @@
             <!-- Javax Servlet API 2.4. -->
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
-            <version since="26 Oct 2011">2.4</version>
+            <version>3.0-alpha-1</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -191,7 +191,7 @@
             <plugins>
                 <plugin>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version since="2 Dec 2010">2.1</version>
+                    <version>2.1</version>
                     <configuration>
                         <warSourceExcludes>js/**, css/**, xsl/**</warSourceExcludes>
                         <archive>

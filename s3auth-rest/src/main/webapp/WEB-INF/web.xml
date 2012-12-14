@@ -28,20 +28,13 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<web-app version="3.0" metadata-complete="true"
-    xmlns="http://java.sun.com/xml/ns/javaee"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
-        http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
-
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0" metadata-complete="true" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee         http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
     <display-name>s3auth</display-name>
     <description>s3auth.com r${build.number}</description>
-
     <context-param>
         <param-name>Webmaster</param-name>
         <param-value>yegor@tpc2.com</param-value>
     </context-param>
-
     <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>/robots.txt</url-pattern>
@@ -58,11 +51,9 @@
         <servlet-name>default</servlet-name>
         <url-pattern>/js/*</url-pattern>
     </servlet-mapping>
-
     <listener>
         <listener-class>com.s3auth.servlets.HostsListener</listener-class>
     </listener>
-
     <servlet>
         <servlet-name>ExceptionTrap</servlet-name>
         <servlet-class>com.rexsl.core.ExceptionTrap</servlet-class>
@@ -79,7 +70,6 @@
         <exception-type>java.lang.Throwable</exception-type>
         <location>/trap</location>
     </error-page>
-
     <filter>
         <filter-name>XsltFilter</filter-name>
         <filter-class>com.rexsl.core.XsltFilter</filter-class>
@@ -90,7 +80,6 @@
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>ERROR</dispatcher>
     </filter-mapping>
-
     <servlet>
         <servlet-name>RestfulServlet</servlet-name>
         <servlet-class>com.rexsl.core.RestfulServlet</servlet-class>
@@ -103,20 +92,16 @@
         <servlet-name>RestfulServlet</servlet-name>
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
-
     <error-page>
         <error-code>404</error-code>
         <location>/error</location>
     </error-page>
-
     <error-page>
         <error-code>405</error-code>
         <location>/error</location>
     </error-page>
-
     <mime-mapping>
         <extension>xsl</extension>
         <mime-type>text/xsl</mime-type>
     </mime-mapping>
-
 </web-app>
