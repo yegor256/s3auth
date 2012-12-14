@@ -99,7 +99,7 @@
                         </a>
                         <xsl:text> of AWS). </xsl:text>
                         <xsl:text>Sea also terms of use, privacy policy and license agreement at </xsl:text>
-                        <a href="http://www.s3auth.com/misc/LICENSE.txt">
+                        <a href="/misc/LICENSE.txt">
                             <xsl:text>LICENSE.txt</xsl:text>
                         </a>
                         <xsl:text>.</xsl:text>

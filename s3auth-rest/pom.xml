@@ -127,6 +127,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.rexsl</groupId>
             <artifactId>rexsl-standalone</artifactId>
             <version>${rexsl.version}</version>
@@ -155,6 +160,12 @@
             <groupId>com.rexsl</groupId>
             <artifactId>rexsl-test</artifactId>
             <version>${rexsl.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.jersey</groupId>
+                    <artifactId>jersey-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <!--
@@ -164,17 +175,6 @@
             <groupId>com.restfb</groupId>
             <artifactId>restfb</artifactId>
             <version>1.6.11</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-        </dependency>
-        <dependency>
-            <!-- JAX-RS implementation, from ReXSL -->
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-core</artifactId>
-            <version>1.12</version>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <!-- JAXB 2.0 API. -->
