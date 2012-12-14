@@ -173,7 +173,7 @@
             <!-- JAX-RS implementation, from ReXSL -->
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-core</artifactId>
-            <version>1.16</version>
+            <version>1.12</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
