@@ -118,7 +118,7 @@ final class HttpThread implements Runnable {
                 )
                 .withHeader("Server", HttpThread.NAME)
                 .withHeader(
-                    "s3auth-time",
+                    "X-S3auth-Time",
                     Long.toString(System.currentTimeMillis() - start)
                 )
                 .withBody(resource)
