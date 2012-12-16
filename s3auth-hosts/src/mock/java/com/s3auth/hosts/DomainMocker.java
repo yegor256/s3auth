@@ -50,6 +50,7 @@ public final class DomainMocker {
      */
     public DomainMocker() {
         this.withName("localhost");
+        this.withRegion("s3-ap-southeast-1");
         this.withKey("AAAAAAAAAAAAAAAAAAAA");
         this.withSecret("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
     }
@@ -81,6 +82,16 @@ public final class DomainMocker {
      */
     public DomainMocker withSecret(final String secret) {
         Mockito.doReturn(secret).when(this.domain).secret();
+        return this;
+    }
+
+    /**
+     * With this region.
+     * @param region The region
+     * @return This object
+     */
+    public DomainMocker withRegion(final String region) {
+        Mockito.doReturn(region).when(this.domain).region();
         return this;
     }
 

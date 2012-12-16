@@ -40,6 +40,7 @@ import javax.validation.constraints.NotNull;
  * @version $Id$
  * @since 0.0.1
  */
+@SuppressWarnings("PMD.TooManyMethods")
 final class DefaultDomain implements Domain {
 
     /**
@@ -52,9 +53,11 @@ final class DefaultDomain implements Domain {
      * @param name Name of it
      * @param key Key of it
      * @param secret Secret of it
+     * @param region The region of S3 bucket
+     * @checkstyle ParameterNumber (3 lines)
      */
-    public DefaultDomain(final String name, final String key,
-        final String secret) {
+    public DefaultDomain(@NotNull final String name, @NotNull final String key,
+        @NotNull final String secret, @NotNull final String region) {
         this(
             new Domain() {
                 @Override
@@ -68,6 +71,10 @@ final class DefaultDomain implements Domain {
                 @Override
                 public String secret() {
                     return secret;
+                }
+                @Override
+                public String region() {
+                    return region;
                 }
             }
         );
@@ -131,6 +138,15 @@ final class DefaultDomain implements Domain {
     @NotNull
     public String secret() {
         return this.origin.secret().trim();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @NotNull
+    public String region() {
+        return this.origin.region().trim();
     }
 
 }

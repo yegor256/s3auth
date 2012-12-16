@@ -64,9 +64,11 @@ final class DefaultBucket implements Bucket {
     @Override
     @NotNull
     public AmazonS3 client() {
-        return new AmazonS3Client(
-            new BasicAWSCredentials(this.domain.key(), this.domain.secret())
+        final AmazonS3 client = new AmazonS3Client(
+            new BasicAWSCredentials(this.key(), this.secret())
         );
+        client.setEndpoint(String.format("%s.amazonaws.com", this.region()));
+        return client;
     }
 
     /**
@@ -119,6 +121,15 @@ final class DefaultBucket implements Bucket {
     @NotNull
     public String secret() {
         return this.domain.secret();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @NotNull
+    public String region() {
+        return this.domain.region();
     }
 
 }

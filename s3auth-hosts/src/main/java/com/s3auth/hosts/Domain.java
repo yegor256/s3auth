@@ -110,6 +110,17 @@ public interface Domain {
                 ).addNode("key").addConstraintViolation();
                 isValid = false;
             }
+            if (domain.region() == null) {
+                ctx.buildConstraintViolationWithTemplate(
+                    "AWS S3 region is mandatory and can't be NULL"
+                ).addConstraintViolation();
+                isValid = false;
+            } else if (!domain.region().matches("s3[a-z0-9\\-]*")) {
+                ctx.buildConstraintViolationWithTemplate(
+                    String.format("invalid AWS S3 region '%s'", domain.region())
+                ).addNode("region").addConstraintViolation();
+                isValid = false;
+            }
             if (domain.secret() == null) {
                 ctx.buildConstraintViolationWithTemplate(
                     "AWS secret key is mandatory and can't be NULL"
@@ -144,5 +155,12 @@ public interface Domain {
      * @return AWS secret key
      */
     String secret();
+
+    /**
+     * Region of S3 bucket.
+     * @return Region name/endpoint, e.g. "s3-us-west-1"
+     * @see <a href="http://docs.amazonwebservices.com/general/latest/gr/rande.html#s3_region">S3 Regions</a>
+     */
+    String region();
 
 }

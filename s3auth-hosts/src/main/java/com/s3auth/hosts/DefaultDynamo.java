@@ -61,10 +61,33 @@ import javax.validation.constraints.NotNull;
  * @version $Id$
  * @since 0.0.1
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
- * @checkstyle MultipleStringLiterals (500 lines)
  */
-@SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
 final class DefaultDynamo implements Dynamo {
+
+    /**
+     * Dynamo DB key, URN of a user.
+     */
+    private static final String USER = "user.urn";
+
+    /**
+     * Dynamo DB key, name of domain.
+     */
+    private static final String NAME = "domain.name";
+
+    /**
+     * Dynamo DB key, AWS key of bucket.
+     */
+    private static final String KEY = "domain.key";
+
+    /**
+     * Dynamo DB key, AWS secret of bucket.
+     */
+    private static final String SECRET = "domain.secret";
+
+    /**
+     * Dynamo DB key, AWS S3 region of bucket.
+     */
+    private static final String REGION = "domain.region";
 
     /**
      * AWS client.
@@ -114,18 +137,23 @@ final class DefaultDynamo implements Dynamo {
      */
     @Override
     @Loggable(Loggable.INFO)
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public ConcurrentMap<URN, Set<Domain>> load() throws IOException {
         final ConcurrentMap<URN, Set<Domain>> domains =
             new ConcurrentHashMap<URN, Set<Domain>>();
         final ScanResult result = this.client.scan(new ScanRequest(this.table));
         for (final Map<String, AttributeValue> item : result.getItems()) {
-            final URN user = URN.create(item.get("user.urn").getS());
+            if (!item.containsKey(DefaultDynamo.REGION)) {
+                item.put(DefaultDynamo.REGION, new AttributeValue("s3"));
+            }
+            final URN user = URN.create(item.get(DefaultDynamo.USER).getS());
             domains.putIfAbsent(user, new HashSet<Domain>());
             domains.get(user).add(
                 new DefaultDomain(
-                    item.get("domain.name").getS(),
-                    item.get("domain.key").getS(),
-                    item.get("domain.secret").getS()
+                    item.get(DefaultDynamo.NAME).getS(),
+                    item.get(DefaultDynamo.KEY).getS(),
+                    item.get(DefaultDynamo.SECRET).getS(),
+                    item.get(DefaultDynamo.REGION).getS()
                 )
             );
         }
@@ -142,10 +170,11 @@ final class DefaultDynamo implements Dynamo {
         @NotNull final Domain domain) throws IOException {
         final ConcurrentMap<String, AttributeValue> attrs =
             new ConcurrentHashMap<String, AttributeValue>();
-        attrs.put("user.urn", new AttributeValue(user.toString()));
-        attrs.put("domain.name", new AttributeValue(domain.name()));
-        attrs.put("domain.key", new AttributeValue(domain.key()));
-        attrs.put("domain.secret", new AttributeValue(domain.secret()));
+        attrs.put(DefaultDynamo.USER, new AttributeValue(user.toString()));
+        attrs.put(DefaultDynamo.NAME, new AttributeValue(domain.name()));
+        attrs.put(DefaultDynamo.KEY, new AttributeValue(domain.key()));
+        attrs.put(DefaultDynamo.SECRET, new AttributeValue(domain.secret()));
+        attrs.put(DefaultDynamo.REGION, new AttributeValue(domain.region()));
         final PutItemResult result = this.client.putItem(
             new PutItemRequest(this.table, attrs)
         );
