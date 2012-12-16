@@ -30,7 +30,6 @@
 package com.s3auth.relay;
 
 import com.jcabi.log.VerboseRunnable;
-import java.net.ServerSocket;
 import java.net.URI;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
@@ -56,7 +55,7 @@ public final class MainTest {
     @org.junit.Ignore
     @SuppressWarnings("PMD.DoNotUseThreads")
     public void startsAndListensOnPort() throws Exception {
-        final int port = MainTest.port();
+        final int port = PortMocker.reserve();
         final CountDownLatch done = new CountDownLatch(1);
         final Thread thread = new Thread(
             new VerboseRunnable(
@@ -90,25 +89,6 @@ public final class MainTest {
             done.await(1, TimeUnit.SECONDS),
             Matchers.is(true)
         );
-    }
-
-    /**
-     * Find and return the first available port.
-     * @return The port number
-     */
-    private static int port() {
-        int port;
-        try {
-            final ServerSocket socket = new ServerSocket(0);
-            try {
-                port = socket.getLocalPort();
-            } finally {
-                socket.close();
-            }
-        } catch (java.io.IOException ex) {
-            throw new IllegalStateException("Failed to reserve port", ex);
-        }
-        return port;
     }
 
 }

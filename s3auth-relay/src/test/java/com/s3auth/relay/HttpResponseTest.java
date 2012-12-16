@@ -29,9 +29,21 @@
  */
 package com.s3auth.relay;
 
+import com.jcabi.log.VerboseRunnable;
+import com.s3auth.hosts.Resource;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -40,6 +52,7 @@ import org.junit.Test;
  * Test case for {@link HttpResponse}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 public final class HttpResponseTest {
 
@@ -59,6 +72,68 @@ public final class HttpResponseTest {
             Matchers.allOf(
                 Matchers.startsWith("HTTP/1.1 404"),
                 Matchers.containsString("\n\nhi!")
+            )
+        );
+    }
+
+    /**
+     * HttpResponse can process a slow resource (a few seconds waiting).
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void sendsDataFromSlowResource() throws Exception {
+        final String content = "\u0433 some text";
+        final Resource res = new Resource() {
+            @Override
+            public long writeTo(final OutputStream stream) {
+                try {
+                    TimeUnit.SECONDS.sleep(2);
+                } catch (InterruptedException ex) {
+                    throw new IllegalStateException(ex);
+                }
+                final PrintWriter writer = new PrintWriter(stream);
+                writer.print(content);
+                writer.flush();
+                return content.getBytes().length;
+            }
+            @Override
+            public Collection<String> headers() {
+                return new ArrayList<String>();
+            }
+        };
+        final HttpResponse response = new HttpResponse().withBody(res);
+        final ServerSocket server = new ServerSocket(0);
+        final CountDownLatch done = new CountDownLatch(1);
+        final StringBuffer received = new StringBuffer();
+        new Thread(
+            new VerboseRunnable(
+                new Callable<Void>() {
+                    @Override
+                    public Void call() throws Exception {
+                        final Socket reading = server.accept();
+                        received.append(
+                            IOUtils.toString(reading.getInputStream())
+                        );
+                        reading.close();
+                        done.countDown();
+                        return null;
+                    }
+                },
+                true
+            )
+        ).start();
+        final Socket writing = new Socket("localhost", server.getLocalPort());
+        response.send(writing);
+        writing.close();
+        MatcherAssert.assertThat(
+            done.await(1, TimeUnit.SECONDS),
+            Matchers.is(true)
+        );
+        MatcherAssert.assertThat(
+            received.toString(),
+            Matchers.allOf(
+                Matchers.startsWith("HTTP/1.1 200 OK"),
+                Matchers.endsWith(content)
             )
         );
     }
