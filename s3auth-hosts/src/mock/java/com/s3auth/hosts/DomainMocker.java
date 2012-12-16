@@ -50,8 +50,8 @@ public final class DomainMocker {
      */
     public DomainMocker() {
         this.withName("localhost");
-        this.withKey("AKI56FXVOY5FEEZNZXAQ");
-        this.withSecret("ZFomiC6OObi6gD2J1QQcaW1evMUfqv3fVkpDImIO");
+        this.withKey("AAAAAAAAAAAAAAAAAAAA");
+        this.withSecret("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
     }
 
     /**

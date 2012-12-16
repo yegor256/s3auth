@@ -50,9 +50,9 @@ public final class BucketMocker {
      * Public ctor.
      */
     public BucketMocker() {
-        this.withName("localhost");
-        this.withKey("AKIAJFWVOY5KEEZNZXAQ");
-        this.withSecret("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");
+        this.withName("maven.s3auth.com");
+        this.withKey("AAAAAAAAAAAAAAAAAAAA");
+        this.withSecret("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
         this.withClient(Mockito.mock(AmazonS3.class));
     }
 
