@@ -52,6 +52,18 @@ public final class LocalHostTest {
     public void rendersHomePage() throws Exception {
         final Host host = new LocalHost();
         MatcherAssert.assertThat(
+            host.isHidden(new URI("/some-uri")),
+            Matchers.is(false)
+        );
+        MatcherAssert.assertThat(
+            host.authorized("user-name", "user-password"),
+            Matchers.is(true)
+        );
+        MatcherAssert.assertThat(
+            host,
+            Matchers.hasToString(Matchers.equalTo("localhost"))
+        );
+        MatcherAssert.assertThat(
             ResourceMocker.toString(host.fetch(URI.create("/"))),
             Matchers.notNullValue()
         );
