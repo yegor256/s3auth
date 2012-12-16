@@ -104,12 +104,7 @@ final class DefaultDynamo implements Dynamo {
      */
     public DefaultDynamo() {
         this(
-            new AmazonDynamoDBClient(
-                new BasicAWSCredentials(
-                    Manifests.read("S3Auth-AwsDynamoKey"),
-                    Manifests.read("S3Auth-AwsDynamoSecret")
-                )
-            ),
+            DefaultDynamo.live(),
             Manifests.read("S3Auth-AwsDynamoTable")
         );
     }
@@ -204,6 +199,20 @@ final class DefaultDynamo implements Dynamo {
             domain.name(),
             result.getConsumedCapacityUnits()
         );
+    }
+
+    /**
+     * Make a live client.
+     * @return The client to work with
+     */
+    private static AmazonDynamoDB live() {
+        final String key = Manifests.read("S3Auth-AwsDynamoKey");
+        final String secret = Manifests.read("S3Auth-AwsDynamoSecret");
+        final AmazonDynamoDB client = new AmazonDynamoDBClient(
+            new BasicAWSCredentials(key, secret)
+        );
+        Logger.info(DefaultDynamo.class, "#live(): Dynamo with '%s'", key);
+        return client;
     }
 
 }

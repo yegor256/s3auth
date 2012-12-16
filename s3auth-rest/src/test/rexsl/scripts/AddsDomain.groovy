@@ -37,13 +37,13 @@ import com.s3auth.rest.CryptedUser
 import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.MediaType
 
-Manifests.append(new File(rexsl.basedir, 'src/test/resources/META-INF/MANIFEST.MF'))
+Manifests.append(new File(rexsl.basedir, 'target/test-classes/META-INF/MANIFEST.MF'))
 
 def user = new CryptedUser(new UserMocker().withIdentity('urn:google:555').mock())
 def cookie = BaseRs.COOKIE + '=' + user
 def host = 'test.s3auth.com'
-def key = 'AKIAJFWVOY5KEEPZNZXA'
-def secret = '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'
+def key = 'AAAAAAAAAAAAAAAAAAAA'
+def secret = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 
 def home = RestTester.start(rexsl.home)
     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)

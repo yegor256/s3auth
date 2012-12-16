@@ -36,7 +36,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.UriBuilder
 import org.hamcrest.Matchers
 
-Manifests.append(new File(rexsl.basedir, 'src/test/resources/META-INF/MANIFEST.MF'))
+Manifests.append(new File(rexsl.basedir, 'target/test-classes/META-INF/MANIFEST.MF'))
 
 RestTester.start(UriBuilder.fromUri(rexsl.home).path('/misc/version'))
     .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
