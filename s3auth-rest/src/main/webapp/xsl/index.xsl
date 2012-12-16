@@ -56,7 +56,7 @@
             </xsl:otherwise>
         </xsl:choose>
         <p>
-            <xsl:text>Register new domain using the form (all fields are mandatory):</xsl:text>
+            <xsl:text>Register new domain using the form:</xsl:text>
         </p>
         <form method="post">
             <xsl:attribute name="action">
