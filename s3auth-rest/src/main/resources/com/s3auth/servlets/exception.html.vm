@@ -24,7 +24,7 @@
                 problem and will work with it as soon as possible. In the
                 mean time click "Back" button in your browser and try
                 to do something else.
-                Release <span class="tt">${build.number}</span>.
+                Release <span class="tt">${buildNumber}</span>.
             </p>
             <pre style="display:none;">${text}</pre>
         </div>
