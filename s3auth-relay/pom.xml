@@ -143,14 +143,6 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <configuration>
-                        <systemPropertyVariables>
-                            <http.port>${http.port}</http.port>
-                        </systemPropertyVariables>
-                    </configuration>
-                </plugin>
-                <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
                     <configuration>
                         <archive>
@@ -171,80 +163,8 @@
         </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.7</version>
-                <executions>
-                    <execution>
-                        <id>reserve-http-port</id>
-                        <phase>generate-test-resources</phase>
-                        <goals>
-                            <goal>reserve-network-port</goal>
-                        </goals>
-                        <configuration>
-                            <portNames>
-                                <portName>http.port</portName>
-                            </portNames>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-invoker-plugin</artifactId>
-                <configuration>
-                    <debug>false</debug>
-                    <noLog>false</noLog>
-                    <projectsDirectory>${project.build.outputDirectory}/invoker</projectsDirectory>
-                    <showErrors>true</showErrors>
-                    <showVersion>false</showVersion>
-                    <streamLogs>true</streamLogs>
-                    <postBuildHookScript>verify.groovy</postBuildHookScript>
-                    <settingsFile>${project.build.outputDirectory}/invoker/settings.xml</settingsFile>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>test-pom-configuration</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
-                    <execution>
-                        <id>prepare-integration-test</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <copy file="${basedir}/src/main/production/pom.xml" todir="${project.build.outputDirectory}/invoker/relay"/>
-                                <echo file="${project.build.outputDirectory}/invoker/settings.xml"><![CDATA[
-                                    <settings>
-                                     <servers>
-                                      <server>
-                                       <id>repo.s3auth.com</id>
-                                       <username>${aws.key}</username>
-                                       <password>${aws.secret}</password>
-                                      </server>
-                                     </servers>
-                                    </settings>
-                                ]]></echo>
-                                <echo file="${project.build.outputDirectory}/invoker/relay/verify.groovy">
-                                    def log = new File(basedir, 'build.log')
-                                    assert log.text.contains('java.net.BindException: Permission denied')
-                                </echo>
-                                <echo file="${project.build.outputDirectory}/invoker/relay/invoker.properties">
-                                    invoker.goals = test
-                                    invoker.buildResult = failure
-                                </echo>
-                            </target>
-                        </configuration>
-                    </execution>
                     <execution>
                         <id>deploy-to-production</id>
                         <phase>deploy</phase>

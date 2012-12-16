@@ -7,6 +7,6 @@ S3Auth-GoogleId: 1034952105445.apps.googleusercontent.com
 S3Auth-GoogleSecret: 0Nq-fl2TAmmXapFFm90M9qad
 S3Auth-SecurityKey: key
 S3Auth-SecuritySalt: salt
-S3Auth-AwsDynamoKey: AKIAIMCAQHQMKEKL4VXA
-S3Auth-AwsDynamoSecret: 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
+S3Auth-AwsDynamoKey: ${aws.key}
+S3Auth-AwsDynamoSecret: ${aws.secret}
 S3Auth-AwsDynamoTable: s3auth-test
