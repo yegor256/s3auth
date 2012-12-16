@@ -29,52 +29,57 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 /**
- * Test case for {@link DefaultResource}.
+ * Test case for {@link Resource}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class DefaultResourceTest {
+public final class ResourceTest {
 
     /**
-     * DefaultResource can build headers.
+     * Resource.PlainText can return text content.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void getsHeadersFromAmazonObject() throws Exception {
-        final S3Object object = Mockito.mock(S3Object.class);
-        final ObjectMetadata meta = Mockito.mock(ObjectMetadata.class);
-        Mockito.doReturn(meta).when(object).getObjectMetadata();
-        Mockito.doReturn(1L).when(meta).getContentLength();
-        final Resource res = new DefaultResource(object);
+    public void returnsPlainTextContent() throws Exception {
+        final String content = "\u0433 test!";
+        final Resource res = new Resource.PlainText(content);
         MatcherAssert.assertThat(
-            res.headers(),
-            Matchers.hasItem("Content-Length: 1")
+            ResourceMocker.toString(res),
+            Matchers.equalTo(content)
         );
     }
 
     /**
-     * DefaultResource can write to output stream.
+     * Resource.PlainText can produce correct HTTP headers.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void writesFromAmazonObjectToOutputStream() throws Exception {
-        final S3ObjectInputStream stream =
-            Mockito.mock(S3ObjectInputStream.class);
-        Mockito.doReturn(-1).when(stream).read(Mockito.any(byte[].class));
-        final S3Object object = Mockito.mock(S3Object.class);
-        Mockito.doReturn(stream).when(object).getObjectContent();
+    public void getsHeadersForPlainText() throws Exception {
+        final Resource res = new Resource.PlainText("");
         MatcherAssert.assertThat(
-            ResourceMocker.toString(new DefaultResource(object)),
-            Matchers.equalTo("")
+            res.headers(),
+            Matchers.allOf(
+                Matchers.hasItem("Content-Length: 0"),
+                Matchers.hasItem("Content-Type: text/plain")
+            )
+        );
+    }
+
+    /**
+     * Resource.PlainText can convert itselt to string.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void convertsItselfToString() throws Exception {
+        final String content = "\u0444\u0433 test!";
+        MatcherAssert.assertThat(
+            new Resource.PlainText(content),
+            Matchers.hasToString(Matchers.notNullValue())
         );
     }
 

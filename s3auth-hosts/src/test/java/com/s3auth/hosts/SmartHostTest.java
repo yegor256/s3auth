@@ -58,4 +58,16 @@ public final class SmartHostTest {
         );
     }
 
+    /**
+     * SmartHost can convert itself to string.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void convertsItselfToString() throws Exception {
+        MatcherAssert.assertThat(
+            new SmartHost(new HostMocker().mock()),
+            Matchers.hasToString(Matchers.notNullValue())
+        );
+    }
+
 }
