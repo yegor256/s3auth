@@ -60,7 +60,7 @@ import org.apache.commons.io.IOUtils;
  * @see HttpFacade
  */
 @SuppressWarnings("PMD.DoNotUseThreads")
-final class HttpThread implements Runnable {
+final class HttpThread {
 
     /**
      * Name of the server we show in HTTP headers.
@@ -94,18 +94,20 @@ final class HttpThread implements Runnable {
     }
 
     /**
-     * {@inheritDoc}
+     * Dispatch one request from the encapsulated queue.
+     * @return Amount of bytes sent to socket
+     * @throws InterruptedException If interrupted while waiting for the queue
      */
-    @Override
     @Loggable(Loggable.DEBUG)
-    public void run() {
-        final Socket socket = this.socket();
+    public long dispatch() throws InterruptedException {
+        final Socket socket = this.sockets.take();
         final long start = System.currentTimeMillis();
+        long bytes;
         try {
             final HttpRequest request = new HttpRequest(socket);
             final Host host = this.host(request);
             final Resource resource = host.fetch(request.requestUri());
-            final long bytes = new HttpResponse()
+            bytes = new HttpResponse()
                 .withStatus(HttpURLConnection.HTTP_OK)
                 .withHeader(HttpHeaders.CACHE_CONTROL, "no-cache")
                 .withHeader(HttpHeaders.EXPIRES, "-1")
@@ -133,10 +135,10 @@ final class HttpThread implements Runnable {
                 System.currentTimeMillis() - start
             );
         } catch (HttpException ex) {
-            this.failure(ex, socket);
+            bytes = this.failure(ex, socket);
         } catch (java.io.IOException ex) {
             Logger.warn(this, "#run(): IO problem: %s", ex.getMessage());
-            this.failure(
+            bytes = this.failure(
                 new HttpException(
                     HttpURLConnection.HTTP_INTERNAL_ERROR,
                     ex
@@ -146,21 +148,7 @@ final class HttpThread implements Runnable {
         } finally {
             IOUtils.closeQuietly(socket);
         }
-    }
-
-    /**
-     * Get next socket available.
-     * @return The socket from the queue
-     */
-    private Socket socket() {
-        Socket socket;
-        try {
-            socket = this.sockets.take();
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-            throw new IllegalStateException(ex);
-        }
-        return socket;
+        return bytes;
     }
 
     /**
@@ -216,10 +204,11 @@ final class HttpThread implements Runnable {
      * Send failure to the socket.
      * @param cause The problem
      * @param socket The socket to talk to
+     * @return Number of bytes sent
      */
-    private void failure(final HttpException cause, final Socket socket) {
+    private long failure(final HttpException cause, final Socket socket) {
         try {
-            cause.response().send(socket);
+            return cause.response().send(socket);
         } catch (java.io.IOException ex) {
             throw new IllegalStateException(ex);
         }

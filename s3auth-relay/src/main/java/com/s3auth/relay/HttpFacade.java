@@ -99,13 +99,22 @@ final class HttpFacade implements Closeable {
      * @param port Port number
      * @throws IOException If can't initialize
      */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public HttpFacade(@NotNull final Hosts hosts, final int port)
         throws IOException {
         this.server = new ServerSocket(port);
-        for (int thread = 0; thread < HttpFacade.THREADS; ++thread) {
+        final HttpThread thread = new HttpThread(this.sockets, hosts);
+        for (int idx = 0; idx < HttpFacade.THREADS; ++idx) {
             this.backend.scheduleWithFixedDelay(
-                new VerboseRunnable(new HttpThread(this.sockets, hosts)),
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            thread.dispatch();
+                        } catch (InterruptedException ex) {
+                            Thread.currentThread().interrupt();
+                        }
+                    }
+                },
                 0, 1, TimeUnit.NANOSECONDS
             );
         }
@@ -134,9 +143,9 @@ final class HttpFacade implements Closeable {
     @Override
     @Loggable(Loggable.DEBUG)
     public void close() throws IOException {
+        this.server.close();
         this.shutdown(this.frontend);
         this.shutdown(this.backend);
-        this.server.close();
     }
 
     /**
