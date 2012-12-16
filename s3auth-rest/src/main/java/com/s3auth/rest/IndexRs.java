@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -56,6 +57,7 @@ import javax.ws.rs.core.Response;
  * @since 0.0.1
  */
 @Path("/")
+@SuppressWarnings("PMD.TooManyMethods")
 public final class IndexRs extends BaseRs {
 
     /**
@@ -83,8 +85,10 @@ public final class IndexRs extends BaseRs {
      * @param host The host name
      * @param key AWS key
      * @param secret AWS secret
+     * @param region S3 region
      * @return The JAX-RS response
      * @throws IOException If some IO problem inside
+     * @checkstyle ParameterNumber (9 lines)
      */
     @POST
     @Path("/add")
@@ -92,7 +96,9 @@ public final class IndexRs extends BaseRs {
     @Loggable(Loggable.DEBUG)
     public Response add(@FormParam("host") final String host,
         @FormParam("key") final String key,
-        @FormParam("secret") final String secret) throws IOException {
+        @FormParam("secret") final String secret,
+        @DefaultValue("s3") @FormParam("region") final String region)
+        throws IOException {
         final boolean added = this.hosts().domains(this.user()).add(
             new Domain() {
                 @Override
@@ -106,6 +112,10 @@ public final class IndexRs extends BaseRs {
                 @Override
                 public String secret() {
                     return secret;
+                }
+                @Override
+                public String region() {
+                    return region;
                 }
             }
         );
@@ -153,6 +163,10 @@ public final class IndexRs extends BaseRs {
                 }
                 @Override
                 public String secret() {
+                    throw new UnsupportedOperationException();
+                }
+                @Override
+                public String region() {
                     throw new UnsupportedOperationException();
                 }
             }

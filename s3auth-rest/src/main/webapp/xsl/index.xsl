@@ -75,6 +75,14 @@
                     <xsl:text>AWS secret key:</xsl:text>
                 </label>
                 <input name="secret" size="40" maxlength="40"/>
+                <label>
+                    <xsl:text>Optional AWS S3 endpoint (</xsl:text>
+                    <a href="http://docs.amazonwebservices.com/general/latest/gr/rande.html#s3_region">
+                        <xsl:text>what is it?</xsl:text>
+                    </a>
+                    <xsl:text>):</xsl:text>
+                </label>
+                <input name="region" placeholder="s3" size="25" maxlength="30"/>
                 <input class="submit" type="submit" value=""/>
             </p>
         </form>
@@ -232,6 +240,10 @@ maven.s3auth.com with .htpasswd(3 user(s) updated 2min ago)]]></pre>
             <xsl:text>, secret: </xsl:text>
             <span class="tt">
                 <xsl:value-of select="secret"/>
+            </span>
+            <xsl:text>, endpoint: </xsl:text>
+            <span class="tt">
+                <xsl:value-of select="region"/>
             </span>
             <xsl:text>) </xsl:text>
             <a>

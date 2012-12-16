@@ -108,6 +108,15 @@ public final class JaxbDomain {
     }
 
     /**
+     * Get region.
+     * @return The region
+     */
+    @XmlElement
+    public String getRegion() {
+        return this.domain.region();
+    }
+
+    /**
      * Get links.
      * @return The links
      */

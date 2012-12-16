@@ -64,6 +64,10 @@ public final class JaxbDomainTest {
                 public String secret() {
                     return "foo";
                 }
+                @Override
+                public String region() {
+                    return "s3-sa-east-1";
+                }
             },
             new UriInfoMocker().mock()
         );
@@ -73,6 +77,7 @@ public final class JaxbDomainTest {
                 "/domain[name='localhost']",
                 "/domain[key='ABC']",
                 "/domain[secret='foo']",
+                "/domain[region='s3-sa-east-1']",
                 "/domain/links/link[@rel='remove']"
             )
         );
