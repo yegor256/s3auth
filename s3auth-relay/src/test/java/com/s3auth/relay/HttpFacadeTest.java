@@ -56,31 +56,23 @@ import org.junit.Test;
 public final class HttpFacadeTest {
 
     /**
-     * Port to use for facade (defined in pom.xml).
-     */
-    private final transient int port =
-        Integer.valueOf(System.getProperty("http.port"));
-
-    /**
-     * URI of facade home.
-     */
-    private final transient URI uri =
-        URI.create(String.format("http://localhost:%d/", this.port));
-
-    /**
      * HttpFacade can process parallel requests.
      * @throws Exception If there is some problem inside
      */
     @Test
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void handlesParallelHttpRequests() throws Exception {
+        final int port = PortMocker.reserve();
+        final URI uri = URI.create(
+            String.format("http://localhost:%d/", port)
+        );
         final HttpFacade facade =
-            new HttpFacade(new HostsMocker().mock(), this.port);
+            new HttpFacade(new HostsMocker().mock(), port);
         facade.listen();
         final int threads = 50;
         final CountDownLatch start = new CountDownLatch(1);
         final CountDownLatch finished = new CountDownLatch(threads);
-        final URI path = UriBuilder.fromUri(this.uri).path("/abc").build();
+        final URI path = UriBuilder.fromUri(uri).path("/abc").build();
         final Callable<?> task = new Callable<Void>() {
             @Override
             public Void call() throws Exception {
