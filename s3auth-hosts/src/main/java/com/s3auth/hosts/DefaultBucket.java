@@ -64,9 +64,16 @@ final class DefaultBucket implements Bucket {
     @Override
     @NotNull
     public AmazonS3 client() {
-        return new AmazonS3Client(
+        final AmazonS3 client = new AmazonS3Client(
             new BasicAWSCredentials(this.domain.key(), this.domain.secret())
         );
+        Logger.debug(
+            this,
+            "#client(): created for '%s' in '%s'",
+            this.name(),
+            client.getBucketLocation(this.name())
+        );
+        return client;
     }
 
     /**
