@@ -32,7 +32,6 @@ package com.s3auth.hosts;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.jcabi.log.Logger;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -52,35 +51,11 @@ final class DefaultBucket implements Bucket {
     private final transient Domain domain;
 
     /**
-     * The client cached.
-     */
-    private final transient AmazonS3 clnt;
-
-    /**
      * Public ctor.
      * @param dmn The domain
      */
     public DefaultBucket(@NotNull final Domain dmn) {
         this.domain = dmn;
-        this.clnt = new AmazonS3Client(
-            new BasicAWSCredentials(this.domain.key(), this.domain.secret())
-        );
-        try {
-            final String location = this.clnt.getBucketLocation(this.name());
-            Logger.debug(
-                this,
-                "#DefaultBucket('%s'): located in '%s'",
-                this.domain,
-                location
-            );
-        } catch (com.amazonaws.services.s3.model.AmazonS3Exception ex) {
-            Logger.warn(
-                this,
-                "#DefaultBucket('%s'): failed to find location: %s",
-                this.domain,
-                ex.getMessage()
-            );
-        }
     }
 
     /**
@@ -89,7 +64,9 @@ final class DefaultBucket implements Bucket {
     @Override
     @NotNull
     public AmazonS3 client() {
-        return this.clnt;
+        return new AmazonS3Client(
+            new BasicAWSCredentials(this.domain.key(), this.domain.secret())
+        );
     }
 
     /**
