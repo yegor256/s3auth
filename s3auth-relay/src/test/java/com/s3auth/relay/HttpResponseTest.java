@@ -81,6 +81,7 @@ public final class HttpResponseTest {
      * @throws Exception If there is some problem inside
      */
     @Test
+    @SuppressWarnings("PMD.DoNotUseThreads")
     public void sendsDataFromSlowResource() throws Exception {
         final String content = "\u0433 some text";
         final Resource res = new Resource() {
