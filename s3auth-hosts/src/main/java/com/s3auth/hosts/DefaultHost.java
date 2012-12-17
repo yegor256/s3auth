@@ -245,6 +245,7 @@ final class DefaultHost implements Host {
                 text.append('/');
             }
             text.append(suffix);
+            Logger.debug(this, "#get('%s'): %s", this.origin, text);
             return text.toString();
         }
         /**
