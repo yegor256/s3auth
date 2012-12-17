@@ -103,6 +103,11 @@
                             <xsl:text>LICENSE.txt</xsl:text>
                         </a>
                         <xsl:text>.</xsl:text>
+                        <xsl:text> This website is using </xsl:text>
+                        <a href="http://www.rexsl.com/">
+                            <xsl:text>ReXSL</xsl:text>
+                        </a>
+                        <xsl:text>, Java RESTful development framework.</xsl:text>
                     </p>
                     <p>
                         <a href="https://aws.amazon.com/solution-providers/isv/technopark-corp">

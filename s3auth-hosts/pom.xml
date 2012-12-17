@@ -55,6 +55,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
@@ -100,35 +101,4 @@
             <artifactId>commons-codec</artifactId>
         </dependency>
     </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-hosts-config-file</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <copy file="${hosts.xml}" tofile="${project.build.outputDirectory}/com/s3auth/hosts/hosts.xml" overwrite="true" force="true" failonerror="false" verbose="true"/>
-                                <echo file="${project.build.testOutputDirectory}/com/s3auth/hosts/hosts.xml"><![CDATA[
-                                   <?xml version='1.0'?>
-                                   <hosts>
-                                    <host>
-                                     <domain>xxx.s3auth.com</domain>
-                                     <bucket>test-bucket</bucket>
-                                     <htpasswd>user:$apr1$aWpRqYLn$E0f4eJu7v9kr.pnChbEUf/</htpasswd>
-                                    </host>
-                                   </hosts>
-                                ]]></echo>
-                            </target>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>
