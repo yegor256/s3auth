@@ -79,6 +79,7 @@ Make sure it's executable:
 Add this to crontab:
 
     @reboot sudo hostname relay.s3auth.com
+    @reboot sudo service rsyslog restart
     @reboot sudo /home/ubuntu/run.sh &
 
 Configure syslog as explained here:

@@ -243,12 +243,12 @@ public final class DynamoHosts implements Hosts {
             } catch (java.io.IOException ex) {
                 throw new IllegalArgumentException(ex);
             }
-            this.hosts.put(
-                domain.name(),
-                new SmartHost(new DefaultHost(DynamoHosts.normalize(domain)))
-            );
             added = true;
         }
+        this.hosts.put(
+            domain.name(),
+            new SmartHost(new DefaultHost(DynamoHosts.normalize(domain)))
+        );
         return added;
     }
 
