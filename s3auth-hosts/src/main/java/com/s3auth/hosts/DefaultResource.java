@@ -31,6 +31,7 @@ package com.s3auth.hosts;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
+import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -76,6 +77,13 @@ final class DefaultResource implements Resource {
     @Override
     public long writeTo(final OutputStream output) throws IOException {
         final InputStream input = this.object.getObjectContent();
+        Logger.debug(
+            this,
+            "#writeTo(): starting to stream %s/%s, redirectLocation=%s",
+            this.object.getBucketName(),
+            this.object.getKey(),
+            this.object.getRedirectLocation()
+        );
         long total = 0;
         // @checkstyle MagicNumber (1 line)
         final byte[] buffer = new byte[16 * 1024];
@@ -87,9 +95,8 @@ final class DefaultResource implements Resource {
                 } catch (IOException ex) {
                     throw new DefaultResource.StreamingException(
                         String.format(
-                            "failed to read, total=%d, count=%d",
-                            total,
-                            count
+                            "failed to read, total=%d",
+                            total
                         ),
                         ex
                     );
@@ -163,7 +170,10 @@ final class DefaultResource implements Resource {
          * @param thr The cause of it
          */
         public StreamingException(final String cause, final Throwable thr) {
-            super(cause, thr);
+            super(
+                String.format("%s: '%s'", cause, thr.getMessage()),
+                thr
+            );
         }
     }
 
