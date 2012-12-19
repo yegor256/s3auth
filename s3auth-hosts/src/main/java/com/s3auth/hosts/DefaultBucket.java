@@ -29,6 +29,7 @@
  */
 package com.s3auth.hosts;
 
+import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -51,11 +52,23 @@ final class DefaultBucket implements Bucket {
     private final transient Domain domain;
 
     /**
+     * Client of AmazonS3.
+     */
+    private final transient AmazonS3 clnt;
+
+    /**
      * Public ctor.
      * @param dmn The domain
      */
     public DefaultBucket(@NotNull final Domain dmn) {
         this.domain = dmn;
+        final ClientConfiguration config = new ClientConfiguration();
+        config.setSocketTimeout(0);
+        this.clnt = new AmazonS3Client(
+            new BasicAWSCredentials(this.key(), this.secret()),
+            config
+        );
+        this.clnt.setEndpoint(String.format("%s.amazonaws.com", this.region()));
     }
 
     /**
@@ -64,11 +77,7 @@ final class DefaultBucket implements Bucket {
     @Override
     @NotNull
     public AmazonS3 client() {
-        final AmazonS3 client = new AmazonS3Client(
-            new BasicAWSCredentials(this.key(), this.secret())
-        );
-        client.setEndpoint(String.format("%s.amazonaws.com", this.region()));
-        return client;
+        return this.clnt;
     }
 
     /**
