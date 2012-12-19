@@ -77,9 +77,9 @@ final class DefaultResource implements Resource {
     @Override
     public long writeTo(final OutputStream output) throws IOException {
         final InputStream input = this.object.getObjectContent();
-        final int bytes = IOUtils.copy(input, output);
+        final long bytes = IOUtils.copyLarge(input, output);
         input.close();
-        return (long) bytes;
+        return bytes;
     }
 
     /**

@@ -87,7 +87,7 @@ public final class DefaultResourceTest {
      */
     @Test
     public void writesInputToOutputStream() throws Exception {
-        final int size = 10000;
+        final int size = 100 * 1024;
         final byte[] data = new byte[size];
         final Random random = new Random();
         for (int pos = 0; pos < size; ++pos) {
