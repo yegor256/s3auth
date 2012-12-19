@@ -37,7 +37,6 @@ import java.io.OutputStream;
 import java.util.Collection;
 import java.util.LinkedList;
 import javax.ws.rs.core.HttpHeaders;
-import org.apache.commons.io.IOUtils;
 
 /**
  * Default implementation of {@link Resource}.
@@ -77,9 +76,45 @@ final class DefaultResource implements Resource {
     @Override
     public long writeTo(final OutputStream output) throws IOException {
         final InputStream input = this.object.getObjectContent();
-        final long bytes = IOUtils.copyLarge(input, output);
-        input.close();
-        return bytes;
+        long total = 0;
+        // @checkstyle MagicNumber (1 line)
+        final byte[] buffer = new byte[16 * 1024];
+        try {
+            while (true) {
+                int count = 0;
+                try {
+                    count = input.read(buffer);
+                } catch (IOException ex) {
+                    throw new DefaultResource.StreamingException(
+                        String.format(
+                            "failed to read, total=%d, count=%d",
+                            total,
+                            count
+                        ),
+                        ex
+                    );
+                }
+                if (count == -1) {
+                    break;
+                }
+                try {
+                    output.write(buffer, 0, count);
+                } catch (IOException ex) {
+                    throw new DefaultResource.StreamingException(
+                        String.format(
+                            "failed to write, total=%d, count=%d",
+                            total,
+                            count
+                        ),
+                        ex
+                    );
+                }
+                total += count;
+            }
+        } finally {
+            input.close();
+        }
+        return total;
     }
 
     /**
@@ -112,6 +147,24 @@ final class DefaultResource implements Resource {
      */
     public static String header(final String name, final String value) {
         return String.format("%s: %s", name, value);
+    }
+
+    /**
+     * Custom IO exception.
+     */
+    private static final class StreamingException extends IOException {
+        /**
+         * Serialization marker.
+         */
+        private static final long serialVersionUID = 0x7529FA781E111179L;
+        /**
+         * Public ctor.
+         * @param cause The cause of it
+         * @param thr The cause of it
+         */
+        public StreamingException(final String cause, final Throwable thr) {
+            super(cause, thr);
+        }
     }
 
 }

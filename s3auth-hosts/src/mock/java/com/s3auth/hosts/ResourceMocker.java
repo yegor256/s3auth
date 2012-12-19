@@ -30,6 +30,7 @@
 package com.s3auth.hosts;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import org.apache.commons.io.IOUtils;
 import org.mockito.Mockito;
@@ -86,8 +87,9 @@ public final class ResourceMocker {
      * Convert resource to string.
      * @param res The resource
      * @return Its text
+     * @throws IOException If fails
      */
-    public static String toString(final Resource res) {
+    public static String toString(final Resource res) throws IOException {
         return new String(ResourceMocker.toByteArray(res));
     }
 
@@ -95,14 +97,11 @@ public final class ResourceMocker {
      * Convert resource to byte array.
      * @param res The resource
      * @return Its text
+     * @throws IOException If fails
      */
-    public static byte[] toByteArray(final Resource res) {
+    public static byte[] toByteArray(final Resource res) throws IOException {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try {
-            res.writeTo(baos);
-        } catch (java.io.IOException ex) {
-            throw new IllegalStateException(ex);
-        }
+        res.writeTo(baos);
         return baos.toByteArray();
     }
 

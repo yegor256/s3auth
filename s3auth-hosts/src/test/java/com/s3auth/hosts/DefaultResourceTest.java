@@ -33,6 +33,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.Random;
 import org.apache.http.client.methods.HttpGet;
 import org.hamcrest.MatcherAssert;
@@ -102,6 +103,24 @@ public final class DefaultResourceTest {
         MatcherAssert.assertThat(
             ResourceMocker.toByteArray(new DefaultResource(object)),
             Matchers.equalTo(data)
+        );
+    }
+
+    /**
+     * DefaultResource can throw when failed to read.
+     * @throws Exception If there is some problem inside
+     */
+    @Test(expected = IOException.class)
+    public void throwsWhenFailedToRead() throws Exception {
+        final S3ObjectInputStream stream =
+            Mockito.mock(S3ObjectInputStream.class);
+        Mockito.doThrow(new IOException("oops"))
+            .when(stream).read(Mockito.any(byte[].class));
+        final S3Object object = Mockito.mock(S3Object.class);
+        Mockito.doReturn(stream).when(object).getObjectContent();
+        MatcherAssert.assertThat(
+            ResourceMocker.toString(new DefaultResource(object)),
+            Matchers.equalTo("")
         );
     }
 
