@@ -126,7 +126,8 @@
         <dependency>
             <groupId>com.rexsl</groupId>
             <artifactId>rexsl-standalone</artifactId>
-            <version>${rexsl.version}</version>
+            <version>1.0-SNAPSHOT</version>
+            <!-- <version>${rexsl.version}</version> -->
             <classifier>bin</classifier>
             <scope>test</scope>
         </dependency>

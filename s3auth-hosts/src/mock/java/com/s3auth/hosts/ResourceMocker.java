@@ -88,13 +88,22 @@ public final class ResourceMocker {
      * @return Its text
      */
     public static String toString(final Resource res) {
+        return new String(ResourceMocker.toByteArray(res));
+    }
+
+    /**
+     * Convert resource to byte array.
+     * @param res The resource
+     * @return Its text
+     */
+    public static byte[] toByteArray(final Resource res) {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
             res.writeTo(baos);
         } catch (java.io.IOException ex) {
             throw new IllegalStateException(ex);
         }
-        return baos.toString();
+        return baos.toByteArray();
     }
 
     /**

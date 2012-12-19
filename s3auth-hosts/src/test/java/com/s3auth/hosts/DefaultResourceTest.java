@@ -32,6 +32,9 @@ package com.s3auth.hosts;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import java.io.ByteArrayInputStream;
+import java.util.Random;
+import org.apache.http.client.methods.HttpGet;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -75,6 +78,30 @@ public final class DefaultResourceTest {
         MatcherAssert.assertThat(
             ResourceMocker.toString(new DefaultResource(object)),
             Matchers.equalTo("")
+        );
+    }
+
+    /**
+     * DefaultResource can write a real input stream to output stream.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void writesInputToOutputStream() throws Exception {
+        final int size = 10000;
+        final byte[] data = new byte[size];
+        final Random random = new Random();
+        for (int pos = 0; pos < size; ++pos) {
+            data[pos] = (byte) random.nextInt();
+        }
+        final S3ObjectInputStream stream = new S3ObjectInputStream(
+            new ByteArrayInputStream(data),
+            new HttpGet()
+        );
+        final S3Object object = Mockito.mock(S3Object.class);
+        Mockito.doReturn(stream).when(object).getObjectContent();
+        MatcherAssert.assertThat(
+            ResourceMocker.toByteArray(new DefaultResource(object)),
+            Matchers.equalTo(data)
         );
     }
 
