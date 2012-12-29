@@ -32,10 +32,14 @@ We're using Amazon EC2.
 
 Create a new EC2 instance., with Ubuntu Server 10, 64 bit.
 
+Save hostname to /etc/hostname:
+
+    echo "relay.s3auth.com" | sudo tee /etc/hostname
+
 Install Java & supplementary tools
 
     sudo apt-get update
-    sudo apt-get install openjdk-7-jdk mailutils
+    sudo apt-get install openjdk-7-jdk mailutils ntp
     sudo apt-get upgrade
 
 Install Maven 3
@@ -78,8 +82,6 @@ Make sure it's executable:
 
 Add this to crontab:
 
-    @reboot sudo hostname relay.s3auth.com
-    @reboot sudo service rsyslog restart
     @reboot sudo /home/ubuntu/run.sh &
 
 Configure syslog as explained here:

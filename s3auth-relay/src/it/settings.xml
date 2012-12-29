@@ -1,5 +1,6 @@
-/**
- * Copyright (c) 2012, s3auth.com
+<?xml version="1.0"?>
+<!--
+ * Copyright (c) 2012, jcabi.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +10,7 @@
  * disclaimer. 2) Redistributions in binary form must reproduce the above
  * copyright notice, this list of conditions and the following
  * disclaimer in the documentation and/or other materials provided
- * with the distribution. 3) Neither the name of the s3auth.com nor
+ * with the distribution. 3) Neither the name of the jcabi.com nor
  * the names of its contributors may be used to endorse or promote
  * products derived from this software without specific prior written
  * permission.
@@ -26,52 +27,38 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package com.s3auth.relay;
-
-import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
-import com.s3auth.hosts.DynamoHosts;
-import java.util.concurrent.TimeUnit;
-import joptsimple.OptionParser;
-import joptsimple.OptionSet;
-
-/**
- * Main entrance to the system.
- *
- * <p>The class is immutable and thread-safe.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 0.0.1
- */
-public final class Main {
-
-    /**
-     * It's a utility class.
-     */
-    private Main() {
-        // intentionally empty
-    }
-
-    /**
-     * Entrance.
-     * @param args Optional arguments
-     * @throws Exception If something is wrong
-     */
-    @Loggable(Loggable.INFO)
-    public static void main(final String[] args) throws Exception {
-        final OptionParser parser = new OptionParser("p:d");
-        final OptionSet options = parser.parse(args);
-        final int port = Integer.valueOf(options.valueOf("p").toString());
-        final HttpFacade facade = new HttpFacade(new DynamoHosts(), port);
-        facade.listen();
-        Logger.warn(Main.class, "started at http://localhost:%d...", port);
-        if (options.has("d")) {
-            while (true) {
-                TimeUnit.MINUTES.sleep(1);
-            }
-        }
-    }
-
-}
+ -->
+<settings>
+    <profiles>
+        <profile>
+            <id>it-repo</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <repositories>
+                <repository>
+                    <id>local.central</id>
+                    <url>@localRepositoryUrl@</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>local.central</id>
+                    <url>@localRepositoryUrl@</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+    </profiles>
+</settings>

@@ -71,6 +71,11 @@
             <artifactId>commons-codec</artifactId>
         </dependency>
         <dependency>
+            <groupId>net.sf.jopt-simple</groupId>
+            <artifactId>jopt-simple</artifactId>
+            <version>4.4-beta-3</version>
+        </dependency>
+        <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-manifests</artifactId>
         </dependency>

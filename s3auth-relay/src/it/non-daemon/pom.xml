@@ -28,49 +28,48 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.s3auth</groupId>
-    <artifactId>s3auth-relay-production</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <prerequisites>
-        <maven>3.0</maven>
-    </prerequisites>
-    <repositories>
-        <repository>
-            <id>repo.s3auth.com</id>
-            <url>s3://repo.s3auth.com/snapshot</url>
-        </repository>
-        <repository>
-            <id>oss.sonatype.org</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </repository>
-    </repositories>
+    <artifactId>s3auth-relay-non-daemon</artifactId>
+    <version>1.0</version>
+    <packaging>jar</packaging>
     <dependencies>
         <dependency>
             <groupId>com.s3auth</groupId>
             <artifactId>s3auth-relay</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>@project.version@</version>
             <scope>runtime</scope>
         </dependency>
     </dependencies>
     <build>
-        <extensions>
-            <extension>
-                <groupId>org.kuali.maven.wagons</groupId>
-                <artifactId>maven-s3-wagon</artifactId>
-                <version>1.1.19</version>
-            </extension>
-        </extensions>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <id>reserve-port</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>reserve-network-port</goal>
+                        </goals>
+                        <configuration>
+                            <portNames>
+                                <portName>relay.port</portName>
+                            </portNames>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.2.1</version>
                 <executions>
                     <execution>
-                        <id>execute</id>
+                        <id>execute-relay-JAR</id>
                         <phase>test</phase>
                         <goals>
                             <goal>exec</goal>
@@ -81,8 +80,7 @@
                                 <argument>-classpath</argument>
                                 <classpath/>
                                 <argument>com.s3auth.relay.Main</argument>
-                                <argument>-p=80</argument>
-                                <argument>-d</argument>
+                                <argument>-p=${relay.port}</argument>
                             </arguments>
                         </configuration>
                     </execution>

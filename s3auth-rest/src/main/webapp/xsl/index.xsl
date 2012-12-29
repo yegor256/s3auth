@@ -82,7 +82,7 @@
                     </a>
                     <xsl:text>):</xsl:text>
                 </label>
-                <input name="region" placeholder="s3" size="25" maxlength="30"/>
+                <input name="region" value="s3" size="25" maxlength="30"/>
                 <input class="submit" type="submit" value=""/>
             </p>
         </form>
