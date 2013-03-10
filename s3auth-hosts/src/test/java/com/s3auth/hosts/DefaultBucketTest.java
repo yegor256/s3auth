@@ -41,15 +41,15 @@ import org.junit.Test;
 public final class DefaultBucketTest {
 
     /**
-     * DefaultBucket can be compared with domain.
+     * DefaultBucket can reproduce properties.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void comparesWithDomain() throws Exception {
+    public void reproducesPropertiesOfDomain() throws Exception {
         final Domain domain = new DomainMocker().mock();
         MatcherAssert.assertThat(
-            new DefaultBucket(domain),
-            Matchers.equalTo(domain)
+            new DefaultBucket(domain).name(),
+            Matchers.equalTo(domain.name())
         );
     }
 

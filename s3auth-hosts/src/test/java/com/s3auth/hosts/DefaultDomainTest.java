@@ -41,15 +41,15 @@ import org.junit.Test;
 public final class DefaultDomainTest {
 
     /**
-     * DefaultDomain can be compared with domain.
+     * DefaultDomain can reproduce properties of another domain.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void comparesWithDomain() throws Exception {
+    public void reproducesProperties() throws Exception {
         final Domain domain = new DomainMocker().mock();
         MatcherAssert.assertThat(
-            new DefaultDomain(domain),
-            Matchers.equalTo(domain)
+            new DefaultDomain(domain).name(),
+            Matchers.equalTo(domain.name())
         );
     }
 

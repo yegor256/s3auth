@@ -31,23 +31,28 @@ package com.s3auth.hosts;
 
 import com.amazonaws.services.s3.model.BucketWebsiteConfiguration;
 import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
 import java.util.LinkedList;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.lang.StringUtils;
 
 /**
  * Default implementation of {@link Host}.
  *
- * <p>The class is immutable and thread-safe.
- *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
  */
+@Immutable
+@ToString
+@EqualsAndHashCode(of = { "bucket", "htpasswd" })
 final class DefaultHost implements Host {
 
     /**
@@ -73,14 +78,7 @@ final class DefaultHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return String.format("%s with %s", this.bucket, this.htpasswd);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+    @Loggable(Loggable.DEBUG)
     public void close() throws IOException {
         // nothing to do
     }
@@ -89,7 +87,9 @@ final class DefaultHost implements Host {
      * {@inheritDoc}
      */
     @Override
+    @NotNull
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    @Loggable(Loggable.DEBUG)
     public Resource fetch(@NotNull final URI uri) throws IOException {
         Resource resource = null;
         final Collection<String> errors = new LinkedList<String>();
@@ -125,13 +125,6 @@ final class DefaultHost implements Host {
                 )
             );
         }
-        Logger.info(
-            this,
-            "#fetch('%s'): found at %s as %s",
-            uri,
-            this.bucket.name(),
-            resource
-        );
         return resource;
     }
 
@@ -139,6 +132,7 @@ final class DefaultHost implements Host {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(Loggable.DEBUG)
     public boolean isHidden(@NotNull final URI uri) {
         return true;
     }
@@ -147,6 +141,7 @@ final class DefaultHost implements Host {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(Loggable.DEBUG)
     public boolean authorized(@NotNull final String user,
         @NotNull final String password) throws IOException {
         boolean auth;
@@ -156,13 +151,6 @@ final class DefaultHost implements Host {
         } else {
             auth = this.htpasswd.authorized(user, password);
         }
-        Logger.info(
-            this,
-            "#authorized('%s', '%s'): %B",
-            user,
-            password,
-            auth
-        );
         return auth;
     }
 
@@ -223,6 +211,7 @@ final class DefaultHost implements Host {
          * {@inheritDoc}
          */
         @Override
+        @Loggable(Loggable.DEBUG)
         public String get() {
             String suffix = null;
             try {
@@ -245,7 +234,6 @@ final class DefaultHost implements Host {
                 text.append('/');
             }
             text.append(suffix);
-            Logger.debug(this, "#get('%s'): %s", this.origin, text);
             return text.toString();
         }
         /**

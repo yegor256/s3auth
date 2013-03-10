@@ -30,16 +30,16 @@
 package com.s3auth.hosts;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.jcabi.aspects.Immutable;
 
 /**
  * Single Amazon S3 bucket.
- *
- * <p>Implementation must be immutable and thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.2
  */
+@Immutable
 public interface Bucket extends Domain {
 
     /**

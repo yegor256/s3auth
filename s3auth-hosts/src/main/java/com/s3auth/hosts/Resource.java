@@ -29,28 +29,35 @@
  */
 package com.s3auth.hosts;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Collection;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 
 /**
  * Found resource.
  *
- * <p>Implementation must be immutable and thread-safe.
- *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
  */
+@Immutable
 public interface Resource {
 
     /**
      * Simple resource made out of plain text.
      */
+    @Immutable
+    @ToString
+    @EqualsAndHashCode(of = "text")
+    @Loggable(Loggable.DEBUG)
     class PlainText implements Resource {
         /**
          * Plain text to show.
@@ -67,15 +74,8 @@ public interface Resource {
          * {@inheritDoc}
          */
         @Override
-        public String toString() {
-            return String.format("text-%d-chars", this.text.length());
-        }
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        @Loggable(Loggable.DEBUG)
-        public long writeTo(final OutputStream stream) throws IOException {
+        public long writeTo(@NotNull final OutputStream stream)
+            throws IOException {
             IOUtils.write(this.text, stream);
             return this.text.getBytes().length;
         }
@@ -83,6 +83,7 @@ public interface Resource {
          * {@inheritDoc}
          */
         @Override
+        @NotNull
         public Collection<String> headers() {
             return Arrays.asList(
                 String.format(

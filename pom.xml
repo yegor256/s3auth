@@ -47,7 +47,7 @@
     <parent>
         <groupId>com.jcabi</groupId>
         <artifactId>parent</artifactId>
-        <version>0.7.5</version>
+        <version>0.7.13</version>
     </parent>
     <groupId>com.s3auth</groupId>
     <artifactId>s3auth</artifactId>
@@ -116,7 +116,7 @@
         </site>
     </distributionManagement>
     <properties>
-        <rexsl.version>0.4.5</rexsl.version>
+        <rexsl.version>1.0-SNAPSHOT</rexsl.version>
     </properties>
     <repositories>
         <repository>
@@ -136,13 +136,7 @@
             <dependency>
                 <groupId>com.amazonaws</groupId>
                 <artifactId>aws-java-sdk</artifactId>
-                <version>1.3.26</version>
-            </dependency>
-            <dependency>
-                <!-- Uniform Resource Name -->
-                <groupId>com.jcabi</groupId>
-                <artifactId>jcabi-urn</artifactId>
-                <version>${jcabi.version}</version>
+                <version>1.3.33</version>
             </dependency>
             <dependency>
                 <!-- Uniform Resource Name -->
@@ -151,11 +145,6 @@
                 <version>${jcabi.version}</version>
                 <classifier>mock</classifier>
                 <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.jcabi</groupId>
-                <artifactId>jcabi-manifests</artifactId>
-                <version>${jcabi.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

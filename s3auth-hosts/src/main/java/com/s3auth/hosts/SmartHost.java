@@ -29,6 +29,7 @@
  */
 package com.s3auth.hosts;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import java.io.ByteArrayOutputStream;
@@ -36,6 +37,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * A {@link Host} that adds extra information on top of bucket's
@@ -47,6 +50,10 @@ import javax.validation.constraints.NotNull;
  * @version $Id$
  * @since 0.0.1
  */
+@Immutable
+@ToString
+@EqualsAndHashCode(of = "host")
+@Loggable(Loggable.DEBUG)
 final class SmartHost implements Host {
 
     /**
@@ -71,14 +78,6 @@ final class SmartHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return this.host.toString();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void close() throws IOException {
         this.host.close();
     }
@@ -87,7 +86,6 @@ final class SmartHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    @Loggable(Loggable.DEBUG)
     public Resource fetch(@NotNull final URI uri) throws IOException {
         Resource resource;
         if (SmartHost.HTPASSWD.matcher(uri.toString()).matches()) {

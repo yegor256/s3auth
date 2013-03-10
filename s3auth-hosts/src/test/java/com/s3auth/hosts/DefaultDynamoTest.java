@@ -53,12 +53,22 @@ public final class DefaultDynamoTest {
      */
     @Test
     public void loadsDynamoConfiguration() throws Exception {
-        final AmazonDynamoDB aws = Mockito.mock(AmazonDynamoDB.class);
-        Mockito.doReturn(
-            new ScanResult()
-                .withItems(new LinkedList<Map<String, AttributeValue>>())
-        ).when(aws).scan(Mockito.any(ScanRequest.class));
-        final Dynamo dynamo = new DefaultDynamo(aws, "table");
+        final Dynamo dynamo = new DefaultDynamo(
+            new Dynamo.Client() {
+                @Override
+                public AmazonDynamoDB get() {
+                    final AmazonDynamoDB aws =
+                        Mockito.mock(AmazonDynamoDB.class);
+                    Mockito.doReturn(
+                        new ScanResult().withItems(
+                            new LinkedList<Map<String, AttributeValue>>()
+                        )
+                    ).when(aws).scan(Mockito.any(ScanRequest.class));
+                    return aws;
+                }
+            },
+            "table"
+        );
         MatcherAssert.assertThat(
             dynamo.load(),
             Matchers.notNullValue()

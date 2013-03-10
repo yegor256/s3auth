@@ -29,6 +29,8 @@
  */
 package com.s3auth.hosts;
 
+import com.amazonaws.services.dynamodb.AmazonDynamoDB;
+import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
 import java.io.Closeable;
 import java.io.IOException;
@@ -38,7 +40,7 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Abstraction on top of DynamoDB SDK.
  *
- * <p>Implementation must be immutable and thread-safe.
+ * <p>Implementation must be thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -46,7 +48,20 @@ import java.util.concurrent.ConcurrentMap;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  * @checkstyle MultipleStringLiterals (500 lines)
  */
+@Immutable
 interface Dynamo extends Closeable {
+
+    /**
+     * Client to Amazon.
+     */
+    @Immutable
+    interface Client {
+        /**
+         * Get Amazon client.
+         * @return The client
+         */
+        AmazonDynamoDB get();
+    }
 
     /**
      * Load all data from DynamoDB.
@@ -59,15 +74,17 @@ interface Dynamo extends Closeable {
      * Save to DynamoDB.
      * @param user Who is the owner
      * @param domain The domain to save
+     * @return TRUE if successfully added
      * @throws IOException If some IO problem inside
      */
-    void add(URN user, Domain domain) throws IOException;
+    boolean add(URN user, Domain domain) throws IOException;
 
     /**
      * Delete from DynamoDB.
      * @param domain The domain to save
+     * @return TRUE if successfully deleted
      * @throws IOException If some IO problem inside
      */
-    void remove(Domain domain) throws IOException;
+    boolean remove(Domain domain) throws IOException;
 
 }

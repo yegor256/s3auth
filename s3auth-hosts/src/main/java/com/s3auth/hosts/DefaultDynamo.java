@@ -34,14 +34,13 @@ import com.amazonaws.services.dynamodb.AmazonDynamoDB;
 import com.amazonaws.services.dynamodb.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodb.model.AttributeValue;
 import com.amazonaws.services.dynamodb.model.DeleteItemRequest;
-import com.amazonaws.services.dynamodb.model.DeleteItemResult;
 import com.amazonaws.services.dynamodb.model.Key;
 import com.amazonaws.services.dynamodb.model.PutItemRequest;
-import com.amazonaws.services.dynamodb.model.PutItemResult;
 import com.amazonaws.services.dynamodb.model.ScanRequest;
 import com.amazonaws.services.dynamodb.model.ScanResult;
+import com.jcabi.aspects.Cacheable;
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
 import java.io.IOException;
@@ -50,19 +49,30 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Abstraction on top of DynamoDB SDK.
  *
- * <p>The class is immutable and thread-safe.
+ * <p>The class is mutable and thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
+@Immutable
+@ToString
+@EqualsAndHashCode(of = { "client", "table" })
 final class DefaultDynamo implements Dynamo {
+
+    /**
+     * Lifetime of registry in memory, in minutes.
+     */
+    private static final int LIFETIME = 5;
 
     /**
      * Dynamo DB key, URN of a user.
@@ -90,9 +100,9 @@ final class DefaultDynamo implements Dynamo {
     private static final String REGION = "domain.region";
 
     /**
-     * AWS client.
+     * Client.
      */
-    private final transient AmazonDynamoDB client;
+    private final transient Dynamo.Client client;
 
     /**
      * Table name.
@@ -104,7 +114,17 @@ final class DefaultDynamo implements Dynamo {
      */
     public DefaultDynamo() {
         this(
-            DefaultDynamo.live(),
+            new Dynamo.Client() {
+                @Override
+                public AmazonDynamoDB get() {
+                    return new AmazonDynamoDBClient(
+                        new BasicAWSCredentials(
+                            Manifests.read("S3Auth-AwsDynamoKey"),
+                            Manifests.read("S3Auth-AwsDynamoSecret")
+                        )
+                    );
+                }
+            },
             Manifests.read("S3Auth-AwsDynamoTable")
         );
     }
@@ -114,7 +134,8 @@ final class DefaultDynamo implements Dynamo {
      * @param clnt The client to Dynamo DB
      * @param tbl Table name
      */
-    protected DefaultDynamo(final AmazonDynamoDB clnt, final String tbl) {
+    protected DefaultDynamo(@NotNull final Dynamo.Client clnt,
+        @NotNull final String tbl) {
         this.client = clnt;
         this.table = tbl;
     }
@@ -123,20 +144,24 @@ final class DefaultDynamo implements Dynamo {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(Loggable.DEBUG)
     public void close() throws IOException {
-        this.client.shutdown();
+        // nothing to do
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @Loggable(Loggable.INFO)
+    @NotNull
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    @Loggable(Loggable.DEBUG)
+    @Cacheable(lifetime = DefaultDynamo.LIFETIME, unit = TimeUnit.MINUTES)
     public ConcurrentMap<URN, Set<Domain>> load() throws IOException {
         final ConcurrentMap<URN, Set<Domain>> domains =
             new ConcurrentHashMap<URN, Set<Domain>>();
-        final ScanResult result = this.client.scan(new ScanRequest(this.table));
+        final AmazonDynamoDB amazon = this.client.get();
+        final ScanResult result = amazon.scan(new ScanRequest(this.table));
         for (final Map<String, AttributeValue> item : result.getItems()) {
             if (!item.containsKey(DefaultDynamo.REGION)) {
                 item.put(DefaultDynamo.REGION, new AttributeValue("s3"));
@@ -152,7 +177,7 @@ final class DefaultDynamo implements Dynamo {
                 )
             );
         }
-        Logger.info(this, "#load(): %d user(s)", domains.size());
+        amazon.shutdown();
         return domains;
     }
 
@@ -160,8 +185,8 @@ final class DefaultDynamo implements Dynamo {
      * {@inheritDoc}
      */
     @Override
-    @Loggable(Loggable.DEBUG)
-    public void add(@NotNull final URN user,
+    @Loggable(Loggable.INFO)
+    public boolean add(@NotNull final URN user,
         @NotNull final Domain domain) throws IOException {
         final ConcurrentMap<String, AttributeValue> attrs =
             new ConcurrentHashMap<String, AttributeValue>();
@@ -170,49 +195,26 @@ final class DefaultDynamo implements Dynamo {
         attrs.put(DefaultDynamo.KEY, new AttributeValue(domain.key()));
         attrs.put(DefaultDynamo.SECRET, new AttributeValue(domain.secret()));
         attrs.put(DefaultDynamo.REGION, new AttributeValue(domain.region()));
-        final PutItemResult result = this.client.putItem(
-            new PutItemRequest(this.table, attrs)
-        );
-        Logger.info(
-            this,
-            "#add('%s', '%s'): added, %.2f unit(s)",
-            user,
-            domain.name(),
-            result.getConsumedCapacityUnits()
-        );
+        final AmazonDynamoDB amazon = this.client.get();
+        amazon.putItem(new PutItemRequest(this.table, attrs));
+        amazon.shutdown();
+        return true;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @Loggable(Loggable.DEBUG)
-    public void remove(@NotNull final Domain domain) throws IOException {
-        final DeleteItemResult result = this.client.deleteItem(
+    @Loggable(Loggable.INFO)
+    public boolean remove(@NotNull final Domain domain) throws IOException {
+        final AmazonDynamoDB amazon = this.client.get();
+        amazon.deleteItem(
             new DeleteItemRequest(
                 this.table, new Key(new AttributeValue(domain.name()))
             )
         );
-        Logger.info(
-            this,
-            "#remove('%s'): removed, %.2f unit(s)",
-            domain.name(),
-            result.getConsumedCapacityUnits()
-        );
-    }
-
-    /**
-     * Make a live client.
-     * @return The client to work with
-     */
-    private static AmazonDynamoDB live() {
-        final String key = Manifests.read("S3Auth-AwsDynamoKey");
-        final String secret = Manifests.read("S3Auth-AwsDynamoSecret");
-        final AmazonDynamoDB client = new AmazonDynamoDBClient(
-            new BasicAWSCredentials(key, secret)
-        );
-        Logger.info(DefaultDynamo.class, "#live(): Dynamo with '%s'", key);
-        return client;
+        amazon.shutdown();
+        return true;
     }
 
 }

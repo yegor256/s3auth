@@ -30,6 +30,11 @@
 package com.s3auth.hosts;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.client.methods.HttpGet;
 import org.mockito.Mockito;
 
 /**
@@ -54,7 +59,17 @@ public final class BucketMocker {
         this.withRegion("s3-ap-southeast-1");
         this.withKey("AAAAAAAAAAAAAAAAAAAA");
         this.withSecret("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-        this.withClient(Mockito.mock(AmazonS3.class));
+        final S3Object object = Mockito.mock(S3Object.class);
+        Mockito.doReturn(
+            new S3ObjectInputStream(
+                IOUtils.toInputStream("TXT"),
+                new HttpGet()
+            )
+        ).when(object).getObjectContent();
+        final AmazonS3 client = Mockito.mock(AmazonS3.class);
+        Mockito.doReturn(object).when(client)
+            .getObject(Mockito.any(GetObjectRequest.class));
+        this.withClient(client);
     }
 
     /**

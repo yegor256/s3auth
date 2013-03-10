@@ -29,25 +29,25 @@
  */
 package com.s3auth.hosts;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
 import com.jcabi.urn.URN;
 import java.io.IOException;
 import java.util.AbstractSet;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.atomic.AtomicLong;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Collection of hosts, persisted in Amazon DynamoDB.
  *
- * <p>The class is immutable and thread-safe.
+ * <p>The class is mutable and thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -55,34 +55,20 @@ import javax.validation.constraints.Pattern;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @SuppressWarnings("PMD.TooManyMethods")
+@Immutable
+@ToString
+@EqualsAndHashCode(of = "dynamo")
 public final class DynamoHosts implements Hosts {
 
     /**
-     * How often to reload from DynamoDB, in milliseconds.
+     * How often to reload from DynamoDB, in minutes.
      */
-    private static final int PERIOD_MS = 1 * 60 * 1000;
-
-    /**
-     * When recent update happened?
-     */
-    private final transient AtomicLong updated = new AtomicLong();
+    private static final int LIFETIME = 5;
 
     /**
      * Dynamo DB.
      */
     private final transient Dynamo dynamo;
-
-    /**
-     * Domains with their hosts.
-     */
-    private final transient ConcurrentMap<String, Host> hosts =
-        new ConcurrentHashMap<String, Host>();
-
-    /**
-     * Users with their domains.
-     */
-    private final transient ConcurrentMap<URN, Set<Domain>> users =
-        new ConcurrentHashMap<URN, Set<Domain>>();
 
     /**
      * Default ctor.
@@ -103,14 +89,25 @@ public final class DynamoHosts implements Hosts {
      * {@inheritDoc}
      */
     @Override
+    @NotNull
     @Loggable(Loggable.DEBUG)
     public Host find(
         @NotNull(message = "host name can't be NULL")
         @Pattern(regexp = "[a-zA-Z0-9\\-\\.]+", message = "invalid host name")
         final String name) throws IOException {
-        this.update();
-        final Host host = this.hosts.get(name);
-        if (host == null) {
+        Domain domain = null;
+        for (Set<Domain> domains : this.dynamo.load().values()) {
+            for (Domain candidate : domains) {
+                if (candidate.name().equals(name)) {
+                    domain = candidate;
+                    break;
+                }
+            }
+            if (domain != null) {
+                break;
+            }
+        }
+        if (domain == null) {
             throw new Hosts.NotFoundException(
                 String.format(
                     "host '%s' not found, register it at www.s3auth.com",
@@ -118,54 +115,51 @@ public final class DynamoHosts implements Hosts {
                 )
             );
         }
-        Logger.info(this, "#find('%s'): found %[type]s", name, host);
-        return host;
+        return new SmartHost(new DefaultHost(new DefaultBucket(domain)));
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
+    @NotNull
     @Loggable(Loggable.DEBUG)
-    public Set<Domain> domains(
-        @NotNull @Valid final User user) throws IOException {
-        this.update();
-        this.users.putIfAbsent(
-            user.identity(),
-            new CopyOnWriteArraySet<Domain>()
-        );
-        final Set<Domain> set = this.users.get(user.identity());
+    public Set<Domain> domains(@NotNull @Valid final User user)
+        throws IOException {
         // @checkstyle AnonInnerLength (100 lines)
         return new AbstractSet<Domain>() {
             @Override
             public int size() {
-                return set.size();
+                final Iterator<?> iterator = this.iterator();
+                int size = 0;
+                while (iterator.hasNext()) {
+                    iterator.next();
+                }
+                return size;
             }
             @Override
             public Iterator<Domain> iterator() {
-                return set.iterator();
+                ConcurrentMap<URN, Set<Domain>> data;
+                try {
+                    data = DynamoHosts.this.dynamo.load();
+                } catch (java.io.IOException ex) {
+                    throw new IllegalArgumentException(ex);
+                }
+                Set<Domain> domains = data.get(user.identity());
+                if (domains == null) {
+                    domains = new HashSet<Domain>();
+                }
+                return domains.iterator();
             }
             @Override
             public boolean add(@NotNull @Valid final Domain domain) {
-                boolean added = false;
-                final Domain normal = DynamoHosts.normalize(domain);
-                if (DynamoHosts.this.add(user.identity(), normal)) {
-                    set.add(normal);
-                    added = true;
-                }
-                return added;
+                return DynamoHosts.this.add(user.identity(), domain);
             }
             @Override
             public boolean remove(final Object obj) {
-                boolean removed = false;
-                final Domain domain = DynamoHosts.normalize(
-                    Domain.class.cast(obj)
+                return DynamoHosts.this.remove(
+                    user.identity(), Domain.class.cast(obj)
                 );
-                if (DynamoHosts.this.remove(user.identity(), domain)) {
-                    set.remove(domain);
-                    removed = true;
-                }
-                return removed;
             }
         };
     }
@@ -177,53 +171,6 @@ public final class DynamoHosts implements Hosts {
     @Loggable(Loggable.DEBUG)
     public void close() throws IOException {
         this.dynamo.close();
-        for (Host host : this.hosts.values()) {
-            host.close();
-        }
-    }
-
-    /**
-     * Refresh content from Dynamo DB into local variables.
-     * @throws IOException If some IO problem inside
-     */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    private void update() throws IOException {
-        synchronized (this.updated) {
-            if (System.currentTimeMillis() - this.updated.get()
-                > DynamoHosts.PERIOD_MS) {
-                this.users.clear();
-                this.users.putAll(this.dynamo.load());
-                for (URN user : this.users.keySet()) {
-                    for (Domain domain : this.users.get(user)) {
-                        this.add(user, domain);
-                    }
-                }
-                Logger.info(
-                    this,
-                    "#update(): %d host(s), %d user(s) loaded",
-                    this.hosts.size(),
-                    this.users.size()
-                );
-                this.updated.set(System.currentTimeMillis());
-            }
-        }
-    }
-
-    /**
-     * Normalize domain, into a common type.
-     * @param domain The domain to normalize
-     * @return Normalized domain
-     */
-    private static Bucket normalize(final Domain domain) {
-        Bucket normalized;
-        if (domain instanceof Bucket) {
-            normalized = Bucket.class.cast(domain);
-        } else if (domain instanceof DefaultDomain) {
-            normalized = new DefaultBucket(domain);
-        } else {
-            normalized = new DefaultBucket(new DefaultDomain(domain));
-        }
-        return normalized;
     }
 
     /**
@@ -233,23 +180,11 @@ public final class DynamoHosts implements Hosts {
      * @return Item was added (FALSE means that we already had it)
      */
     private boolean add(final URN user, final Domain domain) {
-        boolean added;
-        if (this.hosts.containsKey(domain.name())) {
-            Logger.warn(this, "#add('%s', '%s'): no need", user, domain);
-            added = false;
-        } else {
-            try {
-                this.dynamo.add(user, domain);
-            } catch (java.io.IOException ex) {
-                throw new IllegalArgumentException(ex);
-            }
-            added = true;
+        try {
+            return this.dynamo.add(user, domain);
+        } catch (java.io.IOException ex) {
+            throw new IllegalArgumentException(ex);
         }
-        this.hosts.put(
-            domain.name(),
-            new SmartHost(new DefaultHost(DynamoHosts.normalize(domain)))
-        );
-        return added;
     }
 
     /**
@@ -259,27 +194,30 @@ public final class DynamoHosts implements Hosts {
      * @return Item was removed (FALSE means that we didn't have it)
      */
     private boolean remove(final URN user, final Domain domain) {
-        boolean removed;
-        if (this.hosts.containsKey(domain.name())
-            && this.users.get(user).contains(domain)) {
-            try {
-                this.dynamo.remove(domain);
-            } catch (java.io.IOException ex) {
-                throw new IllegalArgumentException(ex);
+        try {
+            final ConcurrentMap<URN, Set<Domain>> data = this.dynamo.load();
+            if (!data.containsKey(user)) {
+                throw new IllegalArgumentException(
+                    String.format(
+                        "user %s not found, can't delete %s",
+                        user,
+                        domain.name()
+                    )
+                );
             }
-            this.hosts.remove(domain.name());
-            removed = true;
-        } else {
-            Logger.warn(
-                this,
-                "#remove('%s', '%s'/%[type]s): no need",
-                user,
-                domain,
-                domain
-            );
-            removed = false;
+            if (!data.get(user).contains(domain)) {
+                throw new IllegalArgumentException(
+                    String.format(
+                        "domain %s doesn't belong to %s, can't delete it",
+                        domain.name(),
+                        user
+                    )
+                );
+            }
+            return this.dynamo.remove(domain);
+        } catch (java.io.IOException ex) {
+            throw new IllegalArgumentException(ex);
         }
-        return removed;
     }
 
 }

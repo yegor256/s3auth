@@ -29,6 +29,8 @@
  */
 package com.s3auth.hosts;
 
+import com.jcabi.aspects.Cacheable;
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import java.io.ByteArrayOutputStream;
@@ -36,29 +38,30 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  * Htpasswd file abstraction.
  *
- * <p>The class is mutable and thread-safe.
- *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
+@Immutable
+@EqualsAndHashCode(of = "host")
 final class Htpasswd {
 
     /**
-     * How often to reload from the host, in milliseconds.
+     * Lifetime of HTPASSWD in memory, in minutes.
      */
-    private static final int PERIOD_MS = 5 * 60 * 1000;
+    private static final int LIFETIME = 5;
 
     /**
      * All known algorithms.
@@ -78,17 +81,6 @@ final class Htpasswd {
     private final transient Host host;
 
     /**
-     * When was the file recently loaded from S3?
-     */
-    private final transient AtomicLong updated = new AtomicLong();
-
-    /**
-     * Map of user names and their hashes.
-     */
-    private final transient ConcurrentMap<String, String> map =
-        new ConcurrentHashMap<String, String>();
-
-    /**
      * Public ctor.
      * @param hst The host to work with
      */
@@ -101,11 +93,17 @@ final class Htpasswd {
      */
     @Override
     public String toString() {
-        return Logger.format(
-            ".htpasswd(%d user(s) updated %[ms]s ago)",
-            this.map.size(),
-            System.currentTimeMillis() - this.updated.get()
-        );
+        String text;
+        try {
+            text = Logger.format(
+                ".htpasswd(%d user(s), reloaded every %d min)",
+                this.fetch().size(),
+                Htpasswd.LIFETIME
+            );
+        } catch (IOException ex) {
+            text = ex.getMessage();
+        }
+        return text;
     }
 
     /**
@@ -128,34 +126,28 @@ final class Htpasswd {
      * @return Map of users
      * @throws IOException If some error inside
      */
-    @Loggable(Loggable.DEBUG)
+    @Cacheable(lifetime = Htpasswd.LIFETIME, unit = TimeUnit.MINUTES)
     private ConcurrentMap<String, String> fetch() throws IOException {
-        synchronized (this.updated) {
-            if (System.currentTimeMillis() - this.updated.get()
-                > Htpasswd.PERIOD_MS) {
-                this.map.clear();
-                final String[] lines = this.content().split("\n");
-                for (String line : lines) {
-                    if (line.isEmpty()) {
-                        continue;
-                    }
-                    final String[] parts = line.trim().split(":", 2);
-                    if (parts.length != 2) {
-                        continue;
-                    }
-                    this.map.put(parts[0].trim(), parts[1].trim());
-                }
-                this.updated.set(System.currentTimeMillis());
+        final ConcurrentMap<String, String> map =
+            new ConcurrentHashMap<String, String>();
+        final String[] lines = this.content().split("\n");
+        for (String line : lines) {
+            if (line.isEmpty()) {
+                continue;
             }
+            final String[] parts = line.trim().split(":", 2);
+            if (parts.length != 2) {
+                continue;
+            }
+            map.put(parts[0].trim(), parts[1].trim());
         }
-        return this.map;
+        return map;
     }
 
     /**
      * Fetch the .htpasswd file, or returns empty string if it's absent.
      * @return Content of .htpasswd file, or empty
      */
-    @Loggable(Loggable.DEBUG)
     private String content() {
         String content;
         try {
@@ -182,7 +174,6 @@ final class Htpasswd {
      * @return TRUE if they match
      * @throws IOException If some error inside
      */
-    @Loggable(Loggable.DEBUG)
     private static boolean matches(final String hash, final String password)
         throws IOException {
         boolean matches = false;
@@ -212,6 +203,7 @@ final class Htpasswd {
     /**
      * MD5 hash builder.
      */
+    @Loggable(Loggable.DEBUG)
     private static final class Md5 implements Htpasswd.Algorithm {
         /**
          * MD5 pattern.
@@ -241,6 +233,7 @@ final class Htpasswd {
     /**
      * SHA1 hash builder.
      */
+    @Loggable(Loggable.DEBUG)
     private static final class Sha implements Htpasswd.Algorithm {
         /**
          * SHA1 pattern.
@@ -277,6 +270,7 @@ final class Htpasswd {
     /**
      * UNIX crypt.
      */
+    @Loggable(Loggable.DEBUG)
     private static final class Crypt implements Htpasswd.Algorithm {
         /**
          * {@inheritDoc}
@@ -290,6 +284,7 @@ final class Htpasswd {
     /**
      * Plain Text.
      */
+    @Loggable(Loggable.DEBUG)
     private static final class PlainText implements Htpasswd.Algorithm {
         /**
          * {@inheritDoc}

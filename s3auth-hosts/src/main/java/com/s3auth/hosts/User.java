@@ -29,6 +29,7 @@
  */
 package com.s3auth.hosts;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -51,6 +52,7 @@ import javax.validation.Payload;
  * @since 0.0.1
  */
 @User.Valid
+@Immutable
 public interface User {
 
     @Target(ElementType.TYPE)
@@ -94,13 +96,13 @@ public interface User {
                 && !"google".equals(user.identity().nid())) {
                 ctx.buildConstraintViolationWithTemplate("invalid NID of URN")
                     // @checkstyle MultipleStringLiterals (1 line)
-                    .addNode("identity")
+                    .addPropertyNode("identity")
                     .addConstraintViolation();
                 isValid = false;
             }
             if (!user.identity().nss().matches("\\d+")) {
                 ctx.buildConstraintViolationWithTemplate("invalid NSS of URN")
-                    .addNode("identity")
+                    .addPropertyNode("identity")
                     .addConstraintViolation();
                 isValid = false;
             }

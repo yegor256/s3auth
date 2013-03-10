@@ -29,6 +29,7 @@
  */
 package com.s3auth.hosts;
 
+import com.jcabi.aspects.Immutable;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -49,6 +50,7 @@ import javax.validation.Payload;
  * @since 0.0.1
  */
 @Domain.Valid
+@Immutable
 public interface Domain {
 
     @Target(ElementType.TYPE)
@@ -96,7 +98,7 @@ public interface Domain {
             } else if (!domain.name().matches("\\s*[a-zA-Z0-9\\-\\.]+\\s*")) {
                 ctx.buildConstraintViolationWithTemplate(
                     String.format("invalid domain name '%s'", domain.name())
-                ).addNode("name").addConstraintViolation();
+                ).addPropertyNode("name").addConstraintViolation();
                 isValid = false;
             }
             if (domain.key() == null) {
@@ -107,7 +109,7 @@ public interface Domain {
             } else if (!domain.key().matches("\\s*[A-Z0-9]{20}\\s*")) {
                 ctx.buildConstraintViolationWithTemplate(
                     String.format("invalid AWS key '%s'", domain.key())
-                ).addNode("key").addConstraintViolation();
+                ).addPropertyNode("key").addConstraintViolation();
                 isValid = false;
             }
             if (domain.region() == null) {
@@ -118,7 +120,7 @@ public interface Domain {
             } else if (!domain.region().matches("s3[a-z0-9\\-]*")) {
                 ctx.buildConstraintViolationWithTemplate(
                     String.format("invalid AWS S3 region '%s'", domain.region())
-                ).addNode("region").addConstraintViolation();
+                ).addPropertyNode("region").addConstraintViolation();
                 isValid = false;
             }
             if (domain.secret() == null) {
@@ -130,7 +132,7 @@ public interface Domain {
                 .matches("\\s*[a-zA-Z0-9\\+/]{40}\\s*")) {
                 ctx.buildConstraintViolationWithTemplate(
                     String.format("invalid AWS secret '%s'", domain.secret())
-                ).addNode("secret").addConstraintViolation();
+                ).addPropertyNode("secret").addConstraintViolation();
                 isValid = false;
             }
             return isValid;

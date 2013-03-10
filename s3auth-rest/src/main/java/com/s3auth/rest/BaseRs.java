@@ -74,27 +74,32 @@ public class BaseRs extends BaseResource {
     private transient FlashCookie flash;
 
     /**
-     * Set cookie. Should be called by JAX-RS implemenation
-     * because of {@code &#64;CookieParam} annotation.
-     * @param cookie The cookie to set
+     * Inset with a version of the product.
+     * @return The inset
      */
-    @CookieParam(BaseRs.COOKIE)
-    public final void setCookie(final String cookie) {
-        if (cookie != null) {
-            this.icookie = cookie;
-        }
+    @Inset.Runtime
+    public Inset insetVersion() {
+        return new VersionInset(
+            Manifests.read("Fazend-Version"),
+            Manifests.read("Fazend-Revision"),
+            Manifests.read("Fazend-Date")
+        );
     }
 
     /**
-     * Set flash cookie. Should be called by JAX-RS implemenation
-     * because of {@code &#64;CookieParam} annotation.
-     * @param cookie The cookie to set
+     * Supplementary inset.
+     * @return The inset
      */
-    @CookieParam(FlashCookie.NAME)
-    public final void setFlash(final String cookie) {
-        if (cookie != null && !cookie.isEmpty()) {
-            this.flash = new FlashCookie(cookie);
-        }
+    @Inset.Runtime
+    public Inset insetSupplementary() {
+        return new Inset() {
+            @Override
+            public void render(final BasePage<?, ?> page,
+                final Response.ResponseBuilder builder) {
+                builder.type(MediaType.TEXT_XML);
+                builder.header(HttpHeaders.VARY, "Cookie");
+            }
+        };
     }
 
     /**

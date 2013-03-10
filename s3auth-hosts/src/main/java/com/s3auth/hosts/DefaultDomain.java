@@ -29,18 +29,23 @@
  */
 package com.s3auth.hosts;
 
+import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Default implementation of domain.
- *
- * <p>The class is immutable and thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
  */
 @SuppressWarnings("PMD.TooManyMethods")
+@Immutable
+@ToString
+@EqualsAndHashCode(of = "origin")
 final class DefaultDomain implements Domain {
 
     /**
@@ -92,32 +97,8 @@ final class DefaultDomain implements Domain {
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return this.origin.name();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int hashCode() {
-        return this.origin.name().hashCode();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(final Object obj) {
-        return this == obj || (obj instanceof Domain
-            && Domain.class.cast(obj).name().equals(this.name()));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     @NotNull
+    @Loggable(Loggable.DEBUG)
     public String name() {
         return this.origin.name().trim();
     }
@@ -127,6 +108,7 @@ final class DefaultDomain implements Domain {
      */
     @Override
     @NotNull
+    @Loggable(Loggable.DEBUG)
     public String key() {
         return this.origin.key().trim();
     }
@@ -136,6 +118,7 @@ final class DefaultDomain implements Domain {
      */
     @Override
     @NotNull
+    @Loggable(Loggable.DEBUG)
     public String secret() {
         return this.origin.secret().trim();
     }
@@ -145,6 +128,7 @@ final class DefaultDomain implements Domain {
      */
     @Override
     @NotNull
+    @Loggable(Loggable.DEBUG)
     public String region() {
         return this.origin.region().trim();
     }

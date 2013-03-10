@@ -31,23 +31,28 @@ package com.s3auth.hosts;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
-import com.jcabi.log.Logger;
+import com.jcabi.aspects.Loggable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.LinkedList;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Default implementation of {@link Resource}.
  *
- * <p>The class is immutable and thread-safe.
+ * <p>The class is mutable and thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
  */
+@ToString
+@EqualsAndHashCode(of = "object")
 final class DefaultResource implements Resource {
 
     /**
@@ -59,7 +64,7 @@ final class DefaultResource implements Resource {
      * Public ctor.
      * @param obj S3 object
      */
-    public DefaultResource(final S3Object obj) {
+    public DefaultResource(@NotNull final S3Object obj) {
         this.object = obj;
     }
 
@@ -67,23 +72,10 @@ final class DefaultResource implements Resource {
      * {@inheritDoc}
      */
     @Override
-    public String toString() {
-        return this.object.getKey();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public long writeTo(final OutputStream output) throws IOException {
+    @Loggable(Loggable.DEBUG)
+    public long writeTo(@NotNull final OutputStream output) throws IOException {
         final InputStream input = this.object.getObjectContent();
-        Logger.debug(
-            this,
-            "#writeTo(): starting to stream %s/%s, redirectLocation=%s",
-            this.object.getBucketName(),
-            this.object.getKey(),
-            this.object.getRedirectLocation()
-        );
+        assert input != null;
         long total = 0;
         // @checkstyle MagicNumber (1 line)
         final byte[] buffer = new byte[16 * 1024];
@@ -128,6 +120,8 @@ final class DefaultResource implements Resource {
      * {@inheritDoc}
      */
     @Override
+    @NotNull
+    @Loggable(Loggable.DEBUG)
     public Collection<String> headers() {
         final ObjectMetadata meta = this.object.getObjectMetadata();
         final Collection<String> headers = new LinkedList<String>();
@@ -137,12 +131,14 @@ final class DefaultResource implements Resource {
                 Long.toString(meta.getContentLength())
             )
         );
-        headers.add(
-            DefaultResource.header(
-                HttpHeaders.CONTENT_TYPE,
-                meta.getContentType()
-            )
-        );
+        if (meta.getContentType() != null) {
+            headers.add(
+                DefaultResource.header(
+                    HttpHeaders.CONTENT_TYPE,
+                    meta.getContentType()
+                )
+            );
+        }
         return headers;
     }
 
@@ -152,7 +148,10 @@ final class DefaultResource implements Resource {
      * @param value The value
      * @return Full HTTP header string
      */
-    public static String header(final String name, final String value) {
+    @NotNull
+    @Loggable(Loggable.DEBUG)
+    public static String header(@NotNull final String name,
+        @NotNull final String value) {
         return String.format("%s: %s", name, value);
     }
 

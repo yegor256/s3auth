@@ -29,6 +29,7 @@
  */
 package com.s3auth.hosts;
 
+import com.jcabi.aspects.Immutable;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.URI;
@@ -36,12 +37,11 @@ import java.net.URI;
 /**
  * One host.
  *
- * <p>Implementation must be immutable and thread-safe.
- *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
  */
+@Immutable
 public interface Host extends Closeable {
 
     /**

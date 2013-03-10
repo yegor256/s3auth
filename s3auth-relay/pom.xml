@@ -52,6 +52,10 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.rexsl</groupId>
             <artifactId>rexsl-test</artifactId>
             <version>${rexsl.version}</version>
@@ -73,7 +77,7 @@
         <dependency>
             <groupId>net.sf.jopt-simple</groupId>
             <artifactId>jopt-simple</artifactId>
-            <version>4.4-beta-3</version>
+            <version>4.4</version>
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
@@ -98,7 +102,7 @@
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-core</artifactId>
-            <version>1.16</version>
+            <version>1.17.1</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>

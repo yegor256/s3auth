@@ -33,17 +33,22 @@ import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Default implementation of {@link Bucket}.
- *
- * <p>The class is immutable and thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
  */
+@Immutable
+@ToString
+@EqualsAndHashCode(of = "domain")
 final class DefaultBucket implements Bucket {
 
     /**
@@ -52,23 +57,28 @@ final class DefaultBucket implements Bucket {
     private final transient Domain domain;
 
     /**
-     * Client of AmazonS3.
-     */
-    private final transient AmazonS3 clnt;
-
-    /**
      * Public ctor.
      * @param dmn The domain
      */
     public DefaultBucket(@NotNull final Domain dmn) {
         this.domain = dmn;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @NotNull
+    @Loggable(Loggable.DEBUG)
+    public AmazonS3 client() {
         final ClientConfiguration config = new ClientConfiguration();
         config.setSocketTimeout(0);
-        this.clnt = new AmazonS3Client(
+        final AmazonS3 client = new AmazonS3Client(
             new BasicAWSCredentials(this.key(), this.secret()),
             config
         );
-        this.clnt.setEndpoint(String.format("%s.amazonaws.com", this.region()));
+        client.setEndpoint(String.format("%s.amazonaws.com", this.region()));
+        return client;
     }
 
     /**
@@ -76,40 +86,7 @@ final class DefaultBucket implements Bucket {
      */
     @Override
     @NotNull
-    public AmazonS3 client() {
-        return this.clnt;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return this.domain.toString();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int hashCode() {
-        return this.domain.name().hashCode();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(final Object obj) {
-        return this == obj || (obj instanceof Domain
-            && Domain.class.cast(obj).name().equals(this.name()));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @NotNull
+    @Loggable(Loggable.DEBUG)
     public String name() {
         return this.domain.name();
     }
@@ -119,6 +96,7 @@ final class DefaultBucket implements Bucket {
      */
     @Override
     @NotNull
+    @Loggable(Loggable.DEBUG)
     public String key() {
         return this.domain.key();
     }
@@ -128,6 +106,7 @@ final class DefaultBucket implements Bucket {
      */
     @Override
     @NotNull
+    @Loggable(Loggable.DEBUG)
     public String secret() {
         return this.domain.secret();
     }
@@ -137,6 +116,7 @@ final class DefaultBucket implements Bucket {
      */
     @Override
     @NotNull
+    @Loggable(Loggable.DEBUG)
     public String region() {
         return this.domain.region();
     }
