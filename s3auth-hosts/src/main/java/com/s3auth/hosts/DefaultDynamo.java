@@ -75,27 +75,27 @@ final class DefaultDynamo implements Dynamo {
     /**
      * Dynamo DB key, URN of a user.
      */
-    private static final String USER = "user.urn";
+    public static final String USER = "user.urn";
 
     /**
      * Dynamo DB key, name of domain.
      */
-    private static final String NAME = "domain.name";
+    public static final String NAME = "domain.name";
 
     /**
      * Dynamo DB key, AWS key of bucket.
      */
-    private static final String KEY = "domain.key";
+    public static final String KEY = "domain.key";
 
     /**
      * Dynamo DB key, AWS secret of bucket.
      */
-    private static final String SECRET = "domain.secret";
+    public static final String SECRET = "domain.secret";
 
     /**
      * Dynamo DB key, AWS S3 region of bucket.
      */
-    private static final String REGION = "domain.region";
+    public static final String REGION = "domain.region";
 
     /**
      * Client.
@@ -161,9 +161,6 @@ final class DefaultDynamo implements Dynamo {
         final AmazonDynamoDB amazon = this.client.get();
         final ScanResult result = amazon.scan(new ScanRequest(this.table));
         for (final Map<String, AttributeValue> item : result.getItems()) {
-            if (!item.containsKey(DefaultDynamo.REGION)) {
-                item.put(DefaultDynamo.REGION, new AttributeValue("s3"));
-            }
             final URN user = URN.create(item.get(DefaultDynamo.USER).getS());
             domains.putIfAbsent(user, new Domains());
             domains.get(user).add(

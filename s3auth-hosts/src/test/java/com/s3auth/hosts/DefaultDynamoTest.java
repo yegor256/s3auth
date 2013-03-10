@@ -33,8 +33,12 @@ import com.amazonaws.services.dynamodb.AmazonDynamoDB;
 import com.amazonaws.services.dynamodb.model.AttributeValue;
 import com.amazonaws.services.dynamodb.model.ScanRequest;
 import com.amazonaws.services.dynamodb.model.ScanResult;
+import com.jcabi.urn.URNMocker;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -57,23 +61,69 @@ public final class DefaultDynamoTest {
             new Dynamo.Client() {
                 @Override
                 public AmazonDynamoDB get() {
-                    final AmazonDynamoDB aws =
-                        Mockito.mock(AmazonDynamoDB.class);
-                    Mockito.doReturn(
-                        new ScanResult().withItems(
-                            new LinkedList<Map<String, AttributeValue>>()
-                        )
-                    ).when(aws).scan(Mockito.any(ScanRequest.class));
-                    return aws;
+                    return DefaultDynamoTest.this.amazon();
                 }
             },
             "table"
         );
         MatcherAssert.assertThat(
-            dynamo.load(),
-            Matchers.notNullValue()
+            dynamo.load().size(),
+            Matchers.equalTo(dynamo.load().size())
+        );
+        final int size = dynamo.load().size();
+        dynamo.add(new URNMocker().mock(), new DomainMocker().mock());
+        MatcherAssert.assertThat(
+            dynamo.load().size(),
+            Matchers.not(Matchers.equalTo(size))
         );
         dynamo.close();
+    }
+
+    /**
+     * Create and return a random amazon client.
+     * @return The client
+     */
+    private AmazonDynamoDB amazon() {
+        final List<Map<String, AttributeValue>> items =
+            new LinkedList<Map<String, AttributeValue>>();
+        final int total = Math.abs(new Random().nextInt(20));
+        for (int num = 0; num < total; ++num) {
+            items.add(this.item());
+        }
+        final AmazonDynamoDB aws =
+            Mockito.mock(AmazonDynamoDB.class);
+        Mockito.doReturn(new ScanResult().withItems(items))
+            .when(aws).scan(Mockito.any(ScanRequest.class));
+        return aws;
+    }
+
+    /**
+     * Create and return a random amazon item.
+     * @return The client
+     */
+    private Map<String, AttributeValue> item() {
+        final Map<String, AttributeValue> item =
+            new ConcurrentHashMap<String, AttributeValue>();
+        item.put(
+            DefaultDynamo.USER,
+            new AttributeValue(new URNMocker().mock().toString())
+        );
+        item.put(
+            DefaultDynamo.NAME,
+            new AttributeValue(
+                String.format(
+                    "google-%d.com",
+                    Math.abs(new Random().nextInt())
+                )
+            )
+        );
+        item.put(DefaultDynamo.KEY, new AttributeValue("aaaaaaaaaaaaaaaa"));
+        item.put(
+            DefaultDynamo.SECRET,
+            new AttributeValue("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        );
+        item.put(DefaultDynamo.REGION, new AttributeValue("s3"));
+        return item;
     }
 
 }
