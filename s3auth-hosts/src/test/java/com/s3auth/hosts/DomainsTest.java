@@ -29,61 +29,34 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.services.dynamodb.AmazonDynamoDB;
-import com.jcabi.aspects.Immutable;
-import com.jcabi.urn.URN;
-import java.io.Closeable;
-import java.io.IOException;
-import java.util.Map;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Abstraction on top of DynamoDB SDK.
- *
- * <p>Implementation must be thread-safe.
- *
+ * Test case for {@link Domains}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 0.0.1
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
- * @checkstyle MultipleStringLiterals (500 lines)
  */
-@Immutable
-interface Dynamo extends Closeable {
+public final class DomainsTest {
 
     /**
-     * Client to Amazon.
+     * Domains can add and retrieve domains.
+     * @throws Exception If there is some problem inside
      */
-    @Immutable
-    interface Client {
-        /**
-         * Get Amazon client.
-         * @return The client
-         */
-        AmazonDynamoDB get();
+    @Test
+    public void addsAndRetrievesDomains() throws Exception {
+        final Domain domain = new DomainMocker().mock();
+        final Domains domains = new Domains();
+        domains.add(domain);
+        MatcherAssert.assertThat(
+            domains.has(domain.name()),
+            Matchers.is(true)
+        );
+        MatcherAssert.assertThat(
+            domains.contains(new DefaultDomain(domain)),
+            Matchers.is(true)
+        );
     }
-
-    /**
-     * Load all data from DynamoDB.
-     * @return Map of users and their domains
-     * @throws IOException If some IO problem inside
-     */
-    Map<URN, Domains> load() throws IOException;
-
-    /**
-     * Save to DynamoDB.
-     * @param user Who is the owner
-     * @param domain The domain to save
-     * @return TRUE if successfully added
-     * @throws IOException If some IO problem inside
-     */
-    boolean add(URN user, Domain domain) throws IOException;
-
-    /**
-     * Delete from DynamoDB.
-     * @param domain The domain to save
-     * @return TRUE if successfully deleted
-     * @throws IOException If some IO problem inside
-     */
-    boolean remove(Domain domain) throws IOException;
 
 }

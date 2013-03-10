@@ -44,6 +44,27 @@ import org.junit.Test;
 public final class DynamoHostsTest {
 
     /**
+     * DynamoHosts can clean cache in runtime.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void updatesCachedData() throws Exception {
+        final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
+        final Domain domain = new DomainMocker().mock();
+        final User user = new UserMocker().mock();
+        MatcherAssert.assertThat(
+            hosts.domains(user).add(domain),
+            Matchers.is(true)
+        );
+        MatcherAssert.assertThat(hosts.domains(user), Matchers.hasSize(1));
+        MatcherAssert.assertThat(
+            hosts.domains(user).contains(domain),
+            Matchers.is(true)
+        );
+        hosts.close();
+    }
+
+    /**
      * DynamoHosts can reject duplicates.
      * @throws Exception If there is some problem inside
      */

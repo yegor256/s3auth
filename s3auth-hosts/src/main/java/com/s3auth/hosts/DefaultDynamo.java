@@ -44,9 +44,7 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
@@ -157,9 +155,9 @@ final class DefaultDynamo implements Dynamo {
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     @Loggable(Loggable.DEBUG)
     @Cacheable(lifetime = DefaultDynamo.LIFETIME, unit = TimeUnit.MINUTES)
-    public ConcurrentMap<URN, Set<Domain>> load() throws IOException {
-        final ConcurrentMap<URN, Set<Domain>> domains =
-            new ConcurrentHashMap<URN, Set<Domain>>();
+    public ConcurrentMap<URN, Domains> load() throws IOException {
+        final ConcurrentMap<URN, Domains> domains =
+            new ConcurrentHashMap<URN, Domains>();
         final AmazonDynamoDB amazon = this.client.get();
         final ScanResult result = amazon.scan(new ScanRequest(this.table));
         for (final Map<String, AttributeValue> item : result.getItems()) {
@@ -167,7 +165,7 @@ final class DefaultDynamo implements Dynamo {
                 item.put(DefaultDynamo.REGION, new AttributeValue("s3"));
             }
             final URN user = URN.create(item.get(DefaultDynamo.USER).getS());
-            domains.putIfAbsent(user, new HashSet<Domain>());
+            domains.putIfAbsent(user, new Domains());
             domains.get(user).add(
                 new DefaultDomain(
                     item.get(DefaultDynamo.NAME).getS(),

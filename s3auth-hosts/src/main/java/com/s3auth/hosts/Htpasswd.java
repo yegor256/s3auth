@@ -252,14 +252,6 @@ final class Htpasswd {
                     DigestUtils.sha1(password)
                 );
                 matches = matcher.group(1).equals(required);
-                Logger.debug(
-                    this,
-                    "#matches('%s', '%s'): matches=%B, required='%s'",
-                    hash,
-                    password,
-                    matches,
-                    required
-                );
             } else {
                 matches = false;
             }

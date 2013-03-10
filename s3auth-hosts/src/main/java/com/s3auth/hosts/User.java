@@ -87,6 +87,7 @@ public interface User {
         }
         /**
          * {@inheritDoc}
+         * @checkstyle MultipleStringLiterals (50 lines)
          */
         @Override
         public boolean isValid(final User user,
@@ -94,16 +95,15 @@ public interface User {
             boolean isValid = true;
             if (!"facebook".equals(user.identity().nid())
                 && !"google".equals(user.identity().nid())) {
-                ctx.buildConstraintViolationWithTemplate("invalid NID of URN")
-                    // @checkstyle MultipleStringLiterals (1 line)
-                    .addPropertyNode("identity")
-                    .addConstraintViolation();
+                ctx.buildConstraintViolationWithTemplate(
+                    String.format("invalid NID of URN: %s", user.identity())
+                ).addPropertyNode("identity").addConstraintViolation();
                 isValid = false;
             }
             if (!user.identity().nss().matches("\\d+")) {
-                ctx.buildConstraintViolationWithTemplate("invalid NSS of URN")
-                    .addPropertyNode("identity")
-                    .addConstraintViolation();
+                ctx.buildConstraintViolationWithTemplate(
+                    String.format("invalid NSS of URN: %s", user.identity())
+                ).addPropertyNode("identity").addConstraintViolation();
                 isValid = false;
             }
             return isValid;
