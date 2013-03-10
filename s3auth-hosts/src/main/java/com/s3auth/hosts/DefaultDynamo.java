@@ -68,11 +68,6 @@ import lombok.ToString;
 final class DefaultDynamo implements Dynamo {
 
     /**
-     * Lifetime of registry in memory, in minutes.
-     */
-    private static final int LIFETIME = 5;
-
-    /**
      * Dynamo DB key, URN of a user.
      */
     public static final String USER = "user.urn";
@@ -96,6 +91,11 @@ final class DefaultDynamo implements Dynamo {
      * Dynamo DB key, AWS S3 region of bucket.
      */
     public static final String REGION = "domain.region";
+
+    /**
+     * Lifetime of registry in memory, in minutes.
+     */
+    private static final int LIFETIME = 5;
 
     /**
      * Client.
