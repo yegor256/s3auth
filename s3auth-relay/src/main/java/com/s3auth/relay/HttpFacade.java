@@ -45,19 +45,23 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * HTTP facade (port listener).
  *
  * <p>The class is instantiated in {@link Main}, once per application run.
  *
- * <p>The class is immutable and thread-safe.
+ * <p>The class is mutable and thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
  * @see Main
  */
+@ToString
+@EqualsAndHashCode(of = { "sockets", "server" })
 @SuppressWarnings("PMD.DoNotUseThreads")
 final class HttpFacade implements Closeable {
 
@@ -119,7 +123,6 @@ final class HttpFacade implements Closeable {
                 0, 1, TimeUnit.NANOSECONDS
             );
         }
-        Logger.debug(this, "#HttpFacade(.., %d): instantiated", port);
     }
 
     /**

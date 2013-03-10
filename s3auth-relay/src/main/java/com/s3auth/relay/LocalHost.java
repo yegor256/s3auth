@@ -29,6 +29,7 @@
  */
 package com.s3auth.relay;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
@@ -38,6 +39,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 
 /**
  * Local host with data.
@@ -48,13 +50,13 @@ import javax.validation.constraints.NotNull;
  * {@link HttpThread} according to the information in {@code "Host"}
  * HTTP header.
  *
- * <p>The class is immutable and thread-safe.
- *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
  * @see HttpThread
  */
+@Immutable
+@EqualsAndHashCode
 final class LocalHost implements Host {
 
     /**

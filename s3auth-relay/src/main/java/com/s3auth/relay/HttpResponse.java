@@ -42,6 +42,8 @@ import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.httpclient.HttpStatus;
 
 /**
@@ -65,6 +67,8 @@ import org.apache.commons.httpclient.HttpStatus;
  * @since 0.0.1
  * @see HttpThread
  */
+@ToString
+@EqualsAndHashCode(of = { "status", "hdrs", "body" })
 final class HttpResponse {
 
     /**

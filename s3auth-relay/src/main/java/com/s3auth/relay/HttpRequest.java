@@ -44,6 +44,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * HTTP request.
@@ -59,13 +61,15 @@ import javax.validation.constraints.NotNull;
  *
  * <p>We don't support any other methods except "GET".
  *
- * <p>The class is immutable and thread-safe.
+ * <p>The class is mutable and thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
  * @see HttpThread
  */
+@ToString
+@EqualsAndHashCode(of = { "uri", "hdrs" })
 final class HttpRequest {
 
     /**

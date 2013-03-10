@@ -43,6 +43,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentMap;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -52,13 +54,15 @@ import org.apache.commons.io.IOUtils;
  * queue, processing it, and closing the socket. The class is instantiated
  * by {@link HttpFacade} and is executed by Services Executor routinely.
  *
- * <p>The class is immutable and thread-safe.
+ * <p>The class is thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
  * @see HttpFacade
  */
+@ToString
+@EqualsAndHashCode(of = { "hosts", "sockets" })
 @SuppressWarnings("PMD.DoNotUseThreads")
 final class HttpThread {
 

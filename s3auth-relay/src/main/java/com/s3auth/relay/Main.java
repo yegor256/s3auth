@@ -29,22 +29,26 @@
  */
 package com.s3auth.relay;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.s3auth.hosts.DynamoHosts;
 import java.util.concurrent.TimeUnit;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Main entrance to the system.
- *
- * <p>The class is immutable and thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
  */
+@Immutable
+@ToString
+@EqualsAndHashCode
 public final class Main {
 
     /**

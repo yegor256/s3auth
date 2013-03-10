@@ -40,6 +40,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.CharEncoding;
 
@@ -57,6 +59,8 @@ import org.apache.commons.lang.CharEncoding;
  * @since 0.0.1
  * @see HttpThread
  */
+@ToString(of = "host")
+@EqualsAndHashCode(of = { "host", "request" })
 final class SecuredHost implements Host {
 
     /**
@@ -127,14 +131,6 @@ final class SecuredHost implements Host {
     @Loggable(Loggable.DEBUG)
     public void close() throws IOException {
         this.host.close();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString() {
-        return this.host.toString();
     }
 
     /**
