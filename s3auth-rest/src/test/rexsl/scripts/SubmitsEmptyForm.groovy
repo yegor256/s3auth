@@ -30,18 +30,23 @@
 package com.s3auth.rest.rexsl.scripts
 
 import com.jcabi.manifests.Manifests
+import com.rexsl.page.auth.AuthInset
 import com.rexsl.test.RestTester
 import com.s3auth.hosts.UserMocker
 import com.s3auth.rest.BaseRs
-import com.s3auth.rest.CryptedUser
+import com.s3auth.rest.RestUser
 import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.MediaType
 import org.hamcrest.Matchers
 
 Manifests.append(new File(rexsl.basedir, 'target/test-classes/META-INF/MANIFEST.MF'))
 
-def user = new CryptedUser(new UserMocker().withIdentity('urn:facebook:999').mock())
-def cookie = BaseRs.COOKIE + '=' + user
+def user = new RestUser(new UserMocker().withIdentity('urn:facebook:999').mock())
+def cookie = 'Rexsl-Auth=' + AuthInset.encrypt(
+    user.asIdentity(),
+    Manifests.read("S3Auth-SecurityKey"),
+    Manifests.read("S3Auth-SecuritySalt")
+)
 
 RestTester.start(rexsl.home)
     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)

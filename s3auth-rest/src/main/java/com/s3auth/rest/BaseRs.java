@@ -151,20 +151,7 @@ public class BaseRs extends BaseResource {
         if (identity.equals(Identity.ANONYMOUS)) {
             user = User.ANONYMOUS;
         } else {
-            user = new User() {
-                @Override
-                public URN identity() {
-                    return identity.urn();
-                }
-                @Override
-                public String name() {
-                    return identity.name();
-                }
-                @Override
-                public URI photo() {
-                    return identity.photo();
-                }
-            };
+            user = new RestUser(identity);
         }
         return user;
     }
