@@ -32,18 +32,15 @@ package com.s3auth.rest.rexsl.scripts
 import com.rexsl.test.RestTester
 import com.rexsl.test.html.NoBrokenLinks
 import javax.ws.rs.core.HttpHeaders
-import javax.ws.rs.core.UriBuilder
 
-def uri = UriBuilder.fromUri(rexsl.home).path('/a').build()
-
-RestTester.start(uri)
+RestTester.start(rexsl.home)
     .header(HttpHeaders.ACCEPT, '*/*')
     .header(HttpHeaders.USER_AGENT, 'somebody')
     .get('read home page as somebody')
     .assertStatus(HttpURLConnection.HTTP_OK)
     .assertThat(new NoBrokenLinks(rexsl.home))
 
-RestTester.start(uri)
+RestTester.start(rexsl.home)
     .header(HttpHeaders.ACCEPT, 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8')
     .header(HttpHeaders.USER_AGENT, 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)')
     .get('read home page as IE')

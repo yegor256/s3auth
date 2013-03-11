@@ -32,9 +32,8 @@ package com.s3auth.rest.rexsl.scripts
 import com.rexsl.test.RestTester
 import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.MediaType
-import javax.ws.rs.core.UriBuilder
 
-RestTester.start(UriBuilder.fromUri(rexsl.home).path('/a'))
+RestTester.start(rexsl.home)
     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
     .header(HttpHeaders.USER_AGENT, 'Chrome/10.0')
     .get('read entrance page')

@@ -29,23 +29,13 @@
  */
 package com.s3auth.rest;
 
-import com.jcabi.aspects.Loggable;
-import com.jcabi.manifests.Manifests;
 import com.rexsl.page.BasePage;
-import com.rexsl.page.JaxbBundle;
-import com.rexsl.page.Link;
-import com.s3auth.hosts.User;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Base RESTful page.
- *
- * <p>The class is mutable and NOT thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -54,41 +44,5 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "page")
 @XmlAccessorType(XmlAccessType.NONE)
 public class CommonPage extends BasePage<CommonPage, BaseRs> {
-
-    /**
-     * Set authenticated user.
-     * @param user The user
-     * @return Itself
-     */
-    @Loggable(Loggable.DEBUG)
-    public final CommonPage authenticated(final User user) {
-        this.link(new Link("logout", "/a/out"));
-        this.append(new JaxbUser(user));
-        return this;
-    }
-
-    /**
-     * Render it.
-     * @return JAX-RS response
-     */
-    @Loggable(Loggable.DEBUG)
-    public final Response.ResponseBuilder render() {
-        BaseRs.class.cast(this.home()).render(this);
-        final Response.ResponseBuilder builder = Response.ok();
-        this.append(
-            new JaxbBundle("version")
-                .add("name", Manifests.read("S3Auth-Version"))
-                .up()
-                .add("revision", Manifests.read("S3Auth-Revision"))
-                .up()
-                .add("date", Manifests.read("S3Auth-Date"))
-                .up()
-        );
-        builder.entity(this);
-        builder.type(MediaType.TEXT_XML);
-        builder.header(HttpHeaders.VARY, "Cookie");
-        BaseRs.class.cast(this.home()).render(builder);
-        return builder;
-    }
 
 }

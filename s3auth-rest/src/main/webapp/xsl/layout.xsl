@@ -180,7 +180,7 @@
     <xsl:template match="flash">
         <div id="flash">
             <xsl:attribute name="class">
-                <xsl:value-of select="color"/>
+                <xsl:value-of select="level"/>
             </xsl:attribute>
             <xsl:value-of select="message"/>
         </div>

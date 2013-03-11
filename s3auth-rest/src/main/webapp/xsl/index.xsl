@@ -37,6 +37,16 @@
         </title>
     </xsl:template>
     <xsl:template name="content">
+        <xsl:choose>
+            <xsl:when test="/page/identity">
+                <xsl:call-template name="account"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:call-template name="entrance"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    <xsl:template name="account">
         <h1>
             <xsl:text>Domains Under Management</xsl:text>
         </h1>
@@ -253,5 +263,78 @@ maven.s3auth.com with .htpasswd(3 user(s) updated 2min ago)]]></pre>
                 <xsl:text>delete</xsl:text>
             </a>
         </li>
+    </xsl:template>
+    <xsl:template name="entrance">
+        <p>
+            <xsl:text>To start, login using one of your accounts at:</xsl:text>
+        </p>
+        <p>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='facebook-auth']/@href"/>
+                </xsl:attribute>
+                <img class="icon" src="http://img.s3auth.com/icons/facebook.png" alt="facebook icon"/>
+            </a>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='google-auth']/@href"/>
+                </xsl:attribute>
+                <img class="icon" src="http://img.s3auth.com/icons/google.png" alt="google icon"/>
+            </a>
+        </p>
+        <h1>
+            <xsl:text>Amazon S3 HTTP Basic Auth Gateway</xsl:text>
+        </h1>
+        <p>
+            <xsl:text>s3auth.com is a </xsl:text>
+            <a href="http://en.wikipedia.org/wiki/Basic_access_authentication">
+                <xsl:text>Basic HTTP Auth</xsl:text>
+            </a>
+            <xsl:text> gateway in front of your private </xsl:text>
+            <a href="http://aws.amazon.com/s3/">
+                <xsl:text>Amazon S3</xsl:text>
+            </a>
+            <xsl:text> bucket.</xsl:text>
+        </p>
+        <p>
+            <xsl:text>Point your </xsl:text>
+            <span class="tt">
+                <xsl:text>test.example.com</xsl:text>
+            </span>
+            <xsl:text> CNAME to </xsl:text>
+            <span class="tt">
+                <xsl:text>relay.s3auth.com</xsl:text>
+            </span>
+            <xsl:text>, and register the domain here. You will be able to
+            access bucket's content in a browser with HTTP basic auth.
+            Your bucket will be accessible using your </xsl:text>
+            <a href="http://aws.amazon.com/iam/">
+                <xsl:text>Amazon IAM</xsl:text>
+            </a>
+            <xsl:text> credentials and with custom user/password pairs in your </xsl:text>
+            <span class="tt">
+                <xsl:text>.htpasswd</xsl:text>
+            </span>
+            <xsl:text> file (similar to Apache HTTP Server).</xsl:text>
+        </p>
+        <p>
+            <xsl:text>For example, try </xsl:text>
+            <span class="tt">
+                <xsl:text>http://maven.s3auth.com/</xsl:text>
+            </span>
+            <xsl:text> (with username </xsl:text>
+            <span class="tt">
+                <xsl:text>s3auth</xsl:text>
+            </span>
+            <xsl:text> and password </xsl:text>
+            <span class="tt">
+                <xsl:text>s3auth</xsl:text>
+            </span>
+            <xsl:text>). You will access content of Amazon S3 bucket </xsl:text>
+            <span class="tt">
+                <xsl:text>maven.s3auth.com</xsl:text>
+            </span>
+            <xsl:text>, which is not readable anonymously otherwise.</xsl:text>
+        </p>
     </xsl:template>
 </xsl:stylesheet>

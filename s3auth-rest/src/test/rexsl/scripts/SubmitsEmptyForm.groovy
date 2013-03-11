@@ -55,11 +55,11 @@ RestTester.start(rexsl.home)
     .assertStatus(HttpURLConnection.HTTP_SEE_OTHER)
     .assertHeader(
         HttpHeaders.SET_COOKIE,
-        Matchers.hasItem(Matchers.containsString('s3auth-flash'))
+        Matchers.hasItem(Matchers.containsString('Rexsl-Flash'))
     )
     .follow()
     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
     .header(HttpHeaders.COOKIE, cookie)
     .get('read home page again')
-    .assertXPath('/page/flash[color="RED"]')
+    .assertXPath('/page/flash[level="WARNING"]')
     .assertXPath('/page/flash/message')

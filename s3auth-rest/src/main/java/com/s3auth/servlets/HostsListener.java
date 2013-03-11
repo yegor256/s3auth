@@ -79,8 +79,10 @@ public final class HostsListener implements ServletContextListener {
             );
             throw new IllegalStateException(ex);
         }
-        event.getServletContext()
-            .setAttribute("com.s3auth.HOSTS", this.hosts);
+        event.getServletContext().setAttribute(
+            Hosts.class.getName(),
+            this.hosts
+        );
     }
 
     /**

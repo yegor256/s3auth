@@ -33,10 +33,12 @@ import com.jcabi.aspects.Loggable;
 import com.rexsl.page.JaxbGroup;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
+import com.rexsl.page.inset.FlashInset;
 import com.s3auth.hosts.Domain;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.logging.Level;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
@@ -75,7 +77,6 @@ public final class IndexRs extends BaseRs {
             .init(this)
             .append(JaxbGroup.build(this.domains(), "domains"))
             .link(new Link("add", "/add"))
-            .authenticated(this.user())
             .render()
             .build();
     }
@@ -120,24 +121,20 @@ public final class IndexRs extends BaseRs {
             }
         );
         if (!added) {
-            throw FlashCookie.forward(
+            throw FlashInset.forward(
                 this.uriInfo().getBaseUri(),
                 String.format(
                     "host '%s' is already registered in the system",
                     host
-                )
+                ),
+                Level.WARNING
             );
         }
-        return Response.status(Response.Status.SEE_OTHER)
-            .location(this.uriInfo().getBaseUri())
-            .cookie(
-                new FlashCookie(
-                    this.uriInfo().getBaseUri(),
-                    String.format("added '%s' host to collection", host),
-                    FlashCookie.Color.GREEN
-                )
-            )
-            .build();
+        return FlashInset.forward(
+            this.uriInfo().getBaseUri(),
+            String.format("added '%s' host to collection", host),
+            Level.INFO
+        ).getResponse();
     }
 
     /**
@@ -172,24 +169,20 @@ public final class IndexRs extends BaseRs {
             }
         );
         if (!removed) {
-            throw FlashCookie.forward(
+            throw FlashInset.forward(
                 this.uriInfo().getBaseUri(),
                 String.format(
                     "failed to remove '%s' host",
                     host
-                )
+                ),
+                Level.WARNING
             );
         }
-        return Response.status(Response.Status.SEE_OTHER)
-            .location(this.uriInfo().getBaseUri())
-            .cookie(
-                new FlashCookie(
-                    this.uriInfo().getBaseUri(),
-                    String.format("removed '%s' host from collection", host),
-                    FlashCookie.Color.GREEN
-                )
-            )
-            .build();
+        return FlashInset.forward(
+            this.uriInfo().getBaseUri(),
+            String.format("removed '%s' host from collection", host),
+            Level.INFO
+        ).getResponse();
     }
 
     /**

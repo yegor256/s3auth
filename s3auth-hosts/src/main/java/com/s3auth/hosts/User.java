@@ -55,6 +55,24 @@ import javax.validation.Payload;
 @Immutable
 public interface User {
 
+    /**
+     * Anonymous User.
+     */
+    User ANONYMOUS = new User() {
+        @Override
+        public URN identity() {
+            return URN.create("urn:anonymous:0");
+        }
+        @Override
+        public String name() {
+            return "Mr. Anonymous";
+        }
+        @Override
+        public URI photo() {
+            return URI.create("http://img.s3auth.com/unknown.png");
+        }
+    };
+
     @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
     @Constraint(validatedBy = User.Validator.class)
@@ -94,7 +112,8 @@ public interface User {
             final ConstraintValidatorContext ctx) {
             boolean isValid = true;
             if (!"facebook".equals(user.identity().nid())
-                && !"google".equals(user.identity().nid())) {
+                && !"google".equals(user.identity().nid())
+                && !"anonymous".equals(user.identity().nid())) {
                 ctx.buildConstraintViolationWithTemplate(
                     String.format("invalid NID of URN: %s", user.identity())
                 ).addPropertyNode("identity").addConstraintViolation();

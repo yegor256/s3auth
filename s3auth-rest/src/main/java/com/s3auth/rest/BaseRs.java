@@ -29,16 +29,27 @@
  */
 package com.s3auth.rest;
 
-import com.jcabi.log.Logger;
+import com.jcabi.manifests.Manifests;
+import com.jcabi.urn.URN;
+import com.rexsl.page.BasePage;
 import com.rexsl.page.BaseResource;
-import com.rexsl.page.JaxbBundle;
+import com.rexsl.page.Inset;
 import com.rexsl.page.Resource;
+import com.rexsl.page.auth.AuthInset;
+import com.rexsl.page.auth.Facebook;
+import com.rexsl.page.auth.Google;
+import com.rexsl.page.auth.Identity;
+import com.rexsl.page.inset.FlashInset;
+import com.rexsl.page.inset.LinksInset;
+import com.rexsl.page.inset.VersionInset;
 import com.s3auth.hosts.Hosts;
 import com.s3auth.hosts.User;
+import java.net.URI;
 import javax.servlet.ServletContext;
-import javax.ws.rs.CookieParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -51,12 +62,8 @@ import javax.ws.rs.core.Response;
  * @since 0.0.1
  */
 @Resource.Forwarded
+@Inset.Default({ LinksInset.class, FlashInset.class })
 public class BaseRs extends BaseResource {
-
-    /**
-     * Name of auth cookie.
-     */
-    public static final String COOKIE = "s3auth.com";
 
     /**
      * Hosts.
@@ -64,25 +71,15 @@ public class BaseRs extends BaseResource {
     private transient Hosts ihosts;
 
     /**
-     * Cookie.
-     */
-    private transient String icookie;
-
-    /**
-     * Flash message from previous page.
-     */
-    private transient FlashCookie flash;
-
-    /**
      * Inset with a version of the product.
      * @return The inset
      */
     @Inset.Runtime
-    public Inset insetVersion() {
+    public Inset ver() {
         return new VersionInset(
-            Manifests.read("Fazend-Version"),
-            Manifests.read("Fazend-Revision"),
-            Manifests.read("Fazend-Date")
+            Manifests.read("S3Auth-Version"),
+            Manifests.read("S3Auth-Revision"),
+            Manifests.read("S3Auth-Date")
         );
     }
 
@@ -91,7 +88,7 @@ public class BaseRs extends BaseResource {
      * @return The inset
      */
     @Inset.Runtime
-    public Inset insetSupplementary() {
+    public Inset supplementary() {
         return new Inset() {
             @Override
             public void render(final BasePage<?, ?> page,
@@ -103,7 +100,34 @@ public class BaseRs extends BaseResource {
     }
 
     /**
-     * Inject servlet context. Should be called by JAX-RS implemenation
+     * Authentication inset.
+     * @return The inset
+     */
+    @Inset.Runtime
+    public AuthInset auth() {
+        return new AuthInset(
+            this,
+            Manifests.read("S3Auth-SecurityKey"),
+            Manifests.read("S3Auth-SecuritySalt")
+        )
+            .with(
+                new Facebook(
+                    this,
+                    Manifests.read("S3Auth-FbId"),
+                    Manifests.read("S3Auth-FbSecret")
+                )
+            )
+            .with(
+                new Google(
+                    this,
+                    Manifests.read("S3Auth-GoogleId"),
+                    Manifests.read("S3Auth-GoogleSecret")
+                )
+            );
+    }
+
+    /**
+     * Inject servlet context. Should be called by JAX-RS implementation
      * because of {@code &#64;Context} annotation. Servlet attributes are
      * injected into context by {@link com.netbout.servlets.HostsListener}
      * servlet listener.
@@ -111,35 +135,9 @@ public class BaseRs extends BaseResource {
      */
     @Context
     public final void setServletContext(final ServletContext context) {
-        this.ihosts = (Hosts) context.getAttribute("com.s3auth.HOSTS");
+        this.ihosts = (Hosts) context.getAttribute(Hosts.class.getName());
         if (this.ihosts == null) {
             throw new IllegalStateException("HOSTS is not initialized");
-        }
-    }
-
-    /**
-     * Render something extra to the page.
-     * @param page The page to render into
-     */
-    public final void render(final CommonPage page) {
-        if (this.flash != null) {
-            page.append(
-                new JaxbBundle("flash")
-                    .add("message", this.flash.message())
-                    .up()
-                    .add("color", this.flash.color())
-                    .up()
-            );
-        }
-    }
-
-    /**
-     * Render something extra to the builder.
-     * @param builder Response builder
-     */
-    public final void render(final Response.ResponseBuilder builder) {
-        if (this.flash != null) {
-            this.flash.clean(builder, this.uriInfo().getBaseUri());
         }
     }
 
@@ -148,30 +146,27 @@ public class BaseRs extends BaseResource {
      * @return Name of the user
      */
     protected final User user() {
-        try {
-            return CryptedUser.valueOf(this.icookie);
-        } catch (CryptedUser.DecryptionException ex) {
-            Logger.debug(
-                this,
-                "Failed to decrypt '%s' from %s calling '%s': %[exception]s",
-                this.icookie,
-                this.httpServletRequest().getRemoteAddr(),
-                this.httpServletRequest().getRequestURI(),
-                ex
-            );
-            throw new WebApplicationException(
-                ex,
-                Response.status(Response.Status.TEMPORARY_REDIRECT)
-                    .header("X-S3auth-Error", ex.getMessage())
-                    .location(
-                        this.uriInfo().getBaseUriBuilder()
-                            .clone()
-                            .path("/a")
-                            .build()
-                    )
-                    .build()
-            );
+        final Identity identity = this.auth().identity();
+        User user;
+        if (identity.equals(Identity.ANONYMOUS)) {
+            user = User.ANONYMOUS;
+        } else {
+            user = new User() {
+                @Override
+                public URN identity() {
+                    return identity.urn();
+                }
+                @Override
+                public String name() {
+                    return identity.name();
+                }
+                @Override
+                public URI photo() {
+                    return identity.photo();
+                }
+            };
         }
+        return user;
     }
 
     /**

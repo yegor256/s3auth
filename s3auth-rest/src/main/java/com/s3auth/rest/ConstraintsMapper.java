@@ -30,6 +30,7 @@
 package com.s3auth.rest;
 
 import com.rexsl.page.BaseResource;
+import com.rexsl.page.inset.FlashInset;
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -53,7 +54,7 @@ public final class ConstraintsMapper extends BaseResource
      */
     @Override
     public Response toResponse(final ConstraintViolationException violation) {
-        return FlashCookie.forward(
+        return FlashInset.forward(
             this.uriInfo().getBaseUri(),
             violation
         ).getResponse();

@@ -141,13 +141,13 @@ label {
     padding: 0.4em 0.8em;
 }
 
-    #flash.GREEN {
+    #flash.INFO {
         color: green;
         background-color: #dfd;
         border: 1px solid green;
     }
 
-    #flash.RED {
+    #flash.WARNING {
         color: red;
         background-color: #fdd;
         border: 1px solid red;
