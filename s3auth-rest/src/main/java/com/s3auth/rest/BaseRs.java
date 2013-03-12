@@ -30,7 +30,6 @@
 package com.s3auth.rest;
 
 import com.jcabi.manifests.Manifests;
-import com.jcabi.urn.URN;
 import com.rexsl.page.BasePage;
 import com.rexsl.page.BaseResource;
 import com.rexsl.page.Inset;
@@ -44,9 +43,7 @@ import com.rexsl.page.inset.LinksInset;
 import com.rexsl.page.inset.VersionInset;
 import com.s3auth.hosts.Hosts;
 import com.s3auth.hosts.User;
-import java.net.URI;
 import javax.servlet.ServletContext;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;

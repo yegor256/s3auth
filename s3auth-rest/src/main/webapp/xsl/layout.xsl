@@ -76,7 +76,7 @@
                             <img src="http://img.s3auth.com/logo.png" alt="s3auth.com logo" style="width: 180px; height: 32px;"/>
                         </a>
                     </p>
-                    <xsl:apply-templates select="user"/>
+                    <xsl:apply-templates select="identity"/>
                     <xsl:apply-templates select="flash"/>
                     <xsl:call-template name="content"/>
                     <p style="border-top: 1px solid #ccc; margin-top: 2em; padding-top: 1em;">
@@ -88,7 +88,7 @@
                         <a href="http://aws.amazon.com/">
                             <xsl:text>Amazon Web Services</xsl:text>
                         </a>
-                        <xsl:text>, although we provide service for their clients.</xsl:text>
+                        <xsl:text>, although we provide a service for their clients.</xsl:text>
                         <xsl:text> The service is absolutely free of charge, since it is sponsored by </xsl:text>
                         <a href="http://www.tpc2.com/">
                             <xsl:text>tpc2.com</xsl:text>
@@ -131,7 +131,7 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    <xsl:template match="user">
+    <xsl:template match="identity">
         <p>
             <img style="width: 25px; height: 25px;">
                 <xsl:attribute name="src">
@@ -147,10 +147,10 @@
                 <xsl:attribute name="src">
                     <xsl:text>http://img.s3auth.com/icons/</xsl:text>
                     <xsl:choose>
-                        <xsl:when test="starts-with(identity, 'urn:facebook:')">
+                        <xsl:when test="starts-with(urn, 'urn:facebook:')">
                             <xsl:text>facebook</xsl:text>
                         </xsl:when>
-                        <xsl:when test="starts-with(identity, 'urn:google:')">
+                        <xsl:when test="starts-with(urn, 'urn:google:')">
                             <xsl:text>google</xsl:text>
                         </xsl:when>
                     </xsl:choose>
