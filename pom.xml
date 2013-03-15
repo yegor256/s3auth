@@ -116,7 +116,7 @@
         </site>
     </distributionManagement>
     <properties>
-        <rexsl.version>1.0-SNAPSHOT</rexsl.version>
+        <rexsl.version>0.4.8</rexsl.version>
     </properties>
     <repositories>
         <repository>

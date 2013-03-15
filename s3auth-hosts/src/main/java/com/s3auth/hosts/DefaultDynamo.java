@@ -181,6 +181,7 @@ final class DefaultDynamo implements Dynamo {
      */
     @Override
     @Loggable(Loggable.INFO)
+    @Cacheable.Flush
     public boolean add(@NotNull final URN user,
         @NotNull final Domain domain) throws IOException {
         final ConcurrentMap<String, AttributeValue> attrs =
@@ -201,6 +202,7 @@ final class DefaultDynamo implements Dynamo {
      */
     @Override
     @Loggable(Loggable.INFO)
+    @Cacheable.Flush
     public boolean remove(@NotNull final Domain domain) throws IOException {
         final AmazonDynamoDB amazon = this.client.get();
         amazon.deleteItem(
