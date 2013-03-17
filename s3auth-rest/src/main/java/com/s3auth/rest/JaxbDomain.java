@@ -29,6 +29,7 @@
  */
 package com.s3auth.rest;
 
+import com.jcabi.aspects.Loggable;
 import com.rexsl.page.Link;
 import com.s3auth.hosts.Domain;
 import java.util.Collection;
@@ -51,6 +52,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "domain")
 @XmlAccessorType(XmlAccessType.NONE)
+@Loggable(Loggable.DEBUG)
 public final class JaxbDomain {
 
     /**

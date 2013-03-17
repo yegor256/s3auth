@@ -49,6 +49,7 @@ import lombok.ToString;
 @Immutable
 @ToString
 @EqualsAndHashCode
+@Loggable(Loggable.INFO)
 public final class Main {
 
     /**
@@ -63,7 +64,6 @@ public final class Main {
      * @param args Optional arguments
      * @throws Exception If something is wrong
      */
-    @Loggable(Loggable.INFO)
     public static void main(final String[] args) throws Exception {
         final OptionParser parser = new OptionParser("p:d");
         final OptionSet options = parser.parse(args);

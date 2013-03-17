@@ -48,6 +48,7 @@ import org.apache.commons.io.IOUtils;
  * @since 0.0.1
  */
 @Path("/misc")
+@Loggable(Loggable.DEBUG)
 public final class MiscRs extends BaseRs {
 
     /**
@@ -57,7 +58,6 @@ public final class MiscRs extends BaseRs {
     @GET
     @Path("/version")
     @Produces(MediaType.TEXT_PLAIN)
-    @Loggable(Loggable.DEBUG)
     public String version() {
         return Manifests.read("S3Auth-Revision");
     }
@@ -70,7 +70,6 @@ public final class MiscRs extends BaseRs {
     @GET
     @Path("/LICENSE.txt")
     @Produces(MediaType.TEXT_PLAIN)
-    @Loggable(Loggable.DEBUG)
     public String license() throws IOException {
         return IOUtils.toString(
             this.getClass().getResourceAsStream("/LICENSE.txt")

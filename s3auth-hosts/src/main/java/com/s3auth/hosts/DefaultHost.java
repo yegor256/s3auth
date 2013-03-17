@@ -53,6 +53,7 @@ import org.apache.commons.lang.StringUtils;
 @Immutable
 @ToString
 @EqualsAndHashCode(of = { "bucket", "htpasswd" })
+@Loggable(Loggable.DEBUG)
 final class DefaultHost implements Host {
 
     /**
@@ -78,7 +79,6 @@ final class DefaultHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    @Loggable(Loggable.DEBUG)
     public void close() throws IOException {
         // nothing to do
     }
@@ -89,7 +89,6 @@ final class DefaultHost implements Host {
     @Override
     @NotNull
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    @Loggable(Loggable.DEBUG)
     public Resource fetch(@NotNull final URI uri) throws IOException {
         Resource resource = null;
         final Collection<String> errors = new LinkedList<String>();
@@ -132,7 +131,6 @@ final class DefaultHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    @Loggable(Loggable.DEBUG)
     public boolean isHidden(@NotNull final URI uri) {
         return true;
     }
@@ -141,7 +139,6 @@ final class DefaultHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    @Loggable(Loggable.DEBUG)
     public boolean authorized(@NotNull final String user,
         @NotNull final String password) throws IOException {
         boolean auth;
@@ -195,6 +192,7 @@ final class DefaultHost implements Host {
     /**
      * Object name with a suffix from a bucket.
      */
+    @Loggable(Loggable.DEBUG)
     private final class NameWithSuffix implements DefaultHost.ObjectName {
         /**
          * Original name.
@@ -211,7 +209,6 @@ final class DefaultHost implements Host {
          * {@inheritDoc}
          */
         @Override
-        @Loggable(Loggable.DEBUG)
         public String get() {
             String suffix = null;
             try {

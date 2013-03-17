@@ -44,6 +44,7 @@ import javax.ws.rs.core.MediaType;
  * @version $Id$
  * @since 0.0.1
  */
+@Loggable(Loggable.DEBUG)
 final class HttpException extends IOException {
 
     /**
@@ -83,7 +84,6 @@ final class HttpException extends IOException {
      * Public ctor.
      * @param response The response
      */
-    @Loggable(Loggable.DEBUG)
     public HttpException(@NotNull final HttpResponse response) {
         super();
         this.resp = response;

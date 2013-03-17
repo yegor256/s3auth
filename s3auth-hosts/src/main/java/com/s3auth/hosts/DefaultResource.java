@@ -53,6 +53,7 @@ import lombok.ToString;
  */
 @ToString
 @EqualsAndHashCode(of = "object")
+@Loggable(Loggable.DEBUG)
 final class DefaultResource implements Resource {
 
     /**
@@ -72,7 +73,6 @@ final class DefaultResource implements Resource {
      * {@inheritDoc}
      */
     @Override
-    @Loggable(Loggable.DEBUG)
     public long writeTo(@NotNull final OutputStream output) throws IOException {
         final InputStream input = this.object.getObjectContent();
         assert input != null;
@@ -121,7 +121,6 @@ final class DefaultResource implements Resource {
      */
     @Override
     @NotNull
-    @Loggable(Loggable.DEBUG)
     public Collection<String> headers() {
         final ObjectMetadata meta = this.object.getObjectMetadata();
         final Collection<String> headers = new LinkedList<String>();
@@ -149,7 +148,6 @@ final class DefaultResource implements Resource {
      * @return Full HTTP header string
      */
     @NotNull
-    @Loggable(Loggable.DEBUG)
     public static String header(@NotNull final String name,
         @NotNull final String value) {
         return String.format("%s: %s", name, value);

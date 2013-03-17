@@ -29,6 +29,7 @@
  */
 package com.s3auth.rest;
 
+import com.jcabi.aspects.Loggable;
 import com.jcabi.manifests.Manifests;
 import com.rexsl.page.BasePage;
 import com.rexsl.page.BaseResource;
@@ -60,6 +61,7 @@ import javax.ws.rs.core.Response;
  */
 @Resource.Forwarded
 @Inset.Default({ LinksInset.class, FlashInset.class })
+@Loggable(Loggable.DEBUG)
 public class BaseRs extends BaseResource {
 
     /**

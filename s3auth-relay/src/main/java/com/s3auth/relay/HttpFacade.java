@@ -63,6 +63,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(of = { "sockets", "server" })
 @SuppressWarnings("PMD.DoNotUseThreads")
+@Loggable(Loggable.DEBUG)
 final class HttpFacade implements Closeable {
 
     /**
@@ -145,7 +146,6 @@ final class HttpFacade implements Closeable {
      * {@inheritDoc}
      */
     @Override
-    @Loggable(Loggable.DEBUG)
     public void close() throws IOException {
         this.server.close();
         this.shutdown(this.frontend);
@@ -155,7 +155,6 @@ final class HttpFacade implements Closeable {
     /**
      * Process one socket.
      */
-    @Loggable(Loggable.DEBUG)
     private void process() {
         Socket socket;
         try {
@@ -191,7 +190,6 @@ final class HttpFacade implements Closeable {
      * Shutdown a service.
      * @param service The service to shut down
      */
-    @Loggable(Loggable.DEBUG)
     private void shutdown(final ScheduledExecutorService service) {
         service.shutdown();
         try {

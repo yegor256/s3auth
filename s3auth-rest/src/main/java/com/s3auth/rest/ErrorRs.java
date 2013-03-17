@@ -47,6 +47,7 @@ import javax.ws.rs.core.Response;
  * @since 0.0.1
  */
 @Path("/error")
+@Loggable(Loggable.DEBUG)
 public final class ErrorRs extends BaseRs {
 
     /**
@@ -55,7 +56,6 @@ public final class ErrorRs extends BaseRs {
      */
     @GET
     @Path("/")
-    @Loggable(Loggable.DEBUG)
     public Response get() {
         return new PageBuilder()
             .stylesheet("/xsl/error.xsl")
@@ -72,7 +72,6 @@ public final class ErrorRs extends BaseRs {
      */
     @POST
     @Path("/")
-    @Loggable(Loggable.DEBUG)
     public Response post() {
         return Response.status(Response.Status.SEE_OTHER).location(
             this.uriInfo().getBaseUriBuilder().clone().path("/error").build()

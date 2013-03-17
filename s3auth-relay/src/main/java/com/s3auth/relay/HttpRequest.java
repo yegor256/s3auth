@@ -70,6 +70,7 @@ import lombok.ToString;
  */
 @ToString
 @EqualsAndHashCode(of = { "uri", "hdrs" })
+@Loggable(Loggable.DEBUG)
 final class HttpRequest {
 
     /**
@@ -101,7 +102,6 @@ final class HttpRequest {
      * @throws IOException If some socket problem
      * @see <a href="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>
      */
-    @Loggable(Loggable.DEBUG)
     public HttpRequest(@NotNull final Socket socket) throws IOException {
         final BufferedReader reader =
             new BufferedReader(new InputStreamReader(socket.getInputStream()));

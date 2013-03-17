@@ -49,6 +49,7 @@ import lombok.ToString;
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "domain")
+@Loggable(Loggable.DEBUG)
 final class DefaultBucket implements Bucket {
 
     /**
@@ -69,7 +70,6 @@ final class DefaultBucket implements Bucket {
      */
     @Override
     @NotNull
-    @Loggable(Loggable.DEBUG)
     public AmazonS3 client() {
         final ClientConfiguration config = new ClientConfiguration();
         config.setSocketTimeout(0);
@@ -86,7 +86,6 @@ final class DefaultBucket implements Bucket {
      */
     @Override
     @NotNull
-    @Loggable(Loggable.DEBUG)
     public String name() {
         return this.domain.name();
     }
@@ -96,7 +95,6 @@ final class DefaultBucket implements Bucket {
      */
     @Override
     @NotNull
-    @Loggable(Loggable.DEBUG)
     public String key() {
         return this.domain.key();
     }
@@ -106,7 +104,6 @@ final class DefaultBucket implements Bucket {
      */
     @Override
     @NotNull
-    @Loggable(Loggable.DEBUG)
     public String secret() {
         return this.domain.secret();
     }
@@ -116,7 +113,6 @@ final class DefaultBucket implements Bucket {
      */
     @Override
     @NotNull
-    @Loggable(Loggable.DEBUG)
     public String region() {
         return this.domain.region();
     }

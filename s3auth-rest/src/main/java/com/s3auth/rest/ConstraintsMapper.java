@@ -29,8 +29,10 @@
  */
 package com.s3auth.rest;
 
+import com.jcabi.aspects.Loggable;
 import com.rexsl.page.BaseResource;
 import com.rexsl.page.inset.FlashInset;
+import java.util.logging.Level;
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -46,6 +48,7 @@ import javax.ws.rs.ext.Provider;
  * @since 0.0.1
  */
 @Provider
+@Loggable(Loggable.DEBUG)
 public final class ConstraintsMapper extends BaseResource
     implements ExceptionMapper<ConstraintViolationException> {
 
@@ -56,7 +59,8 @@ public final class ConstraintsMapper extends BaseResource
     public Response toResponse(final ConstraintViolationException violation) {
         return FlashInset.forward(
             this.uriInfo().getBaseUri(),
-            violation
+            violation.getMessage(),
+            Level.WARNING
         ).getResponse();
     }
 

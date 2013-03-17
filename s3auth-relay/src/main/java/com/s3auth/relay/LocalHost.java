@@ -57,6 +57,7 @@ import lombok.EqualsAndHashCode;
  */
 @Immutable
 @EqualsAndHashCode
+@Loggable(Loggable.DEBUG)
 final class LocalHost implements Host {
 
     /**
@@ -72,7 +73,6 @@ final class LocalHost implements Host {
      */
     @Override
     @SuppressWarnings("PMD.DoNotCallSystemExit")
-    @Loggable(Loggable.DEBUG)
     public Resource fetch(@NotNull final URI uri) throws IOException {
         String output;
         if ("/".equals(uri.toString())) {

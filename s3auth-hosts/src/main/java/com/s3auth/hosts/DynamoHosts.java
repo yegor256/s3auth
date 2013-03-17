@@ -57,6 +57,7 @@ import lombok.ToString;
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "dynamo")
+@Loggable(Loggable.DEBUG)
 public final class DynamoHosts implements Hosts {
 
     /**
@@ -84,7 +85,6 @@ public final class DynamoHosts implements Hosts {
      */
     @Override
     @NotNull
-    @Loggable(Loggable.DEBUG)
     public Host find(
         @NotNull(message = "host name can't be NULL")
         @Pattern(regexp = "[a-zA-Z0-9\\-\\.]+", message = "invalid host name")
@@ -106,7 +106,6 @@ public final class DynamoHosts implements Hosts {
      */
     @Override
     @NotNull
-    @Loggable(Loggable.DEBUG)
     public Set<Domain> domains(@NotNull @Valid final User user)
         throws IOException {
         final Map<URN, Domains> data = DynamoHosts.this.dynamo.load();
@@ -121,7 +120,6 @@ public final class DynamoHosts implements Hosts {
      * {@inheritDoc}
      */
     @Override
-    @Loggable(Loggable.DEBUG)
     public void close() throws IOException {
         this.dynamo.close();
     }
@@ -188,6 +186,7 @@ public final class DynamoHosts implements Hosts {
     /**
      * Wrap of domains.
      */
+    @Loggable(Loggable.DEBUG)
     private final class Wrap extends AbstractSet<Domain> {
         /**
          * User.

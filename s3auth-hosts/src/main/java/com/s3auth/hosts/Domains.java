@@ -47,6 +47,7 @@ import lombok.ToString;
  */
 @ToString
 @EqualsAndHashCode(callSuper = false, of = "all")
+@Loggable(Loggable.DEBUG)
 final class Domains extends AbstractSet<Domain> {
 
     /**
@@ -59,7 +60,6 @@ final class Domains extends AbstractSet<Domain> {
      * @param name The domain to check
      * @return TRUE if it is inside already
      */
-    @Loggable(Loggable.DEBUG)
     public boolean has(@NotNull final String name) {
         boolean has = false;
         for (Domain domain : this.all) {
@@ -76,7 +76,6 @@ final class Domains extends AbstractSet<Domain> {
      * @param name The domain
      * @return Found domain
      */
-    @Loggable(Loggable.DEBUG)
     public Domain get(@NotNull final String name) {
         Domain found = null;
         for (Domain domain : this.all) {
@@ -97,7 +96,6 @@ final class Domains extends AbstractSet<Domain> {
      * {@inheritDoc}
      */
     @Override
-    @Loggable(Loggable.DEBUG)
     public boolean add(final Domain domain) {
         boolean added = false;
         if (!this.has(domain.name())) {
@@ -111,7 +109,6 @@ final class Domains extends AbstractSet<Domain> {
      * {@inheritDoc}
      */
     @Override
-    @Loggable(Loggable.DEBUG)
     public boolean contains(final Object obj) {
         return this.has(Domain.class.cast(obj).name());
     }
@@ -120,7 +117,6 @@ final class Domains extends AbstractSet<Domain> {
      * {@inheritDoc}
      */
     @Override
-    @Loggable(Loggable.DEBUG)
     public Iterator<Domain> iterator() {
         return this.all.iterator();
     }
@@ -129,7 +125,6 @@ final class Domains extends AbstractSet<Domain> {
      * {@inheritDoc}
      */
     @Override
-    @Loggable(Loggable.DEBUG)
     public int size() {
         return this.all.size();
     }

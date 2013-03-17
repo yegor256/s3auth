@@ -56,6 +56,7 @@ import org.apache.commons.codec.digest.DigestUtils;
  */
 @Immutable
 @EqualsAndHashCode(of = "host")
+@Loggable(Loggable.DEBUG)
 final class Htpasswd {
 
     /**
@@ -113,7 +114,6 @@ final class Htpasswd {
      * @return Yes or no
      * @throws IOException If some error inside
      */
-    @Loggable(Loggable.DEBUG)
     public boolean authorized(@NotNull final String user,
         @NotNull final String password) throws IOException {
         final ConcurrentMap<String, String> users = this.fetch();

@@ -60,6 +60,7 @@ import javax.ws.rs.core.Response;
  */
 @Path("/")
 @SuppressWarnings("PMD.TooManyMethods")
+@Loggable(Loggable.DEBUG)
 public final class IndexRs extends BaseRs {
 
     /**
@@ -69,7 +70,6 @@ public final class IndexRs extends BaseRs {
      */
     @GET
     @Path("/")
-    @Loggable(Loggable.DEBUG)
     public Response index() throws IOException {
         return new PageBuilder()
             .stylesheet("/xsl/index.xsl")
@@ -94,7 +94,6 @@ public final class IndexRs extends BaseRs {
     @POST
     @Path("/add")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Loggable(Loggable.DEBUG)
     public Response add(@FormParam("host") final String host,
         @FormParam("key") final String key,
         @FormParam("secret") final String secret,
@@ -145,7 +144,6 @@ public final class IndexRs extends BaseRs {
      */
     @GET
     @Path("/remove")
-    @Loggable(Loggable.DEBUG)
     public Response remove(@QueryParam("host") final String host)
         throws IOException {
         final boolean removed = this.hosts().domains(this.user()).remove(

@@ -65,6 +65,7 @@ import lombok.ToString;
 @Immutable
 @ToString
 @EqualsAndHashCode(of = { "client", "table" })
+@Loggable(Loggable.INFO)
 final class DefaultDynamo implements Dynamo {
 
     /**
@@ -142,7 +143,6 @@ final class DefaultDynamo implements Dynamo {
      * {@inheritDoc}
      */
     @Override
-    @Loggable(Loggable.DEBUG)
     public void close() throws IOException {
         // nothing to do
     }
@@ -153,7 +153,6 @@ final class DefaultDynamo implements Dynamo {
     @Override
     @NotNull
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    @Loggable(Loggable.DEBUG)
     @Cacheable(lifetime = DefaultDynamo.LIFETIME, unit = TimeUnit.MINUTES)
     public ConcurrentMap<URN, Domains> load() throws IOException {
         final ConcurrentMap<URN, Domains> domains =
@@ -180,7 +179,6 @@ final class DefaultDynamo implements Dynamo {
      * {@inheritDoc}
      */
     @Override
-    @Loggable(Loggable.INFO)
     @Cacheable.Flush
     public boolean add(@NotNull final URN user,
         @NotNull final Domain domain) throws IOException {
@@ -201,7 +199,6 @@ final class DefaultDynamo implements Dynamo {
      * {@inheritDoc}
      */
     @Override
-    @Loggable(Loggable.INFO)
     @Cacheable.Flush
     public boolean remove(@NotNull final Domain domain) throws IOException {
         final AmazonDynamoDB amazon = this.client.get();

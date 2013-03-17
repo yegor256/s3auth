@@ -69,6 +69,7 @@ import org.apache.commons.httpclient.HttpStatus;
  */
 @ToString
 @EqualsAndHashCode(of = { "status", "hdrs", "body" })
+@Loggable(Loggable.DEBUG)
 final class HttpResponse {
 
     /**
@@ -142,7 +143,6 @@ final class HttpResponse {
      * @throws IOException If some IO problem inside
      * @see http://stackoverflow.com/questions/8179547
      */
-    @Loggable(Loggable.DEBUG)
     public long send(@NotNull final Socket socket) throws IOException {
         long bytes = 0;
         final OutputStream stream = socket.getOutputStream();

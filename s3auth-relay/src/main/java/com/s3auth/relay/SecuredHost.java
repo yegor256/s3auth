@@ -61,6 +61,7 @@ import org.apache.commons.lang.CharEncoding;
  */
 @ToString(of = "host")
 @EqualsAndHashCode(of = { "host", "request" })
+@Loggable(Loggable.DEBUG)
 final class SecuredHost implements Host {
 
     /**
@@ -94,7 +95,6 @@ final class SecuredHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    @Loggable(Loggable.DEBUG)
     public Resource fetch(@NotNull final URI uri) throws IOException {
         Resource res;
         if (this.isHidden(uri)) {
@@ -109,7 +109,6 @@ final class SecuredHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    @Loggable(Loggable.DEBUG)
     public boolean isHidden(@NotNull final URI uri) throws IOException {
         return this.host.isHidden(uri);
     }
@@ -118,7 +117,6 @@ final class SecuredHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    @Loggable(Loggable.DEBUG)
     public boolean authorized(@NotNull final String user,
         @NotNull final String password) throws IOException {
         return this.host.authorized(user, password);
@@ -128,7 +126,6 @@ final class SecuredHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    @Loggable(Loggable.DEBUG)
     public void close() throws IOException {
         this.host.close();
     }

@@ -47,6 +47,7 @@ import javax.servlet.ServletContextListener;
  * @version $Id$
  * @since 0.0.1
  */
+@Loggable(Loggable.DEBUG)
 public final class HostsListener implements ServletContextListener {
 
     /**
@@ -66,7 +67,6 @@ public final class HostsListener implements ServletContextListener {
      * {@link com.netbout.rest.BaseRs#setServletContext(ServletContext)}.
      */
     @Override
-    @Loggable(Loggable.DEBUG)
     public void contextInitialized(final ServletContextEvent event) {
         try {
             Manifests.append(event.getServletContext());
@@ -89,7 +89,6 @@ public final class HostsListener implements ServletContextListener {
      * {@inheritDoc}
      */
     @Override
-    @Loggable(Loggable.DEBUG)
     public void contextDestroyed(final ServletContextEvent event) {
         if (this.hosts == null) {
             Logger.warn(this, "#contextDestroyed(): Hosts is null");

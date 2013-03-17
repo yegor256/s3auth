@@ -46,6 +46,7 @@ import lombok.ToString;
 @Immutable
 @ToString
 @EqualsAndHashCode(of = "origin")
+@Loggable(Loggable.DEBUG)
 final class DefaultDomain implements Domain {
 
     /**
@@ -98,7 +99,6 @@ final class DefaultDomain implements Domain {
      */
     @Override
     @NotNull
-    @Loggable(Loggable.DEBUG)
     public String name() {
         return this.origin.name().trim();
     }
@@ -108,7 +108,6 @@ final class DefaultDomain implements Domain {
      */
     @Override
     @NotNull
-    @Loggable(Loggable.DEBUG)
     public String key() {
         return this.origin.key().trim();
     }
@@ -118,7 +117,6 @@ final class DefaultDomain implements Domain {
      */
     @Override
     @NotNull
-    @Loggable(Loggable.DEBUG)
     public String secret() {
         return this.origin.secret().trim();
     }
@@ -128,7 +126,6 @@ final class DefaultDomain implements Domain {
      */
     @Override
     @NotNull
-    @Loggable(Loggable.DEBUG)
     public String region() {
         return this.origin.region().trim();
     }

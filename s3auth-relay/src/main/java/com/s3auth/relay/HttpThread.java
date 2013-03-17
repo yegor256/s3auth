@@ -64,6 +64,7 @@ import org.apache.commons.io.IOUtils;
 @ToString
 @EqualsAndHashCode(of = { "hosts", "sockets" })
 @SuppressWarnings("PMD.DoNotUseThreads")
+@Loggable(Loggable.DEBUG)
 final class HttpThread {
 
     /**
@@ -102,7 +103,6 @@ final class HttpThread {
      * @return Amount of bytes sent to socket
      * @throws InterruptedException If interrupted while waiting for the queue
      */
-    @Loggable(Loggable.DEBUG)
     public long dispatch() throws InterruptedException {
         final Socket socket = this.sockets.take();
         final long start = System.currentTimeMillis();

@@ -45,6 +45,7 @@ import javax.validation.constraints.NotNull;
  * @since 0.0.1
  */
 @Immutable
+@Loggable(Loggable.DEBUG)
 public final class RestUser implements User {
 
     /**
@@ -108,7 +109,6 @@ public final class RestUser implements User {
      * {@inheritDoc}
      */
     @Override
-    @Loggable(Loggable.DEBUG)
     public URN identity() {
         return this.origin.identity();
     }
@@ -117,7 +117,6 @@ public final class RestUser implements User {
      * {@inheritDoc}
      */
     @Override
-    @Loggable(Loggable.DEBUG)
     public String name() {
         return this.origin.name();
     }
@@ -126,7 +125,6 @@ public final class RestUser implements User {
      * {@inheritDoc}
      */
     @Override
-    @Loggable(Loggable.DEBUG)
     public URI photo() {
         return this.origin.photo();
     }
