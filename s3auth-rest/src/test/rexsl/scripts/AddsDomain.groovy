@@ -37,21 +37,24 @@ import com.s3auth.rest.RestUser
 import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.MediaType
 
-Manifests.append(new File(rexsl.basedir, 'target/test-classes/META-INF/MANIFEST.MF'))
+String cookie() {
+    Manifests.append(new File(rexsl.basedir, 'target/test-classes/META-INF/MANIFEST.MF'))
+    def user = new RestUser(new UserMocker().withIdentity('urn:facebook:555').mock())
+    'Rexsl-Auth=' + AuthInset.encrypt(
+        user.asIdentity(),
+        Manifests.read('S3Auth-SecurityKey'),
+        Manifests.read('S3Auth-SecuritySalt')
+    )
+}
 
-def user = new RestUser(new UserMocker().withIdentity('urn:facebook:555').mock())
-def cookie = 'Rexsl-Auth=' + AuthInset.encrypt(
-    user.asIdentity(),
-    Manifests.read('S3Auth-SecurityKey'),
-    Manifests.read('S3Auth-SecuritySalt')
-)
+def cookie = this.cookie()
 def host = 'test.s3auth.com'
 def key = 'AAAAAAAAAAAAAAAAAAAA'
 def secret = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 
 def home = RestTester.start(rexsl.home)
     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-    .header(HttpHeaders.COOKIE, cookie)
+    .header(HttpHeaders.COOKIE, this.cookie())
     .get('read home page')
     .assertStatus(HttpURLConnection.HTTP_OK)
 if (!home.nodes("//domain[name='${host}']").isEmpty()) {
