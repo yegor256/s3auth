@@ -116,7 +116,8 @@
         </site>
     </distributionManagement>
     <properties>
-        <rexsl.version>0.4.8</rexsl.version>
+        <rexsl.version>1.0-SNAPSHOT</rexsl.version>
+        <jcabi.version>1.0-SNAPSHOT</jcabi.version>
     </properties>
     <repositories>
         <repository>

@@ -150,6 +150,12 @@ label {
     #flash.WARNING {
         color: red;
         background-color: #fdd;
+        border: 1px solid orange;
+    }
+
+    #flash.SEVERE {
+        color: red;
+        background-color: #fdd;
         border: 1px solid red;
     }
 
