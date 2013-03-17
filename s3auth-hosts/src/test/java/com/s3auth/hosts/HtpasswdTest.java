@@ -144,6 +144,21 @@ public final class HtpasswdTest {
     }
 
     /**
+     * Htpasswd can authorize twice.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void authorizesTwice() throws Exception {
+        final Htpasswd htpasswd = new Htpasswd(this.host("bobby:pwd"));
+        for (int attempt = 0; attempt < 2; ++attempt) {
+            MatcherAssert.assertThat(
+                htpasswd.authorized("bobby", "pwd"),
+                Matchers.is(true)
+            );
+        }
+    }
+
+    /**
      * Create host that fetches the provided htpasswd content.
      * @param htpasswd The content to fetch
      * @return The host
