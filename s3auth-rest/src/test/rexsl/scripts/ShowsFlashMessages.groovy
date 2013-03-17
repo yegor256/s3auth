@@ -41,7 +41,7 @@ import org.hamcrest.Matchers
 
 Manifests.append(new File(rexsl.basedir, 'target/test-classes/META-INF/MANIFEST.MF'))
 
-def user = new RestUser(new UserMocker().withIdentity('urn:facebook:333').mock())
+def user = new RestUser(new UserMocker().withIdentity('urn:facebook:777').mock())
 def cookie = 'Rexsl-Auth=' + AuthInset.encrypt(
     user.asIdentity(),
     Manifests.read("S3Auth-SecurityKey"),
