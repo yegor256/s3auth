@@ -30,44 +30,41 @@
 package com.s3auth.hosts;
 
 import com.jcabi.aspects.Immutable;
-import java.io.Closeable;
-import java.io.IOException;
-import java.net.URI;
 
 /**
- * One host.
+ * Range of data.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
  */
 @Immutable
-public interface Host extends Closeable {
+public interface Range {
 
     /**
-     * Find resource and return its input stream.
-     * @param uri Name of resource
-     * @param range Range of data to return
-     * @return The stream
-     * @throws IOException If some error with I/O inside
+     * All inclusive range.
      */
-    Resource fetch(URI uri, Range range) throws IOException;
+    Range ENTIRE = new Range() {
+        @Override
+        public long first() {
+            return 0;
+        }
+        @Override
+        public long last() {
+            return Long.MAX_VALUE;
+        }
+    };
 
     /**
-     * This URI require authentication?
-     * @param uri Which URI we're trying to access
-     * @return Yes or no
-     * @throws IOException If some error with I/O inside
+     * First byte to fetch, inclusively.
+     * @return Number of byte
      */
-    boolean isHidden(URI uri) throws IOException;
+    long first();
 
     /**
-     * Can this user login in with this credentials?
-     * @param user User name
-     * @param password Password
-     * @return Yes or no
-     * @throws IOException If some error with I/O inside
+     * Last byte to fetch, inclusively.
+     * @return Number of byte
      */
-    boolean authorized(String user, String password) throws IOException;
+    long last();
 
 }

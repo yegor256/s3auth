@@ -89,7 +89,8 @@ final class DefaultHost implements Host {
     @Override
     @NotNull
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public Resource fetch(@NotNull final URI uri) throws IOException {
+    public Resource fetch(@NotNull final URI uri, @NotNull final Range range)
+        throws IOException {
         Resource resource = null;
         final Collection<String> errors = new LinkedList<String>();
         for (DefaultHost.ObjectName name : this.names(uri)) {
@@ -99,7 +100,7 @@ final class DefaultHost implements Host {
                         new GetObjectRequest(
                             this.bucket.name(),
                             name.get()
-                        )
+                        ).withRange(range.first(), range.last())
                     )
                 );
                 break;

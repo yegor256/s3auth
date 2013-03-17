@@ -110,7 +110,9 @@ final class HttpThread {
         try {
             final HttpRequest request = new HttpRequest(socket);
             final Host host = this.host(request);
-            final Resource resource = host.fetch(request.requestUri());
+            final Resource resource = host.fetch(
+                request.requestUri(), request.range()
+            );
             bytes = new HttpResponse()
                 .withStatus(HttpURLConnection.HTTP_OK)
                 .withHeader(HttpHeaders.CACHE_CONTROL, "no-cache")

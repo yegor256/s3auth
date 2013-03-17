@@ -86,12 +86,13 @@ final class SmartHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    public Resource fetch(@NotNull final URI uri) throws IOException {
+    public Resource fetch(@NotNull final URI uri, @NotNull final Range range)
+        throws IOException {
         Resource resource;
         if (SmartHost.HTPASSWD.matcher(uri.toString()).matches()) {
             String text;
             try {
-                final Resource htpasswd = this.host.fetch(uri);
+                final Resource htpasswd = this.host.fetch(uri, range);
                 final ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 htpasswd.writeTo(baos);
                 text = String.format(
@@ -103,7 +104,7 @@ final class SmartHost implements Host {
             }
             resource = new Resource.PlainText(text);
         } else {
-            resource = this.host.fetch(uri);
+            resource = this.host.fetch(uri, range);
         }
         return resource;
     }

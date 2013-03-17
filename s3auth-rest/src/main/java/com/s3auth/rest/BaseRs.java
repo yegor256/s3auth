@@ -74,7 +74,7 @@ public class BaseRs extends BaseResource {
      * @return The inset
      */
     @Inset.Runtime
-    public Inset ver() {
+    public final Inset ver() {
         return new VersionInset(
             Manifests.read("S3Auth-Version"),
             Manifests.read("S3Auth-Revision"),
@@ -87,7 +87,7 @@ public class BaseRs extends BaseResource {
      * @return The inset
      */
     @Inset.Runtime
-    public Inset supplementary() {
+    public final Inset supplementary() {
         return new Inset() {
             @Override
             public void render(final BasePage<?, ?> page,
@@ -103,7 +103,7 @@ public class BaseRs extends BaseResource {
      * @return The inset
      */
     @Inset.Runtime
-    public AuthInset auth() {
+    public final AuthInset auth() {
         // @checkstyle LineLength (3 lines)
         return new AuthInset(this, Manifests.read("S3Auth-SecurityKey"), Manifests.read("S3Auth-SecuritySalt"))
             .with(new Facebook(this, Manifests.read("S3Auth-FbId"), Manifests.read("S3Auth-FbSecret")))

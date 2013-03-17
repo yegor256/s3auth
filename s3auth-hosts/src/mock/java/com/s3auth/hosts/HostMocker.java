@@ -53,7 +53,7 @@ public final class HostMocker {
         try {
             Mockito.doReturn(new ResourceMocker().withContent("hello").mock())
                 .when(this.host)
-                .fetch(Mockito.any(URI.class));
+                .fetch(Mockito.any(URI.class), Mockito.any(Range.class));
             Mockito.doReturn(true).when(this.host).authorized(
                 Mockito.anyString(),
                 Mockito.anyString()
@@ -75,7 +75,7 @@ public final class HostMocker {
         try {
             Mockito.doReturn(new ResourceMocker().withContent(content).mock())
                 .when(this.host)
-                .fetch(uri);
+                .fetch(Mockito.eq(uri), Mockito.any(Range.class));
         } catch (java.io.IOException ex) {
             throw new IllegalStateException(ex);
         }

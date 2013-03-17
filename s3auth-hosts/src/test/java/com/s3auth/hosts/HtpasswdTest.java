@@ -152,7 +152,7 @@ public final class HtpasswdTest {
     private Host host(final String htpasswd) throws Exception {
         final Host host = new HostMocker().mock();
         Mockito.doReturn(new ResourceMocker().withContent(htpasswd).mock())
-            .when(host).fetch(URI.create("/.htpasswd"));
+            .when(host).fetch(URI.create("/.htpasswd"), Range.ENTIRE);
         return host;
     }
 

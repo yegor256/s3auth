@@ -151,7 +151,10 @@ final class Htpasswd {
     private String content() {
         String content;
         try {
-            final Resource res = this.host.fetch(URI.create("/.htpasswd"));
+            final Resource res = this.host.fetch(
+                URI.create("/.htpasswd"),
+                Range.ENTIRE
+            );
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             res.writeTo(baos);
             content = baos.toString().trim();

@@ -30,6 +30,7 @@
 package com.s3auth.relay;
 
 import com.jcabi.aspects.Loggable;
+import com.s3auth.hosts.Range;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -154,6 +155,14 @@ final class HttpRequest {
      */
     public URI requestUri() {
         return this.uri;
+    }
+
+    /**
+     * Get range requested.
+     * @return The URI
+     */
+    public Range range() {
+        return Range.ENTIRE;
     }
 
     /**

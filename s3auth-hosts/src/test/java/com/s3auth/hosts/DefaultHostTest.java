@@ -98,7 +98,9 @@ public final class DefaultHostTest {
             };
         for (Map.Entry<String, String> path : paths.entrySet()) {
             MatcherAssert.assertThat(
-                ResourceMocker.toString(host.fetch(URI.create(path.getKey()))),
+                ResourceMocker.toString(
+                    host.fetch(URI.create(path.getKey()), Range.ENTIRE)
+                ),
                 Matchers.equalTo(path.getValue())
             );
         }
@@ -119,7 +121,7 @@ public final class DefaultHostTest {
                     .mock()
             )
         );
-        host.fetch(URI.create("foo.html"));
+        host.fetch(URI.create("foo.html"), Range.ENTIRE);
     }
 
     /**
