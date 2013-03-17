@@ -52,7 +52,7 @@ import org.apache.commons.lang.StringUtils;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "bucket", "htpasswd" })
+@EqualsAndHashCode(of = "bucket")
 @Loggable(Loggable.DEBUG)
 final class DefaultHost implements Host {
 
