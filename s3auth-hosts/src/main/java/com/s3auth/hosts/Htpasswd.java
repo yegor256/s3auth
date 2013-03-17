@@ -97,8 +97,7 @@ final class Htpasswd {
         String text;
         try {
             text = Logger.format(
-                ".htpasswd(%d user(s), reloaded every %d min)",
-                this.fetch().size(),
+                ".htpasswd(? user(s), reloaded every %d min)",
                 Htpasswd.LIFETIME
             );
         } catch (IOException ex) {
