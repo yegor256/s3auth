@@ -139,9 +139,11 @@ final class LocalHost implements Host {
             exception = new HttpException(
                 HttpURLConnection.HTTP_NOT_FOUND,
                 String.format(
-                    "shutdown key starts with '%s...'",
-                    // @checkstyle MagicNumber (1 line)
-                    LocalHost.SHUTDOWN.substring(0, 5)
+                    "shutdown key ends with '%s...'",
+                    LocalHost.SHUTDOWN.substring(
+                        // @checkstyle MagicNumber (1 line)
+                        LocalHost.SHUTDOWN.length() - 5
+                    )
                 )
             );
         }
