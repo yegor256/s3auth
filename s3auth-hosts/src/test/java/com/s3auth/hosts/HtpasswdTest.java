@@ -144,6 +144,21 @@ public final class HtpasswdTest {
     }
 
     /**
+     * Htpasswd can use default host.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void worksWithDefaultHost() throws Exception {
+        final Htpasswd htpasswd = new Htpasswd(
+            new DefaultHost(new BucketMocker().mock())
+        );
+        MatcherAssert.assertThat(
+            htpasswd.authorized("jacky", "pwd"),
+            Matchers.is(false)
+        );
+    }
+
+    /**
      * Create host that fetches the provided htpasswd content.
      * @param htpasswd The content to fetch
      * @return The host

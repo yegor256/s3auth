@@ -31,6 +31,7 @@ package com.s3auth.relay;
 
 import com.jcabi.aspects.Loggable;
 import com.s3auth.hosts.Host;
+import com.s3auth.hosts.Range;
 import com.s3auth.hosts.Resource;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -95,12 +96,13 @@ final class SecuredHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    public Resource fetch(@NotNull final URI uri) throws IOException {
+    public Resource fetch(@NotNull final URI uri, @NotNull final Range range)
+        throws IOException {
         Resource res;
         if (this.isHidden(uri)) {
-            res = this.secured(uri);
+            res = this.secured(uri, range);
         } else {
-            res = this.host.fetch(uri);
+            res = this.host.fetch(uri, range);
         }
         return res;
     }
@@ -133,10 +135,12 @@ final class SecuredHost implements Host {
     /**
      * Fetch this URI in a secure way.
      * @param uri The URI to fetch
+     * @param range The range
      * @return Fetched resource
      * @throws IOException If some IO problem inside
      */
-    private Resource secured(final URI uri) throws IOException {
+    private Resource secured(final URI uri, final Range range)
+        throws IOException {
         if (!this.request.headers().containsKey(HttpHeaders.AUTHORIZATION)) {
             throw new HttpException(
                 new HttpResponse()
@@ -189,7 +193,7 @@ final class SecuredHost implements Host {
                     .withBody(this.host.toString())
             );
         }
-        return this.host.fetch(uri);
+        return this.host.fetch(uri, range);
     }
 
 }

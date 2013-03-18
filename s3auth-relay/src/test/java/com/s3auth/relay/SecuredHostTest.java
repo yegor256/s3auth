@@ -31,6 +31,7 @@ package com.s3auth.relay;
 
 import com.s3auth.hosts.Host;
 import com.s3auth.hosts.HostMocker;
+import com.s3auth.hosts.Range;
 import com.s3auth.hosts.Resource;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -63,7 +64,7 @@ public final class SecuredHostTest {
                 new SecuredHost(
                     new HostMocker().mock(),
                     HttpRequestMocker.toRequest(http)
-                ).fetch(URI.create("/"));
+                ).fetch(URI.create("/"), Range.ENTIRE);
                 Assert.fail("exception expected");
             } catch (HttpException ex) {
                 MatcherAssert.assertThat(
@@ -90,7 +91,7 @@ public final class SecuredHostTest {
                 new SecuredHost(
                     new HostMocker().mock(),
                     HttpRequestMocker.toRequest(http)
-                ).fetch(URI.create("/test.html"));
+                ).fetch(URI.create("/test.html"), Range.ENTIRE);
                 Assert.fail("exception expected, but didn't happen");
             } catch (HttpException ex) {
                 MatcherAssert.assertThat(
@@ -130,7 +131,7 @@ public final class SecuredHostTest {
                         return false;
                     }
                     @Override
-                    public Resource fetch(final URI uri) {
+                    public Resource fetch(final URI uri, final Range range) {
                         throw new UnsupportedOperationException();
                     }
                     @Override
@@ -141,7 +142,7 @@ public final class SecuredHostTest {
                 HttpRequestMocker.toRequest(
                     "GET / HTTP/1.1\nAuthorization: Basic dGVzdDp0ZXN0\n\n"
                 )
-            ).fetch(URI.create("/test-request.html"));
+            ).fetch(URI.create("/test-request.html"), Range.ENTIRE);
             Assert.fail("authorization failed expected, but didn't happen");
         } catch (HttpException ex) {
             MatcherAssert.assertThat(

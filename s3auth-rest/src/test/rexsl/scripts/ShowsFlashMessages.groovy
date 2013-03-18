@@ -33,7 +33,6 @@ import com.jcabi.manifests.Manifests
 import com.rexsl.page.auth.AuthInset
 import com.rexsl.test.RestTester
 import com.s3auth.hosts.UserMocker
-import com.s3auth.rest.BaseRs
 import com.s3auth.rest.RestUser
 import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.MediaType
@@ -41,12 +40,15 @@ import org.hamcrest.Matchers
 
 Manifests.append(new File(rexsl.basedir, 'target/test-classes/META-INF/MANIFEST.MF'))
 
-def user = new RestUser(new UserMocker().withIdentity('urn:facebook:777').mock())
-def cookie = 'Rexsl-Auth=' + AuthInset.encrypt(
-    user.asIdentity(),
-    Manifests.read("S3Auth-SecurityKey"),
-    Manifests.read("S3Auth-SecuritySalt")
-)
+String cookie() {
+    def user = new RestUser(new UserMocker().withIdentity('urn:facebook:777').mock())
+    'Rexsl-Auth=' + AuthInset.encrypt(
+        user.asIdentity(),
+        Manifests.read('S3Auth-SecurityKey'),
+        Manifests.read('S3Auth-SecuritySalt')
+    )
+}
+def cookie = this.cookie()
 def host = 'test-2.s3auth.com'
 
 def home = RestTester.start(rexsl.home)

@@ -107,24 +107,6 @@ public final class DefaultHostTest {
     }
 
     /**
-     * DefaultHost can throw IOException for absent object.
-     * @throws Exception If there is some problem inside
-     */
-    @Test(expected = java.io.IOException.class)
-    public void throwsWhenAbsentResource() throws Exception {
-        final Host host = new DefaultHost(
-            new DefaultBucket(
-                new DomainMocker()
-                    .withName("invalid-bucket.s3auth.com")
-                    .withKey("foo")
-                    .withSecret("invalid-data")
-                    .mock()
-            )
-        );
-        host.fetch(URI.create("foo.html"), Range.ENTIRE);
-    }
-
-    /**
      * DefaultHost can show some stats in {@code #toString()}.
      * @throws Exception If there is some problem inside
      */
@@ -133,6 +115,18 @@ public final class DefaultHostTest {
         MatcherAssert.assertThat(
             new DefaultHost(new BucketMocker().mock()),
             Matchers.hasToString(Matchers.notNullValue())
+        );
+    }
+
+    /**
+     * DefaultHost can reject authorization with invalid credentials.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void rejectsAuthorizationWhenInvalidCredentials() throws Exception {
+        MatcherAssert.assertThat(
+            new DefaultHost(new BucketMocker().mock()).authorized("1", "2"),
+            Matchers.is(false)
         );
     }
 

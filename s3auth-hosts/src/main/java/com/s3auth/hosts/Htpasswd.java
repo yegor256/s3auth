@@ -31,6 +31,7 @@ package com.s3auth.hosts;
 
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.LogExceptions;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import java.io.ByteArrayOutputStream;
@@ -55,8 +56,8 @@ import org.apache.commons.codec.digest.DigestUtils;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
-@EqualsAndHashCode(of = "host")
 @Loggable(Loggable.DEBUG)
+@EqualsAndHashCode(of = "host")
 final class Htpasswd {
 
     /**
@@ -94,17 +95,10 @@ final class Htpasswd {
      */
     @Override
     public String toString() {
-        String text;
-        try {
-            text = Logger.format(
-                ".htpasswd(%d user(s), reloaded every %d min)",
-                this.fetch().size(),
-                Htpasswd.LIFETIME
-            );
-        } catch (IOException ex) {
-            text = ex.getMessage();
-        }
-        return text;
+        return Logger.format(
+            ".htpasswd(? user(s), reloaded every %d min)",
+            Htpasswd.LIFETIME
+        );
     }
 
     /**
@@ -114,6 +108,7 @@ final class Htpasswd {
      * @return Yes or no
      * @throws IOException If some error inside
      */
+    @LogExceptions
     public boolean authorized(@NotNull final String user,
         @NotNull final String password) throws IOException {
         final ConcurrentMap<String, String> users = this.fetch();

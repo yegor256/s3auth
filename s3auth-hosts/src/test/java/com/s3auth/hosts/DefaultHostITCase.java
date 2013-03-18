@@ -27,62 +27,34 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.s3auth.relay;
+package com.s3auth.hosts;
 
-import com.jcabi.manifests.Manifests;
-import com.s3auth.hosts.Host;
-import com.s3auth.hosts.Range;
-import com.s3auth.hosts.ResourceMocker;
 import java.net.URI;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * Test case for {@link LocalHost}.
+ * Integration test case for {@link DefaultHost}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class LocalHostTest {
+public final class DefaultHostITCase {
 
     /**
-     * LocalHost can render a simple home page.
+     * DefaultHost can throw IOException for absent object.
      * @throws Exception If there is some problem inside
      */
-    @Test
-    public void rendersHomePage() throws Exception {
-        final Host host = new LocalHost();
-        MatcherAssert.assertThat(
-            host.isHidden(new URI("/some-uri")),
-            Matchers.is(false)
+    @Test(expected = java.io.IOException.class)
+    public void throwsWhenAbsentResource() throws Exception {
+        final Host host = new DefaultHost(
+            new DefaultBucket(
+                new DomainMocker()
+                    .withName("invalid-bucket.s3auth.com")
+                    .withKey("foo")
+                    .withSecret("invalid-data")
+                    .mock()
+            )
         );
-        MatcherAssert.assertThat(
-            host.authorized("user-name", "user-password"),
-            Matchers.is(true)
-        );
-        MatcherAssert.assertThat(
-            host,
-            Matchers.hasToString(Matchers.equalTo("localhost"))
-        );
-        MatcherAssert.assertThat(
-            ResourceMocker.toString(host.fetch(URI.create("/"), Range.ENTIRE)),
-            Matchers.notNullValue()
-        );
-    }
-
-    /**
-     * LocalHost can report current version.
-     * @throws Exception If there is some problem inside
-     */
-    @Test
-    public void reportsCurrentVersion() throws Exception {
-        final Host host = new LocalHost();
-        MatcherAssert.assertThat(
-            ResourceMocker.toString(
-                host.fetch(URI.create("/version"), Range.ENTIRE)
-            ),
-            Matchers.equalTo(Manifests.read("S3Auth-Revision"))
-        );
+        host.fetch(URI.create("foo.html"));
     }
 
 }
