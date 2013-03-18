@@ -54,7 +54,7 @@ public final class DefaultHostITCase {
                     .mock()
             )
         );
-        host.fetch(URI.create("foo.html"));
+        host.fetch(URI.create("foo.html"), Range.ENTIRE);
     }
 
 }

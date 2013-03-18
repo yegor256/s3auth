@@ -73,7 +73,7 @@ final class LocalHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    public Resource fetch(@NotNull final URI uri, @NotNull final Range range) 
+    public Resource fetch(@NotNull final URI uri, @NotNull final Range range)
         throws IOException {
         if (uri.toString().startsWith("/shutdown")) {
             throw this.halt(uri.toString());
