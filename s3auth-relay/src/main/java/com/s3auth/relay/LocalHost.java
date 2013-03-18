@@ -72,17 +72,15 @@ final class LocalHost implements Host {
      * {@inheritDoc}
      */
     @Override
-    @SuppressWarnings("PMD.DoNotCallSystemExit")
     public Resource fetch(@NotNull final URI uri) throws IOException {
+        if (uri.toString().startsWith("/shutdown")) {
+            throw this.halt(uri.toString());
+        }
         String output;
         if ("/".equals(uri.toString())) {
             output = "see www.s3auth.com";
         } else if ("/version".equals(uri.toString())) {
             output = Manifests.read("S3Auth-Revision");
-        } else if (uri.toString().equals(LocalHost.SHUTDOWN)) {
-            output = "";
-            Logger.warn(this, "fetch(%s): shutting down..", uri);
-            System.exit(0);
         } else {
             throw new HttpException(
                 HttpURLConnection.HTTP_NOT_FOUND,
@@ -123,6 +121,31 @@ final class LocalHost implements Host {
     @Override
     public String toString() {
         return "localhost";
+    }
+
+    /**
+     * Shutdown.
+     * @param uri URI just dispatched
+     * @return The exception to throw
+     */
+    @SuppressWarnings("PMD.DoNotCallSystemExit")
+    private IOException halt(final String uri) {
+        IOException exception;
+        if (uri.equals(LocalHost.SHUTDOWN)) {
+            exception = new IOException();
+            Logger.warn(this, "fetch(%s): shutting down..", uri);
+            System.exit(0);
+        } else {
+            exception = new HttpException(
+                HttpURLConnection.HTTP_NOT_FOUND,
+                String.format(
+                    "shutdown key starts with '%s...'",
+                    // @checkstyle MagicNumber (1 line)
+                    LocalHost.SHUTDOWN.substring(0, 5)
+                )
+            );
+        }
+        return exception;
     }
 
 }
