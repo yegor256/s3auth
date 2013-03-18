@@ -144,18 +144,18 @@ public final class HtpasswdTest {
     }
 
     /**
-     * Htpasswd can authorize twice.
+     * Htpasswd can use default host.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void authorizesTwice() throws Exception {
-        final Htpasswd htpasswd = new Htpasswd(this.host("bobby:pwd"));
-        for (int attempt = 0; attempt < 2; ++attempt) {
-            MatcherAssert.assertThat(
-                htpasswd.authorized("bobby", "pwd"),
-                Matchers.is(true)
-            );
-        }
+    public void worksWithDefaultHost() throws Exception {
+        final Htpasswd htpasswd = new Htpasswd(
+            new DefaultHost(new BucketMocker().mock())
+        );
+        MatcherAssert.assertThat(
+            htpasswd.authorized("jacky", "pwd"),
+            Matchers.is(false)
+        );
     }
 
     /**
