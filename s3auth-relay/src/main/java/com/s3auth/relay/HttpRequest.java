@@ -181,7 +181,7 @@ final class HttpRequest {
             final Matcher matcher = HttpRequest.RANGE_PATTERN.matcher(
                 this.hdrs.get(HttpRequest.RANGE_HEADER).iterator().next()
             );
-            if (matcher.matches()) {
+            if (!matcher.matches()) {
                 throw new HttpException(
                     HttpURLConnection.HTTP_BAD_REQUEST,
                     "invalid Range header format"
