@@ -99,6 +99,11 @@ final class HttpResponse {
      * @return This object
      */
     public HttpResponse withStatus(final int stts) {
+        if (stts < HttpURLConnection.HTTP_OK) {
+            throw new IllegalArgumentException(
+                String.format("illegal HTTP status %d", stts)
+            );
+        }
         this.status = stts;
         return this;
     }
@@ -123,6 +128,7 @@ final class HttpResponse {
      */
     public HttpResponse withBody(@NotNull final Resource res) {
         this.body = res;
+        this.withStatus(res.status());
         return this;
     }
 

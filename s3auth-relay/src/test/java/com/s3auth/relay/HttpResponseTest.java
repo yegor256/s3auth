@@ -84,6 +84,7 @@ public final class HttpResponseTest {
     @SuppressWarnings("PMD.DoNotUseThreads")
     public void sendsDataFromSlowResource() throws Exception {
         final String content = "\u0433 some text";
+        // @checkstyle AnonInnerLength (50 lines)
         final Resource res = new Resource() {
             @Override
             public long writeTo(final OutputStream stream) {
@@ -96,6 +97,10 @@ public final class HttpResponseTest {
                 writer.print(content);
                 writer.flush();
                 return content.getBytes().length;
+            }
+            @Override
+            public int status() {
+                return HttpURLConnection.HTTP_OK;
             }
             @Override
             public Collection<String> headers() {

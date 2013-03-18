@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.util.Arrays;
 import java.util.Collection;
 import javax.validation.constraints.NotNull;
@@ -74,6 +75,13 @@ public interface Resource {
          * {@inheritDoc}
          */
         @Override
+        public int status() {
+            return HttpURLConnection.HTTP_OK;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
         public long writeTo(@NotNull final OutputStream stream)
             throws IOException {
             IOUtils.write(this.text, stream);
@@ -98,6 +106,12 @@ public interface Resource {
             );
         }
     }
+
+    /**
+     * Get HTTP status.
+     * @return The status
+     */
+    int status();
 
     /**
      * Write its content to the writer.

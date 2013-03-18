@@ -35,6 +35,7 @@ import com.jcabi.aspects.Loggable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.util.Collection;
 import java.util.LinkedList;
 import javax.validation.constraints.NotNull;
@@ -90,6 +91,20 @@ final class DefaultResource implements Resource {
         this.object = obj;
         this.range = rng;
         this.size = bytes;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int status() {
+        int status;
+        if (this.range.equals(Range.ENTIRE)) {
+            status = HttpURLConnection.HTTP_OK;
+        } else {
+            status = HttpURLConnection.HTTP_PARTIAL;
+        }
+        return status;
     }
 
     /**
@@ -161,8 +176,16 @@ final class DefaultResource implements Resource {
                 )
             );
         }
+        if (meta.getETag() != null) {
+            headers.add(
+                DefaultResource.header(
+                    HttpHeaders.ETAG,
+                    meta.getETag()
+                )
+            );
+        }
         headers.add(DefaultResource.header("Accept-Ranges", "bytes"));
-        if (!this.range.equals(Range.ENTIRE)) {
+        if (!this.range.equals(Range.ENTIRE) && this.size > 0) {
             headers.add(
                 DefaultResource.header(
                     "Content-Range",

@@ -32,6 +32,7 @@ package com.s3auth.hosts;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import org.apache.commons.io.IOUtils;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -56,6 +57,8 @@ public final class ResourceMocker {
      */
     public ResourceMocker() {
         this.withContent("no content");
+        Mockito.doReturn(HttpURLConnection.HTTP_OK)
+            .when(this.resource).status();
     }
 
     /**
