@@ -30,6 +30,9 @@
 package com.s3auth.hosts;
 
 import java.net.URI;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Assume;
 import org.junit.Test;
 
 /**
@@ -38,6 +41,34 @@ import org.junit.Test;
  * @version $Id$
  */
 public final class DefaultHostITCase {
+
+    /**
+     * DefaultHost can fetch a real object from S3 bucket.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void fetchesRealObjectFromAmazonBucket() throws Exception {
+        final String key = System.getProperty("failsafe.aws.key");
+        final String secret = System.getProperty("failsafe.aws.secret");
+        Assume.assumeThat(key, Matchers.notNullValue());
+        final Host host = new DefaultHost(
+            new DefaultBucket(
+                new DomainMocker()
+                    .withName("maven.s3auth.com")
+                    .withKey(key)
+                    .withSecret(secret)
+                    .withRegion("s3")
+                    .mock()
+            )
+        );
+        MatcherAssert.assertThat(
+            ResourceMocker.toString(
+                // @checkstyle MagicNumber (1 line)
+                host.fetch(URI.create("/index.html"), new Range.Simple(3, 500))
+            ),
+            Matchers.startsWith("OCTYPE html>\n")
+        );
+    }
 
     /**
      * DefaultHost can throw IOException for absent object.

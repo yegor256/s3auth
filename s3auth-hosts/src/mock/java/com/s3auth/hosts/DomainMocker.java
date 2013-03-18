@@ -50,7 +50,7 @@ public final class DomainMocker {
      */
     public DomainMocker() {
         this.withName("localhost");
-        this.withRegion("s3-ap-southeast-1");
+        this.withRegion("s3");
         this.withKey("AAAAAAAAAAAAAAAAAAAA");
         this.withSecret("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
     }

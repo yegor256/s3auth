@@ -30,6 +30,7 @@
 package com.s3auth.hosts;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 
 /**
  * Range of data.
@@ -66,5 +67,43 @@ public interface Range {
      * @return Number of byte
      */
     long last();
+
+    /**
+     * Simple implementation.
+     */
+    @Loggable(Loggable.DEBUG)
+    final class Simple implements Range {
+        /**
+         * First byte.
+         */
+        private final transient long frst;
+        /**
+         * Last byte.
+         */
+        private final transient long lst;
+        /**
+         * Public ctor.
+         * @param first First byte
+         * @param last Last byte
+         */
+        public Simple(final long first, final long last) {
+            this.frst = first;
+            this.lst = last;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public long first() {
+            return this.frst;
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public long last() {
+            return this.lst;
+        }
+    }
 
 }

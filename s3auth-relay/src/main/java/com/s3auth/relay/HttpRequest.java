@@ -187,16 +187,10 @@ final class HttpRequest {
                     "invalid Range header format"
                 );
             }
-            range = new Range() {
-                @Override
-                public long first() {
-                    return Long.parseLong(matcher.group(1));
-                }
-                @Override
-                public long last() {
-                    return Long.parseLong(matcher.group(2));
-                }
-            };
+            range = new Range.Simple(
+                Long.parseLong(matcher.group(1)),
+                Long.parseLong(matcher.group(2))
+            );
         } else {
             range = Range.ENTIRE;
         }

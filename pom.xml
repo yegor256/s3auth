@@ -153,6 +153,15 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <failsafe.aws.key>${aws.key}</failsafe.aws.key>
+                            <failsafe.aws.secret>${aws.secret}</failsafe.aws.secret>
+                        </systemPropertyVariables>
+                    </configuration>
+                </plugin>
+                <plugin>
                     <groupId>com.texry</groupId>
                     <artifactId>texry-maven-plugin</artifactId>
                     <version>0.2.1</version>
