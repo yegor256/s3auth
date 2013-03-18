@@ -58,7 +58,7 @@ public final class DefaultResourceTest {
         final ObjectMetadata meta = Mockito.mock(ObjectMetadata.class);
         Mockito.doReturn(meta).when(object).getObjectMetadata();
         Mockito.doReturn(1L).when(meta).getContentLength();
-        final Resource res = new DefaultResource(object, Range.ENTIRE);
+        final Resource res = new DefaultResource(object);
         MatcherAssert.assertThat(
             res.headers(),
             Matchers.hasItem("Content-Length: 1")
@@ -77,7 +77,7 @@ public final class DefaultResourceTest {
         final S3Object object = Mockito.mock(S3Object.class);
         Mockito.doReturn(stream).when(object).getObjectContent();
         MatcherAssert.assertThat(
-            ResourceMocker.toString(new DefaultResource(object, Range.ENTIRE)),
+            ResourceMocker.toString(new DefaultResource(object)),
             Matchers.equalTo("")
         );
     }
@@ -101,9 +101,7 @@ public final class DefaultResourceTest {
         final S3Object object = Mockito.mock(S3Object.class);
         Mockito.doReturn(stream).when(object).getObjectContent();
         MatcherAssert.assertThat(
-            ResourceMocker.toByteArray(
-                new DefaultResource(object, Range.ENTIRE)
-            ),
+            ResourceMocker.toByteArray(new DefaultResource(object)),
             Matchers.equalTo(data)
         );
     }
@@ -121,7 +119,7 @@ public final class DefaultResourceTest {
         final S3Object object = Mockito.mock(S3Object.class);
         Mockito.doReturn(stream).when(object).getObjectContent();
         MatcherAssert.assertThat(
-            ResourceMocker.toString(new DefaultResource(object, Range.ENTIRE)),
+            ResourceMocker.toString(new DefaultResource(object)),
             Matchers.equalTo("")
         );
     }

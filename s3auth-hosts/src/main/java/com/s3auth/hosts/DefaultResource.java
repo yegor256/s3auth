@@ -67,14 +67,29 @@ final class DefaultResource implements Resource {
     private final transient Range range;
 
     /**
+     * Total size of the S3 object.
+     */
+    private final transient long size;
+
+    /**
+     * Public ctor.
+     * @param obj S3 object
+     */
+    public DefaultResource(@NotNull final S3Object obj) {
+        this(obj, Range.ENTIRE, 0);
+    }
+
+    /**
      * Public ctor.
      * @param obj S3 object
      * @param rng Range served
+     * @param bytes Total size in bytes
      */
     public DefaultResource(@NotNull final S3Object obj,
-        @NotNull final Range rng) {
+        @NotNull final Range rng, final long bytes) {
         this.object = obj;
         this.range = rng;
+        this.size = bytes;
     }
 
     /**
@@ -155,7 +170,7 @@ final class DefaultResource implements Resource {
                         "bytes %d-%d/%d",
                         this.range.first(),
                         this.range.last(),
-                        this.object.getObjectMetadata().getContentLength()
+                        this.size
                     )
                 )
             );

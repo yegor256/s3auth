@@ -31,6 +31,7 @@ package com.s3auth.hosts;
 
 import com.amazonaws.services.s3.model.BucketWebsiteConfiguration;
 import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
@@ -95,15 +96,23 @@ final class DefaultHost implements Host {
         final Collection<String> errors = new LinkedList<String>();
         for (DefaultHost.ObjectName name : this.names(uri)) {
             try {
-                resource = new DefaultResource(
-                    this.bucket.client().getObject(
-                        new GetObjectRequest(
-                            this.bucket.name(),
-                            name.get()
-                        ).withRange(range.first(), range.last())
-                    ),
-                    range
+                final S3Object object = this.bucket.client().getObject(
+                    new GetObjectRequest(
+                        this.bucket.name(),
+                        name.get()
+                    ).withRange(range.first(), range.last())
                 );
+                if (range.equals(Range.ENTIRE)) {
+                    resource = new DefaultResource(object);
+                } else {
+                    resource = new DefaultResource(
+                        object,
+                        range,
+                        this.bucket.client().getObject(
+                            new GetObjectRequest(this.bucket.name(), name.get())
+                        ).getObjectMetadata().getContentLength()
+                    );
+                }
                 break;
             } catch (com.amazonaws.AmazonClientException ex) {
                 errors.add(
