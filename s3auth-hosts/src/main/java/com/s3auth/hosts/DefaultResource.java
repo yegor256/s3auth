@@ -62,11 +62,19 @@ final class DefaultResource implements Resource {
     private final transient S3Object object;
 
     /**
+     * The range.
+     */
+    private final transient Range range;
+
+    /**
      * Public ctor.
      * @param obj S3 object
+     * @param rng Range served
      */
-    public DefaultResource(@NotNull final S3Object obj) {
+    public DefaultResource(@NotNull final S3Object obj,
+        @NotNull final Range rng) {
         this.object = obj;
+        this.range = rng;
     }
 
     /**
@@ -135,6 +143,20 @@ final class DefaultResource implements Resource {
                 DefaultResource.header(
                     HttpHeaders.CONTENT_TYPE,
                     meta.getContentType()
+                )
+            );
+        }
+        headers.add(DefaultResource.header("Accept-Ranges", "bytes"));
+        if (!this.range.equals(Range.ENTIRE)) {
+            headers.add(
+                DefaultResource.header(
+                    "Content-Range",
+                    String.format(
+                        "bytes %d-%d/%d",
+                        this.range.first(),
+                        this.range.last(),
+                        this.object.getObjectMetadata().getContentLength()
+                    )
                 )
             );
         }

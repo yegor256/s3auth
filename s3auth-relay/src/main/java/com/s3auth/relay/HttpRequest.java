@@ -75,6 +75,18 @@ import lombok.ToString;
 final class HttpRequest {
 
     /**
+     * Range HTTP header.
+     * @see <a href="HTTP headers">http://en.wikipedia.org/wiki/List_of_HTTP_header_fields</a>
+     */
+    private static final String RANGE_HEADER = "Range";
+
+    /**
+     * Range header matching pattern.
+     */
+    private static final Pattern RANGE_PATTERN =
+        Pattern.compile("bytes=(\\d+)-(\\d+)");
+
+    /**
      * TOP line pattern.
      */
     private static final Pattern TOP =
@@ -160,9 +172,35 @@ final class HttpRequest {
     /**
      * Get range requested.
      * @return The URI
+     * @throws HttpException If something is wrong
+     * @see <a href="http://en.wikipedia.org/wiki/Byte_serving">Byte Serving</a>
      */
-    public Range range() {
-        return Range.ENTIRE;
+    public Range range() throws HttpException {
+        Range range;
+        if (this.hdrs.containsKey(HttpRequest.RANGE_HEADER)) {
+            final Matcher matcher = HttpRequest.RANGE_PATTERN.matcher(
+                this.hdrs.get(HttpRequest.RANGE_HEADER).iterator().next()
+            );
+            if (matcher.matches()) {
+                throw new HttpException(
+                    HttpURLConnection.HTTP_BAD_REQUEST,
+                    "invalid Range header format"
+                );
+            }
+            range = new Range() {
+                @Override
+                public long first() {
+                    return Long.parseLong(matcher.group(1));
+                }
+                @Override
+                public long last() {
+                    return Long.parseLong(matcher.group(2));
+                }
+            };
+        } else {
+            range = Range.ENTIRE;
+        }
+        return range;
     }
 
     /**

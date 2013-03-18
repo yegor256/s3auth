@@ -101,7 +101,8 @@ final class DefaultHost implements Host {
                             this.bucket.name(),
                             name.get()
                         ).withRange(range.first(), range.last())
-                    )
+                    ),
+                    range
                 );
                 break;
             } catch (com.amazonaws.AmazonClientException ex) {
