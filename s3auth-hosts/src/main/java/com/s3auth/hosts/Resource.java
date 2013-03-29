@@ -40,6 +40,7 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -51,6 +52,34 @@ import org.apache.commons.io.IOUtils;
  */
 @Immutable
 public interface Resource {
+
+    /**
+     * Get HTTP status.
+     * @return The status
+     */
+    int status();
+
+    /**
+     * Write its content to the writer.
+     * @param stream The stream to write to
+     * @return How many bytes were written
+     * @throws IOException If some error with I/O inside
+     */
+    long writeTo(OutputStream stream) throws IOException;
+
+    /**
+     * Get a collection of all necessary HTTP headers for this resource.
+     * @return Collection of HTTP headers
+     * @throws IOException If some error with I/O inside
+     */
+    Collection<String> headers() throws IOException;
+
+    /**
+     * Get its ETag.
+     * @return The etag
+     * @link <a href="http://en.wikipedia.org/wiki/HTTP_ETag">ETag</a>
+     */
+    String etag();
 
     /**
      * Simple resource made out of plain text.
@@ -91,6 +120,13 @@ public interface Resource {
          * {@inheritDoc}
          */
         @Override
+        public String etag() {
+            return DigestUtils.md5Hex(this.text);
+        }
+        /**
+         * {@inheritDoc}
+         */
+        @Override
         @NotNull
         public Collection<String> headers() {
             return Arrays.asList(
@@ -106,26 +142,5 @@ public interface Resource {
             );
         }
     }
-
-    /**
-     * Get HTTP status.
-     * @return The status
-     */
-    int status();
-
-    /**
-     * Write its content to the writer.
-     * @param stream The stream to write to
-     * @return How many bytes were written
-     * @throws IOException If some error with I/O inside
-     */
-    long writeTo(OutputStream stream) throws IOException;
-
-    /**
-     * Get a collection of all necessary HTTP headers for this resource.
-     * @return Collection of HTTP headers
-     * @throws IOException If some error with I/O inside
-     */
-    Collection<String> headers() throws IOException;
 
 }

@@ -106,6 +106,10 @@ public final class HttpResponseTest {
             public Collection<String> headers() {
                 return new ArrayList<String>();
             }
+            @Override
+            public String etag() {
+                return "";
+            }
         };
         final HttpResponse response = new HttpResponse().withBody(res);
         final ServerSocket server = new ServerSocket(0);

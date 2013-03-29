@@ -202,13 +202,22 @@ final class DefaultResource implements Resource {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    @NotNull
+    public String etag() {
+        return this.object.getObjectMetadata().getETag();
+    }
+
+    /**
      * Create a HTTP header from name and value.
      * @param name Name of the header
      * @param value The value
      * @return Full HTTP header string
      */
     @NotNull
-    public static String header(@NotNull final String name,
+    private static String header(@NotNull final String name,
         @NotNull final String value) {
         return String.format("%s: %s", name, value);
     }

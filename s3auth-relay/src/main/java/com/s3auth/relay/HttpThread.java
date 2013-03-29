@@ -35,6 +35,7 @@ import com.jcabi.manifests.Manifests;
 import com.s3auth.hosts.Host;
 import com.s3auth.hosts.Hosts;
 import com.s3auth.hosts.Resource;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.util.Collection;
@@ -112,9 +113,6 @@ final class HttpThread {
         try {
             final HttpRequest request = new HttpRequest(socket);
             final Host host = this.host(request);
-            final Resource resource = host.fetch(
-                request.requestUri(), request.range()
-            );
             bytes = new HttpResponse()
                 .withHeader("Server", HttpThread.NAME)
                 .withHeader(
@@ -128,7 +126,7 @@ final class HttpThread {
                     "X-S3auth-Time",
                     Long.toString(System.currentTimeMillis() - start)
                 )
-                .withBody(resource)
+                .withBody(this.resource(host, request))
                 .send(socket);
         } catch (HttpException ex) {
             bytes = this.failure(ex, socket);
@@ -145,6 +143,32 @@ final class HttpThread {
             IOUtils.closeQuietly(socket);
         }
         return bytes;
+    }
+
+    /**
+     * Make a resource from host and request.
+     * @param host The host
+     * @param request HTTP request
+     * @return The resource
+     * @throws IOException If some IO exception
+     */
+    private Resource resource(final Host host, final HttpRequest request)
+        throws IOException {
+        final Resource resource = host.fetch(
+            request.requestUri(), request.range()
+        );
+        if (request.headers().containsKey(HttpHeaders.IF_NONE_MATCH)) {
+            final String etag = request.headers()
+                .get(HttpHeaders.IF_NONE_MATCH)
+                .iterator().next();
+            if (etag.equals(resource.etag())) {
+                throw new HttpException(
+                    HttpURLConnection.HTTP_NOT_MODIFIED,
+                    "not modified"
+                );
+            }
+        }
+        return resource;
     }
 
     /**
