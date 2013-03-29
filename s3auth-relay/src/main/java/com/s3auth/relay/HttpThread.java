@@ -116,6 +116,7 @@ final class HttpThread {
                 request.requestUri(), request.range()
             );
             bytes = new HttpResponse()
+                .withHeader("Server", HttpThread.NAME)
                 .withHeader(
                     HttpHeaders.DATE,
                     String.format(
@@ -123,7 +124,6 @@ final class HttpThread {
                         new Date()
                     )
                 )
-                .withHeader("Server", HttpThread.NAME)
                 .withHeader(
                     "X-S3auth-Time",
                     Long.toString(System.currentTimeMillis() - start)
