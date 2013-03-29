@@ -104,7 +104,7 @@ final class HttpThread {
      * @return Amount of bytes sent to socket
      * @throws InterruptedException If interrupted while waiting for the queue
      */
-    @Loggable(value = Loggable.DEBUG, limit = 2, unit = TimeUnit.MINUTES)
+    @Loggable(value = Loggable.DEBUG, limit = 1, unit = TimeUnit.DAYS)
     public long dispatch() throws InterruptedException {
         final Socket socket = this.sockets.take();
         final long start = System.currentTimeMillis();

@@ -31,6 +31,8 @@ package com.s3auth.hosts;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Range of data.
@@ -72,6 +74,8 @@ public interface Range {
      * Simple implementation.
      */
     @Loggable(Loggable.DEBUG)
+    @ToString
+    @EqualsAndHashCode(of = { "frst", "lst" })
     final class Simple implements Range {
         /**
          * First byte.
