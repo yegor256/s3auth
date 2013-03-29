@@ -130,15 +130,6 @@ final class HttpThread {
                 )
                 .withBody(resource)
                 .send(socket);
-            Logger.info(
-                this,
-                "#run(): %s/%s sent %d bytes to %s in %[ms]s",
-                host,
-                resource,
-                bytes,
-                socket.getRemoteSocketAddress(),
-                System.currentTimeMillis() - start
-            );
         } catch (HttpException ex) {
             bytes = this.failure(ex, socket);
         } catch (java.io.IOException ex) {
