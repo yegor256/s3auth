@@ -116,8 +116,6 @@ final class HttpThread {
                 request.requestUri(), request.range()
             );
             bytes = new HttpResponse()
-                .withHeader(HttpHeaders.CACHE_CONTROL, "no-cache")
-                .withHeader(HttpHeaders.EXPIRES, "-1")
                 .withHeader(
                     HttpHeaders.DATE,
                     String.format(
