@@ -60,6 +60,14 @@ final class HttpException extends IOException {
     /**
      * Public ctor.
      * @param status The status
+     */
+    public HttpException(final int status) {
+        this(status, "");
+    }
+
+    /**
+     * Public ctor.
+     * @param status The status
      * @param cause The cause of it
      */
     public HttpException(final int status, @NotNull final String cause) {

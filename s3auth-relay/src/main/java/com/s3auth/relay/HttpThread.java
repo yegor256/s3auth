@@ -162,10 +162,7 @@ final class HttpThread {
                 .get(HttpHeaders.IF_NONE_MATCH)
                 .iterator().next();
             if (etag.equals(resource.etag())) {
-                throw new HttpException(
-                    HttpURLConnection.HTTP_NOT_MODIFIED,
-                    "not modified"
-                );
+                throw new HttpException(HttpURLConnection.HTTP_NOT_MODIFIED);
             }
         }
         return resource;
