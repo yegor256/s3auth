@@ -197,7 +197,7 @@ final class HttpThread {
         }
         final String domain = headers.get(HttpHeaders.HOST).iterator().next();
         Host host;
-        if ("relay.s3auth.com".equals(domain)) {
+        if (LocalHost.isIt(domain)) {
             host = new LocalHost();
         } else {
             try {

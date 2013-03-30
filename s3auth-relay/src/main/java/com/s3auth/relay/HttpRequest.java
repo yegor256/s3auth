@@ -96,7 +96,7 @@ final class HttpRequest {
      * Header line pattern.
      */
     private static final Pattern HEADER =
-        Pattern.compile("([a-zA-Z][a-zA-Z\\-]*): *(.*)");
+        Pattern.compile("([a-zA-Z][a-zA-Z\\-]*):\\s*(.*)\\s*");
 
     /**
      * URI requested.
@@ -217,7 +217,7 @@ final class HttpRequest {
                 );
             }
             final String name = HttpRequest.normalized(
-                matcher.group(1).toLowerCase(Locale.ENGLISH)
+                matcher.group(1).trim().toLowerCase(Locale.ENGLISH)
             );
             map.putIfAbsent(name, new LinkedList<String>());
             map.get(name).add(matcher.group(2));

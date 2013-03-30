@@ -70,6 +70,15 @@ final class LocalHost implements Host {
     );
 
     /**
+     * Is it your name?
+     * @param name The name of host, provided in "Host" HTTP header
+     * @return TRUE if this is a localhost
+     */
+    public static boolean isIt(@NotNull final String name) {
+        return "relay.s3auth.com".equals(name);
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
