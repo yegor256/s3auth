@@ -65,11 +65,6 @@ import javax.ws.rs.core.Response;
 public class BaseRs extends BaseResource {
 
     /**
-     * Hosts.
-     */
-    private transient Hosts ihosts;
-
-    /**
      * Inset with a version of the product.
      * @return The inset
      */
@@ -111,21 +106,6 @@ public class BaseRs extends BaseResource {
     }
 
     /**
-     * Inject servlet context. Should be called by JAX-RS implementation
-     * because of {@code &#64;Context} annotation. Servlet attributes are
-     * injected into context by {@link com.netbout.servlets.HostsListener}
-     * servlet listener.
-     * @param context The context
-     */
-    @Context
-    public final void setServletContext(final ServletContext context) {
-        this.ihosts = (Hosts) context.getAttribute(Hosts.class.getName());
-        if (this.ihosts == null) {
-            throw new IllegalStateException("HOSTS is not initialized");
-        }
-    }
-
-    /**
      * Get current user.
      * @return Name of the user
      */
@@ -145,7 +125,13 @@ public class BaseRs extends BaseResource {
      * @return The hosts
      */
     protected final Hosts hosts() {
-        return this.ihosts;
+        final Hosts hosts = Hosts.class.cast(
+            this.servletContext().getAttribute(Hosts.class.getName())
+        );
+        if (hosts == null) {
+            throw new IllegalStateException("HOSTS is not initialized");
+        }
+        return hosts;
     }
 
 }
