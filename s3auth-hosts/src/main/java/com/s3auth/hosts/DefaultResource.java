@@ -125,7 +125,11 @@ final class DefaultResource implements Resource {
                 } catch (IOException ex) {
                     throw new DefaultResource.StreamingException(
                         String.format(
-                            "failed to read, total=%d",
+                            "failed to read %s/%s, range=%s, size=%d, total=%d",
+                            this.object.getBucketName(),
+                            this.object.getKey(),
+                            this.range,
+                            this.size,
                             total
                         ),
                         ex
@@ -139,7 +143,12 @@ final class DefaultResource implements Resource {
                 } catch (IOException ex) {
                     throw new DefaultResource.StreamingException(
                         String.format(
-                            "failed to write, total=%d, count=%d",
+                            // @checkstyle LineLength (1 line)
+                            "failed to write %s/%s, range=%s, size=%d, total=%d, count=%d",
+                            this.object.getBucketName(),
+                            this.object.getKey(),
+                            this.range,
+                            this.size,
                             total,
                             count
                         ),
