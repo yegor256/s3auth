@@ -49,7 +49,7 @@ import lombok.ToString;
 @Immutable
 @ToString
 @EqualsAndHashCode
-@Loggable(Loggable.INFO)
+@Loggable(value = Loggable.INFO, limit = Integer.MAX_VALUE)
 public final class Main {
 
     /**
