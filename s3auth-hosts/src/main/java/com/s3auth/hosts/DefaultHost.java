@@ -97,10 +97,7 @@ final class DefaultHost implements Host {
         for (DefaultHost.ObjectName name : this.names(uri)) {
             try {
                 final S3Object object = this.bucket.client().getObject(
-                    new GetObjectRequest(
-                        this.bucket.name(),
-                        name.get()
-                    ).withRange(range.first(), range.last())
+                    this.request(this.bucket.name(), name.get(), range)
                 );
                 if (range.equals(Range.ENTIRE)) {
                     resource = new DefaultResource(object);
@@ -251,6 +248,22 @@ final class DefaultHost implements Host {
         public String toString() {
             return String.format("%s+suffix", this.origin);
         }
+    }
+
+    /**
+     * Make S3 request.
+     * @param bckt Bucket name
+     * @param name Object name
+     * @param range Range to request
+     * @return Request
+     */
+    private GetObjectRequest request(final String bckt, final String name,
+        final Range range) {
+        final GetObjectRequest request = new GetObjectRequest(bckt, name);
+        if (!range.equals(Range.ENTIRE)) {
+            request.withRange(range.first(), range.last());
+        }
+        return request;
     }
 
 }
