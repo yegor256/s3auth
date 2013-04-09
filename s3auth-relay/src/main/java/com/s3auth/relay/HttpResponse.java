@@ -149,6 +149,7 @@ final class HttpResponse {
      * @throws IOException If some IO problem inside
      * @see http://stackoverflow.com/questions/8179547
      */
+    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public long send(@NotNull final Socket socket) throws IOException {
         long bytes = 0;
         final OutputStream stream = socket.getOutputStream();

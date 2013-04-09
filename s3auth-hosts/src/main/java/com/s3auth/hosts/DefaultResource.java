@@ -111,6 +111,7 @@ final class DefaultResource implements Resource {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public long writeTo(@NotNull final OutputStream output) throws IOException {
         final InputStream input = this.object.getObjectContent();
         assert input != null;
