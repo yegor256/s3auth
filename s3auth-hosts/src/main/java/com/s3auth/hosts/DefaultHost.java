@@ -30,8 +30,6 @@
 package com.s3auth.hosts;
 
 import com.amazonaws.services.s3.model.BucketWebsiteConfiguration;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
@@ -96,18 +94,12 @@ final class DefaultHost implements Host {
         final Collection<String> errors = new LinkedList<String>();
         for (DefaultHost.ObjectName name : this.names(uri)) {
             try {
-                final S3Object object = this.bucket.client().getObject(
-                    this.request(this.bucket.name(), name.get(), range)
+                resource = new DefaultResource(
+                    this.bucket.client(),
+                    this.bucket.name(),
+                    name.get(),
+                    range
                 );
-                if (range.equals(Range.ENTIRE)) {
-                    resource = new DefaultResource(object);
-                } else {
-                    resource = new DefaultResource(
-                        object,
-                        range,
-                        this.size(this.bucket.name(), name.get())
-                    );
-                }
                 break;
             } catch (com.amazonaws.AmazonClientException ex) {
                 errors.add(
@@ -246,34 +238,6 @@ final class DefaultHost implements Host {
         public String toString() {
             return String.format("%s+suffix", this.origin);
         }
-    }
-
-    /**
-     * Make S3 request.
-     * @param bckt Bucket name
-     * @param name Object name
-     * @param range Range to request
-     * @return Request
-     */
-    private GetObjectRequest request(final String bckt, final String name,
-        final Range range) {
-        final GetObjectRequest request = new GetObjectRequest(bckt, name);
-        if (!range.equals(Range.ENTIRE)) {
-            request.withRange(range.first(), range.last());
-        }
-        return request;
-    }
-
-    /**
-     * Get total size of an S3 object.
-     * @param bckt Bucket name
-     * @param name Object name
-     * @return Size of it in bytes
-     */
-    private long size(final String bckt, final String name) {
-        return this.bucket.client().getObject(
-            this.request(bckt, name, Range.ENTIRE)
-        ).getObjectMetadata().getContentLength();
     }
 
 }

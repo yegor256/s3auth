@@ -29,6 +29,8 @@
  */
 package com.s3auth.hosts;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.jcabi.aspects.Loggable;
@@ -53,14 +55,24 @@ import lombok.ToString;
  * @since 0.0.1
  */
 @ToString
-@EqualsAndHashCode(of = "object")
+@EqualsAndHashCode(of = { "bucket", "key", "range" })
 @Loggable(Loggable.DEBUG)
 final class DefaultResource implements Resource {
 
     /**
-     * The object to work with.
+     * Amazon S3 client.
      */
-    private final transient S3Object object;
+    private final transient AmazonS3 client;
+
+    /**
+     * Bucket name.
+     */
+    private final transient String bucket;
+
+    /**
+     * Key in the bucket.
+     */
+    private final transient String key;
 
     /**
      * The range.
@@ -68,29 +80,25 @@ final class DefaultResource implements Resource {
     private final transient Range range;
 
     /**
-     * Total size of the S3 object.
+     * The object retrieved on construction.
      */
-    private final transient long size;
+    private final transient S3Object object;
 
     /**
      * Public ctor.
-     * @param obj S3 object
+     * @param clnt Amazon S3 client
+     * @param bckt Bucket name
+     * @param name Key name
+     * @param rng Range to deliver
      */
-    public DefaultResource(@NotNull final S3Object obj) {
-        this(obj, Range.ENTIRE, 0);
-    }
-
-    /**
-     * Public ctor.
-     * @param obj S3 object
-     * @param rng Range served
-     * @param bytes Total size in bytes
-     */
-    public DefaultResource(@NotNull final S3Object obj,
-        @NotNull final Range rng, final long bytes) {
-        this.object = obj;
+    public DefaultResource(@NotNull final AmazonS3 clnt,
+        @NotNull final String bckt, @NotNull final String name,
+        @NotNull final Range rng) {
+        this.client = clnt;
+        this.bucket = bckt;
+        this.key = name;
         this.range = rng;
-        this.size = bytes;
+        this.object = this.client.getObject(this.request(this.range));
     }
 
     /**
@@ -126,11 +134,10 @@ final class DefaultResource implements Resource {
                 } catch (IOException ex) {
                     throw new DefaultResource.StreamingException(
                         String.format(
-                            "failed to read %s/%s, range=%s, size=%d, total=%d",
-                            this.object.getBucketName(),
-                            this.object.getKey(),
+                            "failed to read %s/%s, range=%s, total=%d",
+                            this.bucket,
+                            this.key,
                             this.range,
-                            this.size,
                             total
                         ),
                         ex
@@ -146,10 +153,9 @@ final class DefaultResource implements Resource {
                         String.format(
                             // @checkstyle LineLength (1 line)
                             "failed to write %s/%s, range=%s, size=%d, total=%d, count=%d",
-                            this.object.getBucketName(),
-                            this.object.getKey(),
+                            this.bucket,
+                            this.key,
                             this.range,
-                            this.size,
                             total,
                             count
                         ),
@@ -195,7 +201,7 @@ final class DefaultResource implements Resource {
             );
         }
         headers.add(DefaultResource.header("Accept-Ranges", "bytes"));
-        if (!this.range.equals(Range.ENTIRE) && this.size > 0) {
+        if (!this.range.equals(Range.ENTIRE)) {
             headers.add(
                 DefaultResource.header(
                     "Content-Range",
@@ -203,7 +209,7 @@ final class DefaultResource implements Resource {
                         "bytes %d-%d/%d",
                         this.range.first(),
                         this.range.last(),
-                        this.size
+                        this.size()
                     )
                 )
             );
@@ -230,6 +236,37 @@ final class DefaultResource implements Resource {
     private static String header(@NotNull final String name,
         @NotNull final String value) {
         return String.format("%s: %s", name, value);
+    }
+
+    /**
+     * Make S3 request with a specified range.
+     * @param rng Range to request
+     * @return Request
+     */
+    private GetObjectRequest request(final Range rng) {
+        final GetObjectRequest request =
+            new GetObjectRequest(this.bucket, this.key);
+        if (!rng.equals(Range.ENTIRE)) {
+            request.withRange(rng.first(), rng.last());
+        }
+        return request;
+    }
+
+    /**
+     * Get total size of an S3 object.
+     * @param bckt Bucket name
+     * @param name Object name
+     * @return Size of it in bytes
+     */
+    private long size() {
+        long size;
+        if (this.range.equals(Range.ENTIRE)) {
+            size = this.object.getObjectMetadata().getContentLength();
+        } else {
+            size = this.client.getObject(this.request(Range.ENTIRE))
+                .getObjectMetadata().getContentLength();
+        }
+        return size;
     }
 
     /**

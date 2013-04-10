@@ -29,6 +29,8 @@
  */
 package com.s3auth.hosts;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
@@ -54,11 +56,14 @@ public final class DefaultResourceTest {
      */
     @Test
     public void getsHeadersFromAmazonObject() throws Exception {
+        final AmazonS3 client = Mockito.mock(AmazonS3.class);
         final S3Object object = Mockito.mock(S3Object.class);
+        Mockito.doReturn(object).when(client)
+            .getObject(Mockito.any(GetObjectRequest.class));
         final ObjectMetadata meta = Mockito.mock(ObjectMetadata.class);
         Mockito.doReturn(meta).when(object).getObjectMetadata();
         Mockito.doReturn(1L).when(meta).getContentLength();
-        final Resource res = new DefaultResource(object);
+        final Resource res = new DefaultResource(client, "a", "", Range.ENTIRE);
         MatcherAssert.assertThat(
             res.headers(),
             Matchers.hasItem("Content-Length: 1")
@@ -71,13 +76,18 @@ public final class DefaultResourceTest {
      */
     @Test
     public void writesFromAmazonObjectToOutputStream() throws Exception {
+        final AmazonS3 client = Mockito.mock(AmazonS3.class);
+        final S3Object object = Mockito.mock(S3Object.class);
+        Mockito.doReturn(object).when(client)
+            .getObject(Mockito.any(GetObjectRequest.class));
         final S3ObjectInputStream stream =
             Mockito.mock(S3ObjectInputStream.class);
         Mockito.doReturn(-1).when(stream).read(Mockito.any(byte[].class));
-        final S3Object object = Mockito.mock(S3Object.class);
         Mockito.doReturn(stream).when(object).getObjectContent();
         MatcherAssert.assertThat(
-            ResourceMocker.toString(new DefaultResource(object)),
+            ResourceMocker.toString(
+                new DefaultResource(client, "b", "", Range.ENTIRE)
+            ),
             Matchers.equalTo("")
         );
     }
@@ -98,10 +108,15 @@ public final class DefaultResourceTest {
             new ByteArrayInputStream(data),
             new HttpGet()
         );
+        final AmazonS3 client = Mockito.mock(AmazonS3.class);
         final S3Object object = Mockito.mock(S3Object.class);
+        Mockito.doReturn(object).when(client)
+            .getObject(Mockito.any(GetObjectRequest.class));
         Mockito.doReturn(stream).when(object).getObjectContent();
         MatcherAssert.assertThat(
-            ResourceMocker.toByteArray(new DefaultResource(object)),
+            ResourceMocker.toByteArray(
+                new DefaultResource(client, "c", "", Range.ENTIRE)
+            ),
             Matchers.equalTo(data)
         );
     }
@@ -116,10 +131,15 @@ public final class DefaultResourceTest {
             Mockito.mock(S3ObjectInputStream.class);
         Mockito.doThrow(new IOException("oops"))
             .when(stream).read(Mockito.any(byte[].class));
+        final AmazonS3 client = Mockito.mock(AmazonS3.class);
         final S3Object object = Mockito.mock(S3Object.class);
+        Mockito.doReturn(object).when(client)
+            .getObject(Mockito.any(GetObjectRequest.class));
         Mockito.doReturn(stream).when(object).getObjectContent();
         MatcherAssert.assertThat(
-            ResourceMocker.toString(new DefaultResource(object)),
+            ResourceMocker.toString(
+                new DefaultResource(client, "d", "", Range.ENTIRE)
+            ),
             Matchers.equalTo("")
         );
     }

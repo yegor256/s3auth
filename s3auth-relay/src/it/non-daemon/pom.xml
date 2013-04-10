@@ -32,7 +32,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.s3auth</groupId>
     <artifactId>s3auth-relay-non-daemon</artifactId>
-    <version>1.0</version>
+    <version>@project.version@</version>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
