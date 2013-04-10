@@ -90,6 +90,7 @@ final class DefaultResource implements Resource {
      * @param bckt Bucket name
      * @param name Key name
      * @param rng Range to deliver
+     * @checkstyle ParameterNumber (5 lines)
      */
     public DefaultResource(@NotNull final AmazonS3 clnt,
         @NotNull final String bckt, @NotNull final String name,
@@ -254,8 +255,6 @@ final class DefaultResource implements Resource {
 
     /**
      * Get total size of an S3 object.
-     * @param bckt Bucket name
-     * @param name Object name
      * @return Size of it in bytes
      */
     private long size() {
