@@ -105,9 +105,7 @@ final class DefaultHost implements Host {
                     resource = new DefaultResource(
                         object,
                         range,
-                        this.bucket.client().getObject(
-                            new GetObjectRequest(this.bucket.name(), name.get())
-                        ).getObjectMetadata().getContentLength()
+                        this.size(this.bucket.name(), name.get())
                     );
                 }
                 break;
@@ -264,6 +262,18 @@ final class DefaultHost implements Host {
             request.withRange(range.first(), range.last());
         }
         return request;
+    }
+
+    /**
+     * Get total size of an S3 object.
+     * @param bckt Bucket name
+     * @param name Object name
+     * @return Size of it in bytes
+     */
+    private long size(final String bckt, final String name) {
+        return this.bucket.client().getObject(
+            this.request(bckt, name, Range.ENTIRE)
+        ).getObjectMetadata().getContentLength();
     }
 
 }

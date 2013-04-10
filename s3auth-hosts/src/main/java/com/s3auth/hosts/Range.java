@@ -49,6 +49,10 @@ public interface Range {
      */
     Range ENTIRE = new Range() {
         @Override
+        public String toString() {
+            return "ENTIRE";
+        }
+        @Override
         public long first() {
             return 0;
         }
