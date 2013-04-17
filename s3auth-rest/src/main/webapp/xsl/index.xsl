@@ -94,7 +94,15 @@
                     <a href="http://docs.amazonwebservices.com/general/latest/gr/rande.html#s3_region">
                         <xsl:text>what is it?</xsl:text>
                     </a>
-                    <xsl:text>):</xsl:text>
+                    <xsl:text>), for example </xsl:text>
+                    <span class="tt">
+                        <xsl:text>s3-ap-southeast-1</xsl:text>
+                    </span>
+                    <xsl:text> or </xsl:text>
+                    <span class="tt">
+                        <xsl:text>s3</xsl:text>
+                    </span>
+                    <xsl:text>:</xsl:text>
                 </label>
                 <input name="region" value="s3" size="25" maxlength="30"/>
                 <input class="submit" type="submit" value=""/>
