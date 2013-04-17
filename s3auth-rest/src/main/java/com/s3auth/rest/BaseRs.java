@@ -44,8 +44,6 @@ import com.rexsl.page.inset.LinksInset;
 import com.rexsl.page.inset.VersionInset;
 import com.s3auth.hosts.Hosts;
 import com.s3auth.hosts.User;
-import javax.servlet.ServletContext;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
