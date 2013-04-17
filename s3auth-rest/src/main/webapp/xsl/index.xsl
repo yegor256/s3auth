@@ -74,7 +74,11 @@
             </xsl:attribute>
             <p>
                 <label>
-                    <xsl:text>Host name (the same as S3 bucket name):</xsl:text>
+                    <xsl:text>Host name (the same as S3 bucket name), for example </xsl:text>
+                    <span class="tt">
+                        <xsl:text>bucket-1.example.com</xsl:text>
+                    </span>
+                    <xsl:text>:</xsl:text>
                 </label>
                 <input name="host"/>
                 <label>
