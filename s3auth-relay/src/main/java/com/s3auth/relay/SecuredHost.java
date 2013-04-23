@@ -96,6 +96,7 @@ final class SecuredHost implements Host {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(value = Loggable.DEBUG, ignore = HttpException.class)
     public Resource fetch(@NotNull final URI uri, @NotNull final Range range)
         throws IOException {
         Resource res;
