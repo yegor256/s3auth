@@ -1,5 +1,6 @@
-s3auth -  HTTP Basic Auth gateway to Amazon S3
-======
+<img src="http://img.s3auth.com/logo.png" width="200px" height="35px"/>
+
+## HTTP Basic Auth gateway to Amazon S3
 
 [www.s3auth.com](http://www.s3auth.com)
 
