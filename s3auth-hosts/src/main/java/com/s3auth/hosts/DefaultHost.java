@@ -88,6 +88,7 @@ final class DefaultHost implements Host {
     @Override
     @NotNull
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    @Loggable(value = Loggable.DEBUG, ignore = IOException.class)
     public Resource fetch(@NotNull final URI uri, @NotNull final Range range)
         throws IOException {
         Resource resource = null;

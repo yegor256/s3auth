@@ -86,6 +86,7 @@ final class SmartHost implements Host {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(value = Loggable.DEBUG, ignore = IOException.class)
     public Resource fetch(@NotNull final URI uri, @NotNull final Range range)
         throws IOException {
         Resource resource;
