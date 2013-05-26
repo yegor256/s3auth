@@ -153,7 +153,7 @@ final class DefaultResource implements Resource {
                     throw new DefaultResource.StreamingException(
                         String.format(
                             // @checkstyle LineLength (1 line)
-                            "failed to write %s/%s, range=%s, size=%d, total=%d, count=%d",
+                            "failed to write %s/%s, range=%s, total=%d, count=%d",
                             this.bucket,
                             this.key,
                             this.range,
