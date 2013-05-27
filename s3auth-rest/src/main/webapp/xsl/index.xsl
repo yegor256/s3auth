@@ -82,11 +82,15 @@
                 </label>
                 <input name="host"/>
                 <label>
-                    <xsl:text>AWS key:</xsl:text>
+                    <xsl:text>AWS key, exactly 20 symbols (</xsl:text>
+                    <a href="http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_SettingUpUser.html">
+                        <xsl:text>where do I get it?</xsl:text>
+                    </a>
+                    <xsl:text>):</xsl:text>
                 </label>
                 <input name="key" size="30" maxlength="20"/>
                 <label>
-                    <xsl:text>AWS secret key:</xsl:text>
+                    <xsl:text>AWS secret key, exactly 40 symbols:</xsl:text>
                 </label>
                 <input name="secret" size="40" maxlength="40"/>
                 <label>
