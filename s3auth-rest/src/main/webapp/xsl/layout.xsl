@@ -83,7 +83,11 @@
                     <p style="border-top: 1px solid #ccc; margin-top: 2em; padding-top: 1em;">
                         <xsl:text>s3auth.com is an open source project, hosted at </xsl:text>
                         <a href="https://github.com/yegor256/s3auth">
-                            <xsl:text>github</xsl:text>
+                            <xsl:text>Github</xsl:text>
+                        </a>
+                        <xsl:text> and </xsl:text>
+                        <a href="https://www.cloudbees.com">
+                            <xsl:text>CloudBees</xsl:text>
                         </a>
                         <xsl:text>. We are not affiliated anyhow with </xsl:text>
                         <a href="http://aws.amazon.com/">

@@ -175,12 +175,12 @@
             <xsl:text>Troubleshooting</xsl:text>
         </h1>
         <p>
-            <xsl:text>You can't authorize yourself with a username/password combination configured in </xsl:text>
+            <xsl:text>If you can't authorize yourself with a username/password combination configured in </xsl:text>
             <span class="tt">
                 <xsl:text>.htpasswd</xsl:text>
             </span>
-            <xsl:text> and on every attempt browser says "try again" and asks for credentials? </xsl:text>
-            <xsl:text>There are two possible causes:</xsl:text>
+            <xsl:text> and on every attempt browser says "try again" and asks for credentials, </xsl:text>
+            <xsl:text>there are two possible causes:</xsl:text>
         </p>
         <ol>
             <li>
