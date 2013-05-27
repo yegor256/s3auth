@@ -123,7 +123,11 @@
             <xsl:text> (domain and bucket name should be identical) and wait for DNS to propagate.</xsl:text>
         </p>
         <p>
-            <xsl:text>2. Create a new user in Amazon IAM and attach new custom policy to it:</xsl:text>
+            <xsl:text>2. Create a new user in Amazon IAM and attach new custom policy to it (</xsl:text>
+            <a href="http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingPolicies.html">
+                <xsl:text>how?</xsl:text>
+            </a>
+            <xsl:text>):</xsl:text>
         </p>
         <pre><![CDATA[{
   "Statement": [

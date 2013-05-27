@@ -58,8 +58,11 @@ public final class HttpFacadeTest {
     /**
      * HttpFacade can process parallel requests.
      * @throws Exception If there is some problem inside
+     * @todo #55 This test is very unstable, see more details in
+     *  https://github.com/yegor256/s3auth/issues/55
      */
     @Test
+    @org.junit.Ignore
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void handlesParallelHttpRequests() throws Exception {
         final int port = PortMocker.reserve();
