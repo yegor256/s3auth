@@ -155,7 +155,7 @@
             </a>
             <xsl:text> tool:</xsl:text>
         </p>
-        <pre><![CDATA[htpasswd -nbs user password]]></pre>
+        <pre><![CDATA[$ htpasswd -nbs user password]]></pre>
         <p>
             <xsl:text>5. Upload it to the root of your bucket.</xsl:text>
         </p>
