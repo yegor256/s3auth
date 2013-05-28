@@ -63,6 +63,7 @@ final class DefaultDomain implements Domain {
     public DefaultDomain(@NotNull final String name, @NotNull final String key,
         @NotNull final String secret, @NotNull final String region) {
         this(
+            // @checkstyle AnonInnerLength (50 lines)
             new Domain() {
                 @Override
                 public String toString() {

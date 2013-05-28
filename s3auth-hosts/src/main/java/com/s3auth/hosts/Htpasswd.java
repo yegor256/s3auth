@@ -96,7 +96,8 @@ final class Htpasswd {
     @Override
     public String toString() {
         return Logger.format(
-            ".htpasswd(? user(s), reloaded every %d min)",
+            ".htpasswd(%d user(s), reloaded every %d min)",
+            this.fetch().size(),
             Htpasswd.LIFETIME
         );
     }
