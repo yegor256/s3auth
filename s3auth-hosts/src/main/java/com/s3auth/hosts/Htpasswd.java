@@ -95,11 +95,17 @@ final class Htpasswd {
      */
     @Override
     public String toString() {
-        return Logger.format(
-            ".htpasswd(%d user(s), reloaded every %d min)",
-            this.fetch().size(),
-            Htpasswd.LIFETIME
-        );
+        String text;
+        try {
+            text = Logger.format(
+                ".htpasswd(%d user(s), reloaded every %d min)",
+                this.fetch().size(),
+                Htpasswd.LIFETIME
+            );
+        } catch (IOException ex) {
+            text = ex.toString();
+        }
+        return text;
     }
 
     /**
