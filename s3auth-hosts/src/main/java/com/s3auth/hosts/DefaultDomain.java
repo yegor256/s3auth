@@ -33,7 +33,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * Default implementation of domain.
@@ -44,7 +43,6 @@ import lombok.ToString;
  */
 @SuppressWarnings("PMD.TooManyMethods")
 @Immutable
-@ToString
 @EqualsAndHashCode(of = "origin")
 @Loggable(Loggable.DEBUG)
 final class DefaultDomain implements Domain {
@@ -66,6 +64,10 @@ final class DefaultDomain implements Domain {
         @NotNull final String secret, @NotNull final String region) {
         this(
             new Domain() {
+                @Override
+                public String toString() {
+                    return String.format("%s/%s", name, region);
+                }
                 @Override
                 public String name() {
                     return name;
@@ -92,6 +94,14 @@ final class DefaultDomain implements Domain {
      */
     public DefaultDomain(@NotNull final Domain domain) {
         this.origin = domain;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return this.origin.toString();
     }
 
     /**

@@ -37,7 +37,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * Default implementation of {@link Bucket}.
@@ -47,7 +46,6 @@ import lombok.ToString;
  * @since 0.0.1
  */
 @Immutable
-@ToString
 @EqualsAndHashCode(of = "domain")
 @Loggable(Loggable.DEBUG)
 final class DefaultBucket implements Bucket {
@@ -79,6 +77,14 @@ final class DefaultBucket implements Bucket {
         );
         client.setEndpoint(String.format("%s.amazonaws.com", this.region()));
         return client;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return this.domain.toString();
     }
 
     /**

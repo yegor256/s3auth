@@ -38,7 +38,6 @@ import java.net.URI;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * A {@link Host} that adds extra information on top of bucket's
@@ -51,7 +50,6 @@ import lombok.ToString;
  * @since 0.0.1
  */
 @Immutable
-@ToString
 @EqualsAndHashCode(of = "host")
 @Loggable(Loggable.DEBUG)
 final class SmartHost implements Host {
@@ -72,6 +70,14 @@ final class SmartHost implements Host {
      */
     public SmartHost(@NotNull final Host hst) {
         this.host = hst;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return this.host.toString();
     }
 
     /**

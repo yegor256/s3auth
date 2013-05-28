@@ -39,7 +39,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -50,7 +49,6 @@ import org.apache.commons.lang3.StringUtils;
  * @since 0.0.1
  */
 @Immutable
-@ToString
 @EqualsAndHashCode(of = "bucket")
 @Loggable(Loggable.DEBUG)
 final class DefaultHost implements Host {
@@ -72,6 +70,18 @@ final class DefaultHost implements Host {
     public DefaultHost(@NotNull final Bucket bckt) {
         this.bucket = bckt;
         this.htpasswd = new Htpasswd(this);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return String.format(
+            "%s with %s",
+            this.bucket.toString(),
+            this.htpasswd.toString()
+        );
     }
 
     /**
