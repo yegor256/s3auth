@@ -4,6 +4,9 @@
     <domains>
         <domain>
             <name>abc</name>
+            <key>ABC</key>
+            <secret>CDE</secret>
+            <region>s3</region>
         </domain>
     </domains>
     <flash>
