@@ -11,7 +11,8 @@
         <div id="content">
             <p>
                 <a href="http://www.s3auth.com/">
-                    <img src="http://img.s3auth.com/logo.png?${build.number}"/>
+                    <img src="http://img.s3auth.com/logo.png?${build.number}"
+                        style="width: 180px; height: 31px;"/>
                 </a>
             </p>
             <p>

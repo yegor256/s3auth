@@ -74,7 +74,7 @@
                                 <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
                             </xsl:attribute>
                             <img src="http://img.s3auth.com/logo.png" alt="s3auth.com logo"
-                                style="width: 180px; height: 31px;"/>
+                                style="width: 20em; height: 3.4em;"/>
                         </a>
                     </p>
                     <xsl:apply-templates select="identity"/>
@@ -138,7 +138,7 @@
     </xsl:template>
     <xsl:template match="identity">
         <p>
-            <img style="width: 25px; height: 25px;">
+            <img style="width: 2.5em; height: 2.5em;">
                 <xsl:attribute name="src">
                     <xsl:value-of select="photo"/>
                 </xsl:attribute>

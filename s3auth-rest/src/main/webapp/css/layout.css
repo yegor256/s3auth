@@ -40,7 +40,7 @@ h2,
 h3,
 textarea {
     font-family: verdana, arial, helvetica, clean, sans-serif;
-    font-size: 12px;
+    font-size: 0.75em;
     font-variant: normal;
     font-stretch: normal;
     font-weight: normal;
@@ -53,6 +53,7 @@ textarea {
 
 /* any link */
 a {
+    font-size: 100%;
     color: #004B91;
 }
 
@@ -80,7 +81,7 @@ ul {
 }
 
     ul li {
-        padding-left: 13px;
+        padding-left: 1.3em;
         list-style-type: none;
         background-image: url('http://img.s3auth.com/bullet.png');
         background-repeat: no-repeat;
@@ -112,7 +113,7 @@ pre {
 input {
     border: solid 1px #666;
     background-color: white;
-    padding: 2px;
+    padding: 0.2em;
 }
 
     /* any submit button */
@@ -172,5 +173,7 @@ label {
 
 img.icon {
     margin-right: 0.5em;
+    width: 3.2em;
+    height: 3.2em;
 }
 
