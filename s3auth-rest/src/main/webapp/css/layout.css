@@ -51,6 +51,13 @@ textarea {
     text-decoration: none;
 }
 
+@media (orientation: portrait) and (min-device-width: 320px) and (max-device-width: 480px) {
+    * { font-size: 1.2em; }
+}
+@media (orientation: portrait) and (min-device-width: 768px) and (max-device-width: 1024px) {
+    * { font-size: 1.1em; }
+}
+
 /* any link */
 a {
     font-size: 100%;

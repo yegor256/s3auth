@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <?xml-stylesheet type='text/xsl' href='/xsl/index.xsl'?>
 <page date="2012-08-23T13:25:33.968+02:00" ip="10.37.129.2">
-    <domains />
+    <domains>
+        <domain>
+            <name>abc</name>
+        </domain>
+    </domains>
     <flash>
         <level>INFO</level>
         <message>everything is file</message>
     </flash>
-    <user>
-        <identity>urn:google:174723</identity>
+    <identity>
+        <urn>urn:google:174723</urn>
         <name>John Doe</name>
         <photo>#</photo>
-    </user>
+    </identity>
     <version>
         <name>1.0-SNAPSHOT</name>
         <revision>123</revision>
