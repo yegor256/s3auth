@@ -244,7 +244,7 @@ final class Htpasswd {
          * SHA1 pattern.
          */
         private static final Pattern PATTERN =
-            Pattern.compile("\\{SHA\\}([a-zA-Z0-9/]+=*)");
+            Pattern.compile("\\{SHA\\}([a-zA-Z0-9/\\+]+=*)");
         /**
          * {@inheritDoc}
          */
