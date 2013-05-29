@@ -85,6 +85,12 @@ public final class HtpasswdTest {
         );
         MatcherAssert.assertThat(
             new Htpasswd(
+                this.host("susi:{SHA}05jkyU4N/+ADjjOghbccdO5zKHE=")
+            ).authorized("susi", "a7a6s-"),
+            Matchers.is(true)
+        );
+        MatcherAssert.assertThat(
+            new Htpasswd(
                 this.host("william:{SHA}qUqP5cyxm6YcTAhz05Hph5gvu9M=")
             ).authorized("william", "invalid-pwd"),
             Matchers.is(false)

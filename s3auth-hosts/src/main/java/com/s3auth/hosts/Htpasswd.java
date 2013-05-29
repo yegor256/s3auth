@@ -131,7 +131,7 @@ final class Htpasswd {
     @Cacheable(lifetime = Htpasswd.LIFETIME, unit = TimeUnit.MINUTES)
     private ConcurrentMap<String, String> fetch() throws IOException {
         final ConcurrentMap<String, String> map =
-            new ConcurrentHashMap<String, String>();
+            new ConcurrentHashMap<String, String>(0);
         final String[] lines = this.content().split("\n");
         for (String line : lines) {
             if (line.isEmpty()) {
