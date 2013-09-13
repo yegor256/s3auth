@@ -29,10 +29,10 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.services.dynamodb.AmazonDynamoDB;
-import com.amazonaws.services.dynamodb.model.AttributeValue;
-import com.amazonaws.services.dynamodb.model.ScanRequest;
-import com.amazonaws.services.dynamodb.model.ScanResult;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.ScanRequest;
+import com.amazonaws.services.dynamodbv2.model.ScanResult;
 import com.jcabi.urn.URNMocker;
 import java.util.LinkedList;
 import java.util.List;
@@ -109,7 +109,7 @@ public final class DefaultDynamoTest {
      */
     private Map<String, AttributeValue> item() {
         final ConcurrentMap<String, AttributeValue> item =
-            new ConcurrentHashMap<String, AttributeValue>();
+            new ConcurrentHashMap<String, AttributeValue>(0);
         item.put(
             DefaultDynamo.USER,
             new AttributeValue(new URNMocker().mock().toString())

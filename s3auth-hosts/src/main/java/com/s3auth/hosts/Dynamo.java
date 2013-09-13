@@ -29,7 +29,7 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.services.dynamodb.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
 import java.io.Closeable;

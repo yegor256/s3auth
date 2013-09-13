@@ -30,14 +30,14 @@
 package com.s3auth.hosts;
 
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.dynamodb.AmazonDynamoDB;
-import com.amazonaws.services.dynamodb.AmazonDynamoDBClient;
-import com.amazonaws.services.dynamodb.model.AttributeValue;
-import com.amazonaws.services.dynamodb.model.DeleteItemRequest;
-import com.amazonaws.services.dynamodb.model.Key;
-import com.amazonaws.services.dynamodb.model.PutItemRequest;
-import com.amazonaws.services.dynamodb.model.ScanRequest;
-import com.amazonaws.services.dynamodb.model.ScanResult;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.DeleteItemRequest;
+import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
+import com.amazonaws.services.dynamodbv2.model.ScanRequest;
+import com.amazonaws.services.dynamodbv2.model.ScanResult;
+import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
@@ -111,7 +111,7 @@ final class DefaultDynamo implements Dynamo {
     /**
      * Public ctor.
      */
-    public DefaultDynamo() {
+    protected DefaultDynamo() {
         this(
             new Dynamo.Client() {
                 @Override
@@ -156,7 +156,7 @@ final class DefaultDynamo implements Dynamo {
     @Cacheable(lifetime = DefaultDynamo.LIFETIME, unit = TimeUnit.MINUTES)
     public ConcurrentMap<URN, Domains> load() throws IOException {
         final ConcurrentMap<URN, Domains> domains =
-            new ConcurrentHashMap<URN, Domains>();
+            new ConcurrentHashMap<URN, Domains>(0);
         final AmazonDynamoDB amazon = this.client.get();
         final ScanResult result = amazon.scan(new ScanRequest(this.table));
         for (final Map<String, AttributeValue> item : result.getItems()) {
@@ -183,7 +183,7 @@ final class DefaultDynamo implements Dynamo {
     public boolean add(@NotNull final URN user,
         @NotNull final Domain domain) throws IOException {
         final ConcurrentMap<String, AttributeValue> attrs =
-            new ConcurrentHashMap<String, AttributeValue>();
+            new ConcurrentHashMap<String, AttributeValue>(0);
         attrs.put(DefaultDynamo.USER, new AttributeValue(user.toString()));
         attrs.put(DefaultDynamo.NAME, new AttributeValue(domain.name()));
         attrs.put(DefaultDynamo.KEY, new AttributeValue(domain.key()));
@@ -204,7 +204,10 @@ final class DefaultDynamo implements Dynamo {
         final AmazonDynamoDB amazon = this.client.get();
         amazon.deleteItem(
             new DeleteItemRequest(
-                this.table, new Key(new AttributeValue(domain.name()))
+                this.table,
+                new ImmutableMap.Builder<String, AttributeValue>()
+                    .put(DefaultDynamo.NAME, new AttributeValue(domain.name()))
+                    .build()
             )
         );
         amazon.shutdown();
