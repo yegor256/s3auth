@@ -44,8 +44,7 @@ String cookie() {
     def user = new RestUser(new UserMocker().withIdentity('urn:facebook:777').mock())
     'Rexsl-Auth=' + AuthInset.encrypt(
         user.asIdentity(),
-        Manifests.read('S3Auth-SecurityKey'),
-        Manifests.read('S3Auth-SecuritySalt')
+        Manifests.read('S3Auth-SecurityKey')
     )
 }
 def cookie = this.cookie()

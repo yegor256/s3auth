@@ -47,7 +47,7 @@
     <parent>
         <groupId>com.jcabi</groupId>
         <artifactId>parent</artifactId>
-        <version>0.7.19</version>
+        <version>0.8</version>
     </parent>
     <groupId>com.s3auth</groupId>
     <artifactId>s3auth</artifactId>
@@ -88,8 +88,8 @@
         </developer>
     </developers>
     <ciManagement>
-        <system>jenkins</system>
-        <url>http://ci.s3auth.com:8080/job/s3auth</url>
+        <system>rultor</system>
+        <url>http://www.rultor.com/s/s3auth</url>
     </ciManagement>
     <issueManagement>
         <system>github</system>
@@ -116,7 +116,7 @@
         </site>
     </distributionManagement>
     <properties>
-        <rexsl.version>0.4.12</rexsl.version>
+        <rexsl.version>0.5</rexsl.version>
     </properties>
     <repositories>
         <repository>
@@ -142,7 +142,7 @@
                 <!-- Uniform Resource Name -->
                 <groupId>com.jcabi</groupId>
                 <artifactId>jcabi-urn</artifactId>
-                <version>${jcabi.version}</version>
+                <version>0.8</version>
                 <classifier>mock</classifier>
                 <scope>test</scope>
             </dependency>

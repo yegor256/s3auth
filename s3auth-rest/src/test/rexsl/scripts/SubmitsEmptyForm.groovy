@@ -43,8 +43,7 @@ Manifests.append(new File(rexsl.basedir, 'target/test-classes/META-INF/MANIFEST.
 def user = new RestUser(new UserMocker().withIdentity('urn:facebook:999').mock())
 def cookie = 'Rexsl-Auth=' + AuthInset.encrypt(
     user.asIdentity(),
-    Manifests.read('S3Auth-SecurityKey'),
-    Manifests.read('S3Auth-SecuritySalt')
+    Manifests.read('S3Auth-SecurityKey')
 )
 
 RestTester.start(rexsl.home)

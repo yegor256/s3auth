@@ -98,7 +98,7 @@ public class BaseRs extends BaseResource {
     @Inset.Runtime
     public final AuthInset auth() {
         // @checkstyle LineLength (3 lines)
-        return new AuthInset(this, Manifests.read("S3Auth-SecurityKey"), Manifests.read("S3Auth-SecuritySalt"))
+        return new AuthInset(this, Manifests.read("S3Auth-SecurityKey"))
             .with(new Facebook(this, Manifests.read("S3Auth-FbId"), Manifests.read("S3Auth-FbSecret")))
             .with(new Google(this, Manifests.read("S3Auth-GoogleId"), Manifests.read("S3Auth-GoogleSecret")));
     }
