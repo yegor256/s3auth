@@ -38,7 +38,7 @@
  * build and re-builds everything from scratch. I already reported this
  * problem: http://jira.codehaus.org/browse/MNG-4885.
  *
- * @author Yegor Bugayenko (yegor@s3auth.com)
+ * @author Yegor Bugayenko (yegor@tpc.com)
  * @link http://maven.apache.org/
  * @link http://en.wikipedia.org/wiki/List_of_build_automation_software
  -->
