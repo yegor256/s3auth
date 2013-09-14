@@ -61,6 +61,7 @@ import lombok.ToString;
  * @version $Id$
  * @since 0.0.1
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @todo #1 Would be nice to migrate to jcabi-dynamo
  */
 @Immutable
 @ToString
