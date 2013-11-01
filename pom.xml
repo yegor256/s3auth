@@ -116,6 +116,7 @@
         </site>
     </distributionManagement>
     <properties>
+        <jersey.version>1.17.1</jersey.version>
         <rexsl.version>0.5.1</rexsl.version>
     </properties>
     <repositories>

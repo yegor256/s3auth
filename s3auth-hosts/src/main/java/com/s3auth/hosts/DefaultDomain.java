@@ -60,7 +60,7 @@ final class DefaultDomain implements Domain {
      * @param region The region of S3 bucket
      * @checkstyle ParameterNumber (3 lines)
      */
-    public DefaultDomain(@NotNull final String name, @NotNull final String key,
+    DefaultDomain(@NotNull final String name, @NotNull final String key,
         @NotNull final String secret, @NotNull final String region) {
         this(
             // @checkstyle AnonInnerLength (50 lines)
@@ -93,7 +93,7 @@ final class DefaultDomain implements Domain {
      * Public ctor.
      * @param domain The domain
      */
-    public DefaultDomain(@NotNull final Domain domain) {
+    DefaultDomain(@NotNull final Domain domain) {
         this.origin = domain;
     }
 

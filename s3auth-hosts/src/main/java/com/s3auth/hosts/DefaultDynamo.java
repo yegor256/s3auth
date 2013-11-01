@@ -112,17 +112,24 @@ final class DefaultDynamo implements Dynamo {
     /**
      * Public ctor.
      */
-    protected DefaultDynamo() {
+    DefaultDynamo() {
         this(
             new Dynamo.Client() {
                 @Override
                 public AmazonDynamoDB get() {
-                    return new AmazonDynamoDBClient(
+                    final AmazonDynamoDB aws = new AmazonDynamoDBClient(
                         new BasicAWSCredentials(
                             Manifests.read("S3Auth-AwsDynamoKey"),
                             Manifests.read("S3Auth-AwsDynamoSecret")
                         )
                     );
+                    // @checkstyle MultipleStringLiterals (1 line)
+                    if (Manifests.exists("S3Auth-AwsDynamoEntryPoint")) {
+                        aws.setEndpoint(
+                            Manifests.read("S3Auth-AwsDynamoEntryPoint")
+                        );
+                    }
+                    return aws;
                 }
             },
             Manifests.read("S3Auth-AwsDynamoTable")
@@ -134,14 +141,14 @@ final class DefaultDynamo implements Dynamo {
      * @param clnt The client to Dynamo DB
      * @param tbl Table name
      */
-    protected DefaultDynamo(@NotNull final Dynamo.Client clnt,
+    DefaultDynamo(@NotNull final Dynamo.Client clnt,
         @NotNull final String tbl) {
         this.client = clnt;
         this.table = tbl;
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         // nothing to do
     }
 

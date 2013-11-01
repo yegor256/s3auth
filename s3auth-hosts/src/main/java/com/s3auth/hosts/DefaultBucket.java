@@ -59,7 +59,7 @@ final class DefaultBucket implements Bucket {
      * Public ctor.
      * @param dmn The domain
      */
-    public DefaultBucket(@NotNull final Domain dmn) {
+    DefaultBucket(@NotNull final Domain dmn) {
         this.domain = dmn;
     }
 
