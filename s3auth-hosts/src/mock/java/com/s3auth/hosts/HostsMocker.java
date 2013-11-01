@@ -29,6 +29,7 @@
  */
 package com.s3auth.hosts;
 
+import java.io.IOException;
 import org.mockito.Mockito;
 
 /**
@@ -52,7 +53,7 @@ public final class HostsMocker {
         try {
             Mockito.doReturn(new HostMocker().mock()).when(this.hosts)
                 .find(Mockito.anyString());
-        } catch (java.io.IOException ex) {
+        } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
     }

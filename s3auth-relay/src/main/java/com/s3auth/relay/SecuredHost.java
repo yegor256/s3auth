@@ -34,6 +34,7 @@ import com.s3auth.hosts.Host;
 import com.s3auth.hosts.Range;
 import com.s3auth.hosts.Resource;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URLDecoder;
@@ -86,7 +87,7 @@ final class SecuredHost implements Host {
      * @param hst Original host
      * @param rqst The request
      */
-    public SecuredHost(@NotNull final Host hst,
+    SecuredHost(@NotNull final Host hst,
         @NotNull final HttpRequest rqst) {
         this.host = hst;
         this.request = rqst;
@@ -96,7 +97,7 @@ final class SecuredHost implements Host {
     @Loggable(value = Loggable.DEBUG, ignore = IOException.class)
     public Resource fetch(@NotNull final URI uri, @NotNull final Range range)
         throws IOException {
-        Resource res;
+        final Resource res;
         if (this.isHidden(uri)) {
             res = this.secured(uri, range);
         } else {
@@ -153,7 +154,7 @@ final class SecuredHost implements Host {
                 )
             );
         }
-        String[] parts;
+        final String[] parts;
         try {
             parts = URLDecoder.decode(
                 new String(
@@ -162,7 +163,7 @@ final class SecuredHost implements Host {
                 ),
                 CharEncoding.UTF_8
             ).split(":", 2);
-        } catch (java.io.UnsupportedEncodingException ex) {
+        } catch (UnsupportedEncodingException ex) {
             throw new IllegalStateException(ex);
         }
         if (parts.length != 2) {

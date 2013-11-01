@@ -92,7 +92,7 @@ final class DefaultResource implements Resource {
      * @param rng Range to deliver
      * @checkstyle ParameterNumber (5 lines)
      */
-    public DefaultResource(@NotNull final AmazonS3 clnt,
+    DefaultResource(@NotNull final AmazonS3 clnt,
         @NotNull final String bckt, @NotNull final String name,
         @NotNull final Range rng) {
         this.client = clnt;
@@ -104,7 +104,7 @@ final class DefaultResource implements Resource {
 
     @Override
     public int status() {
-        int status;
+        final int status;
         if (this.range.equals(Range.ENTIRE)) {
             status = HttpURLConnection.HTTP_OK;
         } else {
@@ -118,12 +118,12 @@ final class DefaultResource implements Resource {
     public long writeTo(@NotNull final OutputStream output) throws IOException {
         final InputStream input = this.object.getObjectContent();
         assert input != null;
-        long total = 0;
+        int total = 0;
         // @checkstyle MagicNumber (1 line)
         final byte[] buffer = new byte[16 * 1024];
         try {
             while (true) {
-                int count = 0;
+                final int count;
                 try {
                     count = input.read(buffer);
                 } catch (IOException ex) {
@@ -162,7 +162,7 @@ final class DefaultResource implements Resource {
         } finally {
             input.close();
         }
-        return total;
+        return (long) total;
     }
 
     @Override
@@ -246,7 +246,7 @@ final class DefaultResource implements Resource {
      * @return Size of it in bytes
      */
     private long size() {
-        long size;
+        final long size;
         if (this.range.equals(Range.ENTIRE)) {
             size = this.object.getObjectMetadata().getContentLength();
         } else {
@@ -269,7 +269,7 @@ final class DefaultResource implements Resource {
          * @param cause The cause of it
          * @param thr The cause of it
          */
-        public StreamingException(final String cause, final Throwable thr) {
+        StreamingException(final String cause, final Throwable thr) {
             super(
                 String.format("%s: '%s'", cause, thr.getMessage()),
                 thr

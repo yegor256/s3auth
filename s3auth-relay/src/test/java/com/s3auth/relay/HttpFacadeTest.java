@@ -29,24 +29,21 @@
  */
 package com.s3auth.relay;
 
-import com.jcabi.log.VerboseRunnable;
-import com.jcabi.log.VerboseThreads;
+import com.jcabi.aspects.Parallel;
+import com.jcabi.aspects.Tv;
 import com.rexsl.test.RestTester;
-import com.s3auth.hosts.HostsMocker;
+import com.s3auth.hosts.Host;
+import com.s3auth.hosts.Hosts;
+import com.s3auth.hosts.Range;
+import com.s3auth.hosts.Resource;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import org.apache.commons.codec.binary.Base64;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Test case for {@link HttpFacade}.
@@ -62,51 +59,41 @@ public final class HttpFacadeTest {
      *  https://github.com/yegor256/s3auth/issues/55
      */
     @Test
-    @org.junit.Ignore
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void handlesParallelHttpRequests() throws Exception {
+        final Resource res = new Resource.PlainText("<test/>");
+        final Host host = Mockito.mock(Host.class);
+        Mockito.doReturn(res).when(host)
+            .fetch(Mockito.any(URI.class), Mockito.any(Range.class));
+        final Hosts hosts = Mockito.mock(Hosts.class);
+        Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
-        final URI uri = URI.create(
-            String.format("http://localhost:%d/", port)
-        );
-        final HttpFacade facade =
-            new HttpFacade(new HostsMocker().mock(), port);
+        final HttpFacade facade = new HttpFacade(hosts, port);
         facade.listen();
-        final int threads = 50;
-        final CountDownLatch start = new CountDownLatch(1);
-        final CountDownLatch finished = new CountDownLatch(threads);
-        final URI path = UriBuilder.fromUri(uri).path("/abc").build();
-        final Callable<?> task = new Callable<Void>() {
-            @Override
-            public Void call() throws Exception {
-                start.await();
-                RestTester.start(path)
-                    .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
-                    .header(
-                        HttpHeaders.AUTHORIZATION,
-                        String.format(
-                            "Basic %s",
-                            Base64.encodeBase64String("a:b".getBytes())
-                        )
-                    )
-                    .get("read sample page")
-                    .assertStatus(HttpURLConnection.HTTP_OK);
-                finished.countDown();
-                return null;
-            }
-        };
-        final ExecutorService svc =
-            Executors.newFixedThreadPool(threads, new VerboseThreads());
-        for (int thread = 0; thread < threads; ++thread) {
-            svc.submit(new VerboseRunnable(task, true));
-        }
-        start.countDown();
-        MatcherAssert.assertThat(
-            finished.await(1, TimeUnit.MINUTES),
-            Matchers.is(true)
+        HttpFacadeTest.http(
+            UriBuilder.fromUri(String.format("http://localhost:%d/", port))
+                .path("/abc").build()
         );
-        svc.shutdown();
         facade.close();
+    }
+
+    /**
+     * Make HTTP request.
+     * @param path URI to hit
+     */
+    @Parallel(threads = Tv.FIVE)
+    private static void http(final URI path) {
+        RestTester.start(path)
+            .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
+            .header(
+                HttpHeaders.AUTHORIZATION,
+                String.format(
+                    "Basic %s",
+                    Base64.encodeBase64String("a:b".getBytes())
+                )
+            )
+            .get("read sample page")
+            .assertStatus(HttpURLConnection.HTTP_OK)
+            .assertXPath("/test");
     }
 
 }

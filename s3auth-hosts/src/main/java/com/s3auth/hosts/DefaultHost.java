@@ -103,13 +103,7 @@ final class DefaultHost implements Host {
                 );
                 break;
             } catch (AmazonClientException ex) {
-                errors.add(
-                    String.format(
-                        "'%s': %s",
-                        name,
-                        ex.getMessage()
-                    )
-                );
+                errors.add(String.format("'%s': %s", name, ex.getMessage()));
             }
         }
         if (resource == null) {
