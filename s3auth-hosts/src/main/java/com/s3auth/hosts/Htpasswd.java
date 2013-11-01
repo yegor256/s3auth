@@ -86,7 +86,7 @@ final class Htpasswd {
      * Public ctor.
      * @param hst The host to work with
      */
-    public Htpasswd(@NotNull final Host hst) {
+    Htpasswd(@NotNull final Host hst) {
         this.host = hst;
     }
 
