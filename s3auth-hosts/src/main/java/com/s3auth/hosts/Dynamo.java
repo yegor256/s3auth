@@ -51,18 +51,6 @@ import java.util.Map;
 interface Dynamo extends Closeable {
 
     /**
-     * Client to Amazon.
-     */
-    @Immutable
-    interface Client {
-        /**
-         * Get Amazon client.
-         * @return The client
-         */
-        AmazonDynamoDB get();
-    }
-
-    /**
      * Load all data from DynamoDB.
      * @return Map of users and their domains
      * @throws IOException If some IO problem inside
@@ -85,5 +73,17 @@ interface Dynamo extends Closeable {
      * @throws IOException If some IO problem inside
      */
     boolean remove(Domain domain) throws IOException;
+
+    /**
+     * Client to Amazon.
+     */
+    @Immutable
+    interface Client {
+        /**
+         * Get Amazon client.
+         * @return The client
+         */
+        AmazonDynamoDB get();
+    }
 
 }

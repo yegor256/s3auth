@@ -53,6 +53,32 @@ import javax.validation.Payload;
 @Immutable
 public interface Domain {
 
+    /**
+     * Name of domain.
+     * @return Full name of domain
+     * @see <a href="http://en.wikipedia.org/wiki/Domain_name">Domain Name</a>
+     */
+    String name();
+
+    /**
+     * Key.
+     * @return AWS key
+     */
+    String key();
+
+    /**
+     * Secret key.
+     * @return AWS secret key
+     */
+    String secret();
+
+    /**
+     * Region of S3 bucket.
+     * @return Region name/endpoint, e.g. "s3-us-west-1"
+     * @see <a href="http://docs.amazonwebservices.com/general/latest/gr/rande.html#s3_region">S3 Regions</a>
+     */
+    String region();
+
     @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
     @Constraint(validatedBy = Domain.Validator.class)
@@ -132,31 +158,5 @@ public interface Domain {
             return isValid;
         }
     }
-
-    /**
-     * Name of domain.
-     * @return Full name of domain
-     * @see <a href="http://en.wikipedia.org/wiki/Domain_name">Domain Name</a>
-     */
-    String name();
-
-    /**
-     * Key.
-     * @return AWS key
-     */
-    String key();
-
-    /**
-     * Secret key.
-     * @return AWS secret key
-     */
-    String secret();
-
-    /**
-     * Region of S3 bucket.
-     * @return Region name/endpoint, e.g. "s3-us-west-1"
-     * @see <a href="http://docs.amazonwebservices.com/general/latest/gr/rande.html#s3_region">S3 Regions</a>
-     */
-    String region();
 
 }

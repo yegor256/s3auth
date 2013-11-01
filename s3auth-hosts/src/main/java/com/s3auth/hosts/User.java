@@ -73,6 +73,24 @@ public interface User {
         }
     };
 
+    /**
+     * Unique name of it.
+     * @return Unique name as URN
+     */
+    URN identity();
+
+    /**
+     * Full name to display.
+     * @return Full name
+     */
+    String name();
+
+    /**
+     * Photo.
+     * @return URL of the image
+     */
+    URI photo();
+
     @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
     @Constraint(validatedBy = User.Validator.class)
@@ -125,23 +143,5 @@ public interface User {
             return isValid;
         }
     }
-
-    /**
-     * Unique name of it.
-     * @return Unique name as URN
-     */
-    URN identity();
-
-    /**
-     * Full name to display.
-     * @return Full name
-     */
-    String name();
-
-    /**
-     * Photo.
-     * @return URL of the image
-     */
-    URI photo();
 
 }

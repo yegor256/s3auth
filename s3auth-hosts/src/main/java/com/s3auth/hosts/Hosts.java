@@ -47,6 +47,22 @@ import java.util.Set;
 public interface Hosts extends Closeable {
 
     /**
+     * Find one host by domain name.
+     * @param domain The domain name
+     * @return Host found
+     * @throws IOException If not found or some other IO problem
+     */
+    Host find(String domain) throws IOException;
+
+    /**
+     * Get domains of the given user.
+     * @param user The user
+     * @return Modifiable collection of domains
+     * @throws IOException If some error inside
+     */
+    Set<Domain> domains(User user) throws IOException;
+
+    /**
      * Thrown by {@link #find(String)} if domain is not found.
      */
     class NotFoundException extends IOException {
@@ -62,21 +78,5 @@ public interface Hosts extends Closeable {
             super(cause);
         }
     }
-
-    /**
-     * Find one host by domain name.
-     * @param domain The domain name
-     * @return Host found
-     * @throws IOException If not found or some other IO problem
-     */
-    Host find(String domain) throws IOException;
-
-    /**
-     * Get domains of the given user.
-     * @param user The user
-     * @return Modifiable collection of domains
-     * @throws IOException If some error inside
-     */
-    Set<Domain> domains(User user) throws IOException;
 
 }

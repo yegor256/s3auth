@@ -67,7 +67,7 @@ final class DefaultHost implements Host {
      * Public ctor.
      * @param bckt The S3 bucket to use
      */
-    public DefaultHost(@NotNull final Bucket bckt) {
+    DefaultHost(@NotNull final Bucket bckt) {
         this.bucket = bckt;
         this.htpasswd = new Htpasswd(this);
     }
@@ -146,17 +146,6 @@ final class DefaultHost implements Host {
     }
 
     /**
-     * Name of an S3 Object, context dependent.
-     */
-    private interface ObjectName {
-        /**
-         * Returns a name of S3 object.
-         * @return The name
-         */
-        String get();
-    }
-
-    /**
      * Convert URI to all possible S3 object names (in order of importance).
      * @param uri The URI
      * @return Object names
@@ -228,6 +217,17 @@ final class DefaultHost implements Host {
         public String toString() {
             return String.format("%s+suffix", this.origin);
         }
+    }
+
+    /**
+     * Name of an S3 Object, context dependent.
+     */
+    private interface ObjectName {
+        /**
+         * Returns a name of S3 object.
+         * @return The name
+         */
+        String get();
     }
 
 }
