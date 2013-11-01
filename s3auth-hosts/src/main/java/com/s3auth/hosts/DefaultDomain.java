@@ -97,44 +97,29 @@ final class DefaultDomain implements Domain {
         this.origin = domain;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         return this.origin.toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull
     public String name() {
         return this.origin.name().trim();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull
     public String key() {
         return this.origin.key().trim();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull
     public String secret() {
         return this.origin.secret().trim();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull
     public String region() {

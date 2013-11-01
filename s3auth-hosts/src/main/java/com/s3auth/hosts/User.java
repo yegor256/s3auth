@@ -96,9 +96,6 @@ public interface User {
      * Validator of User.
      */
     class Validator implements ConstraintValidator<User.Valid, User> {
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void initialize(final User.Valid annotation) {
             //nothing to do

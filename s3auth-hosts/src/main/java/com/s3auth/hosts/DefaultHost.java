@@ -72,9 +72,6 @@ final class DefaultHost implements Host {
         this.htpasswd = new Htpasswd(this);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         return String.format(
@@ -84,17 +81,11 @@ final class DefaultHost implements Host {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void close() throws IOException {
         // nothing to do
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
@@ -136,17 +127,11 @@ final class DefaultHost implements Host {
         return resource;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isHidden(@NotNull final URI uri) {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean authorized(@NotNull final String user,
         @NotNull final String password) throws IOException {
@@ -214,9 +199,6 @@ final class DefaultHost implements Host {
         public NameWithSuffix(final String name) {
             this.origin = name;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String get() {
             String suffix = null;
@@ -242,9 +224,6 @@ final class DefaultHost implements Host {
             text.append(suffix);
             return text.toString();
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String toString() {
             return String.format("%s+suffix", this.origin);

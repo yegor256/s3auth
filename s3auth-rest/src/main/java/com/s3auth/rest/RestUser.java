@@ -105,25 +105,16 @@ public final class RestUser implements User {
         };
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public URN identity() {
         return this.origin.identity();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String name() {
         return this.origin.name();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public URI photo() {
         return this.origin.photo();

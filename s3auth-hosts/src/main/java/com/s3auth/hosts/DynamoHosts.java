@@ -80,9 +80,6 @@ public final class DynamoHosts implements Hosts {
         this.dynamo = dnm;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull
     public Host find(
@@ -102,9 +99,6 @@ public final class DynamoHosts implements Hosts {
         return new SmartHost(new DefaultHost(new DefaultBucket(domain)));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull
     public Set<Domain> domains(@NotNull @Valid final User user)
@@ -117,9 +111,6 @@ public final class DynamoHosts implements Hosts {
         return new DynamoHosts.Wrap(user, domains);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void close() throws IOException {
         this.dynamo.close();
@@ -207,9 +198,6 @@ public final class DynamoHosts implements Hosts {
             this.user = usr;
             this.domains = dmns;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public int size() {
             final Iterator<?> iterator = this.iterator();
@@ -220,30 +208,18 @@ public final class DynamoHosts implements Hosts {
             }
             return size;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public Iterator<Domain> iterator() {
             return this.domains.iterator();
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean contains(final Object obj) {
             return this.domains.contains(obj);
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean add(@NotNull @Valid final Domain domain) {
             return DynamoHosts.this.add(this.user.identity(), domain);
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean remove(final Object obj) {
             return DynamoHosts.this.remove(

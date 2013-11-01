@@ -102,9 +102,6 @@ final class DefaultResource implements Resource {
         this.object = this.client.getObject(this.request(this.range));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int status() {
         int status;
@@ -116,9 +113,6 @@ final class DefaultResource implements Resource {
         return status;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public long writeTo(@NotNull final OutputStream output) throws IOException {
@@ -171,9 +165,6 @@ final class DefaultResource implements Resource {
         return total;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull
     public Collection<String> headers() {
@@ -218,9 +209,6 @@ final class DefaultResource implements Resource {
         return headers;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull
     public String etag() {

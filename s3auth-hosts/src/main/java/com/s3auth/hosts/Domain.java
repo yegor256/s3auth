@@ -76,16 +76,10 @@ public interface Domain {
      * Validator of Domain.
      */
     class Validator implements ConstraintValidator<Domain.Valid, Domain> {
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void initialize(final Domain.Valid annotation) {
             //nothing to do
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean isValid(final Domain domain,
             final ConstraintValidatorContext ctx) {

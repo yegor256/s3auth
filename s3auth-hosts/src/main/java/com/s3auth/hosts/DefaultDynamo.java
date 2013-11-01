@@ -140,17 +140,11 @@ final class DefaultDynamo implements Dynamo {
         this.table = tbl;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void close() throws IOException {
         // nothing to do
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
@@ -176,9 +170,6 @@ final class DefaultDynamo implements Dynamo {
         return domains;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Cacheable.FlushBefore
     public boolean add(@NotNull final URN user,
@@ -196,9 +187,6 @@ final class DefaultDynamo implements Dynamo {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Cacheable.FlushBefore
     public boolean remove(@NotNull final Domain domain) throws IOException {

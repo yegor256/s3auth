@@ -100,32 +100,20 @@ public interface Resource {
         public PlainText(final String txt) {
             this.text = txt;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public int status() {
             return HttpURLConnection.HTTP_OK;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public long writeTo(@NotNull final OutputStream stream)
             throws IOException {
             IOUtils.write(this.text, stream);
             return this.text.getBytes().length;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public String etag() {
             return DigestUtils.md5Hex(this.text);
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         @NotNull
         public Collection<String> headers() {

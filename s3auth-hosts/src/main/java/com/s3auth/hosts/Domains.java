@@ -92,9 +92,6 @@ final class Domains extends AbstractSet<Domain> {
         return found;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean add(final Domain domain) {
         boolean added = false;
@@ -105,25 +102,16 @@ final class Domains extends AbstractSet<Domain> {
         return added;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean contains(final Object obj) {
         return this.has(Domain.class.cast(obj).name());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Iterator<Domain> iterator() {
         return this.all.iterator();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int size() {
         return this.all.size();

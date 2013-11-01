@@ -85,9 +85,6 @@ public final class HostsListener implements ServletContextListener {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void contextDestroyed(final ServletContextEvent event) {
         if (this.hosts == null) {

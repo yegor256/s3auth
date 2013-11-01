@@ -78,9 +78,6 @@ final class LocalHost implements Host {
         return "relay.s3auth.com".equals(name);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Resource fetch(@NotNull final URI uri, @NotNull final Range range)
         throws IOException {
@@ -101,34 +98,22 @@ final class LocalHost implements Host {
         return new Resource.PlainText(output);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isHidden(@NotNull final URI uri) {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean authorized(@NotNull final String user,
         @NotNull final String password) {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void close() {
         // nothing to do
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         return "localhost";

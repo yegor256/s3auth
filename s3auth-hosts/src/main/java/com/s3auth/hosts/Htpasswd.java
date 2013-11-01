@@ -90,9 +90,6 @@ final class Htpasswd {
         this.host = hst;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         String text;
@@ -215,9 +212,6 @@ final class Htpasswd {
          */
         private static final Pattern PATTERN =
             Pattern.compile("\\$apr1\\$([^\\$]+)\\$([a-zA-Z0-9/\\.]+=*)");
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean matches(final String hash, final String password)
             throws IOException {
@@ -245,9 +239,6 @@ final class Htpasswd {
          */
         private static final Pattern PATTERN =
             Pattern.compile("\\{SHA\\}([a-zA-Z0-9/\\+]+=*)");
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean matches(final String hash, final String password) {
             final Matcher matcher = Htpasswd.Sha.PATTERN.matcher(hash);
@@ -269,9 +260,6 @@ final class Htpasswd {
      */
     @Loggable(Loggable.DEBUG)
     private static final class Crypt implements Htpasswd.Algorithm {
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean matches(final String hash, final String password) {
             return false;
@@ -283,9 +271,6 @@ final class Htpasswd {
      */
     @Loggable(Loggable.DEBUG)
     private static final class PlainText implements Htpasswd.Algorithm {
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public boolean matches(final String hash, final String password) {
             return password.equals(hash);

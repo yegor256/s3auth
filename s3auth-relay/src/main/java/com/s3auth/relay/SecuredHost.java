@@ -92,9 +92,6 @@ final class SecuredHost implements Host {
         this.request = rqst;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Loggable(value = Loggable.DEBUG, ignore = IOException.class)
     public Resource fetch(@NotNull final URI uri, @NotNull final Range range)
@@ -108,26 +105,17 @@ final class SecuredHost implements Host {
         return res;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isHidden(@NotNull final URI uri) throws IOException {
         return this.host.isHidden(uri);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean authorized(@NotNull final String user,
         @NotNull final String password) throws IOException {
         return this.host.authorized(user, password);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void close() throws IOException {
         this.host.close();

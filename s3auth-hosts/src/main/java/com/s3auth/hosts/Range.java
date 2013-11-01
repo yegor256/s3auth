@@ -98,16 +98,10 @@ public interface Range {
             this.frst = first;
             this.lst = last;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public long first() {
             return this.frst;
         }
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public long last() {
             return this.lst;

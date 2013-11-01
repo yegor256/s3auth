@@ -63,9 +63,6 @@ final class DefaultBucket implements Bucket {
         this.domain = dmn;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull
     public AmazonS3 client() {
@@ -79,44 +76,29 @@ final class DefaultBucket implements Bucket {
         return client;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         return this.domain.toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull
     public String name() {
         return this.domain.name();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull
     public String key() {
         return this.domain.key();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull
     public String secret() {
         return this.domain.secret();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @NotNull
     public String region() {

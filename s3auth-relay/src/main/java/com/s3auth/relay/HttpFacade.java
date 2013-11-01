@@ -142,9 +142,6 @@ final class HttpFacade implements Closeable {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void close() throws IOException {
         this.server.close();

@@ -72,25 +72,16 @@ final class SmartHost implements Host {
         this.host = hst;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String toString() {
         return this.host.toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void close() throws IOException {
         this.host.close();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Loggable(value = Loggable.DEBUG, ignore = IOException.class)
     public Resource fetch(@NotNull final URI uri, @NotNull final Range range)
@@ -116,17 +107,11 @@ final class SmartHost implements Host {
         return resource;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isHidden(@NotNull final URI uri) {
         return !SmartHost.HTPASSWD.matcher(uri.toString()).matches();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean authorized(@NotNull final String user,
         @NotNull final String password) throws IOException {

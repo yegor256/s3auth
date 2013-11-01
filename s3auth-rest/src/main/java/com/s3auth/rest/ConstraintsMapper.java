@@ -52,9 +52,6 @@ import javax.ws.rs.ext.Provider;
 public final class ConstraintsMapper extends BaseResource
     implements ExceptionMapper<ConstraintViolationException> {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Response toResponse(final ConstraintViolationException violation) {
         return FlashInset.forward(
