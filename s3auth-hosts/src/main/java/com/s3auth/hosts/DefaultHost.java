@@ -98,10 +98,8 @@ final class DefaultHost implements Host {
         for (final DefaultHost.ObjectName name : this.names(uri)) {
             try {
                 resource = new DefaultResource(
-                    this.bucket.client(),
-                    this.bucket.name(),
-                    name.get(),
-                    range
+                    this.bucket.client(), this.bucket.name(),
+                    name.get(), range
                 );
                 break;
             } catch (AmazonClientException ex) {
@@ -118,10 +116,7 @@ final class DefaultHost implements Host {
             throw new IOException(
                 Logger.format(
                     "failed to fetch %s from '%s' (key=%s): %[list]s",
-                    uri,
-                    this.bucket.name(),
-                    this.bucket.key(),
-                    errors
+                    uri, this.bucket.name(), this.bucket.key(), errors
                 )
             );
         }
@@ -136,7 +131,7 @@ final class DefaultHost implements Host {
     @Override
     public boolean authorized(@NotNull final String user,
         @NotNull final String password) throws IOException {
-        boolean auth;
+        final boolean auth;
         if (user.equals(this.bucket.key())
             && password.equals(this.bucket.secret())) {
             auth = true;
@@ -151,7 +146,7 @@ final class DefaultHost implements Host {
      * @param uri The URI
      * @return Object names
      */
-    private Collection<DefaultHost.ObjectName> names(final URI uri) {
+    private Iterable<DefaultHost.ObjectName> names(final URI uri) {
         final String name = StringUtils.strip(uri.getPath(), "/");
         final Collection<DefaultHost.ObjectName> names =
             new LinkedList<DefaultHost.ObjectName>();

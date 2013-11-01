@@ -61,7 +61,7 @@ final class HttpException extends IOException {
      * Public ctor.
      * @param status The status
      */
-    public HttpException(final int status) {
+    HttpException(final int status) {
         this(status, "");
     }
 
@@ -70,7 +70,7 @@ final class HttpException extends IOException {
      * @param status The status
      * @param cause The cause of it
      */
-    public HttpException(final int status, @NotNull final String cause) {
+    HttpException(final int status, @NotNull final String cause) {
         this(
             new HttpResponse()
                 .withStatus(status)
@@ -84,7 +84,7 @@ final class HttpException extends IOException {
      * @param status The status
      * @param cause The cause of it
      */
-    public HttpException(final int status, @NotNull final Throwable cause) {
+    HttpException(final int status, @NotNull final Throwable cause) {
         this(status, cause.getMessage());
     }
 
@@ -92,7 +92,7 @@ final class HttpException extends IOException {
      * Public ctor.
      * @param response The response
      */
-    public HttpException(@NotNull final HttpResponse response) {
+    HttpException(@NotNull final HttpResponse response) {
         super();
         this.resp = response;
     }

@@ -115,42 +115,46 @@ final class HttpRequest {
      * @throws IOException If some socket problem
      * @see <a href="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>
      */
-    public HttpRequest(@NotNull final Socket socket) throws IOException {
+    HttpRequest(@NotNull final Socket socket) throws IOException {
         final BufferedReader reader =
             new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        final String top = reader.readLine();
-        if (top == null) {
-            throw new HttpException(
-                HttpURLConnection.HTTP_BAD_REQUEST,
-                "empty request"
-            );
-        }
-        final Matcher matcher = HttpRequest.TOP.matcher(top);
-        if (!matcher.matches()) {
-            throw new HttpException(
-                HttpURLConnection.HTTP_BAD_REQUEST,
-                String.format("invalid first line: '%s'", top)
-            );
-        }
-        if (!"GET".equals(matcher.group(1))) {
-            throw new HttpException(
-                HttpURLConnection.HTTP_BAD_METHOD,
-                "only GET method is supported"
-            );
-        }
-        this.uri = URI.create(matcher.group(2));
-        final Collection<String> headers = new LinkedList<String>();
-        while (true) {
-            final String line = reader.readLine();
-            if (line == null) {
-                break;
+        try {
+            final String top = reader.readLine();
+            if (top == null) {
+                throw new HttpException(
+                    HttpURLConnection.HTTP_BAD_REQUEST,
+                    "empty request"
+                );
             }
-            if (line.isEmpty()) {
-                break;
+            final Matcher matcher = HttpRequest.TOP.matcher(top);
+            if (!matcher.matches()) {
+                throw new HttpException(
+                    HttpURLConnection.HTTP_BAD_REQUEST,
+                    String.format("invalid first line: '%s'", top)
+                );
             }
-            headers.add(line);
+            if (!"GET".equals(matcher.group(1))) {
+                throw new HttpException(
+                    HttpURLConnection.HTTP_BAD_METHOD,
+                    "only GET method is supported"
+                );
+            }
+            this.uri = URI.create(matcher.group(2));
+            final Collection<String> headers = new LinkedList<String>();
+            while (true) {
+                final String line = reader.readLine();
+                if (line == null) {
+                    break;
+                }
+                if (line.isEmpty()) {
+                    break;
+                }
+                headers.add(line);
+            }
+            this.hdrs.putAll(this.parse(headers));
+        } finally {
+            reader.close();
         }
-        this.hdrs.putAll(this.parse(headers));
     }
 
     /**
@@ -176,7 +180,7 @@ final class HttpRequest {
      * @see <a href="http://en.wikipedia.org/wiki/Byte_serving">Byte Serving</a>
      */
     public Range range() throws HttpException {
-        Range range;
+        final Range range;
         if (this.hdrs.containsKey(HttpRequest.RANGE_HEADER)) {
             final Matcher matcher = HttpRequest.RANGE_PATTERN.matcher(
                 this.hdrs.get(HttpRequest.RANGE_HEADER).iterator().next()
@@ -201,14 +205,14 @@ final class HttpRequest {
      * Parse header lines and create full map.
      * @param lines All lines
      * @return Map of headers
-     * @throws IOException If some socket problem
+     * @throws HttpException If some socket problem
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private ConcurrentMap<String, Collection<String>> parse(
-        final Collection<String> lines) throws IOException {
+        final Iterable<String> lines) throws HttpException {
         final ConcurrentMap<String, Collection<String>> map =
             new ConcurrentHashMap<String, Collection<String>>();
-        for (String line : lines) {
+        for (final String line : lines) {
             final Matcher matcher = HttpRequest.HEADER.matcher(line);
             if (!matcher.matches()) {
                 throw new HttpException(
@@ -234,8 +238,7 @@ final class HttpRequest {
      */
     private static String normalized(final String key) {
         final int len = key.length();
-        char[] bytes = new char[len];
-        bytes = key.toCharArray();
+        final char[] bytes = key.toCharArray();
         if (bytes[0] >= 'a' && bytes[0] <= 'z') {
             bytes[0] = (char) (bytes[0] - ('a' - 'A'));
         }

@@ -30,6 +30,7 @@
 package com.s3auth.relay;
 
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.jcabi.log.VerboseRunnable;
 import com.jcabi.log.VerboseThreads;
@@ -70,7 +71,7 @@ final class HttpFacade implements Closeable {
      * How many threads to use.
      */
     private static final int THREADS =
-        Runtime.getRuntime().availableProcessors() * 8;
+        Runtime.getRuntime().availableProcessors() * Tv.EIGHT;
 
     /**
      * Executor service, with socket openers.
@@ -104,7 +105,7 @@ final class HttpFacade implements Closeable {
      * @param port Port number
      * @throws IOException If can't initialize
      */
-    public HttpFacade(@NotNull final Hosts hosts, final int port)
+    HttpFacade(@NotNull final Hosts hosts, final int port)
         throws IOException {
         this.server = new ServerSocket(port);
         final HttpThread thread = new HttpThread(this.sockets, hosts);
@@ -115,13 +116,14 @@ final class HttpFacade implements Closeable {
                     thread.dispatch();
                 } catch (InterruptedException ex) {
                     Thread.currentThread().interrupt();
+                    Logger.warn(this, "%s", ex);
                 }
             }
         };
         for (int idx = 0; idx < HttpFacade.THREADS; ++idx) {
             this.backend.scheduleWithFixedDelay(
                 runnable,
-                0, 1, TimeUnit.NANOSECONDS
+                0L, 1L, TimeUnit.NANOSECONDS
             );
         }
     }
@@ -138,7 +140,7 @@ final class HttpFacade implements Closeable {
                     }
                 }
             ),
-            0, 1, TimeUnit.NANOSECONDS
+            0L, 1L, TimeUnit.NANOSECONDS
         );
     }
 
@@ -153,15 +155,15 @@ final class HttpFacade implements Closeable {
      * Process one socket.
      */
     private void process() {
-        Socket socket;
+        final Socket socket;
         try {
             socket = this.server.accept();
-        } catch (java.io.IOException ex) {
+        } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
         try {
             final boolean consumed = this.sockets
-                .offer(socket, 1, TimeUnit.SECONDS);
+                .offer(socket, 1L, TimeUnit.SECONDS);
             if (!consumed) {
                 new HttpResponse()
                     .withStatus(HttpURLConnection.HTTP_GATEWAY_TIMEOUT)
@@ -175,7 +177,7 @@ final class HttpFacade implements Closeable {
                     .send(socket);
                 socket.close();
             }
-        } catch (java.io.IOException ex) {
+        } catch (IOException ex) {
             throw new IllegalStateException(ex);
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
@@ -190,12 +192,12 @@ final class HttpFacade implements Closeable {
     private void shutdown(final ScheduledExecutorService service) {
         service.shutdown();
         try {
-            if (service.awaitTermination(1, TimeUnit.SECONDS)) {
+            if (service.awaitTermination(1L, TimeUnit.SECONDS)) {
                 Logger.info(this, "#shutdown(): succeeded");
             } else {
                 Logger.warn(this, "#shutdown(): failed");
                 service.shutdownNow();
-                if (service.awaitTermination(1, TimeUnit.SECONDS)) {
+                if (service.awaitTermination(1L, TimeUnit.SECONDS)) {
                     Logger.info(this, "#shutdown(): shutdownNow() succeeded");
                 } else {
                     Logger.error(this, "#shutdown(): failed to stop threads");

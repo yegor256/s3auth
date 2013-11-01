@@ -84,7 +84,7 @@ final class LocalHost implements Host {
         if (uri.toString().startsWith("/shutdown")) {
             throw this.halt(uri.toString());
         }
-        String output;
+        final String output;
         if ("/".equals(uri.toString())) {
             output = "see www.s3auth.com";
         } else if ("/version".equals(uri.toString())) {
@@ -126,24 +126,20 @@ final class LocalHost implements Host {
      */
     @SuppressWarnings("PMD.DoNotCallSystemExit")
     private IOException halt(final String uri) {
-        IOException exception;
         if (uri.equals(LocalHost.SHUTDOWN)) {
-            exception = new IOException();
             Logger.warn(this, "fetch(%s): shutting down..", uri);
             System.exit(0);
-        } else {
-            exception = new HttpException(
-                HttpURLConnection.HTTP_NOT_FOUND,
-                String.format(
-                    "shutdown key ends with '%s...'",
-                    LocalHost.SHUTDOWN.substring(
-                        // @checkstyle MagicNumber (1 line)
-                        LocalHost.SHUTDOWN.length() - 5
-                    )
-                )
-            );
         }
-        return exception;
+        return new HttpException(
+            HttpURLConnection.HTTP_NOT_FOUND,
+            String.format(
+                "shutdown key ends with '%s...'",
+                LocalHost.SHUTDOWN.substring(
+                    // @checkstyle MagicNumber (1 line)
+                    LocalHost.SHUTDOWN.length() - 5
+                )
+            )
+        );
     }
 
 }

@@ -69,13 +69,12 @@ final class Htpasswd {
      * All known algorithms.
      * @see <a href="http://httpd.apache.org/docs/2.2/misc/password_encryptions.html">Algorithms supported by Apache</a>
      */
-    private static final Htpasswd.Algorithm[] ALGORITHMS =
-        new Htpasswd.Algorithm[] {
-            new Htpasswd.Md5(),
-            new Htpasswd.Sha(),
-            new Htpasswd.Crypt(),
-            new Htpasswd.PlainText(),
-        };
+    private static final Htpasswd.Algorithm[] ALGORITHMS = {
+        new Htpasswd.Md5(),
+        new Htpasswd.Sha(),
+        new Htpasswd.Crypt(),
+        new Htpasswd.PlainText(),
+    };
 
     /**
      * The host we're working with.
@@ -92,17 +91,11 @@ final class Htpasswd {
 
     @Override
     public String toString() {
-        String text;
-        try {
-            text = Logger.format(
-                ".htpasswd(%d user(s), reloaded every %d min)",
-                this.fetch().size(),
-                Htpasswd.LIFETIME
-            );
-        } catch (IOException ex) {
-            text = ex.toString();
-        }
-        return text;
+        return Logger.format(
+            ".htpasswd(%d user(s), reloaded every %d min)",
+            this.fetch().size(),
+            Htpasswd.LIFETIME
+        );
     }
 
     /**
@@ -123,14 +116,13 @@ final class Htpasswd {
     /**
      * Get map of users and passwords from the host.
      * @return Map of users
-     * @throws IOException If some error inside
      */
     @Cacheable(lifetime = Htpasswd.LIFETIME, unit = TimeUnit.MINUTES)
-    private ConcurrentMap<String, String> fetch() throws IOException {
+    private ConcurrentMap<String, String> fetch() {
         final ConcurrentMap<String, String> map =
             new ConcurrentHashMap<String, String>(0);
         final String[] lines = this.content().split("\n");
-        for (String line : lines) {
+        for (final String line : lines) {
             if (line.isEmpty()) {
                 continue;
             }
@@ -161,8 +153,7 @@ final class Htpasswd {
             Logger.warn(
                 this,
                 "#content(): failed to fetch .htpasswd from %s: %s",
-                this.host,
-                ex.getMessage()
+                this.host, ex.getMessage()
             );
             content = "";
         }
@@ -179,7 +170,7 @@ final class Htpasswd {
     private static boolean matches(final String hash, final String password)
         throws IOException {
         boolean matches = false;
-        for (Algorithm algo : Htpasswd.ALGORITHMS) {
+        for (final Htpasswd.Algorithm algo : Htpasswd.ALGORITHMS) {
             if (algo.matches(hash, password)) {
                 matches = true;
                 break;
@@ -216,16 +207,13 @@ final class Htpasswd {
         public boolean matches(final String hash, final String password)
             throws IOException {
             final Matcher matcher = Htpasswd.Md5.PATTERN.matcher(hash);
-            boolean matches;
             if (matcher.matches()) {
                 throw new IOException(
                     // @checkstyle LineLength (1 line)
                     "MD5 hashes are not supported yet, try to use plain text, or SHA1 as explained at http://httpd.apache.org/docs/2.2/misc/password_encryptions.html"
                 );
-            } else {
-                matches = false;
             }
-            return matches;
+            return false;
         }
     }
 
@@ -242,7 +230,7 @@ final class Htpasswd {
         @Override
         public boolean matches(final String hash, final String password) {
             final Matcher matcher = Htpasswd.Sha.PATTERN.matcher(hash);
-            boolean matches;
+            final boolean matches;
             if (matcher.matches()) {
                 final String required = Base64.encodeBase64String(
                     DigestUtils.sha1(password)

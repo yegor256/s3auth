@@ -147,11 +147,10 @@ final class HttpResponse {
      * @param socket The socket to write to
      * @return How many bytes were actually sent
      * @throws IOException If some IO problem inside
-     * @see http://stackoverflow.com/questions/8179547
+     * @see <a href="http://stackoverflow.com/questions/8179547">discussion</a>
      */
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public long send(@NotNull final Socket socket) throws IOException {
-        long bytes = 0;
         final OutputStream stream = socket.getOutputStream();
         final Writer writer = new OutputStreamWriter(stream);
         writer.write(
@@ -162,21 +161,22 @@ final class HttpResponse {
                 HttpResponse.EOL
             )
         );
-        for (ConcurrentMap.Entry<String, Collection<String>> hdr
+        for (final ConcurrentMap.Entry<String, Collection<String>> hdr
             : this.hdrs.entrySet()) {
-            for (String value : hdr.getValue()) {
+            for (final String value : hdr.getValue()) {
                 writer.write(hdr.getKey());
                 writer.write(": ");
                 writer.write(value);
                 writer.write(HttpResponse.EOL);
             }
         }
-        for (String hdr : this.body.headers()) {
+        for (final String hdr : this.body.headers()) {
             writer.write(hdr);
             writer.write(HttpResponse.EOL);
         }
         writer.write(HttpResponse.EOL);
         writer.flush();
+        long bytes = 0L;
         bytes += this.body.writeTo(stream);
         writer.close();
         return bytes;

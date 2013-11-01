@@ -93,7 +93,7 @@ final class HttpThread {
      * @param sckts Sockets to read from
      * @param hsts Hosts
      */
-    public HttpThread(@NotNull final BlockingQueue<Socket> sckts,
+    HttpThread(@NotNull final BlockingQueue<Socket> sckts,
         @NotNull final Hosts hsts) {
         this.sockets = sckts;
         this.hosts = hsts;
@@ -129,7 +129,7 @@ final class HttpThread {
                 .send(socket);
         } catch (HttpException ex) {
             bytes = this.failure(ex, socket);
-        } catch (java.io.IOException ex) {
+        } catch (IOException ex) {
             Logger.warn(this, "#run(): IO problem: %s", ex.getMessage());
             bytes = this.failure(
                 new HttpException(
@@ -195,7 +195,7 @@ final class HttpThread {
             );
         }
         final String domain = headers.get(HttpHeaders.HOST).iterator().next();
-        Host host;
+        final Host host;
         if (LocalHost.isIt(domain)) {
             host = new LocalHost();
         } else {
@@ -206,7 +206,7 @@ final class HttpThread {
                     HttpURLConnection.HTTP_NOT_FOUND,
                     ex
                 );
-            } catch (java.io.IOException ex) {
+            } catch (IOException ex) {
                 throw new HttpException(
                     HttpURLConnection.HTTP_INTERNAL_ERROR,
                     ex
@@ -225,7 +225,7 @@ final class HttpThread {
     private long failure(final HttpException cause, final Socket socket) {
         try {
             return cause.response().send(socket);
-        } catch (java.io.IOException ex) {
+        } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
