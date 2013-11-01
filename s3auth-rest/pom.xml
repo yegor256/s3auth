@@ -219,6 +219,7 @@
                 <version>1.8</version>
                 <executions>
                     <execution>
+                        <phase>initialize</phase>
                         <goals>
                             <goal>reserve-network-port</goal>
                         </goals>
@@ -287,15 +288,31 @@
                         </goals>
                     </execution>
                 </executions>
-                <!--
                 <dependencies>
+                    <dependency>
+                        <groupId>com.amazonaws</groupId>
+                        <artifactId>aws-java-sdk</artifactId>
+                        <version>1.5.7</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.jcabi</groupId>
+                        <artifactId>jcabi-dynamo</artifactId>
+                        <version>0.8.4</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.jcabi</groupId>
+                        <artifactId>jcabi-dynamo</artifactId>
+                        <version>0.8.4</version>
+                        <classifier>mock</classifier>
+                    </dependency>
+                    <!--
                     <dependency>
                         <groupId>com.jcabi</groupId>
                         <artifactId>jcabi-aspects</artifactId>
                         <version>0.8</version>
                     </dependency>
+                    -->
                 </dependencies>
-                -->
             </plugin>
             <plugin>
                 <groupId>com.cloudbees</groupId>

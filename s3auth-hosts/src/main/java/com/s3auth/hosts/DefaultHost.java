@@ -29,6 +29,7 @@
  */
 package com.s3auth.hosts;
 
+import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.s3.model.BucketWebsiteConfiguration;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
@@ -94,7 +95,7 @@ final class DefaultHost implements Host {
         throws IOException {
         Resource resource = null;
         final Collection<String> errors = new LinkedList<String>();
-        for (DefaultHost.ObjectName name : this.names(uri)) {
+        for (final DefaultHost.ObjectName name : this.names(uri)) {
             try {
                 resource = new DefaultResource(
                     this.bucket.client(),
@@ -103,7 +104,7 @@ final class DefaultHost implements Host {
                     range
                 );
                 break;
-            } catch (com.amazonaws.AmazonClientException ex) {
+            } catch (AmazonClientException ex) {
                 errors.add(
                     String.format(
                         "'%s': %s",
@@ -185,7 +186,7 @@ final class DefaultHost implements Host {
          * Public ctor.
          * @param name The original name
          */
-        public NameWithSuffix(final String name) {
+        NameWithSuffix(final String name) {
             this.origin = name;
         }
         @Override
@@ -200,7 +201,7 @@ final class DefaultHost implements Host {
                 if (conf != null) {
                     suffix = conf.getIndexDocumentSuffix();
                 }
-            } catch (com.amazonaws.AmazonClientException ex) {
+            } catch (AmazonClientException ex) {
                 suffix = "";
             }
             if (suffix == null || suffix.isEmpty()) {
