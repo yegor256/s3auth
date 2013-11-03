@@ -128,7 +128,7 @@ public final class DynamoHosts implements Hosts {
             if (this.byName(domain.name()) == null) {
                 added = this.dynamo.add(user, new DefaultDomain(domain));
             }
-        } catch (java.io.IOException ex) {
+        } catch (IOException ex) {
             throw new IllegalArgumentException(ex);
         }
         return added;
@@ -147,7 +147,7 @@ public final class DynamoHosts implements Hosts {
             if (data.containsKey(user) && data.get(user).contains(domain)) {
                 removed = this.dynamo.remove(domain);
             }
-        } catch (java.io.IOException ex) {
+        } catch (IOException ex) {
             throw new IllegalArgumentException(ex);
         }
         return removed;
@@ -161,8 +161,8 @@ public final class DynamoHosts implements Hosts {
      */
     private Domain byName(final String name) throws IOException {
         Domain domain = null;
-        for (Set<Domain> domains : this.dynamo.load().values()) {
-            for (Domain candidate : domains) {
+        for (final Set<Domain> domains : this.dynamo.load().values()) {
+            for (final Domain candidate : domains) {
                 if (candidate.name().equals(name)) {
                     domain = candidate;
                     break;
@@ -193,7 +193,7 @@ public final class DynamoHosts implements Hosts {
          * @param usr User
          * @param dmns Domains
          */
-        public Wrap(final User usr, final Domains dmns) {
+        Wrap(final User usr, final Domains dmns) {
             super();
             this.user = usr;
             this.domains = dmns;
