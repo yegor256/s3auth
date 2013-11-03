@@ -31,6 +31,7 @@ package com.s3auth.relay;
 
 import com.jcabi.aspects.Parallel;
 import com.jcabi.aspects.Tv;
+import com.jcabi.log.Logger;
 import com.rexsl.test.RestTester;
 import com.s3auth.hosts.Host;
 import com.s3auth.hosts.Hosts;
@@ -42,6 +43,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -69,20 +71,26 @@ public final class HttpFacadeTest {
         final int port = PortMocker.reserve();
         final HttpFacade facade = new HttpFacade(hosts, port);
         facade.listen();
-        HttpFacadeTest.http(
-            UriBuilder.fromUri(String.format("http://localhost:%d/", port))
-                .path("/abc").build()
-        );
-        facade.close();
+        final URI uri = UriBuilder
+            .fromUri(String.format("http://localhost:%d/", port))
+            .path("/a").build();
+        Logger.debug(this, "sending HTTP requests to %s", uri);
+        try {
+            HttpFacadeTest.http(uri);
+        } finally {
+            facade.close();
+        }
     }
 
     /**
      * Make HTTP request.
      * @param path URI to hit
+     * @throws Exception If fails
      */
-    @Parallel(threads = Tv.FIVE)
-    private static void http(final URI path) {
-        RestTester.start(path)
+    @Parallel(threads = Tv.TEN)
+    private static void http(final URI path) throws Exception {
+        final String rnd = RandomStringUtils.randomAlphabetic(Tv.FIVE);
+        RestTester.start(UriBuilder.fromUri(path).queryParam("rnd", rnd))
             .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
             .header(
                 HttpHeaders.AUTHORIZATION,

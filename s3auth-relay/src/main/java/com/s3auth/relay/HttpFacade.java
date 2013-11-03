@@ -60,6 +60,7 @@ import lombok.ToString;
  * @version $Id$
  * @since 0.0.1
  * @see Main
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @ToString
 @EqualsAndHashCode(of = { "sockets", "server" })
@@ -135,6 +136,7 @@ final class HttpFacade implements Closeable {
         this.frontend.scheduleWithFixedDelay(
             new VerboseRunnable(
                 new Runnable() {
+                    @Override
                     public void run() {
                         HttpFacade.this.process();
                     }
@@ -146,9 +148,14 @@ final class HttpFacade implements Closeable {
 
     @Override
     public void close() throws IOException {
+        try {
+            this.shutdown(this.frontend);
+            this.shutdown(this.backend);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            throw new IOException(ex);
+        }
         this.server.close();
-        this.shutdown(this.frontend);
-        this.shutdown(this.backend);
     }
 
     /**
@@ -162,23 +169,9 @@ final class HttpFacade implements Closeable {
             throw new IllegalStateException(ex);
         }
         try {
-            final boolean consumed = this.sockets
-                .offer(socket, 1L, TimeUnit.SECONDS);
-            if (!consumed) {
-                new HttpResponse()
-                    .withStatus(HttpURLConnection.HTTP_GATEWAY_TIMEOUT)
-                    .withBody(
-                        String.format(
-                            "%d sockets in queue, %d remaining capacity",
-                            this.sockets.size(),
-                            this.sockets.remainingCapacity()
-                        )
-                    )
-                    .send(socket);
-                socket.close();
+            if (!this.sockets.offer(socket, 1L, TimeUnit.SECONDS)) {
+                this.overflow(socket);
             }
-        } catch (IOException ex) {
-            throw new IllegalStateException(ex);
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
             throw new IllegalStateException(ex);
@@ -186,26 +179,44 @@ final class HttpFacade implements Closeable {
     }
 
     /**
+     * Report overflow problem to the socket and close it.
+     * @param socket The socket to report to
+     */
+    private void overflow(final Socket socket) {
+        try {
+            new HttpResponse()
+                .withStatus(HttpURLConnection.HTTP_GATEWAY_TIMEOUT)
+                .withBody(
+                    String.format(
+                        "%d socket(s) in queue, %d remaining capacity",
+                        this.sockets.size(),
+                        this.sockets.remainingCapacity()
+                    )
+                )
+                .send(socket);
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
+    /**
      * Shutdown a service.
      * @param service The service to shut down
+     * @throws InterruptedException If fails to shutdown
      */
-    private void shutdown(final ScheduledExecutorService service) {
+    private void shutdown(final ScheduledExecutorService service)
+        throws InterruptedException {
         service.shutdown();
-        try {
-            if (service.awaitTermination(1L, TimeUnit.SECONDS)) {
-                Logger.info(this, "#shutdown(): succeeded");
-            } else {
-                Logger.warn(this, "#shutdown(): failed");
-                service.shutdownNow();
-                if (service.awaitTermination(1L, TimeUnit.SECONDS)) {
-                    Logger.info(this, "#shutdown(): shutdownNow() succeeded");
-                } else {
-                    Logger.error(this, "#shutdown(): failed to stop threads");
-                }
-            }
-        } catch (InterruptedException ex) {
+        if (service.awaitTermination(2L, TimeUnit.SECONDS)) {
+            Logger.info(this, "#shutdown(): succeeded");
+        } else {
+            Logger.warn(this, "#shutdown(): failed");
             service.shutdownNow();
-            Thread.currentThread().interrupt();
+            if (service.awaitTermination(2L, TimeUnit.SECONDS)) {
+                Logger.info(this, "#shutdown(): shutdownNow() succeeded");
+            } else {
+                Logger.error(this, "#shutdown(): failed to stop threads");
+            }
         }
     }
 

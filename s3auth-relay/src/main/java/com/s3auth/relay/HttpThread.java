@@ -38,6 +38,7 @@ import com.s3auth.hosts.Resource;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.concurrent.BlockingQueue;
@@ -46,7 +47,6 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.io.IOUtils;
 
 /**
  * Single HTTP processing thread.
@@ -111,35 +111,44 @@ final class HttpThread {
         long bytes;
         try {
             final HttpRequest request = new HttpRequest(socket);
-            final Host host = this.host(request);
-            bytes = new HttpResponse()
-                .withHeader("Server", HttpThread.NAME)
-                .withHeader(
-                    HttpHeaders.DATE,
-                    String.format(
-                        "%ta, %1$td %1$tb %1$tY %1$tT %1$tz",
-                        new Date()
+            if ("GET".equals(request.method())) {
+                bytes = new HttpResponse()
+                    .withHeader("Server", HttpThread.NAME)
+                    .withHeader(
+                        HttpHeaders.DATE,
+                        String.format(
+                            "%ta, %1$td %1$tb %1$tY %1$tT %1$tz",
+                            new Date()
+                        )
                     )
-                )
-                .withHeader(
-                    "X-S3auth-Time",
-                    Long.toString(System.currentTimeMillis() - start)
-                )
-                .withBody(this.resource(host, request))
-                .send(socket);
+                    .withHeader(
+                        "X-S3auth-Time",
+                        Long.toString(System.currentTimeMillis() - start)
+                    )
+                    .withBody(this.resource(this.host(request), request))
+                    .send(socket);
+            } else {
+                bytes = HttpThread.failure(
+                    new HttpException(
+                        HttpURLConnection.HTTP_BAD_METHOD,
+                        "only GET method is supported at the moment"
+                    ),
+                    socket
+                );
+            }
         } catch (HttpException ex) {
-            bytes = this.failure(ex, socket);
+            bytes = HttpThread.failure(ex, socket);
+        } catch (SocketException ex) {
+            Logger.warn(this, "#run(): %s", ex);
+            bytes = 0L;
         } catch (IOException ex) {
-            Logger.warn(this, "#run(): IO problem: %s", ex.getMessage());
-            bytes = this.failure(
+            bytes = HttpThread.failure(
                 new HttpException(
                     HttpURLConnection.HTTP_INTERNAL_ERROR,
                     ex
                 ),
                 socket
             );
-        } finally {
-            IOUtils.closeQuietly(socket);
         }
         return bytes;
     }
@@ -222,7 +231,8 @@ final class HttpThread {
      * @param socket The socket to talk to
      * @return Number of bytes sent
      */
-    private long failure(final HttpException cause, final Socket socket) {
+    private static long failure(final HttpException cause,
+        final Socket socket) {
         try {
             return cause.response().send(socket);
         } catch (IOException ex) {

@@ -88,7 +88,7 @@ public interface Resource {
     @ToString
     @EqualsAndHashCode(of = "text")
     @Loggable(Loggable.DEBUG)
-    class PlainText implements Resource {
+    final class PlainText implements Resource {
         /**
          * Plain text to show.
          */
@@ -108,7 +108,7 @@ public interface Resource {
         public long writeTo(@NotNull final OutputStream stream)
             throws IOException {
             IOUtils.write(this.text, stream);
-            return this.text.getBytes().length;
+            return (long) this.text.getBytes().length;
         }
         @Override
         public String etag() {

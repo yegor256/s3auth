@@ -70,7 +70,7 @@ import lombok.ToString;
  * @see HttpThread
  */
 @ToString
-@EqualsAndHashCode(of = { "uri", "hdrs" })
+@EqualsAndHashCode(of = { "mtd", "uri", "hdrs" })
 @Loggable(Loggable.DEBUG)
 final class HttpRequest {
 
@@ -99,6 +99,11 @@ final class HttpRequest {
         Pattern.compile("([a-zA-Z][a-zA-Z\\-]*):\\s*(.*)\\s*");
 
     /**
+     * HTTP mtd.
+     */
+    private final transient String mtd;
+
+    /**
      * URI requested.
      */
     private final transient URI uri;
@@ -111,50 +116,52 @@ final class HttpRequest {
 
     /**
      * Public ctor.
+     *
+     * <p>It's important NOT to close reader in this mtd. If it's closed
+     * here the entire socket gets closed.
+     *
      * @param socket Socket to read from
      * @throws IOException If some socket problem
      * @see <a href="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>
      */
     HttpRequest(@NotNull final Socket socket) throws IOException {
-        final BufferedReader reader =
-            new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        try {
-            final String top = reader.readLine();
-            if (top == null) {
-                throw new HttpException(
-                    HttpURLConnection.HTTP_BAD_REQUEST,
-                    "empty request"
-                );
-            }
-            final Matcher matcher = HttpRequest.TOP.matcher(top);
-            if (!matcher.matches()) {
-                throw new HttpException(
-                    HttpURLConnection.HTTP_BAD_REQUEST,
-                    String.format("invalid first line: '%s'", top)
-                );
-            }
-            if (!"GET".equals(matcher.group(1))) {
-                throw new HttpException(
-                    HttpURLConnection.HTTP_BAD_METHOD,
-                    "only GET method is supported"
-                );
-            }
-            this.uri = URI.create(matcher.group(2));
-            final Collection<String> headers = new LinkedList<String>();
-            while (true) {
-                final String line = reader.readLine();
-                if (line == null) {
-                    break;
-                }
-                if (line.isEmpty()) {
-                    break;
-                }
-                headers.add(line);
-            }
-            this.hdrs.putAll(this.parse(headers));
-        } finally {
-            reader.close();
+        final BufferedReader reader = new BufferedReader(
+            new InputStreamReader(socket.getInputStream())
+        );
+        final String top = reader.readLine();
+        if (top == null) {
+            throw new HttpException(
+                HttpURLConnection.HTTP_BAD_REQUEST,
+                "empty request"
+            );
         }
+        final Matcher matcher = HttpRequest.TOP.matcher(top);
+        if (!matcher.matches()) {
+            throw new HttpException(
+                HttpURLConnection.HTTP_BAD_REQUEST,
+                String.format("invalid first line: '%s'", top)
+            );
+        }
+        if (!"GET".equals(matcher.group(1))) {
+            throw new HttpException(
+                HttpURLConnection.HTTP_BAD_METHOD,
+                "only GET mtd is supported"
+            );
+        }
+        this.mtd = matcher.group(1);
+        this.uri = URI.create(matcher.group(2));
+        final Collection<String> headers = new LinkedList<String>();
+        while (true) {
+            final String line = reader.readLine();
+            if (line == null) {
+                break;
+            }
+            if (line.isEmpty()) {
+                break;
+            }
+            headers.add(line);
+        }
+        this.hdrs.putAll(this.parse(headers));
     }
 
     /**
@@ -171,6 +178,14 @@ final class HttpRequest {
      */
     public URI requestUri() {
         return this.uri;
+    }
+
+    /**
+     * Get HTTP method requested.
+     * @return The method
+     */
+    public String method() {
+        return this.mtd;
     }
 
     /**
@@ -240,11 +255,11 @@ final class HttpRequest {
         final int len = key.length();
         final char[] bytes = key.toCharArray();
         if (bytes[0] >= 'a' && bytes[0] <= 'z') {
-            bytes[0] = (char) (bytes[0] - ('a' - 'A'));
+            bytes[0] -= 'a' - 'A';
         }
         for (int pos = 1; pos < len; ++pos) {
             if (bytes[pos] >= 'A' && bytes[pos] <= 'Z') {
-                bytes[pos] = (char) (bytes[pos] + ('a' - 'A'));
+                bytes[pos] += 'a' - 'A';
             }
         }
         return new String(bytes);
