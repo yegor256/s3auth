@@ -32,7 +32,9 @@ package com.s3auth.relay;
 import com.jcabi.aspects.Parallel;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
-import com.rexsl.test.RestTester;
+import com.rexsl.test.request.JdkRequest
+import com.rexsl.test.response.RestResponse
+import com.rexsl.test.response.XmlResponse
 import com.s3auth.hosts.Host;
 import com.s3auth.hosts.Hosts;
 import com.s3auth.hosts.Range;
@@ -88,7 +90,7 @@ public final class HttpFacadeTest {
     @Parallel(threads = Tv.TEN)
     private static void http(final URI path) throws Exception {
         final String rnd = RandomStringUtils.randomAlphabetic(Tv.FIVE);
-        RestTester.start(UriBuilder.fromUri(path).queryParam("rnd", rnd))
+        new JdkRequest(path)
             .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
             .header(
                 HttpHeaders.AUTHORIZATION,
@@ -97,8 +99,10 @@ public final class HttpFacadeTest {
                     Base64.encodeBase64String("a:b".getBytes())
                 )
             )
-            .get("read sample page")
+            .uri().queryParam("rnd", rnd).back()
+            .fetch().as(RestResponse.class)
             .assertStatus(HttpURLConnection.HTTP_OK)
+            .as(XmlResponse.class)
             .assertXPath("/test");
     }
 

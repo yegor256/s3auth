@@ -29,20 +29,24 @@
  */
 package com.s3auth.rest.rexsl.scripts
 
-import com.rexsl.test.RestTester
+import com.rexsl.test.request.JdkRequest
+import com.rexsl.test.response.RestResponse
+import com.rexsl.test.response.XmlResponse
 import com.rexsl.test.html.NoBrokenLinks
 import javax.ws.rs.core.HttpHeaders
 
-RestTester.start(rexsl.home)
+new JdkRequest(rexsl.home)
     .header(HttpHeaders.ACCEPT, '*/*')
     .header(HttpHeaders.USER_AGENT, 'somebody')
-    .get('read home page as somebody')
+    .fetch()
+    .as(RestResponse)
     .assertStatus(HttpURLConnection.HTTP_OK)
     .assertThat(new NoBrokenLinks(rexsl.home))
 
-RestTester.start(rexsl.home)
+new JdkRequest(rexsl.home)
     .header(HttpHeaders.ACCEPT, 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8')
     .header(HttpHeaders.USER_AGENT, 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)')
-    .get('read home page as IE')
+    .fetch()
+    .as(RestResponse)
     .assertStatus(HttpURLConnection.HTTP_OK)
     .assertThat(new NoBrokenLinks(rexsl.home))

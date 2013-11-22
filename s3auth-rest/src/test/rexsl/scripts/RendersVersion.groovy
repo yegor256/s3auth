@@ -30,7 +30,8 @@
 package com.s3auth.rest.rexsl.scripts
 
 import com.jcabi.manifests.Manifests
-import com.rexsl.test.RestTester
+import com.rexsl.test.request.JdkRequest
+import com.rexsl.test.response.RestResponse
 import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.UriBuilder
@@ -38,8 +39,10 @@ import org.hamcrest.Matchers
 
 Manifests.append(new File(rexsl.basedir, 'target/test-classes/META-INF/MANIFEST.MF'))
 
-RestTester.start(UriBuilder.fromUri(rexsl.home).path('/misc/version'))
+new JdkRequest(rexsl.home)
+    .uri().path('/misc/version').back()
     .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
-    .get('reading version')
+    .fetch()
+    .as(RestResponse)
     .assertStatus(HttpURLConnection.HTTP_OK)
     .assertBody(Matchers.equalTo(Manifests.read('S3Auth-Revision')))

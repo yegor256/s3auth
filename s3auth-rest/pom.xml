@@ -305,13 +305,6 @@
                         <version>0.8.4</version>
                         <classifier>mock</classifier>
                     </dependency>
-                    <!--
-                    <dependency>
-                        <groupId>com.jcabi</groupId>
-                        <artifactId>jcabi-aspects</artifactId>
-                        <version>0.8</version>
-                    </dependency>
-                    -->
                 </dependencies>
             </plugin>
             <plugin>

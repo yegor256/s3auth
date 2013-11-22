@@ -103,7 +103,7 @@ public final class DynamoHosts implements Hosts {
     @NotNull
     public Set<Domain> domains(@NotNull @Valid final User user)
         throws IOException {
-        final Map<URN, Domains> data = DynamoHosts.this.dynamo.load();
+        final Map<URN, Domains> data = this.dynamo.load();
         Domains domains = data.get(user.identity());
         if (domains == null) {
             domains = new Domains();

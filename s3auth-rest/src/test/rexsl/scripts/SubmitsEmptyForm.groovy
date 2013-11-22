@@ -31,7 +31,11 @@ package com.s3auth.rest.rexsl.scripts
 
 import com.jcabi.manifests.Manifests
 import com.rexsl.page.auth.AuthInset
-import com.rexsl.test.RestTester
+import com.rexsl.test.Request
+import com.rexsl.test.request.JdkRequest
+import com.rexsl.test.response.RestResponse
+import com.rexsl.test.response.XmlResponse
+import com.rexsl.test.wire.CookieOptimizingWire
 import com.s3auth.hosts.UserMocker
 import com.s3auth.rest.RestUser
 import javax.ws.rs.core.HttpHeaders
@@ -46,23 +50,31 @@ def cookie = 'Rexsl-Auth=' + AuthInset.encrypt(
     Manifests.read('S3Auth-SecurityKey')
 )
 
-RestTester.start(rexsl.home)
+new JdkRequest(rexsl.home)
+    .through(CookieOptimizingWire)
     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
     .header(HttpHeaders.COOKIE, cookie)
-    .get('read home page')
+    .fetch()
+    .as(XmlResponse)
     .rel('/page/links/link[@rel="add"]/@href')
-    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-    .header(HttpHeaders.COOKIE, cookie)
     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-    .post('submit incomplete form', 'host=test-3.s3auth.com&key=')
+    .method(Request.POST)
+    .body()
+    .formParam('host', 'test-3.s3auth.com')
+    .formParam('key', '')
+    .back()
+    .fetch()
+    .as(RestResponse)
     .assertStatus(HttpURLConnection.HTTP_SEE_OTHER)
     .assertHeader(
         HttpHeaders.SET_COOKIE,
         Matchers.hasItem(Matchers.containsString('Rexsl-Flash'))
     )
     .follow()
-    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-    .header(HttpHeaders.COOKIE, cookie)
-    .get('read home page again')
+    .method(Request.GET)
+    .reset(HttpHeaders.CONTENT_TYPE)
+    .body().set('').back()
+    .fetch()
+    .as(XmlResponse)
     .assertXPath('/page/flash[level="WARNING"]')
     .assertXPath('/page/flash/message')

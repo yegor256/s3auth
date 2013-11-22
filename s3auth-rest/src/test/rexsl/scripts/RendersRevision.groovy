@@ -29,15 +29,19 @@
  */
 package com.s3auth.rest.rexsl.scripts
 
-import com.rexsl.test.RestTester
+import com.rexsl.test.request.JdkRequest
+import com.rexsl.test.response.RestResponse
+import com.rexsl.test.response.XmlResponse
 import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.MediaType
 
-RestTester.start(rexsl.home)
+new JdkRequest(rexsl.home)
     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
     .header(HttpHeaders.USER_AGENT, 'Chrome/10.0')
-    .get('read entrance page')
+    .fetch()
+    .as(RestResponse)
     .assertStatus(HttpURLConnection.HTTP_OK)
+    .as(XmlResponse)
     .assertXPath('/page/version/revision')
     .assertXPath('/page/version/name')
     .assertXPath('/page/version/date')

@@ -35,6 +35,7 @@ import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.inset.FlashInset;
 import com.s3auth.hosts.Domain;
+import com.s3auth.hosts.User;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -94,12 +95,21 @@ public final class IndexRs extends BaseRs {
     @POST
     @Path("/add")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response add(@FormParam("host") final String host,
+    public Response add(
+        @FormParam("host") final String host,
         @FormParam("key") final String key,
         @FormParam("secret") final String secret,
         @DefaultValue("s3") @FormParam("region") final String region)
         throws IOException {
-        final boolean added = this.hosts().domains(this.user()).add(
+        final User user = this.user();
+        if (user.equals(User.ANONYMOUS)) {
+            throw FlashInset.forward(
+                this.uriInfo().getBaseUri(),
+                "please login first, in order to add new domains",
+                Level.SEVERE
+            );
+        }
+        final boolean added = this.hosts().domains(user).add(
             new Domain() {
                 @Override
                 public String name() {
@@ -146,7 +156,15 @@ public final class IndexRs extends BaseRs {
     @Path("/remove")
     public Response remove(@QueryParam("host") final String host)
         throws IOException {
-        final boolean removed = this.hosts().domains(this.user()).remove(
+        final User user = this.user();
+        if (user.equals(User.ANONYMOUS)) {
+            throw FlashInset.forward(
+                this.uriInfo().getBaseUri(),
+                "please login first, to be able to delete domains",
+                Level.SEVERE
+            );
+        }
+        final boolean removed = this.hosts().domains(user).remove(
             new Domain() {
                 @Override
                 public String name() {
@@ -191,7 +209,7 @@ public final class IndexRs extends BaseRs {
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private Collection<JaxbDomain> domains() throws IOException {
         final Collection<JaxbDomain> domains = new LinkedList<JaxbDomain>();
-        for (Domain domain : this.hosts().domains(this.user())) {
+        for (final Domain domain : this.hosts().domains(this.user())) {
             domains.add(new JaxbDomain(domain, this.uriInfo()));
         }
         return domains;

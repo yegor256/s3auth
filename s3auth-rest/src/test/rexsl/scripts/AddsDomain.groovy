@@ -31,7 +31,11 @@ package com.s3auth.rest.rexsl.scripts
 
 import com.jcabi.manifests.Manifests
 import com.rexsl.page.auth.AuthInset
-import com.rexsl.test.RestTester
+import com.rexsl.test.Request
+import com.rexsl.test.request.JdkRequest
+import com.rexsl.test.response.RestResponse
+import com.rexsl.test.response.XmlResponse
+import com.rexsl.test.wire.CookieOptimizingWire
 import com.s3auth.hosts.UserMocker
 import com.s3auth.rest.RestUser
 import javax.ws.rs.core.HttpHeaders
@@ -51,34 +55,42 @@ def host = 'test.s3auth.com'
 def key = 'AAAAAAAAAAAAAAAAAAAA'
 def secret = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 
-def home = RestTester.start(rexsl.home)
+def home = new JdkRequest(rexsl.home)
+    .through(CookieOptimizingWire)
     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
     .header(HttpHeaders.COOKIE, this.cookie())
-    .get('read home page')
+    .fetch()
+    .as(RestResponse)
     .assertStatus(HttpURLConnection.HTTP_OK)
-if (!home.nodes("//domain[name='${host}']").isEmpty()) {
+    .as(XmlResponse)
+if (!home.xml().nodes("//domain[name='${host}']").isEmpty()) {
     home.rel("//domain[name='${host}']/links/link[@rel='remove']/@href")
-        .header(HttpHeaders.COOKIE, cookie)
-        .get('remove pre-registered domain')
+        .fetch().as(RestResponse)
         .assertStatus(HttpURLConnection.HTTP_SEE_OTHER)
 }
 
 home.rel('/page/links/link[@rel="add"]/@href')
-    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-    .header(HttpHeaders.COOKIE, cookie)
     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-    .post("add new domain ${host}", "host=${host}%20%20&key=%20${key}%20&secret=${secret}")
+    .method(Request.POST)
+    .body()
+    .formParam('host', "${host}  ")
+    .formParam('key', " ${key}  ")
+    .formParam('secret', "${secret}")
+    .back()
+    .fetch().as(RestResponse)
+    .assertStatus(HttpURLConnection.HTTP_SEE_OTHER)
     .follow()
-    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-    .header(HttpHeaders.COOKIE, cookie)
-    .get('read home page again')
+    .method(Request.GET)
+    .reset(HttpHeaders.CONTENT_TYPE)
+    .body().set('').back()
+    .fetch()
+    .as(XmlResponse)
     .assertXPath("/page/domains/domain[name='${host}' and key='${key}' and secret='${secret}' and region='s3']")
     .rel("/page/domains/domain[name='${host}']/links/link[@rel='remove']/@href")
-    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-    .header(HttpHeaders.COOKIE, cookie)
-    .get('deleting this domain')
+    .fetch()
+    .as(RestResponse)
+    .assertStatus(HttpURLConnection.HTTP_SEE_OTHER)
     .follow()
-    .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
-    .header(HttpHeaders.COOKIE, cookie)
-    .get('reading home again, without the domain')
+    .fetch()
+    .as(XmlResponse)
     .assertXPath("/page/domains[count(domain[name='${host}']) = 0]")

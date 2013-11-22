@@ -29,14 +29,17 @@
  */
 package com.s3auth.rest.rexsl.scripts
 
-import com.rexsl.test.RestTester
+import com.rexsl.test.request.JdkRequest
+import com.rexsl.test.response.RestResponse
 import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.UriBuilder
 import org.hamcrest.Matchers
 
-RestTester.start(UriBuilder.fromUri(rexsl.home).path('/misc/LICENSE.txt'))
+new JdkRequest(rexsl.home)
+    .uri().path('/misc/LICENSE.txt').back()
     .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
-    .get('reading license')
+    .fetch()
+    .as(RestResponse)
     .assertStatus(HttpURLConnection.HTTP_OK)
     .assertBody(Matchers.containsString('Copyright (c) 2012'))
