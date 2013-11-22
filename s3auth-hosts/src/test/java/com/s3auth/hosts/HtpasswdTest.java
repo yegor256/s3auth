@@ -29,6 +29,9 @@
  */
 package com.s3auth.hosts;
 
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.GetObjectRequest;
 import java.net.URI;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -55,10 +58,29 @@ public final class HtpasswdTest {
     }
 
     /**
+     * Htpasswd can show some stats in {@code #toString()} with IO exception.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void showsStatsInToStringWithIOException() throws Exception {
+        final AmazonS3 aws = Mockito.mock(AmazonS3.class);
+        Mockito.doThrow(new AmazonClientException("")).when(aws)
+            .getObject(Mockito.any(GetObjectRequest.class));
+        MatcherAssert.assertThat(
+            new Htpasswd(
+                new DefaultHost(
+                    new BucketMocker().withClient(aws).mock()
+                )
+            ),
+            Matchers.hasToString(Matchers.notNullValue())
+        );
+    }
+
+    /**
      * Htpasswd can manage apache hashes, with MD5 algorithm.
      * @throws Exception If there is some problem inside
      * @todo #1 This is not implemented yet
-     * @see ftp://ftp.arlut.utexas.edu/pub/java_hashes/MD5Crypt.java
+     * @link ftp://ftp.arlut.utexas.edu/pub/java_hashes/MD5Crypt.java
      */
     @Test
     @org.junit.Ignore
@@ -121,8 +143,8 @@ public final class HtpasswdTest {
      * Htpasswd can manage apache hashes, with Crypt algorithm.
      * @throws Exception If there is some problem inside
      * @todo #1 This is not implemented yet
-     * @see http://jxutil.sourceforge.net/API/org/sourceforge/jxutil/JCrypt.html
-     * @see http://www.dynamic.net.au/christos/crypt/
+     * @link http://jxutil.sourceforge.net/API/org/sourceforge/jxutil/JCrypt.html
+     * @link http://www.dynamic.net.au/christos/crypt/
      */
     @Test
     @org.junit.Ignore
