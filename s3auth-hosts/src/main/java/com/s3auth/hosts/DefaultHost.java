@@ -75,11 +75,7 @@ final class DefaultHost implements Host {
 
     @Override
     public String toString() {
-        return String.format(
-            "%s with %s",
-            this.bucket.toString(),
-            this.htpasswd.toString()
-        );
+        return this.bucket.toString();
     }
 
     @Override
