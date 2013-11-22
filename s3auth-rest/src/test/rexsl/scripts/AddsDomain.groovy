@@ -36,6 +36,7 @@ import com.rexsl.test.request.JdkRequest
 import com.rexsl.test.response.RestResponse
 import com.rexsl.test.response.XmlResponse
 import com.rexsl.test.wire.CookieOptimizingWire
+import com.rexsl.test.wire.VerboseWire
 import com.s3auth.hosts.UserMocker
 import com.s3auth.rest.RestUser
 import javax.ws.rs.core.HttpHeaders
@@ -56,6 +57,7 @@ def key = 'AAAAAAAAAAAAAAAAAAAA'
 def secret = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 
 def home = new JdkRequest(rexsl.home)
+    .through(VerboseWire)
     .through(CookieOptimizingWire)
     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
     .header(HttpHeaders.COOKIE, this.cookie())
