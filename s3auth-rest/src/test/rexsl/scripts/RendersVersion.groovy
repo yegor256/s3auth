@@ -34,7 +34,6 @@ import com.rexsl.test.request.JdkRequest
 import com.rexsl.test.response.RestResponse
 import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.MediaType
-import javax.ws.rs.core.UriBuilder
 import org.hamcrest.Matchers
 
 Manifests.append(new File(rexsl.basedir, 'target/test-classes/META-INF/MANIFEST.MF'))

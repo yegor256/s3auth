@@ -36,7 +36,6 @@ import com.rexsl.test.request.JdkRequest
 import com.rexsl.test.response.RestResponse
 import com.rexsl.test.response.XmlResponse
 import com.rexsl.test.wire.CookieOptimizingWire
-import com.rexsl.test.wire.VerboseWire
 import com.s3auth.hosts.UserMocker
 import com.s3auth.rest.RestUser
 import javax.ws.rs.core.HttpHeaders
@@ -55,7 +54,6 @@ String cookie() {
 def host = 'test-2.s3auth.com'
 
 def home = new JdkRequest(rexsl.home)
-    .through(VerboseWire)
     .through(CookieOptimizingWire)
     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)
     .header(HttpHeaders.COOKIE, this.cookie())
@@ -72,8 +70,8 @@ home.rel('/page/links/link[@rel="add"]/@href')
     .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
     .body()
     .formParam('host', host)
-    .formParam('key', "AAAAAAAAAAAAAAAAAAAA")
-    .formParam('secret', "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
+    .formParam('key', 'AAAAAAAAAAAAAAAAAAAA')
+    .formParam('secret', 'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')
     .back()
     .method(Request.POST)
     .fetch()
