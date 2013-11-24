@@ -133,7 +133,6 @@
                 <version>1.6.7</version>
             </dependency>
             <dependency>
-                <!-- Uniform Resource Name -->
                 <groupId>com.jcabi</groupId>
                 <artifactId>jcabi-urn</artifactId>
                 <version>0.8</version>
