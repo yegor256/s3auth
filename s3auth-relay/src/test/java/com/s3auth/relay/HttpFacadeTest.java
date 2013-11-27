@@ -41,6 +41,7 @@ import com.s3auth.hosts.Range;
 import com.s3auth.hosts.Resource;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
@@ -48,6 +49,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 /**
  * Test case for {@link HttpFacade}.
@@ -64,8 +67,16 @@ public final class HttpFacadeTest {
     public void handlesParallelHttpRequests() throws Exception {
         final Resource res = new Resource.PlainText("<test/>");
         final Host host = Mockito.mock(Host.class);
-        Mockito.doReturn(res).when(host)
-            .fetch(Mockito.any(URI.class), Mockito.any(Range.class));
+        Mockito.doAnswer(
+            new Answer<Resource>() {
+                @Override
+                public Resource answer(final InvocationOnMock inv)
+                    throws InterruptedException {
+                    TimeUnit.SECONDS.sleep(1L);
+                    return res;
+                }
+            }
+        ).when(host).fetch(Mockito.any(URI.class), Mockito.any(Range.class));
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
@@ -87,7 +98,7 @@ public final class HttpFacadeTest {
      * @param path URI to hit
      * @throws Exception If fails
      */
-    @Parallel(threads = Tv.TEN)
+    @Parallel(threads = Tv.FIFTY)
     private static void http(final URI path) throws Exception {
         final String rnd = RandomStringUtils.randomAlphabetic(Tv.FIVE);
         new JdkRequest(path)
