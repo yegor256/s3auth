@@ -169,7 +169,7 @@ final class HttpFacade implements Closeable {
             throw new IllegalStateException(ex);
         }
         try {
-            if (!this.sockets.offer(socket, 1, TimeUnit.SECONDS)) {
+            if (!this.sockets.offer(socket, Tv.TWENTY, TimeUnit.SECONDS)) {
                 this.overflow(socket);
             }
         } catch (InterruptedException ex) {
