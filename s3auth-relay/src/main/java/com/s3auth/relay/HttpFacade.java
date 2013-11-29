@@ -189,9 +189,9 @@ final class HttpFacade implements Closeable {
                 .withStatus(HttpURLConnection.HTTP_GATEWAY_TIMEOUT)
                 .withBody(
                     String.format(
-                        "%d socket(s) in queue, %d remaining capacity",
-                        this.sockets.size(),
-                        this.sockets.remainingCapacity()
+                        // @checkstyle LineLength (1 line)
+                        "We're sorry, the site is under high load at the moment (%d open connections), please try again in a few minutes",
+                        HttpFacade.THREADS
                     )
                 )
                 .send(socket);
