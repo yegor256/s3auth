@@ -72,7 +72,7 @@ final class HttpFacade implements Closeable {
      * How many threads to use.
      */
     private static final int THREADS =
-        Runtime.getRuntime().availableProcessors() * Tv.EIGHT;
+        Runtime.getRuntime().availableProcessors() * Tv.TWENTY;
 
     /**
      * Executor service, with socket openers.
@@ -169,8 +169,9 @@ final class HttpFacade implements Closeable {
             throw new IllegalStateException(ex);
         }
         try {
-            if (!this.sockets.offer(socket, Tv.TWENTY, TimeUnit.SECONDS)) {
+            if (!this.sockets.offer(socket, Tv.TEN, TimeUnit.SECONDS)) {
                 this.overflow(socket);
+                Logger.warn(this, "too many open connections");
             }
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
