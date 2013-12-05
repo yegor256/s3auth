@@ -31,10 +31,8 @@ package com.s3auth.relay;
 
 import com.jcabi.aspects.Parallel;
 import com.jcabi.aspects.Tv;
-import com.jcabi.log.Logger;
 import com.rexsl.test.request.JdkRequest;
 import com.rexsl.test.response.RestResponse;
-import com.rexsl.test.response.XmlResponse;
 import com.s3auth.hosts.Host;
 import com.s3auth.hosts.Hosts;
 import com.s3auth.hosts.Range;
@@ -47,6 +45,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -65,7 +64,6 @@ public final class HttpFacadeTest {
      */
     @Test
     public void handlesParallelHttpRequests() throws Exception {
-        final Resource res = new Resource.PlainText("<test/>");
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
             new Answer<Resource>() {
@@ -73,7 +71,7 @@ public final class HttpFacadeTest {
                 public Resource answer(final InvocationOnMock inv)
                     throws InterruptedException {
                     TimeUnit.SECONDS.sleep(1L);
-                    return res;
+                    throw new IllegalStateException("hello, world!");
                 }
             }
         ).when(host).fetch(Mockito.any(URI.class), Mockito.any(Range.class));
@@ -85,7 +83,6 @@ public final class HttpFacadeTest {
         final URI uri = UriBuilder
             .fromUri(String.format("http://localhost:%d/", port))
             .path("/a").build();
-        Logger.debug(this, "sending HTTP requests to %s", uri);
         try {
             HttpFacadeTest.http(uri);
         } finally {
@@ -100,7 +97,6 @@ public final class HttpFacadeTest {
      */
     @Parallel(threads = Tv.FIFTY)
     private static void http(final URI path) throws Exception {
-        final String rnd = RandomStringUtils.randomAlphabetic(Tv.FIVE);
         new JdkRequest(path)
             .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
             .header(
@@ -110,11 +106,12 @@ public final class HttpFacadeTest {
                     Base64.encodeBase64String("a:b".getBytes())
                 )
             )
-            .uri().queryParam("rnd", rnd).back()
+            .uri()
+            .queryParam("rnd", RandomStringUtils.randomAlphabetic(Tv.FIVE))
+            .back()
             .fetch().as(RestResponse.class)
-            .assertStatus(HttpURLConnection.HTTP_OK)
-            .as(XmlResponse.class)
-            .assertXPath("/test");
+            .assertStatus(HttpURLConnection.HTTP_INTERNAL_ERROR)
+            .assertBody(Matchers.containsString("hello"));
     }
 
 }
