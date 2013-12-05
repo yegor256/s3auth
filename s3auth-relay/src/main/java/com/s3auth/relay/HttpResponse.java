@@ -179,7 +179,6 @@ final class HttpResponse {
         long bytes = 0L;
         bytes += this.body.writeTo(stream);
         writer.close();
-        socket.close();
         return bytes;
     }
 

@@ -110,17 +110,20 @@ final class HttpFacade implements Closeable {
         throws IOException {
         this.server = new ServerSocket(port);
         final HttpThread thread = new HttpThread(this.sockets, hosts);
-        final Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    thread.dispatch();
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                    Logger.warn(this, "%s", ex);
+        final Runnable runnable = new VerboseRunnable(
+            new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        thread.dispatch();
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                        Logger.warn(this, "%s", ex);
+                    }
                 }
-            }
-        };
+            },
+            true, false
+        );
         for (int idx = 0; idx < HttpFacade.THREADS; ++idx) {
             this.backend.scheduleWithFixedDelay(
                 runnable,

@@ -47,6 +47,7 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.io.IOUtils;
 
 /**
  * Single HTTP processing thread.
@@ -105,6 +106,7 @@ final class HttpThread {
      * @throws InterruptedException If interrupted while waiting for the queue
      */
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
+    @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public long dispatch() throws InterruptedException {
         final Socket socket = this.sockets.take();
         final long start = System.currentTimeMillis();
@@ -141,7 +143,8 @@ final class HttpThread {
         } catch (SocketException ex) {
             Logger.warn(this, "#run(): %s", ex);
             bytes = 0L;
-        } catch (IOException ex) {
+        // @checkstyle IllegalCatch (1 line)
+        } catch (Throwable ex) {
             bytes = HttpThread.failure(
                 new HttpException(
                     HttpURLConnection.HTTP_INTERNAL_ERROR,
@@ -149,6 +152,8 @@ final class HttpThread {
                 ),
                 socket
             );
+        } finally {
+            IOUtils.closeQuietly(socket);
         }
         return bytes;
     }
