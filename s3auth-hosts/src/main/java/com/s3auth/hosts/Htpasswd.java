@@ -46,6 +46,7 @@ import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.codec.digest.Md5Crypt;
 
 /**
  * Htpasswd file abstraction.
@@ -149,7 +150,7 @@ final class Htpasswd {
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             res.writeTo(baos);
             content = baos.toString().trim();
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             Logger.warn(
                 this,
                 "#content(): failed to fetch .htpasswd from %s: %s",
@@ -203,17 +204,22 @@ final class Htpasswd {
          */
         private static final Pattern PATTERN =
             Pattern.compile("\\$apr1\\$([^\\$]+)\\$([a-zA-Z0-9/\\.]+=*)");
+
         @Override
         public boolean matches(final String hash, final String password)
             throws IOException {
             final Matcher matcher = Htpasswd.Md5.PATTERN.matcher(hash);
+            final boolean matches;
             if (matcher.matches()) {
-                throw new IOException(
-                    // @checkstyle LineLength (1 line)
-                    "MD5 hashes are not supported yet, try to use plain text, or SHA1 as explained at http://httpd.apache.org/docs/2.2/misc/password_encryptions.html"
+                final String result = Md5Crypt.apr1Crypt(
+                    password,
+                    matcher.group(1)
                 );
+                matches = hash.equals(result);
+            } else {
+                matches = false;
             }
-            return false;
+            return matches;
         }
     }
 

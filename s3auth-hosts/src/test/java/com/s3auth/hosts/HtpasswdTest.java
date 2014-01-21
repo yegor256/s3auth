@@ -79,11 +79,9 @@ public final class HtpasswdTest {
     /**
      * Htpasswd can manage apache hashes, with MD5 algorithm.
      * @throws Exception If there is some problem inside
-     * @todo #1 This is not implemented yet
      * @link ftp://ftp.arlut.utexas.edu/pub/java_hashes/MD5Crypt.java
      */
     @Test
-    @org.junit.Ignore
     public void understandsApacheNativeHashValues() throws Exception {
         MatcherAssert.assertThat(
             new Htpasswd(
