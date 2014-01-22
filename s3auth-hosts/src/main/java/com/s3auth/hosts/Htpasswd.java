@@ -255,9 +255,16 @@ final class Htpasswd {
      */
     @Loggable(Loggable.DEBUG)
     private static final class UnixCrypt implements Htpasswd.Algorithm {
+        /**
+         * Unix Crypt pattern.
+         */
+        private static final Pattern PATTERN =
+            Pattern.compile("(\\$[156]\\$)?[a-zA-Z0-9./]+(\\$.*)*");
+
         @Override
         public boolean matches(final String hash, final String password) {
-            return hash.equals(Crypt.crypt(password, hash));
+            return Htpasswd.UnixCrypt.PATTERN.matcher(hash).matches()
+                && hash.equals(Crypt.crypt(password, hash));
         }
     }
 
