@@ -140,12 +140,10 @@ public final class HtpasswdTest {
     /**
      * Htpasswd can manage apache hashes, with Crypt algorithm.
      * @throws Exception If there is some problem inside
-     * @todo #1 This is not implemented yet
      * @link http://jxutil.sourceforge.net/API/org/sourceforge/jxutil/JCrypt.html
      * @link http://www.dynamic.net.au/christos/crypt/
      */
     @Test
-    @org.junit.Ignore
     public void understandsCryptHashValues() throws Exception {
         MatcherAssert.assertThat(
             new Htpasswd(

@@ -45,6 +45,7 @@ import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.digest.Crypt;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.codec.digest.Md5Crypt;
 
@@ -73,7 +74,7 @@ final class Htpasswd {
     private static final Htpasswd.Algorithm[] ALGORITHMS = {
         new Htpasswd.Md5(),
         new Htpasswd.Sha(),
-        new Htpasswd.Crypt(),
+        new Htpasswd.UnixCrypt(),
         new Htpasswd.PlainText(),
     };
 
@@ -253,10 +254,17 @@ final class Htpasswd {
      * UNIX crypt.
      */
     @Loggable(Loggable.DEBUG)
-    private static final class Crypt implements Htpasswd.Algorithm {
+    private static final class UnixCrypt implements Htpasswd.Algorithm {
+        /**
+         * Unix Crypt pattern.
+         */
+        private static final Pattern PATTERN =
+            Pattern.compile("(\\$[156]\\$)?[a-zA-Z0-9./]+(\\$.*)*");
+
         @Override
         public boolean matches(final String hash, final String password) {
-            return false;
+            return Htpasswd.UnixCrypt.PATTERN.matcher(hash).matches()
+                && hash.equals(Crypt.crypt(password, hash));
         }
     }
 
