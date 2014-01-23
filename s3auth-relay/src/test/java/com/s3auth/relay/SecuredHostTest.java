@@ -55,21 +55,28 @@ public final class SecuredHostTest {
      */
     @Test
     public void requestsAuthorization() throws Exception {
-        final String[] requests = new String[] {
-            "GET / HTTP/1.1\nHost: example.com\n\n",
-            "GET / HTTP/1.1\n",
+        final String[] hosts = new String[] {
+            "example.com",
+            "maven.s3auth.com"
         };
-        for (String http : requests) {
+        for (final String name : hosts) {
             try {
                 new SecuredHost(
                     new HostMocker().mock(),
-                    HttpRequestMocker.toRequest(http)
+                    HttpRequestMocker.toRequest(
+                        String.format("GET / HTTP/1.1\nHost: %s\n\n", name)
+                    )
                 ).fetch(URI.create("/"), Range.ENTIRE);
                 Assert.fail("exception expected");
-            } catch (HttpException ex) {
+            } catch (final HttpException ex) {
                 MatcherAssert.assertThat(
                     HttpResponseMocker.toString(ex.response()),
-                    Matchers.containsString(HttpHeaders.WWW_AUTHENTICATE)
+                    Matchers.allOf(
+                        Matchers.containsString(HttpHeaders.WWW_AUTHENTICATE),
+                        Matchers.containsString(
+                            String.format("Basic realm=\"%s\"", name)
+                        )
+                    )
                 );
             }
         }
@@ -86,14 +93,14 @@ public final class SecuredHostTest {
             "GET / HTTP/1.1\nAuthorization: Basic a1b2c3==\n\n",
             "GET / HTTP/1.1\nAuthorization: Basic \n\n",
         };
-        for (String http : requests) {
+        for (final String http : requests) {
             try {
                 new SecuredHost(
                     new HostMocker().mock(),
                     HttpRequestMocker.toRequest(http)
                 ).fetch(URI.create("/test.html"), Range.ENTIRE);
                 Assert.fail("exception expected, but didn't happen");
-            } catch (HttpException ex) {
+            } catch (final HttpException ex) {
                 MatcherAssert.assertThat(
                     HttpResponseMocker.toString(ex.response()),
                     Matchers.startsWith(
@@ -144,7 +151,7 @@ public final class SecuredHostTest {
                 )
             ).fetch(URI.create("/test-request.html"), Range.ENTIRE);
             Assert.fail("authorization failed expected, but didn't happen");
-        } catch (HttpException ex) {
+        } catch (final HttpException ex) {
             MatcherAssert.assertThat(
                 HttpResponseMocker.toString(ex.response()),
                 Matchers.containsString("hello")
