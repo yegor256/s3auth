@@ -83,4 +83,16 @@ public final class ResourceTest {
         );
     }
 
+    /**
+     * Resource.PlainText can obtain its last modified time.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void getsLastModifiedTime() throws Exception {
+        MatcherAssert.assertThat(
+            new Resource.PlainText("blah").lastModified(),
+            Matchers.notNullValue()
+        );
+    }
+
 }

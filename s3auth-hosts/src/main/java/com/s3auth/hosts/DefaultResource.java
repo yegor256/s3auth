@@ -39,6 +39,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
@@ -126,7 +127,7 @@ final class DefaultResource implements Resource {
                 final int count;
                 try {
                     count = input.read(buffer);
-                } catch (IOException ex) {
+                } catch (final IOException ex) {
                     throw new DefaultResource.StreamingException(
                         String.format(
                             "failed to read %s/%s, range=%s, total=%d",
@@ -143,7 +144,7 @@ final class DefaultResource implements Resource {
                 }
                 try {
                     output.write(buffer, 0, count);
-                } catch (IOException ex) {
+                } catch (final IOException ex) {
                     throw new DefaultResource.StreamingException(
                         String.format(
                             // @checkstyle LineLength (1 line)
@@ -162,7 +163,7 @@ final class DefaultResource implements Resource {
         } finally {
             input.close();
         }
-        return (long) total;
+        return total;
     }
 
     @Override
@@ -213,6 +214,13 @@ final class DefaultResource implements Resource {
     @NotNull
     public String etag() {
         return this.object.getObjectMetadata().getETag();
+    }
+
+    @Override
+    public Date lastModified() {
+        return new Date(
+            this.object.getObjectMetadata().getLastModified().getTime()
+        );
     }
 
     /**

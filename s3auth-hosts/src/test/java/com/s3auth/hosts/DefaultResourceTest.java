@@ -36,6 +36,7 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Random;
 import org.apache.http.client.methods.HttpGet;
 import org.hamcrest.MatcherAssert;
@@ -141,6 +142,27 @@ public final class DefaultResourceTest {
                 new DefaultResource(client, "d", "", Range.ENTIRE)
             ),
             Matchers.equalTo("")
+        );
+    }
+
+    /**
+     * DefaultResource can obtain its last modified date.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void getsLastModifiedDate() throws Exception {
+        final Date date = new Date();
+        final AmazonS3 client = Mockito.mock(AmazonS3.class);
+        final S3Object object = Mockito.mock(S3Object.class);
+        Mockito.doReturn(object).when(client)
+            .getObject(Mockito.any(GetObjectRequest.class));
+        final ObjectMetadata meta = Mockito.mock(ObjectMetadata.class);
+        Mockito.doReturn(meta).when(object).getObjectMetadata();
+        Mockito.doReturn(date).when(meta).getLastModified();
+        final Resource res = new DefaultResource(client, "x", "", Range.ENTIRE);
+        MatcherAssert.assertThat(
+            res.lastModified(),
+            Matchers.is(date)
         );
     }
 
