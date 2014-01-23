@@ -57,7 +57,7 @@ public final class SecuredHostTest {
     public void requestsAuthorization() throws Exception {
         final String[] hosts = new String[] {
             "example.com",
-            "maven.s3auth.com"
+            "maven.s3auth.com",
         };
         for (final String name : hosts) {
             try {
