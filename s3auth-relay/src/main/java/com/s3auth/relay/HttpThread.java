@@ -48,6 +48,7 @@ import javax.ws.rs.core.HttpHeaders;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.client.utils.DateUtils;
 
 /**
  * Single HTTP processing thread.
@@ -138,13 +139,13 @@ final class HttpThread {
                     socket
                 );
             }
-        } catch (HttpException ex) {
+        } catch (final HttpException ex) {
             bytes = HttpThread.failure(ex, socket);
-        } catch (SocketException ex) {
+        } catch (final SocketException ex) {
             Logger.warn(this, "#run(): %s", ex);
             bytes = 0L;
         // @checkstyle IllegalCatch (1 line)
-        } catch (Throwable ex) {
+        } catch (final Throwable ex) {
             bytes = HttpThread.failure(
                 new HttpException(
                     HttpURLConnection.HTTP_INTERNAL_ERROR,
@@ -175,6 +176,15 @@ final class HttpThread {
                 .get(HttpHeaders.IF_NONE_MATCH)
                 .iterator().next();
             if (etag.equals(resource.etag())) {
+                throw new HttpException(HttpURLConnection.HTTP_NOT_MODIFIED);
+            }
+        }
+        if (request.headers().containsKey(HttpHeaders.IF_MODIFIED_SINCE)) {
+            final Date since = DateUtils.parseDate(
+                request.headers().get(HttpHeaders.IF_MODIFIED_SINCE)
+                    .iterator().next()
+            );
+            if (resource.lastModified().before(since)) {
                 throw new HttpException(HttpURLConnection.HTTP_NOT_MODIFIED);
             }
         }
@@ -215,12 +225,12 @@ final class HttpThread {
         } else {
             try {
                 host = new SecuredHost(this.hosts.find(domain), request);
-            } catch (Hosts.NotFoundException ex) {
+            } catch (final Hosts.NotFoundException ex) {
                 throw new HttpException(
                     HttpURLConnection.HTTP_NOT_FOUND,
                     ex
                 );
-            } catch (IOException ex) {
+            } catch (final IOException ex) {
                 throw new HttpException(
                     HttpURLConnection.HTTP_INTERNAL_ERROR,
                     ex
@@ -240,7 +250,7 @@ final class HttpThread {
         final Socket socket) {
         try {
             return cause.response().send(socket);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
