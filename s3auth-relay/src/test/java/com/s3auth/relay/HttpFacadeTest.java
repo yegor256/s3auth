@@ -39,12 +39,14 @@ import com.s3auth.hosts.Range;
 import com.s3auth.hosts.Resource;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.http.client.utils.DateUtils;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -55,6 +57,8 @@ import org.mockito.stubbing.Answer;
  * Test case for {@link HttpFacade}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle MultipleStringLiteralsCheck (200 lines)
+ * @checkstyle MagicNumberCheck (200 lines)
  */
 public final class HttpFacadeTest {
 
@@ -85,6 +89,69 @@ public final class HttpFacadeTest {
             .path("/a").build();
         try {
             HttpFacadeTest.http(uri);
+        } finally {
+            facade.close();
+        }
+    }
+
+    /**
+     * HttpFacade can process the If-Modified-Since header.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void handlesIfModifiedSinceHeader() throws Exception {
+        final Host host = Mockito.mock(Host.class);
+        Mockito.doAnswer(
+            new Answer<Resource>() {
+                @Override
+                public Resource answer(final InvocationOnMock inv)
+                    throws InterruptedException {
+                    final Resource answer = Mockito.mock(Resource.class);
+                    Mockito.doReturn(new Date(5000L))
+                        .when(answer).lastModified();
+                    Mockito.doReturn(HttpURLConnection.HTTP_OK)
+                        .when(answer).status();
+                    return answer;
+                }
+            }
+        ).when(host).fetch(Mockito.any(URI.class), Mockito.any(Range.class));
+        final Hosts hosts = Mockito.mock(Hosts.class);
+        Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
+        final int port = PortMocker.reserve();
+        final HttpFacade facade = new HttpFacade(hosts, port);
+        facade.listen();
+        final URI uri = UriBuilder
+            .fromUri(String.format("http://localhost:%d/", port))
+            .path("/a").build();
+        try {
+            new JdkRequest(uri)
+                .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
+                .header(
+                    HttpHeaders.AUTHORIZATION,
+                    String.format(
+                        "Basic %s",
+                        Base64.encodeBase64String("a:b".getBytes())
+                    )
+                )
+                .header(
+                    HttpHeaders.IF_MODIFIED_SINCE,
+                    DateUtils.formatDate(new Date(2000L))
+                ).uri().back().fetch().as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK);
+            new JdkRequest(uri)
+                .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
+                .header(
+                    HttpHeaders.AUTHORIZATION,
+                    String.format(
+                        "Basic %s",
+                        Base64.encodeBase64String("a:b".getBytes())
+                    )
+                )
+                .header(
+                    HttpHeaders.IF_MODIFIED_SINCE,
+                    DateUtils.formatDate(new Date(10000L))
+                ).uri().back().fetch().as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_NOT_MODIFIED);
         } finally {
             facade.close();
         }
