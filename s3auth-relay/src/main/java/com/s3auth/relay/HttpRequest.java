@@ -38,15 +38,16 @@ import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URI;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Locale;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.collections4.map.CaseInsensitiveMap;
 
 /**
  * HTTP request.
@@ -111,8 +112,7 @@ final class HttpRequest {
     /**
      * HTTP headers.
      */
-    private final transient ConcurrentMap<String, Collection<String>> hdrs =
-        new ConcurrentHashMap<String, Collection<String>>();
+    private final transient Map<String, Collection<String>> hdrs;
 
     /**
      * Public ctor.
@@ -161,14 +161,14 @@ final class HttpRequest {
             }
             headers.add(line);
         }
-        this.hdrs.putAll(this.parse(headers));
+        this.hdrs = Collections.unmodifiableMap(this.parse(headers));
     }
 
     /**
-     * Get all found HTTP headers.
+     * Get all found HTTP headers. Note that the returned map is unmodifiable.
      * @return Headers
      */
-    public ConcurrentMap<String, Collection<String>> headers() {
+    public Map<String, Collection<String>> headers() {
         return this.hdrs;
     }
 
@@ -223,10 +223,10 @@ final class HttpRequest {
      * @throws HttpException If some socket problem
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    private ConcurrentMap<String, Collection<String>> parse(
+    private Map<String, Collection<String>> parse(
         final Iterable<String> lines) throws HttpException {
-        final ConcurrentMap<String, Collection<String>> map =
-            new ConcurrentHashMap<String, Collection<String>>();
+        final Map<String, Collection<String>> map =
+            new CaseInsensitiveMap<String, Collection<String>>();
         for (final String line : lines) {
             final Matcher matcher = HttpRequest.HEADER.matcher(line);
             if (!matcher.matches()) {
@@ -235,34 +235,14 @@ final class HttpRequest {
                     String.format("invalid header line: '%s'", line)
                 );
             }
-            final String name = HttpRequest.normalized(
-                matcher.group(1).trim().toLowerCase(Locale.ENGLISH)
-            );
-            map.putIfAbsent(name, new LinkedList<String>());
+            final String name =
+                matcher.group(1).trim().toLowerCase(Locale.ENGLISH);
+            if (!map.containsKey(name)) {
+                map.put(name, new LinkedList<String>());
+            }
             map.get(name).add(matcher.group(2));
         }
         return map;
-    }
-
-    /**
-     * Normalize the key by converting to following form: first char
-     * upper case, rest lower case, key is presumed to be ASCII).
-     * @param key The HTTP header key
-     * @return Normalized value
-     * @see <a href="http://www.java2s.com/Open-Source/Java/6.0-JDK-Modules/jax-ws-runtime/com/sun/xml/ws/transport/Headers.java.htm">stolen from here</a>
-     */
-    private static String normalized(final String key) {
-        final int len = key.length();
-        final char[] bytes = key.toCharArray();
-        if (bytes[0] >= 'a' && bytes[0] <= 'z') {
-            bytes[0] -= 'a' - 'A';
-        }
-        for (int pos = 1; pos < len; ++pos) {
-            if (bytes[pos] >= 'A' && bytes[pos] <= 'Z') {
-                bytes[pos] += 'a' - 'A';
-            }
-        }
-        return new String(bytes);
     }
 
 }

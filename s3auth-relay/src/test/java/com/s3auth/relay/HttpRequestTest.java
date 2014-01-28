@@ -37,7 +37,7 @@ import org.junit.Test;
  * Test case for {@link HttpRequest}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @MultipleStringLiteralsCheck (100 lines)
+ * @checkstyle MultipleStringLiteralsCheck (100 lines)
  */
 public final class HttpRequestTest {
 
