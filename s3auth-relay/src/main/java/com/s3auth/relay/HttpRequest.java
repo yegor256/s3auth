@@ -73,6 +73,7 @@ import org.apache.commons.collections4.map.CaseInsensitiveMap;
 @ToString
 @EqualsAndHashCode(of = { "mtd", "uri", "hdrs" })
 @Loggable(Loggable.DEBUG)
+@SuppressWarnings({ "PMD.UseConcurrentHashMap" })
 final class HttpRequest {
 
     /**

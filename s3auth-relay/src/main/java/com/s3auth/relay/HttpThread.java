@@ -65,7 +65,7 @@ import org.apache.commons.io.IOUtils;
  */
 @ToString
 @EqualsAndHashCode(of = { "hosts", "sockets" })
-@SuppressWarnings("PMD.DoNotUseThreads")
+@SuppressWarnings({ "PMD.DoNotUseThreads", "PMD.UseConcurrentHashMap" })
 @Loggable(Loggable.DEBUG)
 final class HttpThread {
 
