@@ -126,7 +126,7 @@ final class DefaultResource implements Resource {
                 final int count;
                 try {
                     count = input.read(buffer);
-                } catch (IOException ex) {
+                } catch (final IOException ex) {
                     throw new DefaultResource.StreamingException(
                         String.format(
                             "failed to read %s/%s, range=%s, total=%d",
@@ -143,7 +143,7 @@ final class DefaultResource implements Resource {
                 }
                 try {
                     output.write(buffer, 0, count);
-                } catch (IOException ex) {
+                } catch (final IOException ex) {
                     throw new DefaultResource.StreamingException(
                         String.format(
                             // @checkstyle LineLength (1 line)
@@ -162,7 +162,7 @@ final class DefaultResource implements Resource {
         } finally {
             input.close();
         }
-        return (long) total;
+        return total;
     }
 
     @Override
@@ -189,6 +189,14 @@ final class DefaultResource implements Resource {
                 DefaultResource.header(
                     HttpHeaders.ETAG,
                     meta.getETag()
+                )
+            );
+        }
+        if (meta.getCacheControl() != null) {
+            headers.add(
+                DefaultResource.header(
+                    HttpHeaders.CACHE_CONTROL,
+                    meta.getCacheControl()
                 )
             );
         }
