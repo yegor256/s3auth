@@ -144,4 +144,24 @@ public final class DefaultResourceTest {
         );
     }
 
+    /**
+     * DefaultResource can get Cache-Control info.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void getsCacheControlHeaderFromAmazonObject() throws Exception {
+        final AmazonS3 client = Mockito.mock(AmazonS3.class);
+        final S3Object object = Mockito.mock(S3Object.class);
+        Mockito.doReturn(object).when(client)
+            .getObject(Mockito.any(GetObjectRequest.class));
+        final ObjectMetadata meta = Mockito.mock(ObjectMetadata.class);
+        Mockito.doReturn(meta).when(object).getObjectMetadata();
+        Mockito.doReturn("max-age: 600, public").when(meta).getCacheControl();
+        final Resource res = new DefaultResource(client, "e", "", Range.ENTIRE);
+        MatcherAssert.assertThat(
+            res.headers(),
+            Matchers.hasItem("Cache-Control: max-age: 600, public")
+        );
+    }
+
 }
