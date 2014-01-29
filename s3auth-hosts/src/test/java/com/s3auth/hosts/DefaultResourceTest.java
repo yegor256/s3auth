@@ -164,4 +164,25 @@ public final class DefaultResourceTest {
         );
     }
 
+    /**
+     * DefaultResource can get default Cache-Control info if resource metadata
+     * does not specify it.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void getsDefaultCacheControlHeader() throws Exception {
+        final AmazonS3 client = Mockito.mock(AmazonS3.class);
+        final S3Object object = Mockito.mock(S3Object.class);
+        Mockito.doReturn(object).when(client)
+            .getObject(Mockito.any(GetObjectRequest.class));
+        final ObjectMetadata meta = Mockito.mock(ObjectMetadata.class);
+        Mockito.doReturn(meta).when(object).getObjectMetadata();
+        Mockito.doReturn(null).when(meta).getCacheControl();
+        final Resource res = new DefaultResource(client, "f", "", Range.ENTIRE);
+        MatcherAssert.assertThat(
+            res.headers(),
+            Matchers.hasItem("Cache-Control: must-revalidate")
+        );
+    }
+
 }
