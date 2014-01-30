@@ -39,6 +39,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
@@ -223,6 +224,13 @@ final class DefaultResource implements Resource {
     @NotNull
     public String etag() {
         return this.object.getObjectMetadata().getETag();
+    }
+
+    @Override
+    public Date lastModified() {
+        return new Date(
+            this.object.getObjectMetadata().getLastModified().getTime()
+        );
     }
 
     /**

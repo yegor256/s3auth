@@ -36,6 +36,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import lombok.EqualsAndHashCode;
@@ -82,6 +83,12 @@ public interface Resource {
     String etag();
 
     /**
+     * Get its last modified date.
+     * @return The last modified date.
+     */
+    Date lastModified();
+
+    /**
      * Simple resource made out of plain text.
      */
     @Immutable
@@ -93,6 +100,10 @@ public interface Resource {
          * Plain text to show.
          */
         private final transient String text;
+        /**
+         * Last modified date to return. Equal to the time of object creation.
+         */
+        private final transient long modified = System.currentTimeMillis();
         /**
          * Public ctor.
          * @param txt The text to show
@@ -108,11 +119,15 @@ public interface Resource {
         public long writeTo(@NotNull final OutputStream stream)
             throws IOException {
             IOUtils.write(this.text, stream);
-            return (long) this.text.getBytes().length;
+            return this.text.getBytes().length;
         }
         @Override
         public String etag() {
             return DigestUtils.md5Hex(this.text);
+        }
+        @Override
+        public Date lastModified() {
+            return new Date(this.modified);
         }
         @Override
         @NotNull

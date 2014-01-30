@@ -38,6 +38,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -90,7 +91,7 @@ public final class HttpResponseTest {
             public long writeTo(final OutputStream stream) {
                 try {
                     TimeUnit.SECONDS.sleep(2);
-                } catch (InterruptedException ex) {
+                } catch (final InterruptedException ex) {
                     throw new IllegalStateException(ex);
                 }
                 final PrintWriter writer = new PrintWriter(stream);
@@ -109,6 +110,10 @@ public final class HttpResponseTest {
             @Override
             public String etag() {
                 return "";
+            }
+            @Override
+            public Date lastModified() {
+                return new Date();
             }
         };
         final HttpResponse response = new HttpResponse().withBody(res);

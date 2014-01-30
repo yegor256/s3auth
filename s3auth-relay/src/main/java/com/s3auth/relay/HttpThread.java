@@ -48,6 +48,7 @@ import javax.ws.rs.core.HttpHeaders;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.client.utils.DateUtils;
 
 /**
  * Single HTTP processing thread.
@@ -175,6 +176,15 @@ final class HttpThread {
                 .get(HttpHeaders.IF_NONE_MATCH)
                 .iterator().next();
             if (etag.equals(resource.etag())) {
+                throw new HttpException(HttpURLConnection.HTTP_NOT_MODIFIED);
+            }
+        }
+        if (request.headers().containsKey(HttpHeaders.IF_MODIFIED_SINCE)) {
+            final Date since = DateUtils.parseDate(
+                request.headers().get(HttpHeaders.IF_MODIFIED_SINCE)
+                    .iterator().next()
+            );
+            if (resource.lastModified().before(since)) {
                 throw new HttpException(HttpURLConnection.HTTP_NOT_MODIFIED);
             }
         }
