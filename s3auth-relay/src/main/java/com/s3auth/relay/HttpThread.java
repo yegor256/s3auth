@@ -41,8 +41,8 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentMap;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import lombok.EqualsAndHashCode;
@@ -65,7 +65,7 @@ import org.apache.commons.io.IOUtils;
  */
 @ToString
 @EqualsAndHashCode(of = { "hosts", "sockets" })
-@SuppressWarnings("PMD.DoNotUseThreads")
+@SuppressWarnings({ "PMD.DoNotUseThreads", "PMD.UseConcurrentHashMap" })
 @Loggable(Loggable.DEBUG)
 final class HttpThread {
 
@@ -138,13 +138,13 @@ final class HttpThread {
                     socket
                 );
             }
-        } catch (HttpException ex) {
+        } catch (final HttpException ex) {
             bytes = HttpThread.failure(ex, socket);
-        } catch (SocketException ex) {
+        } catch (final SocketException ex) {
             Logger.warn(this, "#run(): %s", ex);
             bytes = 0L;
         // @checkstyle IllegalCatch (1 line)
-        } catch (Throwable ex) {
+        } catch (final Throwable ex) {
             bytes = HttpThread.failure(
                 new HttpException(
                     HttpURLConnection.HTTP_INTERNAL_ERROR,
@@ -188,8 +188,7 @@ final class HttpThread {
      * @throws HttpException If some error inside
      */
     private Host host(final HttpRequest request) throws HttpException {
-        final ConcurrentMap<String, Collection<String>> headers =
-            request.headers();
+        final Map<String, Collection<String>> headers = request.headers();
         if (!headers.containsKey(HttpHeaders.HOST)) {
             throw new HttpException(
                 HttpURLConnection.HTTP_BAD_REQUEST,
@@ -215,12 +214,12 @@ final class HttpThread {
         } else {
             try {
                 host = new SecuredHost(this.hosts.find(domain), request);
-            } catch (Hosts.NotFoundException ex) {
+            } catch (final Hosts.NotFoundException ex) {
                 throw new HttpException(
                     HttpURLConnection.HTTP_NOT_FOUND,
                     ex
                 );
-            } catch (IOException ex) {
+            } catch (final IOException ex) {
                 throw new HttpException(
                     HttpURLConnection.HTTP_INTERNAL_ERROR,
                     ex
@@ -240,7 +239,7 @@ final class HttpThread {
         final Socket socket) {
         try {
             return cause.response().send(socket);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
