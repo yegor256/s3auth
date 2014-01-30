@@ -137,7 +137,11 @@ final class SecuredHost implements Host {
                     .withStatus(HttpURLConnection.HTTP_UNAUTHORIZED)
                     .withHeader(
                         HttpHeaders.WWW_AUTHENTICATE,
-                        "Basic realm=\"s3auth\""
+                        String.format(
+                            "Basic realm=\"%s\"",
+                            this.request.headers().get(HttpHeaders.HOST)
+                                .iterator().next()
+                        )
                     )
             );
         }
@@ -163,7 +167,7 @@ final class SecuredHost implements Host {
                 ),
                 CharEncoding.UTF_8
             ).split(":", 2);
-        } catch (UnsupportedEncodingException ex) {
+        } catch (final UnsupportedEncodingException ex) {
             throw new IllegalStateException(ex);
         }
         if (parts.length != 2) {

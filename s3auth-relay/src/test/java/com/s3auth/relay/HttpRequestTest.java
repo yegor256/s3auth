@@ -37,7 +37,9 @@ import org.junit.Test;
  * Test case for {@link HttpRequest}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle MultipleStringLiteralsCheck (100 lines)
  */
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class HttpRequestTest {
 
     /**
@@ -56,6 +58,33 @@ public final class HttpRequestTest {
         MatcherAssert.assertThat(
             request.headers().get("Host"),
             Matchers.hasItem("local")
+        );
+    }
+
+    /**
+     * HttpRequest can retrieve headers in a case-insensitive manner.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void fetchesCaseInsensitiveHeaders() throws Exception {
+        final HttpRequest request = HttpRequestMocker.toRequest(
+            "GET /test.html HTTP/1.1\nHost:local\nAccept:text/plain\n\nbody"
+        );
+        MatcherAssert.assertThat(
+            request.headers().get("Accept"),
+            Matchers.hasItem("text/plain")
+        );
+        MatcherAssert.assertThat(
+            request.headers().get("ACCEPT"),
+            Matchers.hasItem("text/plain")
+        );
+        MatcherAssert.assertThat(
+            request.headers().get("accept"),
+            Matchers.hasItem("text/plain")
+        );
+        MatcherAssert.assertThat(
+            request.headers().get("aCcEpT"),
+            Matchers.hasItem("text/plain")
         );
     }
 

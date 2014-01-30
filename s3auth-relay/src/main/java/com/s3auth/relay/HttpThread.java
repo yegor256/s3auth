@@ -41,8 +41,8 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentMap;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import lombok.EqualsAndHashCode;
@@ -66,7 +66,7 @@ import org.apache.http.client.utils.DateUtils;
  */
 @ToString
 @EqualsAndHashCode(of = { "hosts", "sockets" })
-@SuppressWarnings("PMD.DoNotUseThreads")
+@SuppressWarnings({ "PMD.DoNotUseThreads", "PMD.UseConcurrentHashMap" })
 @Loggable(Loggable.DEBUG)
 final class HttpThread {
 
@@ -198,8 +198,7 @@ final class HttpThread {
      * @throws HttpException If some error inside
      */
     private Host host(final HttpRequest request) throws HttpException {
-        final ConcurrentMap<String, Collection<String>> headers =
-            request.headers();
+        final Map<String, Collection<String>> headers = request.headers();
         if (!headers.containsKey(HttpHeaders.HOST)) {
             throw new HttpException(
                 HttpURLConnection.HTTP_BAD_REQUEST,

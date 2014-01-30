@@ -45,6 +45,7 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Default implementation of {@link Resource}.
@@ -193,6 +194,15 @@ final class DefaultResource implements Resource {
                 )
             );
         }
+        headers.add(
+            DefaultResource.header(
+                HttpHeaders.CACHE_CONTROL,
+                StringUtils.defaultString(
+                    meta.getCacheControl(),
+                    "must-revalidate"
+                )
+            )
+        );
         headers.add(DefaultResource.header("Accept-Ranges", "bytes"));
         if (!this.range.equals(Range.ENTIRE)) {
             headers.add(
