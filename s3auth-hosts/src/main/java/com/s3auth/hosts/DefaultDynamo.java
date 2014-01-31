@@ -95,6 +95,11 @@ final class DefaultDynamo implements Dynamo {
     public static final String REGION = "domain.region";
 
     /**
+     * Dynamo DB key, Syslog host and port of domain.
+     */
+    public static final String SYSLOG = "domain.syslog";
+
+    /**
      * Lifetime of registry in memory, in minutes.
      */
     private static final int LIFETIME = 5;
@@ -169,7 +174,8 @@ final class DefaultDynamo implements Dynamo {
                     item.get(DefaultDynamo.NAME).getS(),
                     item.get(DefaultDynamo.KEY).getS(),
                     item.get(DefaultDynamo.SECRET).getS(),
-                    item.get(DefaultDynamo.REGION).getS()
+                    item.get(DefaultDynamo.REGION).getS(),
+                    item.get(DefaultDynamo.SYSLOG).getS()
                 )
             );
         }
@@ -188,6 +194,7 @@ final class DefaultDynamo implements Dynamo {
         attrs.put(DefaultDynamo.KEY, new AttributeValue(domain.key()));
         attrs.put(DefaultDynamo.SECRET, new AttributeValue(domain.secret()));
         attrs.put(DefaultDynamo.REGION, new AttributeValue(domain.region()));
+        attrs.put(DefaultDynamo.SYSLOG, new AttributeValue(domain.syslog()));
         final AmazonDynamoDB amazon = this.client.get();
         amazon.putItem(new PutItemRequest(this.table, attrs));
         amazon.shutdown();

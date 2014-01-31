@@ -51,6 +51,7 @@ public final class JaxbDomainTest {
     @Test
     public void convertsToXml() throws Exception {
         final JaxbDomain obj = new JaxbDomain(
+            // @checkstyle AnonInnerLength (50 lines)
             new Domain() {
                 @Override
                 public String name() {
@@ -68,6 +69,10 @@ public final class JaxbDomainTest {
                 public String region() {
                     return "s3-sa-east-1";
                 }
+                @Override
+                public String syslog() {
+                    return "localhost:12345";
+                }
             },
             new UriInfoMocker().mock()
         );
@@ -78,6 +83,7 @@ public final class JaxbDomainTest {
                 "/domain[key='ABC']",
                 "/domain[secret='foo']",
                 "/domain[region='s3-sa-east-1']",
+                "/domain[syslog='localhost:12345']",
                 "/domain/links/link[@rel='remove']"
             )
         );

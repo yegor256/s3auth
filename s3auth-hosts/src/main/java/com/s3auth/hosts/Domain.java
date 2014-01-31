@@ -79,6 +79,12 @@ public interface Domain {
      */
     String region();
 
+    /**
+     * Syslog host and port of domain.
+     * @return Syslog host and port
+     */
+    String syslog();
+
     @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
     @Constraint(validatedBy = Domain.Validator.class)

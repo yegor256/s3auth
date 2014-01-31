@@ -119,6 +119,15 @@ public final class JaxbDomain {
     }
 
     /**
+     * Get syslog.
+     * @return The syslog
+     */
+    @XmlElement
+    public String getSyslog() {
+        return this.domain.syslog();
+    }
+
+    /**
      * Get links.
      * @return The links
      */

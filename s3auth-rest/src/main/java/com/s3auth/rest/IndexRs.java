@@ -88,6 +88,7 @@ public final class IndexRs extends BaseRs {
      * @param key AWS key
      * @param secret AWS secret
      * @param region S3 region
+     * @param syslog The syslog host and port
      * @return The JAX-RS response
      * @throws IOException If some IO problem inside
      * @checkstyle ParameterNumber (9 lines)
@@ -99,7 +100,8 @@ public final class IndexRs extends BaseRs {
         @FormParam("host") final String host,
         @FormParam("key") final String key,
         @FormParam("secret") final String secret,
-        @DefaultValue("s3") @FormParam("region") final String region)
+        @DefaultValue("s3") @FormParam("region") final String region,
+        @DefaultValue("") @FormParam("syslog") final String syslog)
         throws IOException {
         final User user = this.user();
         if (user.equals(User.ANONYMOUS)) {
@@ -110,6 +112,7 @@ public final class IndexRs extends BaseRs {
             );
         }
         final boolean added = this.hosts().domains(user).add(
+            // @checkstyle AnonInnerLength (50 lines)
             new Domain() {
                 @Override
                 public String name() {
@@ -126,6 +129,10 @@ public final class IndexRs extends BaseRs {
                 @Override
                 public String region() {
                     return region;
+                }
+                @Override
+                public String syslog() {
+                    return syslog;
                 }
             }
         );
@@ -165,6 +172,7 @@ public final class IndexRs extends BaseRs {
             );
         }
         final boolean removed = this.hosts().domains(user).remove(
+            // @checkstyle AnonInnerLength (50 lines)
             new Domain() {
                 @Override
                 public String name() {
@@ -180,6 +188,10 @@ public final class IndexRs extends BaseRs {
                 }
                 @Override
                 public String region() {
+                    throw new UnsupportedOperationException();
+                }
+                @Override
+                public String syslog() {
                     throw new UnsupportedOperationException();
                 }
             }

@@ -109,6 +109,14 @@
                     <xsl:text>:</xsl:text>
                 </label>
                 <input name="region" value="s3" size="25" maxlength="30"/>
+                <label>
+                    <xsl:text>Optional syslog Host name and port, for example </xsl:text>
+                    <span class="tt">
+                        <xsl:text>syslog.example.com:8080</xsl:text>
+                    </span>
+                    <xsl:text>:</xsl:text>
+                </label>
+                <input name="syslog"/>
                 <input class="submit" type="submit" value=""/>
             </p>
         </form>

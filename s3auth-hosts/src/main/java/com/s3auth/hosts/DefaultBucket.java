@@ -105,4 +105,9 @@ final class DefaultBucket implements Bucket {
         return this.domain.region();
     }
 
+    @Override
+    public String syslog() {
+        return this.domain.syslog();
+    }
+
 }
