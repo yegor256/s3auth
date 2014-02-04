@@ -83,7 +83,7 @@ public final class SyslogHosts implements Hosts {
 
     @Override
     public Host find(final String domain) throws IOException {
-        throw new UnsupportedOperationException("Find not yet supported.");
+        return this.hosts.find(domain);
     }
 
     @Override

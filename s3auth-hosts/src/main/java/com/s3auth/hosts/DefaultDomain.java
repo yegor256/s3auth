@@ -89,7 +89,7 @@ final class DefaultDomain implements Domain {
                 }
                 @Override
                 public String syslog() {
-                    return null;
+                    return syslog;
                 }
             }
         );
