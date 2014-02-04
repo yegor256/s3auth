@@ -167,6 +167,12 @@ final class DefaultDynamo implements Dynamo {
         final AmazonDynamoDB amazon = this.client.get();
         final ScanResult result = amazon.scan(new ScanRequest(this.table));
         for (final Map<String, AttributeValue> item : result.getItems()) {
+            final String syslog;
+            if (item.containsKey(DefaultDynamo.SYSLOG)) {
+                syslog = item.get(DefaultDynamo.SYSLOG).getS();
+            } else {
+                syslog = "";
+            }
             final URN user = URN.create(item.get(DefaultDynamo.USER).getS());
             domains.putIfAbsent(user, new Domains());
             domains.get(user).add(
@@ -175,7 +181,7 @@ final class DefaultDynamo implements Dynamo {
                     item.get(DefaultDynamo.KEY).getS(),
                     item.get(DefaultDynamo.SECRET).getS(),
                     item.get(DefaultDynamo.REGION).getS(),
-                    item.get(DefaultDynamo.SYSLOG).getS()
+                    syslog
                 )
             );
         }
