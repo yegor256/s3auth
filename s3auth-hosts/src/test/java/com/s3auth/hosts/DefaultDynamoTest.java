@@ -56,12 +56,8 @@ public final class DefaultDynamoTest {
     /**
      * DefaultDynamo can load configuration.
      * @throws Exception If there is some problem inside
-     * @todo #48 This test doesn't work because @Cacheable doesn't allow
-     *  cache flushing. Should be implemented in JCABI:
-     *  https://github.com/yegor256/jcabi/issues/163
      */
     @Test
-    @org.junit.Ignore
     public void loadsDynamoConfiguration() throws Exception {
         final Dynamo dynamo = new DefaultDynamo(
             new Dynamo.Client() {
