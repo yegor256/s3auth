@@ -27,66 +27,55 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.s3auth.rest;
+package com.s3auth.hosts;
 
-import com.rexsl.page.UriInfoMocker;
-import com.rexsl.test.JaxbConverter;
-import com.rexsl.test.XhtmlMatchers;
-import com.s3auth.hosts.Domain;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Test case for {@link JaxbDomain}.
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * Test case for {@link SyslogHosts}.
+ *
+ * @author Carlos Miranda (miranda.cma@gmail.com)
  * @version $Id$
- * @since 0.0.1
  */
-public final class JaxbDomainTest {
+public final class SyslogHostsTest {
 
     /**
-     * JaxbDomain can be converted to XML.
-     * @throws Exception If there is some problem inside
+     * SyslogHosts can return the domains of its underlying Hosts.
+     * @throws Exception If something goes wrong
      */
     @Test
-    public void convertsToXml() throws Exception {
-        final JaxbDomain obj = new JaxbDomain(
-            // @checkstyle AnonInnerLength (50 lines)
-            new Domain() {
-                @Override
-                public String name() {
-                    return "localhost";
-                }
-                @Override
-                public String key() {
-                    return "ABC";
-                }
-                @Override
-                public String secret() {
-                    return "foo";
-                }
-                @Override
-                public String region() {
-                    return "s3-sa-east-1";
-                }
-                @Override
-                public String syslog() {
-                    return "localhost:12345";
-                }
-            },
-            new UriInfoMocker().mock()
-        );
+    public void returnsUnderlyingDomains() throws Exception {
+        final Hosts hosts = Mockito.mock(Hosts.class);
+        final Domain first = new DomainMocker().mock();
+        final Domain second = new DomainMocker().mock();
+        final Set<Domain> domains = new HashSet<Domain>();
+        domains.addAll(Arrays.asList(new Domain[]{first, second}));
+        final User user = new UserMocker().mock();
+        Mockito.doReturn(domains).when(hosts).domains(user);
+        @SuppressWarnings("resource")
+        final SyslogHosts syslog = new SyslogHosts(hosts);
         MatcherAssert.assertThat(
-            JaxbConverter.the(obj),
-            XhtmlMatchers.hasXPaths(
-                "/domain[name='localhost']",
-                "/domain[key='ABC']",
-                "/domain[secret='foo']",
-                "/domain[region='s3-sa-east-1']",
-                "/domain[syslog='localhost:12345']",
-                "/domain/links/link[@rel='remove']"
-            )
+            syslog.domains(user),
+            Matchers.containsInAnyOrder(first, second)
         );
+    }
+
+    /**
+     * SyslogHosts can close its underlying Hosts.
+     * @throws Exception If something goes wrong
+     */
+    @Test
+    public void closesUnderlyingHosts() throws Exception {
+        final Hosts hosts = Mockito.mock(Hosts.class);
+        final SyslogHosts syslog = new SyslogHosts(hosts);
+        syslog.close();
+        Mockito.verify(hosts, Mockito.only()).close();
     }
 
 }

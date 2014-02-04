@@ -29,85 +29,66 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.ClientConfiguration;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import javax.validation.constraints.NotNull;
+import java.io.IOException;
+import java.util.Set;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Default implementation of {@link Bucket}.
+ * Decorator of {@link Hosts}, adds syslog capabilities for each domain.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * <p>The class is immutable and thread-safe.</p>
+ *
+ * @author Carlos Miranda (miranda.cma@gmail.com)
  * @version $Id$
- * @since 0.0.1
+ * @todo #34 SyslogHosts should add syslog capabilities to the operations of its
+ *  underlying Hosts instance. The way that I imagine that this will be done is
+ *  that {@link SyslogHosts#find(String)}) should create instances of Host,
+ *  in turn {@link Host#fetch(java.net.URI, Range)} will create instances of
+ *  {@link Resource} that sends messages to the syslog host when
+ *  {@link Resource#writeTo(java.io.OutputStream)} is invoked. I'm making a few
+ *  assumptions about what remains to be done here, namely: 1) The Host and
+ *  Resource decorator objects will probably be inner classes within Hosts or
+ *  find, or even anonymous inner classes - whatever seems best, and 2) the
+ *  underlying Hosts' close() and domains() operations will be unchanged, and
+ *  thus I made simple implementations that directly delegate to the underlying
+ *  instance. Go ahead and change any of the above if the initial design
+ *  considerations are incorrect.
  */
 @Immutable
-@EqualsAndHashCode(of = "domain")
+@ToString
+@EqualsAndHashCode(of = "hosts")
 @Loggable(Loggable.DEBUG)
-final class DefaultBucket implements Bucket {
+public final class SyslogHosts implements Hosts {
 
     /**
-     * The domain.
+     * The underlying Hosts instance.
      */
-    private final transient Domain domain;
+    private final transient Hosts hosts;
 
     /**
      * Public ctor.
-     * @param dmn The domain
+     * @param hsts The hosts to add syslog capability to
      */
-    DefaultBucket(@NotNull final Domain dmn) {
-        this.domain = dmn;
+    public SyslogHosts(final Hosts hsts) {
+        this.hosts = hsts;
     }
 
     @Override
-    @NotNull
-    public AmazonS3 client() {
-        final ClientConfiguration config = new ClientConfiguration();
-        config.setSocketTimeout(0);
-        final AmazonS3 client = new AmazonS3Client(
-            new BasicAWSCredentials(this.key(), this.secret()),
-            config
-        );
-        client.setEndpoint(String.format("%s.amazonaws.com", this.region()));
-        return client;
+    public void close() throws IOException {
+        this.hosts.close();
     }
 
     @Override
-    public String toString() {
-        return this.domain.toString();
+    public Host find(final String domain) throws IOException {
+        return this.hosts.find(domain);
     }
 
     @Override
-    @NotNull
-    public String name() {
-        return this.domain.name();
-    }
-
-    @Override
-    @NotNull
-    public String key() {
-        return this.domain.key();
-    }
-
-    @Override
-    @NotNull
-    public String secret() {
-        return this.domain.secret();
-    }
-
-    @Override
-    @NotNull
-    public String region() {
-        return this.domain.region();
-    }
-
-    @Override
-    public String syslog() {
-        return this.domain.syslog();
+    public Set<Domain> domains(final User user) throws IOException {
+        return this.hosts.domains(user);
     }
 
 }
