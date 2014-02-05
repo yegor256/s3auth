@@ -59,9 +59,10 @@ import org.mockito.stubbing.Answer;
  * Test case for {@link HttpFacade}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @checkstyle MultipleStringLiteralsCheck (200 lines)
- * @checkstyle MagicNumberCheck (200 lines)
+ * @checkstyle MultipleStringLiteralsCheck (500 lines)
+ * @checkstyle MagicNumberCheck (500 lines)
  */
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class HttpFacadeTest {
 
     /**
