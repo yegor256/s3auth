@@ -31,6 +31,7 @@ package com.s3auth.relay;
 
 import com.jcabi.aspects.Parallel;
 import com.jcabi.aspects.Tv;
+import com.rexsl.test.Response;
 import com.rexsl.test.request.JdkRequest;
 import com.rexsl.test.response.RestResponse;
 import com.s3auth.hosts.Host;
@@ -47,6 +48,7 @@ import javax.ws.rs.core.UriBuilder;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.client.utils.DateUtils;
+import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -152,6 +154,56 @@ public final class HttpFacadeTest {
                     DateUtils.formatDate(new Date(10000L))
                 ).uri().back().fetch().as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_NOT_MODIFIED);
+        } finally {
+            facade.close();
+        }
+    }
+
+    /**
+     * HttpFacade returns the Last-Modified header with the response.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void respondsWithLastModifiedHeader() throws Exception {
+        final Date date = new Date();
+        final Host host = Mockito.mock(Host.class);
+        Mockito.doAnswer(
+            new Answer<Resource>() {
+                @Override
+                public Resource answer(final InvocationOnMock inv)
+                    throws InterruptedException {
+                    final Resource answer = Mockito.mock(Resource.class);
+                    Mockito.doReturn(date)
+                        .when(answer).lastModified();
+                    Mockito.doReturn(HttpURLConnection.HTTP_OK)
+                        .when(answer).status();
+                    return answer;
+                }
+            }
+        ).when(host).fetch(Mockito.any(URI.class), Mockito.any(Range.class));
+        final Hosts hosts = Mockito.mock(Hosts.class);
+        Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
+        final int port = PortMocker.reserve();
+        final HttpFacade facade = new HttpFacade(hosts, port);
+        try {
+            facade.listen();
+            final URI uri = UriBuilder
+                .fromUri(String.format("http://localhost:%d/", port))
+                .path("/a").build();
+            final Response resp = new JdkRequest(uri)
+                .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
+                .header(
+                    HttpHeaders.AUTHORIZATION,
+                    String.format(
+                        "Basic %s",
+                        Base64.encodeBase64String("a:b".getBytes())
+                    )
+                ).uri().back().fetch().as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK);
+            MatcherAssert.assertThat(
+                resp.headers().get(HttpHeaders.LAST_MODIFIED).get(0),
+                Matchers.is(DateUtils.formatDate(date))
+            );
         } finally {
             facade.close();
         }
