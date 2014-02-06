@@ -115,7 +115,7 @@ final class HttpThread {
         try {
             final HttpRequest request = new HttpRequest(socket);
             if ("GET".equals(request.method())) {
-                bytes = new HttpResponse()
+                HttpResponse response = new HttpResponse()
                     .withHeader("Server", HttpThread.NAME)
                     .withHeader(
                         HttpHeaders.DATE,
@@ -127,9 +127,16 @@ final class HttpThread {
                     .withHeader(
                         "X-S3auth-Time",
                         Long.toString(System.currentTimeMillis() - start)
-                    )
-                    .withBody(this.resource(this.host(request), request))
-                    .send(socket);
+                    );
+                final Resource resource =
+                    this.resource(this.host(request), request);
+                if (resource.lastModified() != null) {
+                    response = response.withHeader(
+                        HttpHeaders.LAST_MODIFIED,
+                        DateUtils.formatDate(resource.lastModified())
+                    );
+                }
+                bytes = response.withBody(resource).send(socket);
             } else {
                 bytes = HttpThread.failure(
                     new HttpException(
