@@ -211,6 +211,54 @@ public final class HttpFacadeTest {
     }
 
     /**
+     * HttpFacade returns the Age header with the response.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void respondsWithAgeHeader() throws Exception {
+        final Host host = Mockito.mock(Host.class);
+        Mockito.doAnswer(
+            new Answer<Resource>() {
+                @Override
+                public Resource answer(final InvocationOnMock inv)
+                    throws InterruptedException {
+                    final Resource answer = Mockito.mock(Resource.class);
+                    Mockito.doReturn(HttpURLConnection.HTTP_OK)
+                        .when(answer).status();
+                    Thread.sleep(1100L);
+                    return answer;
+                }
+            }
+        ).when(host).fetch(Mockito.any(URI.class), Mockito.any(Range.class));
+        final Hosts hosts = Mockito.mock(Hosts.class);
+        Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
+        final int port = PortMocker.reserve();
+        final HttpFacade facade = new HttpFacade(hosts, port);
+        try {
+            facade.listen();
+            final URI uri = UriBuilder
+                .fromUri(String.format("http://localhost:%d/", port))
+                .path("/a").build();
+            final Response resp = new JdkRequest(uri)
+                .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
+                .header(
+                    HttpHeaders.AUTHORIZATION,
+                    String.format(
+                        "Basic %s",
+                        Base64.encodeBase64String("a:b".getBytes())
+                    )
+                ).uri().back().fetch().as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK);
+            MatcherAssert.assertThat(
+                Integer.parseInt(resp.headers().get("Age").get(0)),
+                Matchers.greaterThanOrEqualTo(1)
+            );
+        } finally {
+            facade.close();
+        }
+    }
+
+    /**
      * Make HTTP request.
      * @param path URI to hit
      * @throws Exception If fails

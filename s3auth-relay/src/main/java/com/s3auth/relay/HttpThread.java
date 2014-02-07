@@ -43,6 +43,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import lombok.EqualsAndHashCode;
@@ -130,6 +131,14 @@ final class HttpThread {
                     );
                 final Resource resource =
                     this.resource(this.host(request), request);
+                response = response.withHeader(
+                    org.apache.http.HttpHeaders.AGE,
+                    String.valueOf(
+                        TimeUnit.MILLISECONDS.toSeconds(
+                            System.currentTimeMillis() - start
+                        )
+                    )
+                );
                 if (resource.lastModified() != null) {
                     response = response.withHeader(
                         HttpHeaders.LAST_MODIFIED,
