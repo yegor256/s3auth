@@ -109,11 +109,7 @@
                     <xsl:text>:</xsl:text>
                 </label>
                 <input name="region" value="s3" size="25" maxlength="30"/>
-                <label>
-                    <xsl:text>Optional syslog host name and port</xsl:text>
-                    <xsl:text> (still in development!):</xsl:text>
-                </label>
-                <input name="syslog" value="syslog.s3auth.com:514" size="45" maxlength="250"/>
+                <input name="syslog" value="syslog.s3auth.com:514" size="45" maxlength="250" type="hidden"/>
                 <input class="submit" type="submit" value=""/>
             </p>
         </form>
