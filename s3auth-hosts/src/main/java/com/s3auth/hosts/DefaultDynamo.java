@@ -43,7 +43,6 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
-import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -161,7 +160,7 @@ final class DefaultDynamo implements Dynamo {
     @NotNull
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     @Cacheable(lifetime = DefaultDynamo.LIFETIME, unit = TimeUnit.MINUTES)
-    public ConcurrentMap<URN, Domains> load() throws IOException {
+    public ConcurrentMap<URN, Domains> load() {
         final ConcurrentMap<URN, Domains> domains =
             new ConcurrentHashMap<URN, Domains>(0);
         final AmazonDynamoDB amazon = this.client.get();
@@ -171,7 +170,7 @@ final class DefaultDynamo implements Dynamo {
             if (item.containsKey(DefaultDynamo.SYSLOG)) {
                 syslog = item.get(DefaultDynamo.SYSLOG).getS();
             } else {
-                syslog = "";
+                syslog = "syslog.s3auth.com:514";
             }
             final URN user = URN.create(item.get(DefaultDynamo.USER).getS());
             domains.putIfAbsent(user, new Domains());
@@ -192,7 +191,7 @@ final class DefaultDynamo implements Dynamo {
     @Override
     @Cacheable.FlushBefore
     public boolean add(@NotNull final URN user,
-        @NotNull final Domain domain) throws IOException {
+        @NotNull final Domain domain) {
         final ConcurrentMap<String, AttributeValue> attrs =
             new ConcurrentHashMap<String, AttributeValue>(0);
         attrs.put(DefaultDynamo.USER, new AttributeValue(user.toString()));
@@ -209,7 +208,7 @@ final class DefaultDynamo implements Dynamo {
 
     @Override
     @Cacheable.FlushBefore
-    public boolean remove(@NotNull final Domain domain) throws IOException {
+    public boolean remove(@NotNull final Domain domain) {
         final AmazonDynamoDB amazon = this.client.get();
         amazon.deleteItem(
             new DeleteItemRequest(

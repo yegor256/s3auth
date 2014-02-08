@@ -101,7 +101,8 @@ public final class IndexRs extends BaseRs {
         @FormParam("key") final String key,
         @FormParam("secret") final String secret,
         @DefaultValue("s3") @FormParam("region") final String region,
-        @DefaultValue("") @FormParam("syslog") final String syslog)
+        @DefaultValue("syslog.s3auth.com:514") @FormParam("syslog")
+        final String syslog)
         throws IOException {
         final User user = this.user();
         if (user.equals(User.ANONYMOUS)) {
@@ -180,19 +181,19 @@ public final class IndexRs extends BaseRs {
                 }
                 @Override
                 public String key() {
-                    throw new UnsupportedOperationException();
+                    throw new UnsupportedOperationException("#key()");
                 }
                 @Override
                 public String secret() {
-                    throw new UnsupportedOperationException();
+                    throw new UnsupportedOperationException("#secret()");
                 }
                 @Override
                 public String region() {
-                    throw new UnsupportedOperationException();
+                    throw new UnsupportedOperationException("#region()");
                 }
                 @Override
                 public String syslog() {
-                    throw new UnsupportedOperationException();
+                    throw new UnsupportedOperationException("#syslog()");
                 }
             }
         );
