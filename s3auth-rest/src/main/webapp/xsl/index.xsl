@@ -108,13 +108,10 @@
                     </span>
                     <xsl:text>:</xsl:text>
                 </label>
-                <input name="region" value="s3" size="25" maxlength="30"/>
+                <input name="region" value="s3" size="45" maxlength="250"/>
                 <label>
-                    <xsl:text>Optional syslog host name and port, for example </xsl:text>
-                    <span class="tt">
-                        <xsl:text>syslog.s3auth.com:514</xsl:text>
-                    </span>
-                    <xsl:text> (yet in development!):</xsl:text>
+                    <xsl:text>Optional syslog host name and port</xsl:text>
+                    <xsl:text> (still in development!):</xsl:text>
                 </label>
                 <input name="syslog"/>
                 <input class="submit" type="submit" value=""/>
