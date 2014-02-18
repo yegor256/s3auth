@@ -54,9 +54,11 @@ public final class DefaultHostITCase {
         final Host host = new DefaultHost(
             new DefaultBucket(
                 new DomainMocker()
+                    // @checkstyle MultipleStringLiterals (1 line)
                     .withName("maven.s3auth.com")
                     .withKey(key)
                     .withSecret(secret)
+                    .withBucket("maven.s3auth.com")
                     .withRegion("s3")
                     .mock()
             )

@@ -51,6 +51,7 @@ public final class DomainMocker {
     public DomainMocker() {
         this.withName("localhost");
         this.withRegion("s3");
+        this.withBucket("bucket");
         this.withKey("AAAAAAAAAAAAAAAAAAAA");
         this.withSecret("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
     }
@@ -82,6 +83,16 @@ public final class DomainMocker {
      */
     public DomainMocker withSecret(final String secret) {
         Mockito.doReturn(secret).when(this.domain).secret();
+        return this;
+    }
+
+    /**
+     * With this bucket.
+     * @param bckt The bucket
+     * @return This object
+     */
+    public DomainMocker withBucket(final String bckt) {
+        Mockito.doReturn(bckt).when(this.domain).bucket();
         return this;
     }
 
