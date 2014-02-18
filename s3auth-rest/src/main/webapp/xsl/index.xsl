@@ -74,7 +74,7 @@
             </xsl:attribute>
             <p>
                 <label>
-                    <xsl:text>Host name (the same as S3 bucket name), for example </xsl:text>
+                    <xsl:text>Host name, for example </xsl:text>
                     <span class="tt">
                         <xsl:text>bucket-1.example.com</xsl:text>
                     </span>
@@ -93,6 +93,10 @@
                     <xsl:text>AWS secret key, exactly 40 symbols:</xsl:text>
                 </label>
                 <input name="secret" size="40" maxlength="40"/>
+                <label>
+                    <xsl:text>Bucket name:</xsl:text>
+                </label>
+                <input name="bucket"/>
                 <label>
                     <xsl:text>Optional AWS S3 endpoint (</xsl:text>
                     <a href="http://docs.amazonwebservices.com/general/latest/gr/rande.html#s3_region">

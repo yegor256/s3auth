@@ -101,6 +101,12 @@ final class DefaultBucket implements Bucket {
 
     @Override
     @NotNull
+    public String bucket() {
+        return this.domain.bucket();
+    }
+
+    @Override
+    @NotNull
     public String region() {
         return this.domain.region();
     }

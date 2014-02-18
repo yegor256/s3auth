@@ -87,6 +87,7 @@ public final class IndexRs extends BaseRs {
      * @param host The host name
      * @param key AWS key
      * @param secret AWS secret
+     * @param bucket Bucket name
      * @param region S3 region
      * @param syslog The syslog host and port
      * @return The JAX-RS response
@@ -100,6 +101,7 @@ public final class IndexRs extends BaseRs {
         @FormParam("host") final String host,
         @FormParam("key") final String key,
         @FormParam("secret") final String secret,
+        @FormParam("bucket") final String bucket,
         @DefaultValue("s3") @FormParam("region") final String region,
         @DefaultValue("syslog.s3auth.com:514") @FormParam("syslog")
         final String syslog)
@@ -126,6 +128,10 @@ public final class IndexRs extends BaseRs {
                 @Override
                 public String secret() {
                     return secret;
+                }
+                @Override
+                public String bucket() {
+                    return bucket;
                 }
                 @Override
                 public String region() {
@@ -186,6 +192,10 @@ public final class IndexRs extends BaseRs {
                 @Override
                 public String secret() {
                     throw new UnsupportedOperationException("#secret()");
+                }
+                @Override
+                public String bucket() {
+                    throw new UnsupportedOperationException("#bucket()");
                 }
                 @Override
                 public String region() {

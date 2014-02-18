@@ -57,13 +57,14 @@ final class DefaultDomain implements Domain {
      * @param name Name of it
      * @param key Key of it
      * @param secret Secret of it
+     * @param bucket Bucket of it.
      * @param region The region of S3 bucket
      * @param syslog Syslog host and port of the domain
      * @checkstyle ParameterNumber (3 lines)
      */
     DefaultDomain(@NotNull final String name, @NotNull final String key,
-        @NotNull final String secret, @NotNull final String region,
-        @NotNull final String syslog) {
+        @NotNull final String secret, final String bucket,
+        @NotNull final String region, @NotNull final String syslog) {
         this(
             // @checkstyle AnonInnerLength (50 lines)
             new Domain() {
@@ -82,6 +83,10 @@ final class DefaultDomain implements Domain {
                 @Override
                 public String secret() {
                     return secret;
+                }
+                @Override
+                public String bucket() {
+                    return bucket;
                 }
                 @Override
                 public String region() {
@@ -124,6 +129,12 @@ final class DefaultDomain implements Domain {
     @NotNull
     public String secret() {
         return this.origin.secret().trim();
+    }
+
+    @Override
+    @NotNull
+    public String bucket() {
+        return this.origin.bucket().trim();
     }
 
     @Override

@@ -94,11 +94,11 @@ final class DefaultHost implements Host {
         for (final DefaultHost.ObjectName name : this.names(uri)) {
             try {
                 resource = new DefaultResource(
-                    this.bucket.client(), this.bucket.name(),
+                    this.bucket.client(), this.bucket.bucket(),
                     name.get(), range
                 );
                 break;
-            } catch (AmazonClientException ex) {
+            } catch (final AmazonClientException ex) {
                 errors.add(String.format("'%s': %s", name, ex.getMessage()));
             }
         }
@@ -186,7 +186,7 @@ final class DefaultHost implements Host {
                 if (conf != null) {
                     suffix = conf.getIndexDocumentSuffix();
                 }
-            } catch (AmazonClientException ex) {
+            } catch (final AmazonClientException ex) {
                 suffix = "";
             }
             if (suffix == null || suffix.isEmpty()) {
