@@ -96,7 +96,7 @@
                 <label>
                     <xsl:text>Bucket name:</xsl:text>
                 </label>
-                <input name="bucket"/>
+                <input name="bucket" size="45" maxlength="250"/>
                 <label>
                     <xsl:text>Optional AWS S3 endpoint (</xsl:text>
                     <a href="http://docs.amazonwebservices.com/general/latest/gr/rande.html#s3_region">
