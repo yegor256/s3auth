@@ -132,7 +132,6 @@ final class DefaultDomain implements Domain {
     }
 
     @Override
-    @NotNull
     public String bucket() {
         return this.origin.bucket().trim();
     }
