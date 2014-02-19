@@ -73,6 +73,12 @@ public interface Domain {
     String secret();
 
     /**
+     * Bucket name.
+     * @return S3 bucket name
+     */
+    String bucket();
+
+    /**
      * Region of S3 bucket.
      * @return Region name/endpoint, e.g. "s3-us-west-1"
      * @see <a href="http://docs.amazonwebservices.com/general/latest/gr/rande.html#s3_region">S3 Regions</a>

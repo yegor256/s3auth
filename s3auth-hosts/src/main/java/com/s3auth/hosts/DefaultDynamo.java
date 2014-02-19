@@ -89,6 +89,11 @@ final class DefaultDynamo implements Dynamo {
     public static final String SECRET = "domain.secret";
 
     /**
+     * Dynamo DB key, Name of bucket.
+     */
+    public static final String BUCKET = "domain.bucket";
+
+    /**
      * Dynamo DB key, AWS S3 region of bucket.
      */
     public static final String REGION = "domain.region";
@@ -172,6 +177,12 @@ final class DefaultDynamo implements Dynamo {
             } else {
                 syslog = "syslog.s3auth.com:514";
             }
+            final String bucket;
+            if (item.containsKey(DefaultDynamo.BUCKET)) {
+                bucket = item.get(DefaultDynamo.BUCKET).getS();
+            } else {
+                bucket = item.get(DefaultDynamo.NAME).getS();
+            }
             final URN user = URN.create(item.get(DefaultDynamo.USER).getS());
             domains.putIfAbsent(user, new Domains());
             domains.get(user).add(
@@ -179,6 +190,7 @@ final class DefaultDynamo implements Dynamo {
                     item.get(DefaultDynamo.NAME).getS(),
                     item.get(DefaultDynamo.KEY).getS(),
                     item.get(DefaultDynamo.SECRET).getS(),
+                    bucket,
                     item.get(DefaultDynamo.REGION).getS(),
                     syslog
                 )

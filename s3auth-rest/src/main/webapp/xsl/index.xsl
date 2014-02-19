@@ -74,7 +74,7 @@
             </xsl:attribute>
             <p>
                 <label>
-                    <xsl:text>Host name (the same as S3 bucket name), for example </xsl:text>
+                    <xsl:text>Host name, for example </xsl:text>
                     <span class="tt">
                         <xsl:text>bucket-1.example.com</xsl:text>
                     </span>
@@ -94,6 +94,10 @@
                 </label>
                 <input name="secret" size="40" maxlength="40"/>
                 <label>
+                    <xsl:text>Bucket name:</xsl:text>
+                </label>
+                <input name="bucket" size="45" maxlength="250"/>
+                <label>
                     <xsl:text>Optional AWS S3 endpoint (</xsl:text>
                     <a href="http://docs.amazonwebservices.com/general/latest/gr/rande.html#s3_region">
                         <xsl:text>what is it?</xsl:text>
@@ -109,7 +113,7 @@
                     <xsl:text>:</xsl:text>
                 </label>
                 <input name="region" value="s3" size="25" maxlength="30"/>
-                <input name="syslog" value="syslog.s3auth.com:514" size="45" maxlength="250" type="hidden"/>
+                <input name="syslog" value="syslog.s3auth.com:514" type="hidden"/>
                 <input class="submit" type="submit" value=""/>
             </p>
         </form>
