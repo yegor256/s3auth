@@ -113,7 +113,7 @@
                     <xsl:text>:</xsl:text>
                 </label>
                 <input name="region" value="s3" size="25" maxlength="30"/>
-                <input name="syslog" value="syslog.s3auth.com:514" size="45" maxlength="250" type="hidden"/>
+                <input name="syslog" value="syslog.s3auth.com:514" type="hidden"/>
                 <input class="submit" type="submit" value=""/>
             </p>
         </form>
