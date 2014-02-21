@@ -30,6 +30,7 @@
 package com.s3auth.hosts;
 
 import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.model.BucketWebsiteConfiguration;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
@@ -98,6 +99,18 @@ final class DefaultHost implements Host {
                     name.get(), range
                 );
                 break;
+            } catch (final AmazonServiceException ex) {
+                if ("NoSuchBucket".equals(ex.getErrorCode())) {
+                    throw new IOException(
+                        Logger.format(
+                            "The bucket '%s' does not exist.",
+                            this.bucket.bucket()
+                        ),
+                        ex
+                    );
+                }
+                // @checkstyle MultipleStringLiterals (1 line)
+                errors.add(String.format("'%s': %s", name, ex.getMessage()));
             } catch (final AmazonClientException ex) {
                 errors.add(String.format("'%s': %s", name, ex.getMessage()));
             }
