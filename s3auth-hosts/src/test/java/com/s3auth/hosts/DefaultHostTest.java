@@ -29,10 +29,12 @@
  */
 package com.s3auth.hosts;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.BucketWebsiteConfiguration;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,7 +42,9 @@ import java.util.concurrent.ConcurrentMap;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -54,6 +58,13 @@ import org.mockito.stubbing.Answer;
 public final class DefaultHostTest {
 
     /**
+     * Rule for checking thrown exception.
+     * @checkstyle VisibilityModifier (3 lines)
+     */
+    @Rule
+    public transient ExpectedException thrown = ExpectedException.none();
+
+    /**
      * DefaultHost can load resource from S3.
      * @throws Exception If there is some problem inside
      */
@@ -62,6 +73,7 @@ public final class DefaultHostTest {
         final AmazonS3 aws = Mockito.mock(AmazonS3.class);
         Mockito.doAnswer(
             new Answer<S3Object>() {
+                @Override
                 public S3Object answer(final InvocationOnMock invocation) {
                     final String key = GetObjectRequest.class.cast(
                         invocation.getArguments()[0]
@@ -96,7 +108,7 @@ public final class DefaultHostTest {
                     this.put("/dir/", String.format("dir/%s", suffix));
                 }
             };
-        for (Map.Entry<String, String> path : paths.entrySet()) {
+        for (final Map.Entry<String, String> path : paths.entrySet()) {
             MatcherAssert.assertThat(
                 ResourceMocker.toString(
                     host.fetch(URI.create(path.getKey()), Range.ENTIRE)
@@ -128,6 +140,37 @@ public final class DefaultHostTest {
             new DefaultHost(new BucketMocker().mock()).authorized("1", "2"),
             Matchers.is(false)
         );
+    }
+
+    /**
+     * DefaultHost can throw a specific exception for a non existent bucket.
+     *
+     * @throws Exception If there is some problem inside
+     * @see <a href="http://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html">S3 Error Responses</a>
+     */
+    @Test
+    public void throwsExceptionForNonexistentBucket() throws Exception {
+        final AmazonS3 aws = Mockito.mock(AmazonS3.class);
+        final AmazonServiceException exp =
+            new AmazonServiceException("No such bucket");
+        exp.setErrorCode("NoSuchBucket");
+        Mockito.doThrow(exp)
+            .when(aws).getObject(Mockito.any(GetObjectRequest.class));
+        Mockito.doReturn(new BucketWebsiteConfiguration())
+            .when(aws).getBucketWebsiteConfiguration(Mockito.anyString());
+        final String bucket = "nonExistent";
+        this.thrown.expect(IOException.class);
+        this.thrown.expectMessage(
+            Matchers.allOf(
+                Matchers.not(Matchers.startsWith("failed to fetch /.htpasswd")),
+                Matchers.is(
+                    String.format("The bucket '%s' does not exist.", bucket)
+                )
+            )
+        );
+        new DefaultHost(
+            new BucketMocker().withBucket(bucket).withClient(aws).mock()
+        ).fetch(URI.create("/.htpasswd"), Range.ENTIRE);
     }
 
 }
