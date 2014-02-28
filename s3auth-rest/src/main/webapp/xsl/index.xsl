@@ -154,7 +154,7 @@
             <a href="http://httpd.apache.org/docs/2.2/misc/password_encryptions.html">
                 <xsl:text>Apache HTTP Server format</xsl:text>
             </a>
-            <xsl:text> (we support only SHA1 and PLAIN TEXT algorithms at the moment) using </xsl:text>
+            <xsl:text> using </xsl:text>
             <a href="http://httpd.apache.org/docs/2.2/programs/htpasswd.html">
                 <xsl:text>htpasswd</xsl:text>
             </a>
