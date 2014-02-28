@@ -121,7 +121,7 @@
             <span class="tt">
                 <xsl:text>relay.s3auth.com</xsl:text>
             </span>
-            <xsl:text> (domain and bucket name should be identical) and wait for DNS to propagate.</xsl:text>
+            <xsl:text> and wait for DNS to propagate.</xsl:text>
         </p>
         <p>
             <xsl:text>2. Create a new user in Amazon IAM and attach new custom policy to it (</xsl:text>
@@ -189,7 +189,7 @@
                 <a href="http://aspirine.org/htpasswd_en.html">
                     <xsl:text>this online tool</xsl:text>
                 </a>
-                <xsl:text> (using SHA-1 algorithm) and try again in 10 minutes (not earlier).</xsl:text>
+                <xsl:text> and try again in 10 minutes (not earlier).</xsl:text>
             </li>
             <li>
                 <xsl:text>S3 permissions are not granted and we simply can't read your </xsl:text>
