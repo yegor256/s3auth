@@ -110,6 +110,15 @@ public final class JaxbDomain {
     }
 
     /**
+     * Get bucket.
+     * @return The bucket
+     */
+    @XmlElement
+    public String getBucket() {
+        return this.domain.bucket();
+    }
+
+    /**
      * Get region.
      * @return The region
      */

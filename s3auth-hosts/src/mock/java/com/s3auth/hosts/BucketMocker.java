@@ -56,6 +56,7 @@ public final class BucketMocker {
      */
     public BucketMocker() {
         this.withName("maven.s3auth.com");
+        this.withBucket("s3auth");
         this.withRegion("s3-ap-southeast-1");
         this.withKey("AAAAAAAAAAAAAAAAAAAA");
         this.withSecret("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
@@ -99,6 +100,16 @@ public final class BucketMocker {
      */
     public BucketMocker withSecret(final String secret) {
         Mockito.doReturn(secret).when(this.bucket).secret();
+        return this;
+    }
+
+    /**
+     * With this bucket.
+     * @param bckt The bucket
+     * @return This object
+     */
+    public BucketMocker withBucket(final String bckt) {
+        Mockito.doReturn(bckt).when(this.bucket).bucket();
         return this;
     }
 

@@ -66,6 +66,10 @@ public final class JaxbDomainTest {
                     return "foo";
                 }
                 @Override
+                public String bucket() {
+                    return "def";
+                }
+                @Override
                 public String region() {
                     return "s3-sa-east-1";
                 }
@@ -82,6 +86,7 @@ public final class JaxbDomainTest {
                 "/domain[name='localhost']",
                 "/domain[key='ABC']",
                 "/domain[secret='foo']",
+                "/domain[bucket='def']",
                 "/domain[region='s3-sa-east-1']",
                 "/domain[syslog='localhost:12345']",
                 "/domain/links/link[@rel='remove']"
