@@ -42,6 +42,7 @@ import javax.ws.rs.core.HttpHeaders;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -118,7 +119,7 @@ public interface Resource {
         @Override
         public long writeTo(@NotNull final OutputStream stream)
             throws IOException {
-            IOUtils.write(this.text, stream);
+            IOUtils.write(this.text, stream, Charsets.UTF_8);
             return this.text.getBytes().length;
         }
         @Override

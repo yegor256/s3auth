@@ -33,6 +33,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -70,17 +71,18 @@ public final class ResourceMocker {
         try {
             Mockito.doAnswer(
                 new Answer<Void>() {
+                    @Override
                     public Void answer(final InvocationOnMock invocation)
                         throws Exception {
                         final OutputStream output = OutputStream.class.cast(
                             invocation.getArguments()[0]
                         );
-                        IOUtils.write(content, output);
+                        IOUtils.write(content, output, Charsets.UTF_8);
                         return null;
                     }
                 }
             ).when(this.resource).writeTo(Mockito.any(OutputStream.class));
-        } catch (java.io.IOException ex) {
+        } catch (final java.io.IOException ex) {
             throw new IllegalStateException(ex);
         }
         return this;
@@ -93,7 +95,7 @@ public final class ResourceMocker {
      * @throws IOException If fails
      */
     public static String toString(final Resource res) throws IOException {
-        return new String(ResourceMocker.toByteArray(res));
+        return new String(ResourceMocker.toByteArray(res), Charsets.UTF_8);
     }
 
     /**
