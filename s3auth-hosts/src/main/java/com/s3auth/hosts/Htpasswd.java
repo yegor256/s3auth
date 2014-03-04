@@ -48,6 +48,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.Crypt;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.codec.digest.Md5Crypt;
+import org.apache.commons.io.Charsets;
 
 /**
  * Htpasswd file abstraction.
@@ -150,7 +151,7 @@ final class Htpasswd {
             );
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             res.writeTo(baos);
-            content = baos.toString().trim();
+            content = baos.toString(Charsets.UTF_8.name()).trim();
         } catch (final IOException ex) {
             Logger.warn(
                 this,
