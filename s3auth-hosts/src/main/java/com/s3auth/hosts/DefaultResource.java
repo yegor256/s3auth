@@ -60,9 +60,6 @@ import org.apache.commons.lang3.StringUtils;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
- * @todo #39:1hr DefaultResource can now post traffic data, per bucket,
- *  to Amazon CloudWatch. It would be good if we can also show this data
- *  to the user.
  */
 @ToString
 @EqualsAndHashCode(of = { "bucket", "key", "range" })
