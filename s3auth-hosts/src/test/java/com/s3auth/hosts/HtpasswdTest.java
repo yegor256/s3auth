@@ -30,8 +30,10 @@
 package com.s3auth.hosts;
 
 import com.amazonaws.AmazonClientException;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.s3auth.hosts.Host.CloudWatch;
 import java.net.URI;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -69,7 +71,8 @@ public final class HtpasswdTest {
         MatcherAssert.assertThat(
             new Htpasswd(
                 new DefaultHost(
-                    new BucketMocker().withClient(aws).mock()
+                    new BucketMocker().withClient(aws).mock(),
+                    this.cloudWatch()
                 )
             ),
             Matchers.hasToString(Matchers.notNullValue())
@@ -174,7 +177,15 @@ public final class HtpasswdTest {
     @Test
     public void worksWithDefaultHost() throws Exception {
         final Htpasswd htpasswd = new Htpasswd(
-            new DefaultHost(new BucketMocker().mock())
+            new DefaultHost(
+                new BucketMocker().mock(),
+                new Host.CloudWatch() {
+                    @Override
+                    public AmazonCloudWatchClient get() {
+                        return Mockito.mock(AmazonCloudWatchClient.class);
+                    }
+                }
+            )
         );
         MatcherAssert.assertThat(
             htpasswd.authorized("jacky", "pwd"),
@@ -195,4 +206,16 @@ public final class HtpasswdTest {
         return host;
     }
 
+    /**
+     * Mock Host.Cloudwatch for test.
+     * @return Mock CloudWatch
+     */
+    private CloudWatch cloudWatch() {
+        return new Host.CloudWatch() {
+            @Override
+            public AmazonCloudWatchClient get() {
+                return Mockito.mock(AmazonCloudWatchClient.class);
+            }
+        };
+    }
 }

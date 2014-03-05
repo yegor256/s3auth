@@ -29,6 +29,7 @@
  */
 package com.s3auth.hosts;
 
+import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -64,7 +65,10 @@ public final class DefaultResourceTest {
         final ObjectMetadata meta = Mockito.mock(ObjectMetadata.class);
         Mockito.doReturn(meta).when(object).getObjectMetadata();
         Mockito.doReturn(1L).when(meta).getContentLength();
-        final Resource res = new DefaultResource(client, "a", "", Range.ENTIRE);
+        final Resource res = new DefaultResource(
+            client, "a", "", Range.ENTIRE,
+            Mockito.mock(AmazonCloudWatchClient.class)
+        );
         MatcherAssert.assertThat(
             res.headers(),
             Matchers.hasItem("Content-Length: 1")
@@ -87,7 +91,10 @@ public final class DefaultResourceTest {
         Mockito.doReturn(stream).when(object).getObjectContent();
         MatcherAssert.assertThat(
             ResourceMocker.toString(
-                new DefaultResource(client, "b", "", Range.ENTIRE)
+                new DefaultResource(
+                    client, "b", "", Range.ENTIRE,
+                    Mockito.mock(AmazonCloudWatchClient.class)
+                )
             ),
             Matchers.equalTo("")
         );
@@ -116,7 +123,10 @@ public final class DefaultResourceTest {
         Mockito.doReturn(stream).when(object).getObjectContent();
         MatcherAssert.assertThat(
             ResourceMocker.toByteArray(
-                new DefaultResource(client, "c", "", Range.ENTIRE)
+                new DefaultResource(
+                    client, "c", "", Range.ENTIRE,
+                    Mockito.mock(AmazonCloudWatchClient.class)
+                )
             ),
             Matchers.equalTo(data)
         );
@@ -139,7 +149,10 @@ public final class DefaultResourceTest {
         Mockito.doReturn(stream).when(object).getObjectContent();
         MatcherAssert.assertThat(
             ResourceMocker.toString(
-                new DefaultResource(client, "d", "", Range.ENTIRE)
+                new DefaultResource(
+                    client, "d", "", Range.ENTIRE,
+                    Mockito.mock(AmazonCloudWatchClient.class)
+                )
             ),
             Matchers.equalTo("")
         );
@@ -159,7 +172,10 @@ public final class DefaultResourceTest {
         final ObjectMetadata meta = Mockito.mock(ObjectMetadata.class);
         Mockito.doReturn(meta).when(object).getObjectMetadata();
         Mockito.doReturn(date).when(meta).getLastModified();
-        final Resource res = new DefaultResource(client, "x", "", Range.ENTIRE);
+        final Resource res = new DefaultResource(
+            client, "x", "", Range.ENTIRE,
+            Mockito.mock(AmazonCloudWatchClient.class)
+        );
         MatcherAssert.assertThat(
             res.lastModified(),
             Matchers.is(date)
@@ -179,7 +195,10 @@ public final class DefaultResourceTest {
         final ObjectMetadata meta = Mockito.mock(ObjectMetadata.class);
         Mockito.doReturn(meta).when(object).getObjectMetadata();
         Mockito.doReturn("max-age: 600, public").when(meta).getCacheControl();
-        final Resource res = new DefaultResource(client, "e", "", Range.ENTIRE);
+        final Resource res = new DefaultResource(
+            client, "e", "", Range.ENTIRE,
+            Mockito.mock(AmazonCloudWatchClient.class)
+        );
         MatcherAssert.assertThat(
             res.headers(),
             Matchers.hasItem("Cache-Control: max-age: 600, public")
@@ -200,7 +219,10 @@ public final class DefaultResourceTest {
         final ObjectMetadata meta = Mockito.mock(ObjectMetadata.class);
         Mockito.doReturn(meta).when(object).getObjectMetadata();
         Mockito.doReturn(null).when(meta).getCacheControl();
-        final Resource res = new DefaultResource(client, "f", "", Range.ENTIRE);
+        final Resource res = new DefaultResource(
+            client, "f", "", Range.ENTIRE,
+            Mockito.mock(AmazonCloudWatchClient.class)
+        );
         MatcherAssert.assertThat(
             res.headers(),
             Matchers.hasItem("Cache-Control: must-revalidate")

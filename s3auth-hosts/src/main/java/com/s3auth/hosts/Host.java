@@ -29,6 +29,7 @@
  */
 package com.s3auth.hosts;
 
+import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
 import com.jcabi.aspects.Immutable;
 import java.io.Closeable;
 import java.io.IOException;
@@ -69,5 +70,17 @@ public interface Host extends Closeable {
      * @throws IOException If some error with I/O inside
      */
     boolean authorized(String user, String password) throws IOException;
+
+    /**
+     * Client to Amazon CloudWatch.
+     */
+    @Immutable
+    interface CloudWatch {
+        /**
+         * Get Amazon client.
+         * @return The client
+         */
+        AmazonCloudWatchClient get();
+    }
 
 }
