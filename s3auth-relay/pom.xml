@@ -176,6 +176,8 @@
                                 <S3Auth-AwsDynamoSecret>${dynamo.secret}</S3Auth-AwsDynamoSecret>
                                 <S3Auth-AwsDynamoTable>${dynamo.table}</S3Auth-AwsDynamoTable>
                                 <S3Auth-ExitKey>${exit.key}</S3Auth-ExitKey>
+                                <S3Auth-AwsCloudWatchKey>${cloudwatch.key}</S3Auth-AwsCloudWatchKey>
+                                <S3Auth-AwsCloudWatchSecret>${cloudwatch.secret}</S3Auth-AwsCloudWatchSecret>
                             </manifestEntries>
                         </archive>
                     </configuration>
