@@ -29,11 +29,14 @@
  */
 package com.s3auth.hosts;
 
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.manifests.Manifests;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -87,6 +90,11 @@ final class DefaultResource implements Resource {
     private final transient S3Object object;
 
     /**
+     * Amazon Cloudwatch Client.
+     */
+    private final transient AmazonCloudWatchClient cloudwatch;
+
+    /**
      * Public ctor.
      * @param clnt Amazon S3 client
      * @param bckt Bucket name
@@ -97,11 +105,35 @@ final class DefaultResource implements Resource {
     DefaultResource(@NotNull final AmazonS3 clnt,
         @NotNull final String bckt, @NotNull final String name,
         @NotNull final Range rng) {
+        this (
+            clnt, bckt, name, rng,
+            new AmazonCloudWatchClient(
+                new BasicAWSCredentials(
+                    Manifests.read("S3Auth-AwsCloudWatchKey"),
+                    Manifests.read("S3Auth-AwsCloudWatchSecret")
+                )
+            )
+        );
+    }
+
+    /**
+     * Ctor for unit tests.
+     * @param clnt Amazon S3 client
+     * @param bckt Bucket name
+     * @param name Key name
+     * @param rng Range to deliver
+     * @param cw Amazon Cloudwatch Client
+     * @checkstyle ParameterNumber (5 lines)
+     */
+    DefaultResource(@NotNull final AmazonS3 clnt,
+        @NotNull final String bckt, @NotNull final String name,
+        @NotNull final Range rng, final AmazonCloudWatchClient cw) {
         this.client = clnt;
         this.bucket = bckt;
         this.key = name;
         this.range = rng;
         this.object = this.client.getObject(this.request(this.range));
+        this.cloudwatch = cw;
     }
 
     @Override
