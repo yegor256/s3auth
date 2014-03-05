@@ -30,6 +30,10 @@
 package com.s3auth.hosts;
 
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
+import com.amazonaws.services.cloudwatch.model.Dimension;
+import com.amazonaws.services.cloudwatch.model.MetricDatum;
+import com.amazonaws.services.cloudwatch.model.PutMetricDataRequest;
+import com.amazonaws.services.cloudwatch.model.StandardUnit;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -56,6 +60,9 @@ import org.apache.commons.lang3.StringUtils;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
+ * @todo #39:1hr DefaultResource can now post traffic data, per bucket,
+ *  to Amazon CloudWatch. It would be good if we can also show this data
+ *  to the user.
  */
 @ToString
 @EqualsAndHashCode(of = { "bucket", "key", "range" })
@@ -169,6 +176,20 @@ final class DefaultResource implements Resource {
                 }
                 total += count;
             }
+            this.cloudwatch.putMetricData(
+                new PutMetricDataRequest()
+                    .withNamespace("S3Auth")
+                    .withMetricData(
+                        new MetricDatum()
+                            .withMetricName("BytesTransferred")
+                            .withDimensions(
+                                new Dimension()
+                                    .withName("Bucket")
+                                    .withValue(this.bucket)
+                            ).withUnit(StandardUnit.Bytes)
+                            .withValue(Double.valueOf(total))
+                    )
+            );
         } finally {
             input.close();
         }

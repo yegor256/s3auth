@@ -30,6 +30,10 @@
 package com.s3auth.hosts;
 
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
+import com.amazonaws.services.cloudwatch.model.Dimension;
+import com.amazonaws.services.cloudwatch.model.MetricDatum;
+import com.amazonaws.services.cloudwatch.model.PutMetricDataRequest;
+import com.amazonaws.services.cloudwatch.model.StandardUnit;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -49,6 +53,7 @@ import org.mockito.Mockito;
  * Test case for {@link DefaultResource}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 public final class DefaultResourceTest {
 
@@ -226,6 +231,54 @@ public final class DefaultResourceTest {
         MatcherAssert.assertThat(
             res.headers(),
             Matchers.hasItem("Cache-Control: must-revalidate")
+        );
+    }
+
+    /**
+     * DefaultResource can post metrics to Amazon CloudWatch.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void postsCloudWatchMetricData() throws Exception {
+        final int size = 100;
+        final byte[] data = new byte[size];
+        final Random random = new Random();
+        for (int pos = 0; pos < size; ++pos) {
+            data[pos] = (byte) random.nextInt();
+        }
+        final S3ObjectInputStream stream = new S3ObjectInputStream(
+            new ByteArrayInputStream(data),
+            new HttpGet()
+        );
+        final AmazonS3 client = Mockito.mock(AmazonS3.class);
+        final S3Object object = Mockito.mock(S3Object.class);
+        Mockito.doReturn(object).when(client)
+            .getObject(Mockito.any(GetObjectRequest.class));
+        Mockito.doReturn(stream).when(object).getObjectContent();
+        final AmazonCloudWatchClient cloudwatch =
+            Mockito.mock(AmazonCloudWatchClient.class);
+        final String bucket = "CloudWatchTest";
+        MatcherAssert.assertThat(
+            ResourceMocker.toByteArray(
+                new DefaultResource(
+                    client, bucket, "", Range.ENTIRE, cloudwatch
+                )
+            ),
+            Matchers.equalTo(data)
+        );
+        Mockito.verify(cloudwatch, Mockito.only()).putMetricData(
+            new PutMetricDataRequest()
+                .withNamespace("S3Auth")
+                .withMetricData(
+                    new MetricDatum()
+                        .withMetricName("BytesTransferred")
+                        .withDimensions(
+                            new Dimension()
+                                .withName("Bucket")
+                                .withValue(bucket)
+                        ).withUnit(StandardUnit.Bytes)
+                        .withValue(Double.valueOf(size))
+                )
         );
     }
 

@@ -32,6 +32,7 @@ package com.s3auth.hosts;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatchAsyncClient;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
 import com.amazonaws.services.s3.model.BucketWebsiteConfiguration;
 import com.jcabi.aspects.Immutable;
@@ -84,7 +85,7 @@ final class DefaultHost implements Host {
             new Host.CloudWatch() {
                 @Override
                 public AmazonCloudWatchClient get() {
-                    return new AmazonCloudWatchClient(
+                    return new AmazonCloudWatchAsyncClient(
                         new BasicAWSCredentials(
                             Manifests.read("S3Auth-AwsCloudWatchKey"),
                             Manifests.read("S3Auth-AwsCloudWatchSecret")
