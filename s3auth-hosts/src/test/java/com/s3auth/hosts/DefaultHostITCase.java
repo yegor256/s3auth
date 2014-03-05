@@ -29,11 +29,14 @@
  */
 package com.s3auth.hosts;
 
+import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
+import com.s3auth.hosts.Host.CloudWatch;
 import java.net.URI;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Integration test case for {@link DefaultHost}.
@@ -61,7 +64,8 @@ public final class DefaultHostITCase {
                     .withBucket("maven.s3auth.com")
                     .withRegion("s3")
                     .mock()
-            )
+            ),
+            this.cloudWatch()
         );
         MatcherAssert.assertThat(
             ResourceMocker.toString(
@@ -85,9 +89,23 @@ public final class DefaultHostITCase {
                     .withKey("foo")
                     .withSecret("invalid-data")
                     .mock()
-            )
+            ),
+            this.cloudWatch()
         );
         host.fetch(URI.create("foo.html"), Range.ENTIRE);
     }
 
+    /**
+     * Mock CloudWatch for test.
+     *
+     * @return Mock cloudwatch
+     */
+    private CloudWatch cloudWatch() {
+        return new Host.CloudWatch() {
+            @Override
+            public AmazonCloudWatchClient get() {
+                return Mockito.mock(AmazonCloudWatchClient.class);
+            }
+        };
+    }
 }

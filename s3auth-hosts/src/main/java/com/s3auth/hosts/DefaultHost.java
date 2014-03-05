@@ -31,10 +31,14 @@ package com.s3auth.hosts;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatchAsyncClient;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
 import com.amazonaws.services.s3.model.BucketWebsiteConfiguration;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
+import com.jcabi.manifests.Manifests;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
@@ -49,6 +53,7 @@ import org.apache.commons.lang3.StringUtils;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
 @EqualsAndHashCode(of = "bucket")
@@ -66,12 +71,43 @@ final class DefaultHost implements Host {
     private final transient Htpasswd htpasswd;
 
     /**
+     * Amazon Cloudwatch Client.
+     */
+    private final transient Host.CloudWatch cloudwatch;
+
+    /**
      * Public ctor.
      * @param bckt The S3 bucket to use
      */
     DefaultHost(@NotNull final Bucket bckt) {
+        this(
+            bckt,
+            new Host.CloudWatch() {
+                @Override
+                public AmazonCloudWatchClient get() {
+                    return new AmazonCloudWatchAsyncClient(
+                        new BasicAWSCredentials(
+                            Manifests.read("S3Auth-AwsCloudWatchKey"),
+                            Manifests.read("S3Auth-AwsCloudWatchSecret")
+                        )
+                    );
+                }
+            }
+        );
+    }
+
+    /**
+     * Ctor for unit tests.
+     * @param bckt The S3 bucket to use
+     * @param cwatch The Amazon Cloudwatch client
+     */
+    DefaultHost(
+        @NotNull final Bucket bckt,
+        @NotNull final Host.CloudWatch cwatch
+    ) {
         this.bucket = bckt;
         this.htpasswd = new Htpasswd(this);
+        this.cloudwatch = cwatch;
     }
 
     @Override
@@ -96,7 +132,7 @@ final class DefaultHost implements Host {
             try {
                 resource = new DefaultResource(
                     this.bucket.client(), this.bucket.bucket(),
-                    name.get(), range
+                    name.get(), range, this.cloudwatch.get()
                 );
                 break;
             } catch (final AmazonServiceException ex) {

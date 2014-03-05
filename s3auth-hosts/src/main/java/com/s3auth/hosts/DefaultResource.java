@@ -29,6 +29,11 @@
  */
 package com.s3auth.hosts;
 
+import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
+import com.amazonaws.services.cloudwatch.model.Dimension;
+import com.amazonaws.services.cloudwatch.model.MetricDatum;
+import com.amazonaws.services.cloudwatch.model.PutMetricDataRequest;
+import com.amazonaws.services.cloudwatch.model.StandardUnit;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -87,21 +92,28 @@ final class DefaultResource implements Resource {
     private final transient S3Object object;
 
     /**
+     * Amazon Cloudwatch Client.
+     */
+    private final transient AmazonCloudWatchClient cloudwatch;
+
+    /**
      * Public ctor.
      * @param clnt Amazon S3 client
      * @param bckt Bucket name
      * @param name Key name
      * @param rng Range to deliver
+     * @param cwatch Amazon Cloudwatch Client
      * @checkstyle ParameterNumber (5 lines)
      */
     DefaultResource(@NotNull final AmazonS3 clnt,
         @NotNull final String bckt, @NotNull final String name,
-        @NotNull final Range rng) {
+        @NotNull final Range rng, final AmazonCloudWatchClient cwatch) {
         this.client = clnt;
         this.bucket = bckt;
         this.key = name;
         this.range = rng;
         this.object = this.client.getObject(this.request(this.range));
+        this.cloudwatch = cwatch;
     }
 
     @Override
@@ -161,6 +173,20 @@ final class DefaultResource implements Resource {
                 }
                 total += count;
             }
+            this.cloudwatch.putMetricData(
+                new PutMetricDataRequest()
+                    .withNamespace("S3Auth")
+                    .withMetricData(
+                        new MetricDatum()
+                            .withMetricName("BytesTransferred")
+                            .withDimensions(
+                                new Dimension()
+                                    .withName("Bucket")
+                                    .withValue(this.bucket)
+                            ).withUnit(StandardUnit.Bytes)
+                            .withValue(Double.valueOf(total))
+                    )
+            );
         } finally {
             input.close();
         }

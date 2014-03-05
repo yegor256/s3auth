@@ -30,10 +30,12 @@
 package com.s3auth.hosts;
 
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.BucketWebsiteConfiguration;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+import com.s3auth.hosts.Host.CloudWatch;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Map;
@@ -94,7 +96,7 @@ public final class DefaultHostTest {
         Mockito.doReturn(new BucketWebsiteConfiguration(suffix))
             .when(aws).getBucketWebsiteConfiguration(Mockito.anyString());
         final Host host = new DefaultHost(
-            new BucketMocker().withClient(aws).mock()
+            new BucketMocker().withClient(aws).mock(), this.cloudWatch()
         );
         @SuppressWarnings("PMD.NonStaticInitializer")
         final ConcurrentMap<String, String> paths =
@@ -137,7 +139,9 @@ public final class DefaultHostTest {
     @Test
     public void rejectsAuthorizationWhenInvalidCredentials() throws Exception {
         MatcherAssert.assertThat(
-            new DefaultHost(new BucketMocker().mock()).authorized("1", "2"),
+            new DefaultHost(
+                new BucketMocker().mock(), this.cloudWatch()
+            ).authorized("1", "2"),
             Matchers.is(false)
         );
     }
@@ -169,8 +173,22 @@ public final class DefaultHostTest {
             )
         );
         new DefaultHost(
-            new BucketMocker().withBucket(bucket).withClient(aws).mock()
+            new BucketMocker().withBucket(bucket).withClient(aws).mock(),
+            this.cloudWatch()
         ).fetch(URI.create("/.htpasswd"), Range.ENTIRE);
+    }
+
+    /**
+     * Mock Host.Cloudwatch for test.
+     * @return Mock Cloudwatch
+     */
+    private CloudWatch cloudWatch() {
+        return new Host.CloudWatch() {
+            @Override
+            public AmazonCloudWatchClient get() {
+                return Mockito.mock(AmazonCloudWatchClient.class);
+            }
+        };
     }
 
 }
