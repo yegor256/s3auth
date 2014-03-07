@@ -306,6 +306,12 @@ maven.s3auth.com with .htpasswd(3 user(s) updated 2min ago)]]></pre>
                 </xsl:attribute>
                 <img class="icon" src="http://img.s3auth.com/icons/google.png" alt="google icon"/>
             </a>
+            <a>
+                <xsl:attribute name="href">
+                    <xsl:value-of select="/page/links/link[@rel='auth-github']/@href"/>
+                </xsl:attribute>
+                <img class="icon" src="http://img.s3auth.com/icons/github.png" alt="github icon"/>
+            </a>
         </p>
         <h1>
             <xsl:text>Amazon S3 HTTP Basic Auth Gateway</xsl:text>
