@@ -29,8 +29,8 @@
  */
 package com.s3auth.rest.rexsl.scripts
 
-import com.rexsl.test.request.JdkRequest
-import com.rexsl.test.response.RestResponse
+import com.jcabi.http.request.JdkRequest
+import com.jcabi.http.response.RestResponse
 import com.rexsl.test.html.NoBrokenLinks
 import javax.ws.rs.core.HttpHeaders
 

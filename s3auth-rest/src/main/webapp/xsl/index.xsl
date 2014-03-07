@@ -293,24 +293,26 @@ maven.s3auth.com with .htpasswd(3 user(s) updated 2min ago)]]></pre>
         <p>
             <xsl:text>To start, login using one of your accounts at:</xsl:text>
         </p>
-        <p>
+        <p style="font-size: 2.5em;">
             <a>
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='auth-facebook']/@href"/>
                 </xsl:attribute>
-                <img class="icon" src="http://img.s3auth.com/icons/facebook.png" alt="facebook icon"/>
+                <i class="fa fa-facebook"><xsl:comment>facebook</xsl:comment></i>
             </a>
+            <xsl:text> </xsl:text>
             <a>
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='auth-google']/@href"/>
                 </xsl:attribute>
-                <img class="icon" src="http://img.s3auth.com/icons/google.png" alt="google icon"/>
+                <i class="fa fa-google-plus"><xsl:comment>google-plus</xsl:comment></i>
             </a>
+            <xsl:text> </xsl:text>
             <a>
                 <xsl:attribute name="href">
                     <xsl:value-of select="/page/links/link[@rel='auth-github']/@href"/>
                 </xsl:attribute>
-                <img class="icon" src="http://img.s3auth.com/icons/github.png" alt="github icon"/>
+                <i class="fa fa-github"><xsl:comment>github</xsl:comment></i>
             </a>
         </p>
         <h1>

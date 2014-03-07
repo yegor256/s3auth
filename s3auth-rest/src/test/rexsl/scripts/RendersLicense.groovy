@@ -29,8 +29,8 @@
  */
 package com.s3auth.rest.rexsl.scripts
 
-import com.rexsl.test.request.JdkRequest
-import com.rexsl.test.response.RestResponse
+import com.jcabi.http.request.JdkRequest
+import com.jcabi.http.response.RestResponse
 import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.MediaType
 import org.hamcrest.Matchers

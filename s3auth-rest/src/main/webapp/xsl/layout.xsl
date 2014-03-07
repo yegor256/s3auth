@@ -53,6 +53,7 @@
                         <xsl:value-of select="/page/version/revision"/>
                     </xsl:attribute>
                 </link>
+                <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"/>
                 <xsl:call-template name="head"/>
                 <script type="text/javascript"><![CDATA[
                   var _gaq = _gaq || [];
@@ -148,23 +149,24 @@
             </img>
             <xsl:text> </xsl:text>
             <xsl:value-of select="name"/>
-            <img style="margin-left: 0.5em;" alt="account type">
-                <xsl:attribute name="src">
-                    <xsl:text>http://img.s3auth.com/icons/</xsl:text>
+            <xsl:text> </xsl:text>
+            <i style="font-size: 1.5em;">
+                <xsl:attribute name="class">
+                    <xsl:text>fa </xsl:text>
                     <xsl:choose>
                         <xsl:when test="starts-with(urn, 'urn:facebook:')">
-                            <xsl:text>facebook</xsl:text>
+                            <xsl:text>fa-facebook</xsl:text>
                         </xsl:when>
                         <xsl:when test="starts-with(urn, 'urn:google:')">
-                            <xsl:text>google</xsl:text>
+                            <xsl:text>fa-google-plus</xsl:text>
                         </xsl:when>
                         <xsl:when test="starts-with(urn, 'urn:github:')">
-                            <xsl:text>github</xsl:text>
+                            <xsl:text>fa-github</xsl:text>
                         </xsl:when>
                     </xsl:choose>
-                    <xsl:text>-small.png</xsl:text>
                 </xsl:attribute>
-            </img>
+                <xsl:comment>icon</xsl:comment>
+            </i>
             <xsl:text> </xsl:text>
             <a>
                 <xsl:attribute name="href">

@@ -309,6 +309,11 @@
                         <version>0.8.4</version>
                         <classifier>mock</classifier>
                     </dependency>
+                    <dependency>
+                        <groupId>com.jcabi</groupId>
+                        <artifactId>jcabi-http</artifactId>
+                        <version>1.0</version>
+                    </dependency>
                 </dependencies>
             </plugin>
             <plugin>
