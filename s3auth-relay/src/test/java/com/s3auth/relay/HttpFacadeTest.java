@@ -31,9 +31,9 @@ package com.s3auth.relay;
 
 import com.jcabi.aspects.Parallel;
 import com.jcabi.aspects.Tv;
-import com.rexsl.test.Response;
-import com.rexsl.test.request.JdkRequest;
-import com.rexsl.test.response.RestResponse;
+import com.jcabi.http.Response;
+import com.jcabi.http.request.JdkRequest;
+import com.jcabi.http.response.RestResponse;
 import com.s3auth.hosts.Host;
 import com.s3auth.hosts.Hosts;
 import com.s3auth.hosts.Range;
