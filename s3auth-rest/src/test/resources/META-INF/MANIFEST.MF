@@ -5,6 +5,8 @@ S3Auth-FbId: 123456789
 S3Auth-FbSecret: foo
 S3Auth-GoogleId: 1034952105445.apps.googleusercontent.com
 S3Auth-GoogleSecret: 0Nq-fl2TAmmXapFFm90M9qad
+S3Auth-GithubId: 1234567
+S3Auth-GithubSecret: 1234567
 S3Auth-SecurityKey: key
 S3Auth-SecuritySalt: salt
 S3Auth-AwsDynamoEntryPoint: http://localhost:${dynamodb.port}
