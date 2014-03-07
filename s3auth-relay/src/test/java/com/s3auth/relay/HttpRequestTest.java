@@ -29,6 +29,7 @@
  */
 package com.s3auth.relay;
 
+import com.s3auth.hosts.Range;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -37,7 +38,8 @@ import org.junit.Test;
  * Test case for {@link HttpRequest}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @checkstyle MultipleStringLiteralsCheck (100 lines)
+ * @checkstyle MultipleStringLiteralsCheck (300 lines)
+ * @checkstyle MagicNumberCheck (300 lines)
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class HttpRequestTest {
@@ -85,6 +87,55 @@ public final class HttpRequestTest {
         MatcherAssert.assertThat(
             request.headers().get("aCcEpT"),
             Matchers.hasItem("text/plain")
+        );
+    }
+
+    /**
+     * HttpRequest can retrieve a full range header value.
+     * @throws Exception If a problem occurs
+     */
+    @Test
+    public void canFetchFullByteRange() throws Exception {
+        final HttpRequest request = HttpRequestMocker.toRequest(
+            new StringBuilder("GET /test.html HTTP/1.1\n")
+                .append("Host:local\n")
+                .append("Accept:text/plain\n")
+                .append("Range: bytes=100-200\n\nbody")
+                .toString()
+        );
+        final Range range = request.range();
+        MatcherAssert.assertThat(
+            range.first(),
+            Matchers.is(100L)
+        );
+        MatcherAssert.assertThat(
+            range.last(),
+            Matchers.is(200L)
+        );
+    }
+
+    /**
+     * HttpRequest can retrieve a range with only the first byte specified.
+     * e.g. "byte=100-" for "From byte 100"
+     * @throws Exception If a problem occurs
+     */
+    @Test
+    public void canFetchRangeFromFirstByte() throws Exception {
+        final HttpRequest request = HttpRequestMocker.toRequest(
+            new StringBuilder("GET /test.html HTTP/1.1\n")
+                .append("Host:local\n")
+                .append("Accept:text/plain\n")
+                .append("Range: bytes=100-\n\nbody")
+                .toString()
+        );
+        final Range range = request.range();
+        MatcherAssert.assertThat(
+            range.first(),
+            Matchers.is(100L)
+        );
+        MatcherAssert.assertThat(
+            range.last(),
+            Matchers.is(Long.MAX_VALUE)
         );
     }
 
