@@ -37,6 +37,7 @@ import com.rexsl.page.Inset;
 import com.rexsl.page.Resource;
 import com.rexsl.page.auth.AuthInset;
 import com.rexsl.page.auth.Facebook;
+import com.rexsl.page.auth.Github;
 import com.rexsl.page.auth.Google;
 import com.rexsl.page.auth.Identity;
 import com.rexsl.page.inset.FlashInset;
@@ -97,10 +98,11 @@ public class BaseRs extends BaseResource {
      */
     @Inset.Runtime
     public final AuthInset auth() {
-        // @checkstyle LineLength (3 lines)
+        // @checkstyle LineLength (4 lines)
         return new AuthInset(this, Manifests.read("S3Auth-SecurityKey"))
             .with(new Facebook(this, Manifests.read("S3Auth-FbId"), Manifests.read("S3Auth-FbSecret")))
-            .with(new Google(this, Manifests.read("S3Auth-GoogleId"), Manifests.read("S3Auth-GoogleSecret")));
+            .with(new Google(this, Manifests.read("S3Auth-GoogleId"), Manifests.read("S3Auth-GoogleSecret")))
+            .with(new Github(this, Manifests.read("S3Auth-GithubId"), Manifests.read("S3Auth-GithubSecret")));
     }
 
     /**

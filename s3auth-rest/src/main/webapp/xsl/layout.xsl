@@ -158,6 +158,9 @@
                         <xsl:when test="starts-with(urn, 'urn:google:')">
                             <xsl:text>google</xsl:text>
                         </xsl:when>
+                        <xsl:when test="starts-with(urn, 'urn:github:')">
+                            <xsl:text>github</xsl:text>
+                        </xsl:when>
                     </xsl:choose>
                     <xsl:text>-small.png</xsl:text>
                 </xsl:attribute>
