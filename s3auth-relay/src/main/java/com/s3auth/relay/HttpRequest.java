@@ -86,7 +86,7 @@ final class HttpRequest {
      * Range header matching pattern.
      */
     private static final Pattern RANGE_PATTERN =
-        Pattern.compile("bytes=(\\d+)-(\\d+)");
+        Pattern.compile("bytes=(\\d*)-(\\d*)");
 
     /**
      * TOP line pattern.
@@ -194,6 +194,13 @@ final class HttpRequest {
      * @return The URI
      * @throws HttpException If something is wrong
      * @see <a href="http://en.wikipedia.org/wiki/Byte_serving">Byte Serving</a>
+     * @todo #110 Range should be able to support a set of ranges. Currently,
+     *  we can only support a single range, e.g. "bytes=100-200". As per RFC
+     *  2616 Sec. 14.35, it should be legal to specify many ranges, for example
+     *  "bytes=100-200,500,600-700" to mean "bytes 100-200, 500th byte, and
+     *  700th byte". See
+     *  http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.35 for
+     *  more details.
      */
     public Range range() throws HttpException {
         final Range range;
@@ -207,10 +214,19 @@ final class HttpRequest {
                     "invalid Range header format"
                 );
             }
-            range = new Range.Simple(
-                Long.parseLong(matcher.group(1)),
-                Long.parseLong(matcher.group(2))
-            );
+            final long first;
+            if (matcher.group(1).isEmpty()) {
+                first = Long.MIN_VALUE;
+            } else {
+                first = Long.parseLong(matcher.group(1));
+            }
+            final long last;
+            if (matcher.group(2).isEmpty()) {
+                last = Long.MAX_VALUE;
+            } else {
+                last = Long.parseLong(matcher.group(2));
+            }
+            range = new Range.Simple(first, last);
         } else {
             range = Range.ENTIRE;
         }

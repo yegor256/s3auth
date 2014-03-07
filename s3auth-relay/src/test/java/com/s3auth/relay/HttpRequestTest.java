@@ -38,7 +38,8 @@ import org.junit.Test;
  * Test case for {@link HttpRequest}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @checkstyle MultipleStringLiteralsCheck (200 lines)
+ * @checkstyle MultipleStringLiteralsCheck (300 lines)
+ * @checkstyle MagicNumberCheck (300 lines)
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public final class HttpRequestTest {
@@ -96,7 +97,7 @@ public final class HttpRequestTest {
     @Test
     public void canFetchFullByteRange() throws Exception {
         final HttpRequest request = HttpRequestMocker.toRequest(
-           new StringBuilder("GET /test.html HTTP/1.1\n")
+            new StringBuilder("GET /test.html HTTP/1.1\n")
                .append("Host:local\n")
                .append("Accept:text/plain\n")
                .append("Range: bytes=100-200\n\nbody")
@@ -121,11 +122,11 @@ public final class HttpRequestTest {
     @Test
     public void canFetchRangeFromFirstByte() throws Exception {
         final HttpRequest request = HttpRequestMocker.toRequest(
-           new StringBuilder("GET /test.html HTTP/1.1\n")
-               .append("Host:local\n")
-               .append("Accept:text/plain\n")
-               .append("Range: bytes=100-\n\nbody")
-               .toString()
+            new StringBuilder("GET /test.html HTTP/1.1\n")
+                .append("Host:local\n")
+                .append("Accept:text/plain\n")
+                .append("Range: bytes=100-\n\nbody")
+                .toString()
         );
         final Range range = request.range();
         MatcherAssert.assertThat(
@@ -147,10 +148,10 @@ public final class HttpRequestTest {
     public void canFetchRangeForLastBytes() throws Exception {
         final HttpRequest request = HttpRequestMocker.toRequest(
            new StringBuilder("GET /test.html HTTP/1.1\n")
-               .append("Host:local\n")
-               .append("Accept:text/plain\n")
-               .append("Range: bytes=-200\n\nbody")
-               .toString()
+                .append("Host:local\n")
+                .append("Accept:text/plain\n")
+                .append("Range: bytes=-200\n\nbody")
+                .toString()
         );
         final Range range = request.range();
         MatcherAssert.assertThat(
