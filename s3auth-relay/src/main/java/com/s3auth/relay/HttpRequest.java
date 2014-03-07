@@ -86,7 +86,7 @@ final class HttpRequest {
      * Range header matching pattern.
      */
     private static final Pattern RANGE_PATTERN =
-        Pattern.compile("bytes=(\\d+)-(\\d*)");
+        Pattern.compile("bytes=(\\d+)-(\\d+)?");
 
     /**
      * TOP line pattern.
@@ -208,7 +208,7 @@ final class HttpRequest {
                 );
             }
             final long last;
-            if (matcher.group(2).isEmpty()) {
+            if (matcher.group(2) == null) {
                 last = Long.MAX_VALUE;
             } else {
                 last = Long.parseLong(matcher.group(2));
