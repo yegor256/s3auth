@@ -119,6 +119,11 @@
                         <a href="https://aws.amazon.com/solution-providers/isv/technopark-corp">
                             <img src="http://img.s3auth.com/apn-logo.png" alt="AWS Partner Network Logo" style="width: 8%;"/>
                         </a>
+                        <xsl:text> </xsl:text>
+                        <iframe src="github-btn.html?user=yegor256&amp;repo=s3auth&amp;type=watch&amp;count=true&amp;size=large"
+                            allowtransparency="true" frameborder="0" scrolling="0" width="152px" height="30px">
+                            <xsl:comment>empty</xsl:comment>
+                        </iframe>
                     </p>
                 </div>
             </body>
@@ -155,13 +160,13 @@
                     <xsl:text>fa </xsl:text>
                     <xsl:choose>
                         <xsl:when test="starts-with(urn, 'urn:facebook:')">
-                            <xsl:text>fa-facebook</xsl:text>
+                            <xsl:text>fa-facebook-square</xsl:text>
                         </xsl:when>
                         <xsl:when test="starts-with(urn, 'urn:google:')">
-                            <xsl:text>fa-google-plus</xsl:text>
+                            <xsl:text>fa-google-plus-square</xsl:text>
                         </xsl:when>
                         <xsl:when test="starts-with(urn, 'urn:github:')">
-                            <xsl:text>fa-github</xsl:text>
+                            <xsl:text>fa-github-square</xsl:text>
                         </xsl:when>
                     </xsl:choose>
                 </xsl:attribute>
