@@ -120,7 +120,7 @@
                             <img src="http://img.s3auth.com/apn-logo.png" alt="AWS Partner Network Logo" style="width: 8%;"/>
                         </a>
                         <xsl:text> </xsl:text>
-                        <iframe src="github-btn.html?user=yegor256&amp;repo=s3auth&amp;type=watch&amp;count=true&amp;size=large"
+                        <iframe src="http://ghbtns.com/github-btn.html?user=yegor256&amp;repo=s3auth&amp;type=watch&amp;count=true&amp;size=large"
                             style="border-width: 0px;overflow:hidden;width:152px;height:30px;">
                             <xsl:comment>empty</xsl:comment>
                         </iframe>
