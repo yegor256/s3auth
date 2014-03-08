@@ -121,7 +121,7 @@
                         </a>
                         <xsl:text> </xsl:text>
                         <iframe src="github-btn.html?user=yegor256&amp;repo=s3auth&amp;type=watch&amp;count=true&amp;size=large"
-                            allowtransparency="true" frameborder="0" scrolling="0" width="152px" height="30px">
+                            style="border-width: 0px;overflow:hidden;width:152px;height:30px;">
                             <xsl:comment>empty</xsl:comment>
                         </iframe>
                     </p>
