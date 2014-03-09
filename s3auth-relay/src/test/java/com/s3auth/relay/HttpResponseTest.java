@@ -32,6 +32,7 @@ package com.s3auth.relay;
 import com.jcabi.log.VerboseRunnable;
 import com.s3auth.hosts.Resource;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.ServerSocket;
@@ -44,6 +45,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -94,7 +96,9 @@ public final class HttpResponseTest {
                 } catch (final InterruptedException ex) {
                     throw new IllegalStateException(ex);
                 }
-                final PrintWriter writer = new PrintWriter(stream);
+                final PrintWriter writer = new PrintWriter(
+                    new OutputStreamWriter(stream, Charsets.UTF_8)
+                );
                 writer.print(content);
                 writer.flush();
                 return content.getBytes().length;
@@ -127,7 +131,9 @@ public final class HttpResponseTest {
                     public Void call() throws Exception {
                         final Socket reading = server.accept();
                         received.append(
-                            IOUtils.toString(reading.getInputStream())
+                            IOUtils.toString(
+                                reading.getInputStream(), Charsets.UTF_8
+                            )
                         );
                         reading.close();
                         done.countDown();

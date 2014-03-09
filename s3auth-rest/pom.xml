@@ -202,6 +202,8 @@
                                 <S3Auth-FbSecret>${fb.secret}</S3Auth-FbSecret>
                                 <S3Auth-GoogleId>${google.id}</S3Auth-GoogleId>
                                 <S3Auth-GoogleSecret>${google.secret}</S3Auth-GoogleSecret>
+                                <S3Auth-GithubId>${github.id}</S3Auth-GithubId>
+                                <S3Auth-GithubSecret>${github.secret}</S3Auth-GithubSecret>
                                 <S3Auth-SecurityKey>${security.key}</S3Auth-SecurityKey>
                                 <S3Auth-AwsDynamoKey>${dynamo.key}</S3Auth-AwsDynamoKey>
                                 <S3Auth-AwsDynamoSecret>${dynamo.secret}</S3Auth-AwsDynamoSecret>
@@ -306,6 +308,11 @@
                         <artifactId>jcabi-dynamo</artifactId>
                         <version>0.8.4</version>
                         <classifier>mock</classifier>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.jcabi</groupId>
+                        <artifactId>jcabi-http</artifactId>
+                        <version>1.0</version>
                     </dependency>
                 </dependencies>
             </plugin>

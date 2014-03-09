@@ -126,9 +126,11 @@ public interface User {
         public boolean isValid(final User user,
             final ConstraintValidatorContext ctx) {
             boolean isValid = true;
-            if (!"facebook".equals(user.identity().nid())
-                && !"google".equals(user.identity().nid())
-                && !"anonymous".equals(user.identity().nid())) {
+            final String nid = user.identity().nid();
+            if (!"facebook".equals(nid)
+                && !"google".equals(nid)
+                && !"github".equals(nid)
+                && !"anonymous".equals(nid)) {
                 ctx.buildConstraintViolationWithTemplate(
                     String.format("invalid NID of URN: %s", user.identity())
                 ).addPropertyNode("identity").addConstraintViolation();

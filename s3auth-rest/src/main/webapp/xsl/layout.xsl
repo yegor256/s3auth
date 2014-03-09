@@ -53,6 +53,7 @@
                         <xsl:value-of select="/page/version/revision"/>
                     </xsl:attribute>
                 </link>
+                <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"/>
                 <xsl:call-template name="head"/>
                 <script type="text/javascript"><![CDATA[
                   var _gaq = _gaq || [];
@@ -118,6 +119,11 @@
                         <a href="https://aws.amazon.com/solution-providers/isv/technopark-corp">
                             <img src="http://img.s3auth.com/apn-logo.png" alt="AWS Partner Network Logo" style="width: 8%;"/>
                         </a>
+                        <xsl:text> </xsl:text>
+                        <iframe src="http://ghbtns.com/github-btn.html?user=yegor256&amp;repo=s3auth&amp;type=watch&amp;count=true&amp;size=large"
+                            style="border-width: 0px;overflow:hidden;width:152px;height:30px;">
+                            <xsl:comment>empty</xsl:comment>
+                        </iframe>
                     </p>
                 </div>
             </body>
@@ -148,20 +154,24 @@
             </img>
             <xsl:text> </xsl:text>
             <xsl:value-of select="name"/>
-            <img style="margin-left: 0.5em;" alt="account type">
-                <xsl:attribute name="src">
-                    <xsl:text>http://img.s3auth.com/icons/</xsl:text>
+            <xsl:text> </xsl:text>
+            <i style="font-size: 1.5em;">
+                <xsl:attribute name="class">
+                    <xsl:text>fa </xsl:text>
                     <xsl:choose>
                         <xsl:when test="starts-with(urn, 'urn:facebook:')">
-                            <xsl:text>facebook</xsl:text>
+                            <xsl:text>fa-facebook-square</xsl:text>
                         </xsl:when>
                         <xsl:when test="starts-with(urn, 'urn:google:')">
-                            <xsl:text>google</xsl:text>
+                            <xsl:text>fa-google-plus-square</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="starts-with(urn, 'urn:github:')">
+                            <xsl:text>fa-github-square</xsl:text>
                         </xsl:when>
                     </xsl:choose>
-                    <xsl:text>-small.png</xsl:text>
                 </xsl:attribute>
-            </img>
+                <xsl:comment>icon</xsl:comment>
+            </i>
             <xsl:text> </xsl:text>
             <a>
                 <xsl:attribute name="href">

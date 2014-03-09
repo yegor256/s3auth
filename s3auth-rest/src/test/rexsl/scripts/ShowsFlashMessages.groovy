@@ -29,13 +29,13 @@
  */
 package com.s3auth.rest.rexsl.scripts
 
+import com.jcabi.http.Request
+import com.jcabi.http.request.JdkRequest
+import com.jcabi.http.response.RestResponse
+import com.jcabi.http.response.XmlResponse
+import com.jcabi.http.wire.CookieOptimizingWire
 import com.jcabi.manifests.Manifests
 import com.rexsl.page.auth.AuthInset
-import com.rexsl.test.Request
-import com.rexsl.test.request.JdkRequest
-import com.rexsl.test.response.RestResponse
-import com.rexsl.test.response.XmlResponse
-import com.rexsl.test.wire.CookieOptimizingWire
 import com.s3auth.hosts.UserMocker
 import com.s3auth.rest.RestUser
 import javax.ws.rs.core.HttpHeaders
