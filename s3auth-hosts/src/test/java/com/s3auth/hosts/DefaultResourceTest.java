@@ -71,7 +71,7 @@ public final class DefaultResourceTest {
         Mockito.doReturn(meta).when(object).getObjectMetadata();
         Mockito.doReturn(1L).when(meta).getContentLength();
         final Resource res = new DefaultResource(
-            client, "a", "", Range.ENTIRE,
+            client, "a", "", Range.ENTIRE, Version.LATEST,
             Mockito.mock(AmazonCloudWatchClient.class)
         );
         MatcherAssert.assertThat(
@@ -97,7 +97,7 @@ public final class DefaultResourceTest {
         MatcherAssert.assertThat(
             ResourceMocker.toString(
                 new DefaultResource(
-                    client, "b", "", Range.ENTIRE,
+                    client, "b", "", Range.ENTIRE, Version.LATEST,
                     Mockito.mock(AmazonCloudWatchClient.class)
                 )
             ),
@@ -129,7 +129,7 @@ public final class DefaultResourceTest {
         MatcherAssert.assertThat(
             ResourceMocker.toByteArray(
                 new DefaultResource(
-                    client, "c", "", Range.ENTIRE,
+                    client, "c", "", Range.ENTIRE, Version.LATEST,
                     Mockito.mock(AmazonCloudWatchClient.class)
                 )
             ),
@@ -155,7 +155,7 @@ public final class DefaultResourceTest {
         MatcherAssert.assertThat(
             ResourceMocker.toString(
                 new DefaultResource(
-                    client, "d", "", Range.ENTIRE,
+                    client, "d", "", Range.ENTIRE, Version.LATEST,
                     Mockito.mock(AmazonCloudWatchClient.class)
                 )
             ),
@@ -178,7 +178,7 @@ public final class DefaultResourceTest {
         Mockito.doReturn(meta).when(object).getObjectMetadata();
         Mockito.doReturn(date).when(meta).getLastModified();
         final Resource res = new DefaultResource(
-            client, "x", "", Range.ENTIRE,
+            client, "x", "", Range.ENTIRE, Version.LATEST,
             Mockito.mock(AmazonCloudWatchClient.class)
         );
         MatcherAssert.assertThat(
@@ -201,7 +201,7 @@ public final class DefaultResourceTest {
         Mockito.doReturn(meta).when(object).getObjectMetadata();
         Mockito.doReturn("max-age: 600, public").when(meta).getCacheControl();
         final Resource res = new DefaultResource(
-            client, "e", "", Range.ENTIRE,
+            client, "e", "", Range.ENTIRE, Version.LATEST,
             Mockito.mock(AmazonCloudWatchClient.class)
         );
         MatcherAssert.assertThat(
@@ -225,7 +225,7 @@ public final class DefaultResourceTest {
         Mockito.doReturn(meta).when(object).getObjectMetadata();
         Mockito.doReturn(null).when(meta).getCacheControl();
         final Resource res = new DefaultResource(
-            client, "f", "", Range.ENTIRE,
+            client, "f", "", Range.ENTIRE, Version.LATEST,
             Mockito.mock(AmazonCloudWatchClient.class)
         );
         MatcherAssert.assertThat(
@@ -261,7 +261,7 @@ public final class DefaultResourceTest {
         MatcherAssert.assertThat(
             ResourceMocker.toByteArray(
                 new DefaultResource(
-                    client, bucket, "", Range.ENTIRE, cloudwatch
+                    client, bucket, "", Range.ENTIRE, Version.LATEST, cloudwatch
                 )
             ),
             Matchers.equalTo(data)

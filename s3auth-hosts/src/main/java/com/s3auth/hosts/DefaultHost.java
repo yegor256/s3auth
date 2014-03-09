@@ -132,7 +132,7 @@ final class DefaultHost implements Host {
             try {
                 resource = new DefaultResource(
                     this.bucket.client(), this.bucket.bucket(),
-                    name.get(), range, this.cloudwatch.get()
+                    name.get(), range, Version.LATEST, this.cloudwatch.get()
                 );
                 break;
             } catch (final AmazonServiceException ex) {
