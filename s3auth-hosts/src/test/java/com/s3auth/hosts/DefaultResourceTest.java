@@ -48,6 +48,8 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 /**
  * Test case for {@link DefaultResource}.
@@ -279,6 +281,33 @@ public final class DefaultResourceTest {
                         ).withUnit(StandardUnit.Bytes)
                         .withValue(Double.valueOf(size))
                 )
+        );
+    }
+
+    /**
+     * DefaultResource can specify an object version to retrieve.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void specifiesObjectVersion() throws Exception {
+        final AmazonS3 client = Mockito.mock(AmazonS3.class);
+        final String version = "abcd";
+        Mockito.doAnswer(
+            new Answer<S3Object>() {
+                @Override
+                public S3Object answer(final InvocationOnMock invocation) {
+                    final GetObjectRequest req =
+                        (GetObjectRequest) invocation.getArguments()[0];
+                    MatcherAssert.assertThat(
+                        req.getVersionId(), Matchers.is(version)
+                    );
+                    return Mockito.mock(S3Object.class);
+                }
+            }
+        ).when(client).getObject(Mockito.any(GetObjectRequest.class));
+        new DefaultResource(
+            client, "h", "", Range.ENTIRE, new Version.Simple(version),
+            Mockito.mock(AmazonCloudWatchClient.class)
         );
     }
 

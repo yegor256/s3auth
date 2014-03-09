@@ -284,17 +284,17 @@ final class DefaultResource implements Resource {
     /**
      * Make S3 request with a specified range.
      * @param rng Range to request
-     * @param version Version of object to fetch
+     * @param ver Version of object to fetch
      * @return Request
      */
-    private GetObjectRequest request(final Range rng, final Version version) {
+    private GetObjectRequest request(final Range rng, final Version ver) {
         final GetObjectRequest request =
             new GetObjectRequest(this.bucket, this.key);
         if (!rng.equals(Range.ENTIRE)) {
             request.withRange(rng.first(), rng.last());
         }
-        if (!version.latest()) {
-            request.withVersionId(version.version());
+        if (!ver.latest()) {
+            request.withVersionId(ver.version());
         }
         return request;
     }
