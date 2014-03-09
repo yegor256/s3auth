@@ -39,6 +39,7 @@ import java.net.Socket;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
@@ -48,6 +49,7 @@ import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * HTTP request.
@@ -101,6 +103,12 @@ final class HttpRequest {
         Pattern.compile("([a-zA-Z][a-zA-Z\\-]*):\\s*(.*)\\s*");
 
     /**
+     * Query param pattern.
+     */
+    private static final Pattern PARAMS =
+        Pattern.compile("[\\?&]([a-zA-Z0-9][a-zA-Z0-9\\-]*)(=([a-zA-Z0-9]+))?");
+
+    /**
      * HTTP mtd.
      */
     private final transient String mtd;
@@ -114,6 +122,11 @@ final class HttpRequest {
      * HTTP headers.
      */
     private final transient Map<String, Collection<String>> hdrs;
+
+    /**
+     * HTTP query params.
+     */
+    private final transient Map<String, Collection<String>> parms;
 
     /**
      * Public ctor.
@@ -143,6 +156,7 @@ final class HttpRequest {
                 String.format("invalid first line: '%s'", top)
             );
         }
+        this.parms = Collections.unmodifiableMap(this.parseParameters(top));
         if (!"GET".equals(matcher.group(1))) {
             throw new HttpException(
                 HttpURLConnection.HTTP_BAD_METHOD,
@@ -162,7 +176,7 @@ final class HttpRequest {
             }
             headers.add(line);
         }
-        this.hdrs = Collections.unmodifiableMap(this.parse(headers));
+        this.hdrs = Collections.unmodifiableMap(this.parseHeaders(headers));
     }
 
     /**
@@ -171,6 +185,15 @@ final class HttpRequest {
      */
     public Map<String, Collection<String>> headers() {
         return this.hdrs;
+    }
+
+    /**
+     * Get all found HTTP parameters.
+     * Note that the returned map is unmodifiable.
+     * @return Headers
+     */
+    public Map<String, Collection<String>> parameters() {
+        return this.parms;
     }
 
     /**
@@ -227,7 +250,7 @@ final class HttpRequest {
      * @throws HttpException If some socket problem
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    private Map<String, Collection<String>> parse(
+    private Map<String, Collection<String>> parseHeaders(
         final Iterable<String> lines) throws HttpException {
         final Map<String, Collection<String>> map =
             new CaseInsensitiveMap<String, Collection<String>>();
@@ -245,6 +268,28 @@ final class HttpRequest {
                 map.put(name, new LinkedList<String>());
             }
             map.get(name).add(matcher.group(2));
+        }
+        return map;
+    }
+
+    /**
+     * Parse query parameters from request string and create full map.
+     * @param request Request string
+     * @return Map of headers
+     */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    private Map<String, Collection<String>> parseParameters(
+        final String request) {
+        final Map<String, Collection<String>> map =
+            new HashMap<String, Collection<String>>();
+        final Matcher matcher = HttpRequest.PARAMS.matcher(request);
+        while (matcher.find()) {
+            final String name = matcher.group(1).trim();
+            if (!map.containsKey(name)) {
+                map.put(name, new LinkedList<String>());
+            }
+            //@checkstyle MagicNumber (1 line)
+            map.get(name).add(StringUtils.defaultString(matcher.group(3)));
         }
         return map;
     }
