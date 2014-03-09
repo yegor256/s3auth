@@ -35,6 +35,7 @@ import com.jcabi.manifests.Manifests;
 import com.s3auth.hosts.Host;
 import com.s3auth.hosts.Hosts;
 import com.s3auth.hosts.Resource;
+import com.s3auth.hosts.Version;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.Socket;
@@ -185,7 +186,7 @@ final class HttpThread {
     private Resource resource(final Host host, final HttpRequest request)
         throws IOException {
         final Resource resource = host.fetch(
-            request.requestUri(), request.range()
+            request.requestUri(), request.range(), Version.LATEST
         );
         if (request.headers().containsKey(HttpHeaders.IF_NONE_MATCH)) {
             final String etag = request.headers()

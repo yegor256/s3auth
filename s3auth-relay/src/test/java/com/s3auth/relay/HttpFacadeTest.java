@@ -38,6 +38,7 @@ import com.s3auth.hosts.Host;
 import com.s3auth.hosts.Hosts;
 import com.s3auth.hosts.Range;
 import com.s3auth.hosts.Resource;
+import com.s3auth.hosts.Version;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.Date;
@@ -81,7 +82,11 @@ public final class HttpFacadeTest {
                     throw new IllegalStateException("hello, world!");
                 }
             }
-        ).when(host).fetch(Mockito.any(URI.class), Mockito.any(Range.class));
+        ).when(host).fetch(
+            Mockito.any(URI.class),
+            Mockito.any(Range.class),
+            Mockito.any(Version.class)
+        );
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
@@ -117,7 +122,11 @@ public final class HttpFacadeTest {
                     return answer;
                 }
             }
-        ).when(host).fetch(Mockito.any(URI.class), Mockito.any(Range.class));
+        ).when(host).fetch(
+            Mockito.any(URI.class),
+            Mockito.any(Range.class),
+            Mockito.any(Version.class)
+        );
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
@@ -181,7 +190,11 @@ public final class HttpFacadeTest {
                     return answer;
                 }
             }
-        ).when(host).fetch(Mockito.any(URI.class), Mockito.any(Range.class));
+        ).when(host).fetch(
+            Mockito.any(URI.class),
+            Mockito.any(Range.class),
+            Mockito.any(Version.class)
+        );
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
@@ -229,7 +242,11 @@ public final class HttpFacadeTest {
                     return answer;
                 }
             }
-        ).when(host).fetch(Mockito.any(URI.class), Mockito.any(Range.class));
+        ).when(host).fetch(
+            Mockito.any(URI.class),
+            Mockito.any(Range.class),
+            Mockito.any(Version.class)
+        );
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();

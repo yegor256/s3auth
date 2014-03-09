@@ -147,7 +147,8 @@ final class Htpasswd {
         try {
             final Resource res = this.host.fetch(
                 URI.create("/.htpasswd"),
-                Range.ENTIRE
+                Range.ENTIRE,
+                Version.LATEST
             );
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             res.writeTo(baos);

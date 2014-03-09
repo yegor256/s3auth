@@ -49,10 +49,11 @@ public interface Host extends Closeable {
      * Find resource and return its input stream.
      * @param uri Name of resource
      * @param range Range of data to return
+     * @param version The version of the data to return
      * @return The stream
      * @throws IOException If some error with I/O inside
      */
-    Resource fetch(URI uri, Range range) throws IOException;
+    Resource fetch(URI uri, Range range, Version version) throws IOException;
 
     /**
      * This URI require authentication?

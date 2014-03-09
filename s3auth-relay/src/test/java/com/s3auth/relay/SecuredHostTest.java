@@ -33,6 +33,7 @@ import com.s3auth.hosts.Host;
 import com.s3auth.hosts.HostMocker;
 import com.s3auth.hosts.Range;
 import com.s3auth.hosts.Resource;
+import com.s3auth.hosts.Version;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import javax.ws.rs.core.HttpHeaders;
@@ -66,7 +67,7 @@ public final class SecuredHostTest {
                     HttpRequestMocker.toRequest(
                         String.format("GET / HTTP/1.1\nHost: %s\n\n", name)
                     )
-                ).fetch(URI.create("/"), Range.ENTIRE);
+                ).fetch(URI.create("/"), Range.ENTIRE, Version.LATEST);
                 Assert.fail("exception expected");
             } catch (final HttpException ex) {
                 MatcherAssert.assertThat(
@@ -98,7 +99,7 @@ public final class SecuredHostTest {
                 new SecuredHost(
                     new HostMocker().mock(),
                     HttpRequestMocker.toRequest(http)
-                ).fetch(URI.create("/test.html"), Range.ENTIRE);
+                ).fetch(URI.create("/test.html"), Range.ENTIRE, Version.LATEST);
                 Assert.fail("exception expected, but didn't happen");
             } catch (final HttpException ex) {
                 MatcherAssert.assertThat(
@@ -138,7 +139,8 @@ public final class SecuredHostTest {
                         return false;
                     }
                     @Override
-                    public Resource fetch(final URI uri, final Range range) {
+                    public Resource fetch(final URI uri, final Range range,
+                        final Version version) {
                         throw new UnsupportedOperationException();
                     }
                     @Override
@@ -149,7 +151,9 @@ public final class SecuredHostTest {
                 HttpRequestMocker.toRequest(
                     "GET / HTTP/1.1\nAuthorization: Basic dGVzdDp0ZXN0\n\n"
                 )
-            ).fetch(URI.create("/test-request.html"), Range.ENTIRE);
+            ).fetch(
+                URI.create("/test-request.html"), Range.ENTIRE, Version.LATEST
+            );
             Assert.fail("authorization failed expected, but didn't happen");
         } catch (final HttpException ex) {
             MatcherAssert.assertThat(
