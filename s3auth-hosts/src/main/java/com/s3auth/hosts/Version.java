@@ -53,7 +53,7 @@ public interface Version {
         }
         @Override
         public String version() {
-            throw new UnsupportedOperationException("Not specified.");
+            throw new UnsupportedOperationException("Version is unspecified.");
         }
     };
 

@@ -73,6 +73,11 @@ import org.apache.http.client.utils.DateUtils;
 final class HttpThread {
 
     /**
+     * S3 version query string.
+     */
+    private static final String S3_VERSION = "s3-version";
+
+    /**
      * Name of the server we show in HTTP headers.
      */
     private static final String NAME = String.format(
@@ -182,11 +187,24 @@ final class HttpThread {
      * @param request HTTP request
      * @return The resource
      * @throws IOException If some IO exception
+     * @todo #61 We should be able to fetch the list of versions of a given
+     *  resource. The request should contain the query "s3-versions". That is,
+     *  for example, requesting "http://maven.s3auth.com/index.html?s3-versions"
+     *  should return the list of all versions of the requested object.
      */
     private Resource resource(final Host host, final HttpRequest request)
         throws IOException {
+        final Version version;
+        if (request.parameters().containsKey(HttpThread.S3_VERSION)) {
+            version = new Version.Simple(
+                request.parameters().get(HttpThread.S3_VERSION)
+                    .iterator().next()
+            );
+        } else {
+            version = Version.LATEST;
+        }
         final Resource resource = host.fetch(
-            request.requestUri(), request.range(), Version.LATEST
+            request.requestUri(), request.range(), version
         );
         if (request.headers().containsKey(HttpHeaders.IF_NONE_MATCH)) {
             final String etag = request.headers()
