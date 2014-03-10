@@ -139,4 +139,71 @@ public final class HttpRequestTest {
         );
     }
 
+    /**
+     * HttpRequest can retrieve query parameters.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void fetchesQueryParams() throws Exception {
+        final HttpRequest request = HttpRequestMocker.toRequest(
+            //@checkstyle LineLength (1 line)
+            "GET /test.html?test=param&hello=world HTTP/1.1\nHost:local\nAccept:text/plain\n\nbody"
+        );
+        MatcherAssert.assertThat(
+            request.parameters().get("test"),
+            Matchers.hasItem("param")
+        );
+        MatcherAssert.assertThat(
+            request.parameters().get("hello"),
+            Matchers.hasItem("world")
+        );
+    }
+
+    /**
+     * HttpRequest can retrieve duplicate query parameters.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void fetchesDuplicateQueryParams() throws Exception {
+        final HttpRequest request = HttpRequestMocker.toRequest(
+            //@checkstyle LineLength (1 line)
+            "GET /test.html?first=one&second=two&first=three HTTP/1.1\nHost:local\nAccept:text/plain\n\nbody"
+        );
+        MatcherAssert.assertThat(
+            request.parameters().get("first"),
+            Matchers.allOf(
+                Matchers.<String>iterableWithSize(2),
+                Matchers.hasItems("one", "three")
+            )
+        );
+        MatcherAssert.assertThat(
+            request.parameters().get("second"),
+            Matchers.hasItem("two")
+        );
+    }
+
+    /**
+     * HttpRequest can retrieve query parameters with no specified value.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void fetchesQueryParamsWithNoValue() throws Exception {
+        final HttpRequest request = HttpRequestMocker.toRequest(
+            //@checkstyle LineLength (1 line)
+            "GET /test.html?blank&something=yes&nothing HTTP/1.1\nHost:local\nAccept:text/plain\n\nbody"
+        );
+        MatcherAssert.assertThat(
+            request.parameters().get("blank"),
+            Matchers.hasItem("")
+        );
+        MatcherAssert.assertThat(
+            request.parameters().get("something"),
+            Matchers.hasItem("yes")
+        );
+        MatcherAssert.assertThat(
+            request.parameters().get("nothing"),
+            Matchers.hasItem("")
+        );
+    }
+
 }
