@@ -36,6 +36,7 @@ import com.jcabi.manifests.Manifests;
 import com.s3auth.hosts.Host;
 import com.s3auth.hosts.Range;
 import com.s3auth.hosts.Resource;
+import com.s3auth.hosts.Version;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -79,8 +80,8 @@ final class LocalHost implements Host {
     }
 
     @Override
-    public Resource fetch(@NotNull final URI uri, @NotNull final Range range)
-        throws IOException {
+    public Resource fetch(@NotNull final URI uri, @NotNull final Range range,
+        @NotNull final Version version) throws IOException {
         if (uri.toString().startsWith("/shutdown")) {
             throw this.halt(uri.toString());
         }

@@ -38,6 +38,7 @@ import com.s3auth.hosts.Host;
 import com.s3auth.hosts.Hosts;
 import com.s3auth.hosts.Range;
 import com.s3auth.hosts.Resource;
+import com.s3auth.hosts.Version;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.Date;
@@ -62,7 +63,7 @@ import org.mockito.stubbing.Answer;
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  * @checkstyle MagicNumberCheck (500 lines)
  */
-@SuppressWarnings("PMD.AvoidDuplicateLiterals")
+@SuppressWarnings({ "PMD.AvoidDuplicateLiterals", "PMD.TooManyMethods" })
 public final class HttpFacadeTest {
 
     /**
@@ -81,7 +82,12 @@ public final class HttpFacadeTest {
                     throw new IllegalStateException("hello, world!");
                 }
             }
-        ).when(host).fetch(Mockito.any(URI.class), Mockito.any(Range.class));
+        ).when(host)
+            .fetch(
+                Mockito.any(URI.class),
+                Mockito.any(Range.class),
+                Mockito.any(Version.class)
+            );
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
@@ -117,7 +123,12 @@ public final class HttpFacadeTest {
                     return answer;
                 }
             }
-        ).when(host).fetch(Mockito.any(URI.class), Mockito.any(Range.class));
+        ).when(host)
+            .fetch(
+                Mockito.any(URI.class),
+                Mockito.any(Range.class),
+                Mockito.any(Version.class)
+            );
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
@@ -181,7 +192,12 @@ public final class HttpFacadeTest {
                     return answer;
                 }
             }
-        ).when(host).fetch(Mockito.any(URI.class), Mockito.any(Range.class));
+        ).when(host)
+            .fetch(
+                Mockito.any(URI.class),
+                Mockito.any(Range.class),
+                Mockito.any(Version.class)
+            );
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
@@ -229,7 +245,12 @@ public final class HttpFacadeTest {
                     return answer;
                 }
             }
-        ).when(host).fetch(Mockito.any(URI.class), Mockito.any(Range.class));
+        ).when(host)
+            .fetch(
+                Mockito.any(URI.class),
+                Mockito.any(Range.class),
+                Mockito.any(Version.class)
+            );
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
@@ -253,6 +274,109 @@ public final class HttpFacadeTest {
                 Integer.parseInt(resp.headers().get("Age").get(0)),
                 Matchers.greaterThanOrEqualTo(1)
             );
+        } finally {
+            facade.close();
+        }
+    }
+
+    /**
+     * HttpFacade can parse S3 version query and pass it on to Resource.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void canParseVersionQuery() throws Exception {
+        final String version = "1234";
+        final Host host = Mockito.mock(Host.class);
+        Mockito.doAnswer(
+            new Answer<Resource>() {
+                @Override
+                public Resource answer(final InvocationOnMock inv)
+                    throws InterruptedException {
+                    MatcherAssert.assertThat(
+                        ((Version) inv.getArguments()[2]).version(),
+                        Matchers.is(version)
+                    );
+                    final Resource answer = Mockito.mock(Resource.class);
+                    Mockito.doReturn(HttpURLConnection.HTTP_OK)
+                        .when(answer).status();
+                    return answer;
+                }
+            }
+        ).when(host)
+            .fetch(
+                Mockito.any(URI.class),
+                Mockito.any(Range.class),
+                Mockito.any(Version.class)
+            );
+        final Hosts hosts = Mockito.mock(Hosts.class);
+        Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
+        final int port = PortMocker.reserve();
+        final HttpFacade facade = new HttpFacade(hosts, port);
+        try {
+            facade.listen();
+            final URI uri = UriBuilder
+                .fromUri(String.format("http://localhost:%d/", port))
+                .path("/a").queryParam("ver", version).build();
+            new JdkRequest(uri).header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
+                .header(
+                    HttpHeaders.AUTHORIZATION,
+                    String.format(
+                        "Basic %s",
+                        Base64.encodeBase64String("a:b".getBytes())
+                    )
+                ).uri().back().fetch().as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK);
+        } finally {
+            facade.close();
+        }
+    }
+
+    /**
+     * HttpFacade will request the latest version if it is not specified..
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void getsLatestVersion() throws Exception {
+        final Host host = Mockito.mock(Host.class);
+        Mockito.doAnswer(
+            new Answer<Resource>() {
+                @Override
+                public Resource answer(final InvocationOnMock inv)
+                    throws InterruptedException {
+                    MatcherAssert.assertThat(
+                        (Version) inv.getArguments()[2],
+                        Matchers.is(Version.LATEST)
+                    );
+                    final Resource answer = Mockito.mock(Resource.class);
+                    Mockito.doReturn(HttpURLConnection.HTTP_OK)
+                        .when(answer).status();
+                    return answer;
+                }
+            }
+        ).when(host)
+            .fetch(
+                Mockito.any(URI.class),
+                Mockito.any(Range.class),
+                Mockito.any(Version.class)
+            );
+        final Hosts hosts = Mockito.mock(Hosts.class);
+        Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
+        final int port = PortMocker.reserve();
+        final HttpFacade facade = new HttpFacade(hosts, port);
+        try {
+            facade.listen();
+            final URI uri = UriBuilder
+                .fromUri(String.format("http://localhost:%d/", port))
+                .path("/a").build();
+            new JdkRequest(uri).header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
+                .header(
+                    HttpHeaders.AUTHORIZATION,
+                    String.format(
+                        "Basic %s",
+                        Base64.encodeBase64String("a:b".getBytes())
+                    )
+                ).uri().back().fetch().as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK);
         } finally {
             facade.close();
         }

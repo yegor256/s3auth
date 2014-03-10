@@ -84,25 +84,25 @@ final class SmartHost implements Host {
 
     @Override
     @Loggable(value = Loggable.DEBUG, ignore = IOException.class)
-    public Resource fetch(@NotNull final URI uri, @NotNull final Range range)
-        throws IOException {
+    public Resource fetch(@NotNull final URI uri, @NotNull final Range range,
+        @NotNull final Version version) throws IOException {
         Resource resource;
         if (SmartHost.HTPASSWD.matcher(uri.toString()).matches()) {
             String text;
             try {
-                final Resource htpasswd = this.host.fetch(uri, range);
+                final Resource htpasswd = this.host.fetch(uri, range, version);
                 final ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 htpasswd.writeTo(baos);
                 text = String.format(
                     "%d byte(s)",
                     baos.toByteArray().length
                 );
-            } catch (java.io.IOException ex) {
+            } catch (final java.io.IOException ex) {
                 text = Logger.format("%[exception]s", ex);
             }
             resource = new Resource.PlainText(text);
         } else {
-            resource = this.host.fetch(uri, range);
+            resource = this.host.fetch(uri, range, version);
         }
         return resource;
     }

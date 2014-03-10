@@ -69,8 +69,12 @@ public final class DefaultHostITCase {
         );
         MatcherAssert.assertThat(
             ResourceMocker.toString(
-                // @checkstyle MagicNumber (1 line)
-                host.fetch(URI.create("/index.html"), new Range.Simple(3, 500))
+                // @checkstyle MagicNumber (3 lines)
+                host.fetch(
+                    URI.create("/index.html"),
+                    new Range.Simple(3, 500),
+                    Version.LATEST
+                )
             ),
             Matchers.startsWith("OCTYPE html>\n")
         );
@@ -92,7 +96,7 @@ public final class DefaultHostITCase {
             ),
             this.cloudWatch()
         );
-        host.fetch(URI.create("foo.html"), Range.ENTIRE);
+        host.fetch(URI.create("foo.html"), Range.ENTIRE, Version.LATEST);
     }
 
     /**

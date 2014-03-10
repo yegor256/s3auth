@@ -33,6 +33,7 @@ import com.jcabi.manifests.Manifests;
 import com.s3auth.hosts.Host;
 import com.s3auth.hosts.Range;
 import com.s3auth.hosts.ResourceMocker;
+import com.s3auth.hosts.Version;
 import java.net.URI;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -65,7 +66,9 @@ public final class LocalHostTest {
             Matchers.hasToString(Matchers.equalTo("localhost"))
         );
         MatcherAssert.assertThat(
-            ResourceMocker.toString(host.fetch(URI.create("/"), Range.ENTIRE)),
+            ResourceMocker.toString(
+                host.fetch(URI.create("/"), Range.ENTIRE, Version.LATEST)
+            ),
             Matchers.notNullValue()
         );
     }
@@ -79,7 +82,7 @@ public final class LocalHostTest {
         final Host host = new LocalHost();
         MatcherAssert.assertThat(
             ResourceMocker.toString(
-                host.fetch(URI.create("/version"), Range.ENTIRE)
+                host.fetch(URI.create("/version"), Range.ENTIRE, Version.LATEST)
             ),
             Matchers.equalTo(Manifests.read("S3Auth-Revision"))
         );

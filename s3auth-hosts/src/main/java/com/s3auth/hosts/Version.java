@@ -29,59 +29,72 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
 import com.jcabi.aspects.Immutable;
-import java.io.Closeable;
-import java.io.IOException;
-import java.net.URI;
+import com.jcabi.aspects.Loggable;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * One host.
+ * S3 Object version.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Carlos Miranda (miranda.cma@gmail.com)
  * @version $Id$
- * @since 0.0.1
  */
 @Immutable
-public interface Host extends Closeable {
+public interface Version {
 
     /**
-     * Find resource and return its input stream.
-     * @param uri Name of resource
-     * @param range Range of data to return
-     * @param version The version of the data to return
-     * @return The stream
-     * @throws IOException If some error with I/O inside
+     * Specify that the latest version be fetched.
      */
-    Resource fetch(URI uri, Range range, Version version) throws IOException;
+    Version LATEST = new Version() {
+        @Override
+        public boolean latest() {
+            return true;
+        }
+        @Override
+        public String version() {
+            throw new UnsupportedOperationException("Version is unspecified.");
+        }
+    };
 
     /**
-     * This URI require authentication?
-     * @param uri Which URI we're trying to access
-     * @return Yes or no
-     * @throws IOException If some error with I/O inside
+     * Flag specifying whether the latest version is to be fetched.
+     * @return Boolean value true, if we're fetching the latest version
      */
-    boolean isHidden(URI uri) throws IOException;
+    boolean latest();
 
     /**
-     * Can this user login in with this credentials?
-     * @param user User name
-     * @param password Password
-     * @return Yes or no
-     * @throws IOException If some error with I/O inside
+     * Version ID of the S3 object.
+     * @return Version ID
      */
-    boolean authorized(String user, String password) throws IOException;
+    String version();
 
     /**
-     * Client to Amazon CloudWatch.
+     * Simple implementation.
      */
-    @Immutable
-    interface CloudWatch {
+    @Loggable(Loggable.DEBUG)
+    @ToString
+    @EqualsAndHashCode(of = "ver")
+    final class Simple implements Version {
         /**
-         * Get Amazon client.
-         * @return The client
+         * The version ID.
          */
-        AmazonCloudWatchClient get();
+        private final String ver;
+        /**
+         * Public ctor.
+         * @param version Version ID string
+         */
+        public Simple(final String version) {
+            this.ver = version;
+        }
+        @Override
+        public boolean latest() {
+            return false;
+        }
+        @Override
+        public String version() {
+            return this.ver;
+        }
     }
 
 }

@@ -87,6 +87,11 @@ final class DefaultResource implements Resource {
     private final transient Range range;
 
     /**
+     * The version.
+     */
+    private final transient Version version;
+
+    /**
      * The object retrieved on construction.
      */
     private final transient S3Object object;
@@ -102,17 +107,22 @@ final class DefaultResource implements Resource {
      * @param bckt Bucket name
      * @param name Key name
      * @param rng Range to deliver
+     * @param ver Version of object to retrieve
      * @param cwatch Amazon Cloudwatch Client
      * @checkstyle ParameterNumber (5 lines)
      */
     DefaultResource(@NotNull final AmazonS3 clnt,
         @NotNull final String bckt, @NotNull final String name,
-        @NotNull final Range rng, final AmazonCloudWatchClient cwatch) {
+        @NotNull final Range rng, @NotNull final Version ver,
+        @NotNull final AmazonCloudWatchClient cwatch) {
         this.client = clnt;
         this.bucket = bckt;
         this.key = name;
         this.range = rng;
-        this.object = this.client.getObject(this.request(this.range));
+        this.version = ver;
+        this.object = this.client.getObject(
+            this.request(this.range, this.version)
+        );
         this.cloudwatch = cwatch;
     }
 
@@ -274,13 +284,17 @@ final class DefaultResource implements Resource {
     /**
      * Make S3 request with a specified range.
      * @param rng Range to request
+     * @param ver Version of object to fetch
      * @return Request
      */
-    private GetObjectRequest request(final Range rng) {
+    private GetObjectRequest request(final Range rng, final Version ver) {
         final GetObjectRequest request =
             new GetObjectRequest(this.bucket, this.key);
         if (!rng.equals(Range.ENTIRE)) {
             request.withRange(rng.first(), rng.last());
+        }
+        if (!ver.latest()) {
+            request.withVersionId(ver.version());
         }
         return request;
     }
@@ -294,8 +308,9 @@ final class DefaultResource implements Resource {
         if (this.range.equals(Range.ENTIRE)) {
             size = this.object.getObjectMetadata().getContentLength();
         } else {
-            size = this.client.getObject(this.request(Range.ENTIRE))
-                .getObjectMetadata().getContentLength();
+            size = this.client.getObject(
+                this.request(Range.ENTIRE, this.version)
+            ).getObjectMetadata().getContentLength();
         }
         return size;
     }

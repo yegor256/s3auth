@@ -124,7 +124,8 @@ final class DefaultHost implements Host {
     @NotNull
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     @Loggable(value = Loggable.DEBUG, ignore = IOException.class)
-    public Resource fetch(@NotNull final URI uri, @NotNull final Range range)
+    public Resource fetch(@NotNull final URI uri,
+        @NotNull final Range range, @NotNull final Version version)
         throws IOException {
         Resource resource = null;
         final Collection<String> errors = new LinkedList<String>();
@@ -132,7 +133,7 @@ final class DefaultHost implements Host {
             try {
                 resource = new DefaultResource(
                     this.bucket.client(), this.bucket.bucket(),
-                    name.get(), range, this.cloudwatch.get()
+                    name.get(), range, version, this.cloudwatch.get()
                 );
                 break;
             } catch (final AmazonServiceException ex) {

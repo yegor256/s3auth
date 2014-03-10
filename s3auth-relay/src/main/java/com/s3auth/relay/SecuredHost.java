@@ -33,6 +33,7 @@ import com.jcabi.aspects.Loggable;
 import com.s3auth.hosts.Host;
 import com.s3auth.hosts.Range;
 import com.s3auth.hosts.Resource;
+import com.s3auth.hosts.Version;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -95,13 +96,13 @@ final class SecuredHost implements Host {
 
     @Override
     @Loggable(value = Loggable.DEBUG, ignore = IOException.class)
-    public Resource fetch(@NotNull final URI uri, @NotNull final Range range)
-        throws IOException {
+    public Resource fetch(@NotNull final URI uri, @NotNull final Range range,
+        @NotNull final Version version)throws IOException {
         final Resource res;
         if (this.isHidden(uri)) {
-            res = this.secured(uri, range);
+            res = this.secured(uri, range, version);
         } else {
-            res = this.host.fetch(uri, range);
+            res = this.host.fetch(uri, range, version);
         }
         return res;
     }
@@ -126,11 +127,12 @@ final class SecuredHost implements Host {
      * Fetch this URI in a secure way.
      * @param uri The URI to fetch
      * @param range The range
+     * @param version The object version
      * @return Fetched resource
      * @throws IOException If some IO problem inside
      */
-    private Resource secured(final URI uri, final Range range)
-        throws IOException {
+    private Resource secured(final URI uri, final Range range,
+        final Version version) throws IOException {
         if (!this.request.headers().containsKey(HttpHeaders.AUTHORIZATION)) {
             throw new HttpException(
                 new HttpResponse()
@@ -187,7 +189,7 @@ final class SecuredHost implements Host {
                     .withBody(this.host.toString())
             );
         }
-        return this.host.fetch(uri, range);
+        return this.host.fetch(uri, range, version);
     }
 
 }

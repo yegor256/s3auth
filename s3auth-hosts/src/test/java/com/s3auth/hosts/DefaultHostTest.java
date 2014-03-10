@@ -113,7 +113,9 @@ public final class DefaultHostTest {
         for (final Map.Entry<String, String> path : paths.entrySet()) {
             MatcherAssert.assertThat(
                 ResourceMocker.toString(
-                    host.fetch(URI.create(path.getKey()), Range.ENTIRE)
+                    host.fetch(
+                        URI.create(path.getKey()), Range.ENTIRE, Version.LATEST
+                    )
                 ),
                 Matchers.equalTo(path.getValue())
             );
@@ -175,7 +177,7 @@ public final class DefaultHostTest {
         new DefaultHost(
             new BucketMocker().withBucket(bucket).withClient(aws).mock(),
             this.cloudWatch()
-        ).fetch(URI.create("/.htpasswd"), Range.ENTIRE);
+        ).fetch(URI.create("/.htpasswd"), Range.ENTIRE, Version.LATEST);
     }
 
     /**

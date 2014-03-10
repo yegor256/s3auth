@@ -48,6 +48,8 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 /**
  * Test case for {@link DefaultResource}.
@@ -71,7 +73,7 @@ public final class DefaultResourceTest {
         Mockito.doReturn(meta).when(object).getObjectMetadata();
         Mockito.doReturn(1L).when(meta).getContentLength();
         final Resource res = new DefaultResource(
-            client, "a", "", Range.ENTIRE,
+            client, "a", "", Range.ENTIRE, Version.LATEST,
             Mockito.mock(AmazonCloudWatchClient.class)
         );
         MatcherAssert.assertThat(
@@ -97,7 +99,7 @@ public final class DefaultResourceTest {
         MatcherAssert.assertThat(
             ResourceMocker.toString(
                 new DefaultResource(
-                    client, "b", "", Range.ENTIRE,
+                    client, "b", "", Range.ENTIRE, Version.LATEST,
                     Mockito.mock(AmazonCloudWatchClient.class)
                 )
             ),
@@ -129,7 +131,7 @@ public final class DefaultResourceTest {
         MatcherAssert.assertThat(
             ResourceMocker.toByteArray(
                 new DefaultResource(
-                    client, "c", "", Range.ENTIRE,
+                    client, "c", "", Range.ENTIRE, Version.LATEST,
                     Mockito.mock(AmazonCloudWatchClient.class)
                 )
             ),
@@ -155,7 +157,7 @@ public final class DefaultResourceTest {
         MatcherAssert.assertThat(
             ResourceMocker.toString(
                 new DefaultResource(
-                    client, "d", "", Range.ENTIRE,
+                    client, "d", "", Range.ENTIRE, Version.LATEST,
                     Mockito.mock(AmazonCloudWatchClient.class)
                 )
             ),
@@ -178,7 +180,7 @@ public final class DefaultResourceTest {
         Mockito.doReturn(meta).when(object).getObjectMetadata();
         Mockito.doReturn(date).when(meta).getLastModified();
         final Resource res = new DefaultResource(
-            client, "x", "", Range.ENTIRE,
+            client, "x", "", Range.ENTIRE, Version.LATEST,
             Mockito.mock(AmazonCloudWatchClient.class)
         );
         MatcherAssert.assertThat(
@@ -201,7 +203,7 @@ public final class DefaultResourceTest {
         Mockito.doReturn(meta).when(object).getObjectMetadata();
         Mockito.doReturn("max-age: 600, public").when(meta).getCacheControl();
         final Resource res = new DefaultResource(
-            client, "e", "", Range.ENTIRE,
+            client, "e", "", Range.ENTIRE, Version.LATEST,
             Mockito.mock(AmazonCloudWatchClient.class)
         );
         MatcherAssert.assertThat(
@@ -225,7 +227,7 @@ public final class DefaultResourceTest {
         Mockito.doReturn(meta).when(object).getObjectMetadata();
         Mockito.doReturn(null).when(meta).getCacheControl();
         final Resource res = new DefaultResource(
-            client, "f", "", Range.ENTIRE,
+            client, "f", "", Range.ENTIRE, Version.LATEST,
             Mockito.mock(AmazonCloudWatchClient.class)
         );
         MatcherAssert.assertThat(
@@ -261,7 +263,7 @@ public final class DefaultResourceTest {
         MatcherAssert.assertThat(
             ResourceMocker.toByteArray(
                 new DefaultResource(
-                    client, bucket, "", Range.ENTIRE, cloudwatch
+                    client, bucket, "", Range.ENTIRE, Version.LATEST, cloudwatch
                 )
             ),
             Matchers.equalTo(data)
@@ -279,6 +281,33 @@ public final class DefaultResourceTest {
                         ).withUnit(StandardUnit.Bytes)
                         .withValue(Double.valueOf(size))
                 )
+        );
+    }
+
+    /**
+     * DefaultResource can specify an object version to retrieve.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void specifiesObjectVersion() throws Exception {
+        final AmazonS3 client = Mockito.mock(AmazonS3.class);
+        final String version = "abcd";
+        Mockito.doAnswer(
+            new Answer<S3Object>() {
+                @Override
+                public S3Object answer(final InvocationOnMock invocation) {
+                    final GetObjectRequest req =
+                        (GetObjectRequest) invocation.getArguments()[0];
+                    MatcherAssert.assertThat(
+                        req.getVersionId(), Matchers.is(version)
+                    );
+                    return Mockito.mock(S3Object.class);
+                }
+            }
+        ).when(client).getObject(Mockito.any(GetObjectRequest.class));
+        new DefaultResource(
+            client, "h", "", Range.ENTIRE, new Version.Simple(version),
+            Mockito.mock(AmazonCloudWatchClient.class)
         );
     }
 

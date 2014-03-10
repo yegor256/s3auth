@@ -52,7 +52,7 @@ public final class SmartHostTest {
             ResourceMocker.toString(
                 new SmartHost(
                     new HostMocker().withContent(uri, "test me").mock()
-                ).fetch(uri, Range.ENTIRE)
+                ).fetch(uri, Range.ENTIRE, Version.LATEST)
             ),
             Matchers.equalTo("7 byte(s)")
         );
