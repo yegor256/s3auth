@@ -280,7 +280,7 @@ public final class HttpFacadeTest {
     }
 
     /**
-     * HttpFacade can parse s3-version query and pass it on to Resource.
+     * HttpFacade can parse S3 version query and pass it on to Resource.
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -316,7 +316,7 @@ public final class HttpFacadeTest {
             facade.listen();
             final URI uri = UriBuilder
                 .fromUri(String.format("http://localhost:%d/", port))
-                .path("/a").queryParam("s3-version", version).build();
+                .path("/a").queryParam("ver", version).build();
             new JdkRequest(uri).header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
                 .header(
                     HttpHeaders.AUTHORIZATION,
