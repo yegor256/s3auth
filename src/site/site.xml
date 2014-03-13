@@ -41,6 +41,8 @@
         <name>s3auth.com</name>
         <src>http://img.s3auth.com/logo.png</src>
         <href>http://maven.s3auth.com/</href>
+        <width>250</width>
+        <height>43</height>
     </bannerLeft>
     <body>
         <head>
