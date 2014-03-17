@@ -209,7 +209,8 @@ public final class DefaultHostTest {
         MatcherAssert.assertThat(
             ResourceMocker.toString(
                 new DefaultHost(
-                    new BucketMocker().mock(), this.cloudWatch()
+                    new BucketMocker().withClient(client).mock(),
+                    this.cloudWatch()
                 ).fetch(new URI(key), Range.ENTIRE, Version.LATEST)
             ),
             Matchers.containsString(
