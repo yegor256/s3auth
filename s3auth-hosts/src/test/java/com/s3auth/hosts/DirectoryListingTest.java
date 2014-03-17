@@ -34,9 +34,9 @@ import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.common.collect.ImmutableList;
+import com.rexsl.test.XhtmlMatchers;
 import org.apache.commons.io.Charsets;
 import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -76,21 +76,21 @@ public final class DirectoryListingTest {
                 ),
                 Charsets.UTF_8
             ),
-            Matchers.allOf(
-                Matchers.containsString(String.format("prefix=\"%s\"", prefix)),
-                Matchers.containsString(objectElement(names[0])),
-                Matchers.containsString(objectElement(names[1])),
-                Matchers.containsString(objectElement(names[2]))
+            XhtmlMatchers.hasXPaths(
+                String.format("/directory[@prefix=\"%s\"]", prefix),
+                objectXPath(names[0]),
+                objectXPath(names[1]),
+                objectXPath(names[2])
             )
         );
     }
 
     /**
-     * Get XML object element.
+     * Get XML object element XPath.
      * @param key The key
      * @return The XML element
      */
-    private static String objectElement(final String key) {
-        return String.format("<object>%s</object>", key);
+    private static String objectXPath(final String key) {
+        return String.format("/directory[object=\"%s\"]", key);
     }
 }

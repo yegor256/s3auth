@@ -65,15 +65,6 @@ import org.xembly.Xembler;
 final class DirectoryListing implements Resource {
 
     /**
-     * XML Header.
-     * @checkstyle LineLength (4 lines)
-     */
-    private static final String XML_HEADER = new StringBuilder()
-        .append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
-        .append("<?xml-stylesheet href=\"http://www.s3auth.com/xsl/directory.xsl\" type=\"text/xsl\"?>\n")
-        .toString();
-
-    /**
      * Byte representation of XML data.
      */
     private final transient byte[] xml;
@@ -97,17 +88,15 @@ final class DirectoryListing implements Resource {
             listing = client.listNextBatchOfObjects(listing);
             objects.addAll(listing.getObjectSummaries());
         }
+        // @checkstyle LineLength (2 lines)
         final Directives dirs = new Directives()
+            .pi("xml-stylesheet", "href=\"http://www.s3auth.com/xsl/directory.xsl\" type=\"text/xsl\"")
             .add("directory").attr("prefix", key);
         for (final S3ObjectSummary object : objects) {
             dirs.add("object").set(object.getKey()).up();
         }
         try {
-            //@checkstyle LineLength (3 lines)
-            this.xml = new StringBuilder(XML_HEADER)
-                .append(new Xembler(dirs).xml())
-                .toString()
-                .getBytes(Charsets.UTF_8);
+            this.xml = new Xembler(dirs).xml().getBytes(Charsets.UTF_8);
         } catch (final ImpossibleModificationException ex) {
             throw new IllegalStateException(
                 "Unable to generate directory listing", ex

@@ -38,6 +38,7 @@ import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.rexsl.test.XhtmlMatchers;
 import com.s3auth.hosts.Host.CloudWatch;
 import java.io.IOException;
 import java.net.URI;
@@ -213,8 +214,9 @@ public final class DefaultHostTest {
                     this.cloudWatch()
                 ).fetch(new URI(key), Range.ENTIRE, Version.LATEST)
             ),
-            Matchers.containsString(
-                String.format("<object>%s</object>", name)
+            XhtmlMatchers.hasXPaths(
+                "/directory[@prefix=\"foo/bar/\"]",
+                "/directory[object=\"foo/bar/boo\"]"
             )
         );
     }
