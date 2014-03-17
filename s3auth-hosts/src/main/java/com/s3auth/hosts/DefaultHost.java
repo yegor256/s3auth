@@ -61,6 +61,11 @@ import org.apache.commons.lang3.StringUtils;
 final class DefaultHost implements Host {
 
     /**
+     * The suffix index.html.
+     */
+    private static final String SUFFIX = "index.html";
+
+    /**
      * The S3 bucket.
      */
     private final transient Bucket bucket;
@@ -137,7 +142,15 @@ final class DefaultHost implements Host {
                 );
                 break;
             } catch (final AmazonServiceException ex) {
-                if ("NoSuchBucket".equals(ex.getErrorCode())) {
+                if (StringUtils.endsWith(name.get(), SUFFIX)
+                    && "NoSuchKey".equals(ex.getErrorCode())
+                ) {
+                    resource = new DirectoryListing(
+                        this.bucket.client(), this.bucket.bucket(),
+                        StringUtils.removeEnd(name.get(), SUFFIX)
+                    );
+                    break;
+                } else if ("NoSuchBucket".equals(ex.getErrorCode())) {
                     throw new IOException(
                         Logger.format(
                             "The bucket '%s' does not exist.",
@@ -240,7 +253,7 @@ final class DefaultHost implements Host {
                 suffix = "";
             }
             if (suffix == null || suffix.isEmpty()) {
-                suffix = "index.html";
+                suffix = SUFFIX;
             }
             final StringBuilder text = new StringBuilder(this.origin);
             if (text.length() > 0) {

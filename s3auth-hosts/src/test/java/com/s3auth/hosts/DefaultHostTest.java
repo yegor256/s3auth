@@ -34,10 +34,15 @@ import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.BucketWebsiteConfiguration;
 import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ListObjectsRequest;
+import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.rexsl.test.XhtmlMatchers;
 import com.s3auth.hosts.Host.CloudWatch;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -178,6 +183,42 @@ public final class DefaultHostTest {
             new BucketMocker().withBucket(bucket).withClient(aws).mock(),
             this.cloudWatch()
         ).fetch(URI.create("/.htpasswd"), Range.ENTIRE, Version.LATEST);
+    }
+
+    /**
+     * DefaultHost can return a directory listing when the resource key does
+     * not exist and ends with "index.html".
+     * @throws Exception If a problem occurs.
+     */
+    @Test
+    public void showsDirectoryListing() throws Exception {
+        final AmazonS3 client = Mockito.mock(AmazonS3.class);
+        final ObjectListing listing = Mockito.mock(ObjectListing.class);
+        final S3ObjectSummary summary = new S3ObjectSummary();
+        final String name = "foo/bar/boo";
+        summary.setKey(name);
+        Mockito.doReturn(Collections.singletonList(summary))
+            .when(listing).getObjectSummaries();
+        final AmazonServiceException ex =
+            new AmazonServiceException("No such key.");
+        ex.setErrorCode("NoSuchKey");
+        Mockito.doThrow(ex).when(client)
+            .getObject(Mockito.any(GetObjectRequest.class));
+        Mockito.doReturn(listing).when(client)
+            .listObjects(Mockito.any(ListObjectsRequest.class));
+        final String key = "foo/bar/index.html";
+        MatcherAssert.assertThat(
+            ResourceMocker.toString(
+                new DefaultHost(
+                    new BucketMocker().withClient(client).mock(),
+                    this.cloudWatch()
+                ).fetch(new URI(key), Range.ENTIRE, Version.LATEST)
+            ),
+            XhtmlMatchers.hasXPaths(
+                "/directory[@prefix=\"foo/bar/\"]",
+                "/directory[object=\"foo/bar/boo\"]"
+            )
+        );
     }
 
     /**
