@@ -82,14 +82,7 @@ public class BaseRs extends BaseResource {
      */
     @Inset.Runtime
     public final Inset supplementary() {
-        return new Inset() {
-            @Override
-            public void render(final BasePage<?, ?> page,
-                final Response.ResponseBuilder builder) {
-                builder.type(MediaType.TEXT_XML);
-                builder.header(HttpHeaders.VARY, "Cookie");
-            }
-        };
+        return new BaseInset();
     }
 
     /**
@@ -132,6 +125,18 @@ public class BaseRs extends BaseResource {
             throw new IllegalStateException("HOSTS is not initialized");
         }
         return hosts;
+    }
+
+    /**
+     * Inset for the base page.
+     */
+    private static final class BaseInset implements Inset {
+        @Override
+        public void render(final BasePage<?, ?> page,
+            final Response.ResponseBuilder builder) {
+            builder.type(MediaType.TEXT_XML);
+            builder.header(HttpHeaders.VARY, "Cookie");
+        }
     }
 
 }
