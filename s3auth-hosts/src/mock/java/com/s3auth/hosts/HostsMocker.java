@@ -53,7 +53,7 @@ public final class HostsMocker {
         try {
             Mockito.doReturn(new HostMocker().mock()).when(this.hosts)
                 .find(Mockito.anyString());
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }

@@ -120,7 +120,7 @@ public interface Resource {
         public long writeTo(@NotNull final OutputStream stream)
             throws IOException {
             IOUtils.write(this.text, stream, Charsets.UTF_8);
-            return this.text.getBytes().length;
+            return this.text.getBytes(Charsets.UTF_8).length;
         }
         @Override
         public String etag() {
@@ -141,7 +141,7 @@ public interface Resource {
                 String.format(
                     "%s: %d",
                     HttpHeaders.CONTENT_LENGTH,
-                    this.text.getBytes().length
+                    this.text.getBytes(Charsets.UTF_8).length
                 )
             );
         }

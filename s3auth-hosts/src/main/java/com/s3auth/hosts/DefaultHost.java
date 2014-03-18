@@ -204,18 +204,7 @@ final class DefaultHost implements Host {
         final Collection<DefaultHost.ObjectName> names =
             new LinkedList<DefaultHost.ObjectName>();
         if (!name.isEmpty()) {
-            names.add(
-                new DefaultHost.ObjectName() {
-                    @Override
-                    public String get() {
-                        return name;
-                    }
-                    @Override
-                    public String toString() {
-                        return name;
-                    }
-                }
-            );
+            names.add(new Simple(name));
         }
         names.add(new DefaultHost.NameWithSuffix(name));
         return names;
@@ -265,6 +254,32 @@ final class DefaultHost implements Host {
         @Override
         public String toString() {
             return String.format("%s+suffix", this.origin);
+        }
+    }
+
+    /**
+     * Object name.
+     */
+    @EqualsAndHashCode(of = "name")
+    private static final class Simple implements DefaultHost.ObjectName {
+        /**
+         * Original name.
+         */
+        private final transient String name;
+        /**
+         * Public ctor.
+         * @param nme The name
+         */
+        Simple(final String nme) {
+            this.name = nme;
+        }
+        @Override
+        public String get() {
+            return this.name;
+        }
+        @Override
+        public String toString() {
+            return this.name;
         }
     }
 
