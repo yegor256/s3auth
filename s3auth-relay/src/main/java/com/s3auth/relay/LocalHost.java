@@ -37,6 +37,7 @@ import com.s3auth.hosts.Host;
 import com.s3auth.hosts.Range;
 import com.s3auth.hosts.Resource;
 import com.s3auth.hosts.Version;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -126,6 +127,7 @@ final class LocalHost implements Host {
      * @return The exception to throw
      */
     @SuppressWarnings("PMD.DoNotCallSystemExit")
+    @SuppressFBWarnings("DM_EXIT")
     private IOException halt(final String uri) {
         if (uri.equals(LocalHost.SHUTDOWN)) {
             Logger.warn(this, "fetch(%s): shutting down..", uri);

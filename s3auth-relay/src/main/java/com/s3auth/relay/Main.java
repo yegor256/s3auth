@@ -67,7 +67,7 @@ public final class Main {
     public static void main(final String[] args) throws Exception {
         final OptionParser parser = new OptionParser("p:d");
         final OptionSet options = parser.parse(args);
-        final int port = Integer.valueOf(options.valueOf("p").toString());
+        final int port = Integer.parseInt(options.valueOf("p").toString());
         final HttpFacade facade = new HttpFacade(new DynamoHosts(), port);
         facade.listen();
         Logger.warn(Main.class, "started at http://localhost:%d...", port);

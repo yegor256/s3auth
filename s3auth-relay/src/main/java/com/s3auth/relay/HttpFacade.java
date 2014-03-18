@@ -111,18 +111,7 @@ final class HttpFacade implements Closeable {
         this.server = new ServerSocket(port);
         final HttpThread thread = new HttpThread(this.sockets, hosts);
         final Runnable runnable = new VerboseRunnable(
-            new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        thread.dispatch();
-                    } catch (InterruptedException ex) {
-                        Thread.currentThread().interrupt();
-                        Logger.warn(this, "%s", ex);
-                    }
-                }
-            },
-            true, false
+            new HttpThreadRunnable(thread), true, false
         );
         for (int idx = 0; idx < HttpFacade.THREADS; ++idx) {
             this.backend.scheduleWithFixedDelay(
@@ -154,7 +143,7 @@ final class HttpFacade implements Closeable {
         try {
             this.shutdown(this.frontend);
             this.shutdown(this.backend);
-        } catch (InterruptedException ex) {
+        } catch (final InterruptedException ex) {
             Thread.currentThread().interrupt();
             throw new IOException(ex);
         }
@@ -168,7 +157,7 @@ final class HttpFacade implements Closeable {
         final Socket socket;
         try {
             socket = this.server.accept();
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
         try {
@@ -176,7 +165,7 @@ final class HttpFacade implements Closeable {
                 this.overflow(socket);
                 Logger.warn(this, "too many open connections");
             }
-        } catch (InterruptedException ex) {
+        } catch (final InterruptedException ex) {
             Thread.currentThread().interrupt();
             throw new IllegalStateException(ex);
         }
@@ -198,7 +187,7 @@ final class HttpFacade implements Closeable {
                     )
                 )
                 .send(socket);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
     }
@@ -224,4 +213,29 @@ final class HttpFacade implements Closeable {
         }
     }
 
+    /**
+     * Dispatcher of HttpThread.
+     */
+    private static final class HttpThreadRunnable implements Runnable {
+        /**
+         * The thread to run.
+         */
+        private final transient HttpThread thread;
+        /**
+         * Constructor.
+         * @param thrd The HttpThread
+         */
+        HttpThreadRunnable(final HttpThread thrd) {
+            this.thread = thrd;
+        }
+        @Override
+        public void run() {
+            try {
+                this.thread.dispatch();
+            } catch (final InterruptedException ex) {
+                Thread.currentThread().interrupt();
+                Logger.warn(this, "%s", ex);
+            }
+        }
+    }
 }

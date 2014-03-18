@@ -45,6 +45,7 @@ import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.io.Charsets;
 
 /**
  * HTTP response, writable to IO socket.
@@ -152,7 +153,7 @@ final class HttpResponse {
     @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     public long send(@NotNull final Socket socket) throws IOException {
         final OutputStream stream = socket.getOutputStream();
-        final Writer writer = new OutputStreamWriter(stream);
+        final Writer writer = new OutputStreamWriter(stream, Charsets.UTF_8);
         writer.write(
             String.format(
                 "HTTP/1.1 %d %s%s",
