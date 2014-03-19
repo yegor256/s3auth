@@ -115,33 +115,7 @@ public final class IndexRs extends BaseRs {
             );
         }
         final boolean added = this.hosts().domains(user).add(
-            // @checkstyle AnonInnerLength (50 lines)
-            new Domain() {
-                @Override
-                public String name() {
-                    return host;
-                }
-                @Override
-                public String key() {
-                    return key;
-                }
-                @Override
-                public String secret() {
-                    return secret;
-                }
-                @Override
-                public String bucket() {
-                    return bucket;
-                }
-                @Override
-                public String region() {
-                    return region;
-                }
-                @Override
-                public String syslog() {
-                    return syslog;
-                }
-            }
+            new SimpleDomain(host, key, secret, bucket, region, syslog)
         );
         if (!added) {
             throw FlashInset.forward(
@@ -179,33 +153,7 @@ public final class IndexRs extends BaseRs {
             );
         }
         final boolean removed = this.hosts().domains(user).remove(
-            // @checkstyle AnonInnerLength (50 lines)
-            new Domain() {
-                @Override
-                public String name() {
-                    return host;
-                }
-                @Override
-                public String key() {
-                    throw new UnsupportedOperationException("#key()");
-                }
-                @Override
-                public String secret() {
-                    throw new UnsupportedOperationException("#secret()");
-                }
-                @Override
-                public String bucket() {
-                    throw new UnsupportedOperationException("#bucket()");
-                }
-                @Override
-                public String region() {
-                    throw new UnsupportedOperationException("#region()");
-                }
-                @Override
-                public String syslog() {
-                    throw new UnsupportedOperationException("#syslog()");
-                }
-            }
+            new SimpleDomain(host, "", "", "", "", "")
         );
         if (!removed) {
             throw FlashInset.forward(
@@ -236,6 +184,80 @@ public final class IndexRs extends BaseRs {
             domains.add(new JaxbDomain(domain, this.uriInfo()));
         }
         return domains;
+    }
+
+    /**
+     * Simple domain representation.
+     */
+    private static final class SimpleDomain implements Domain {
+        /**
+         * Host.
+         */
+        private final transient String host;
+        /**
+         * Key.
+         */
+        private final transient String acc;
+        /**
+         * Secret.
+         */
+        private final transient String sec;
+        /**
+         * Bucket name.
+         */
+        private final transient String buckt;
+        /**
+         * Region.
+         */
+        private final transient String regn;
+        /**
+         * Syslog host.
+         */
+        private final transient String slog;
+        /**
+         * Constructor.
+         * @param hst The host name
+         * @param access AWS access key
+         * @param scrt AWS secret
+         * @param bckt Bucket name
+         * @param rgn S3 region
+         * @param syslg The syslog host and port
+         * @checkstyle ParameterNumber (4 lines)
+         */
+        SimpleDomain(final String hst, final String access, final String scrt,
+            final String bckt, final String rgn, final String syslg) {
+            this.host = hst;
+            this.acc = access;
+            this.sec = scrt;
+            this.buckt = bckt;
+            this.regn = rgn;
+            this.slog = syslg;
+        }
+
+        @Override
+        public String name() {
+            return this.host;
+        }
+        @Override
+        public String key() {
+            return this.acc;
+        }
+        @Override
+        public String secret() {
+            return this.sec;
+        }
+        @Override
+        public String bucket() {
+            return this.buckt;
+        }
+        @Override
+        public String region() {
+            return this.regn;
+        }
+        @Override
+        public String syslog() {
+            return this.slog;
+        }
     }
 
 }

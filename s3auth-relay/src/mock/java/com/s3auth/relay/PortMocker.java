@@ -58,7 +58,7 @@ public final class PortMocker {
             } finally {
                 socket.close();
             }
-        } catch (java.io.IOException ex) {
+        } catch (final java.io.IOException ex) {
             throw new IllegalStateException("Failed to reserve port", ex);
         }
         return port;

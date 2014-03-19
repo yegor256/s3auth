@@ -64,7 +64,7 @@ public final class MainTest {
                     public Void call() throws Exception {
                         try {
                             Main.main(new String[]{Integer.toString(port)});
-                        } catch (InterruptedException ex) {
+                        } catch (final InterruptedException ex) {
                             done.countDown();
                             Thread.currentThread().interrupt();
                             throw new IllegalStateException(ex);

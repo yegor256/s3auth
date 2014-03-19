@@ -186,11 +186,11 @@ public final class DynamoHostsTest {
             new DomainMocker().withKey("broken-key").mock(),
             new DomainMocker().withSecret("broken-secret").mock(),
         };
-        for (Domain domain : domains) {
+        for (final Domain domain : domains) {
             try {
                 hosts.domains(user).add(domain);
                 Assert.fail(String.format("exception expected for %s", domain));
-            } catch (javax.validation.ValidationException ex) {
+            } catch (final javax.validation.ValidationException ex) {
                 MatcherAssert.assertThat(ex, Matchers.notNullValue());
             }
         }

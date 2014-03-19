@@ -128,7 +128,7 @@ public final class DynamoHosts implements Hosts {
             if (this.byName(domain.name()) == null) {
                 added = this.dynamo.add(user, new DefaultDomain(domain));
             }
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalArgumentException(ex);
         }
         return added;
@@ -147,7 +147,7 @@ public final class DynamoHosts implements Hosts {
             if (data.containsKey(user) && data.get(user).contains(domain)) {
                 removed = this.dynamo.remove(domain);
             }
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalArgumentException(ex);
         }
         return removed;

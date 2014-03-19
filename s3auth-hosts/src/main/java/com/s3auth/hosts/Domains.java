@@ -62,7 +62,7 @@ final class Domains extends AbstractSet<Domain> {
      */
     public boolean has(@NotNull final String name) {
         boolean has = false;
-        for (Domain domain : this.all) {
+        for (final Domain domain : this.all) {
             if (domain.name().equals(name)) {
                 has = true;
                 break;
@@ -78,7 +78,7 @@ final class Domains extends AbstractSet<Domain> {
      */
     public Domain get(@NotNull final String name) {
         Domain found = null;
-        for (Domain domain : this.all) {
+        for (final Domain domain : this.all) {
             if (domain.name().equals(name)) {
                 found = domain;
                 break;

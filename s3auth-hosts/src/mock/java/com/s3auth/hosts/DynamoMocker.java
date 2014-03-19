@@ -73,7 +73,9 @@ public final class DynamoMocker {
             }
             @Override
             public boolean remove(final Domain domain) throws IOException {
-                for (Set<Domain> domains : DynamoMocker.this.users.values()) {
+                for (final Set<Domain> domains
+                    : DynamoMocker.this.users.values()
+                ) {
                     domains.remove(domain);
                 }
                 return true;

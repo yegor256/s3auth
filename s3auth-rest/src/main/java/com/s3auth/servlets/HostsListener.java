@@ -64,14 +64,15 @@ public final class HostsListener implements ServletContextListener {
      * {@inheritDoc}
      *
      * <p>These attributes is used later in
-     * {@link com.netbout.rest.BaseRs#setServletContext(ServletContext)}.
+     * {@link com.netbout.rest.BaseRs
+     *  #setServletContext(javax.servlet.ServletContext)}.
      */
     @Override
     public void contextInitialized(final ServletContextEvent event) {
         try {
             Manifests.append(event.getServletContext());
             this.hosts = new DynamoHosts();
-        } catch (java.io.IOException ex) {
+        } catch (final java.io.IOException ex) {
             Logger.error(
                 this,
                 "#contextInitialized(): %[exception]s",
@@ -92,7 +93,7 @@ public final class HostsListener implements ServletContextListener {
         } else {
             try {
                 this.hosts.close();
-            } catch (java.io.IOException ex) {
+            } catch (final java.io.IOException ex) {
                 Logger.error(
                     this,
                     "#contextDestroyed(): %[exception]s",
