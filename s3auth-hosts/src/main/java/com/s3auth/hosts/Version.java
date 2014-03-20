@@ -41,6 +41,7 @@ import lombok.ToString;
  * @version $Id$
  */
 @Immutable
+@SuppressWarnings("PMD.TooManyMethods")
 public interface Version {
 
     /**
@@ -49,6 +50,29 @@ public interface Version {
     Version LATEST = new Version() {
         @Override
         public boolean latest() {
+            return true;
+        }
+        @Override
+        public boolean list() {
+            return false;
+        }
+        @Override
+        public String version() {
+            // @checkstyle MultipleStringLiterals (1 line)
+            throw new UnsupportedOperationException("Version is unspecified.");
+        }
+    };
+
+    /**
+     * Specify that the object's versions be listed.
+     */
+    Version LIST = new Version() {
+        @Override
+        public boolean latest() {
+            return false;
+        }
+        @Override
+        public boolean list() {
             return true;
         }
         @Override
@@ -64,6 +88,13 @@ public interface Version {
     boolean latest();
 
     /**
+     * Flag specifying whether versions should be listed instead of obtaining
+     * a particular version.
+     * @return Boolean value true, if we're fetching the list of versions
+     */
+    boolean list();
+
+    /**
      * Version ID of the S3 object.
      * @return Version ID
      */
@@ -72,6 +103,7 @@ public interface Version {
     /**
      * Simple implementation.
      */
+    @Immutable
     @Loggable(Loggable.DEBUG)
     @ToString
     @EqualsAndHashCode(of = "ver")
@@ -89,6 +121,10 @@ public interface Version {
         }
         @Override
         public boolean latest() {
+            return false;
+        }
+        @Override
+        public boolean list() {
             return false;
         }
         @Override

@@ -136,10 +136,17 @@ final class DefaultHost implements Host {
         final Collection<String> errors = new LinkedList<String>();
         for (final DefaultHost.ObjectName name : this.names(uri)) {
             try {
-                resource = new DefaultResource(
-                    this.bucket.client(), this.bucket.bucket(),
-                    name.get(), range, version, this.cloudwatch.get()
-                );
+                if (version.list()) {
+                    resource = new ObjectVersionListing(
+                        this.bucket.client(), this.bucket.bucket(),
+                        StringUtils.removeEnd(name.get(), SUFFIX)
+                    );
+                } else {
+                    resource = new DefaultResource(
+                        this.bucket.client(), this.bucket.bucket(),
+                        name.get(), range, version, this.cloudwatch.get()
+                    );
+                }
                 break;
             } catch (final AmazonServiceException ex) {
                 if (StringUtils.endsWith(name.get(), SUFFIX)

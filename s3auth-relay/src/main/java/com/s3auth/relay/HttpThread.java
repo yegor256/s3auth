@@ -78,6 +78,11 @@ final class HttpThread {
     private static final String VER = "ver";
 
     /**
+     * S3 version listing query string.
+     */
+    private static final String ALL_VERSIONS = "all-versions";
+
+    /**
      * Name of the server we show in HTTP headers.
      */
     private static final String NAME = String.format(
@@ -196,7 +201,9 @@ final class HttpThread {
     private Resource resource(final Host host, final HttpRequest request)
         throws IOException {
         final Version version;
-        if (request.parameters().containsKey(HttpThread.VER)) {
+        if (request.parameters().containsKey(HttpThread.ALL_VERSIONS)) {
+            version = Version.LIST;
+        } else if (request.parameters().containsKey(HttpThread.VER)) {
             version = new Version.Simple(
                 request.parameters().get(HttpThread.VER)
                     .iterator().next()
