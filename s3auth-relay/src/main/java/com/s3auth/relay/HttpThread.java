@@ -78,6 +78,11 @@ final class HttpThread {
     private static final String VER = "ver";
 
     /**
+     * S3 version listing query string.
+     */
+    private static final String ALL_VERSIONS = "all-versions";
+
+    /**
      * Name of the server we show in HTTP headers.
      */
     private static final String NAME = String.format(
@@ -187,16 +192,13 @@ final class HttpThread {
      * @param request HTTP request
      * @return The resource
      * @throws IOException If some IO exception
-     * @todo #61 We should be able to fetch the list of versions of a given
-     *  resource. The request should contain the query "all-versions". That is,
-     *  for example, requesting
-     *  "http://maven.s3auth.com/index.html?all-versions"
-     *  should return the list of all versions of the requested object.
      */
     private Resource resource(final Host host, final HttpRequest request)
         throws IOException {
         final Version version;
-        if (request.parameters().containsKey(HttpThread.VER)) {
+        if (request.parameters().containsKey(HttpThread.ALL_VERSIONS)) {
+            version = Version.LIST;
+        } else if (request.parameters().containsKey(HttpThread.VER)) {
             version = new Version.Simple(
                 request.parameters().get(HttpThread.VER)
                     .iterator().next()
