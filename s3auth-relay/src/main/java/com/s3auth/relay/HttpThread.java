@@ -192,11 +192,6 @@ final class HttpThread {
      * @param request HTTP request
      * @return The resource
      * @throws IOException If some IO exception
-     * @todo #61 We should be able to fetch the list of versions of a given
-     *  resource. The request should contain the query "all-versions". That is,
-     *  for example, requesting
-     *  "http://maven.s3auth.com/index.html?all-versions"
-     *  should return the list of all versions of the requested object.
      */
     private Resource resource(final Host host, final HttpRequest request)
         throws IOException {
