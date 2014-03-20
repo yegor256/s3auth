@@ -392,8 +392,7 @@ public final class HttpFacadeTest {
         Mockito.doAnswer(
             new Answer<Resource>() {
                 @Override
-                public Resource answer(final InvocationOnMock inv)
-                    throws InterruptedException {
+                public Resource answer(final InvocationOnMock inv) {
                     MatcherAssert.assertThat(
                         (Version) inv.getArguments()[2],
                         Matchers.is(Version.LIST)
@@ -416,17 +415,16 @@ public final class HttpFacadeTest {
         final HttpFacade facade = new HttpFacade(hosts, port);
         try {
             facade.listen();
-            final URI uri = UriBuilder
-                .fromUri(String.format("http://localhost:%d/", port))
-                .path("/a").queryParam("all-versions", "").build();
-            new JdkRequest(uri).header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
+            new JdkRequest(String.format("http://localhost:%d/", port))
+                .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
                 .header(
                     HttpHeaders.AUTHORIZATION,
                     String.format(
                         "Basic %s",
                         Base64.encodeBase64String("a:b".getBytes())
                     )
-                ).uri().back().fetch().as(RestResponse.class)
+                ).uri().path("/a").queryParam("all-versions", "")
+                .back().fetch().as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK);
         } finally {
             facade.close();

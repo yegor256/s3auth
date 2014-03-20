@@ -89,7 +89,7 @@ final class ObjectVersionListing implements Resource {
         // @checkstyle LineLength (2 lines)
         final Directives dirs = new Directives()
             .pi("xml-stylesheet", "href=\"http://www.s3auth.com/xsl/versions.xsl\" type=\"text/xsl\"")
-            .add("versions").attr("prefix", key);
+            .add("versions").attr("object", key);
         for (final S3VersionSummary version : versions.build()) {
             dirs.add("version")
                 .attr("key", version.getKey())

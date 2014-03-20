@@ -36,7 +36,9 @@ import com.amazonaws.services.s3.model.VersionListing;
 import com.google.common.collect.ImmutableList;
 import com.rexsl.test.XhtmlMatchers;
 import org.apache.commons.io.Charsets;
+import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -76,24 +78,29 @@ public final class ObjectVersionListingTest {
                 ),
                 Charsets.UTF_8
             ),
-            XhtmlMatchers.hasXPaths(
-                String.format("/versions[@prefix=\"%s\"]", key),
-                objectXPath(key, versions[0]),
-                objectXPath(key, versions[1]),
-                objectXPath(key, versions[2])
+            Matchers.allOf(
+                XhtmlMatchers.hasXPath(
+                    String.format("/versions[@object=\"%s\"]", key)
+                ),
+                ObjectVersionListingTest.hasKeyXpath(key, versions[0]),
+                ObjectVersionListingTest.hasKeyXpath(key, versions[1]),
+                ObjectVersionListingTest.hasKeyXpath(key, versions[2])
             )
         );
     }
 
     /**
-     * Get XML version element XPath.
+     * Get Matcher for XML version element XPath checking.
      * @param key The key
      * @param version The version
-     * @return The XML element
+     * @return The XML element matcher
      */
-    private static String objectXPath(final String key, final String version) {
-        return String.format(
-            "/versions/version[@key=\"%s\" and .=\"%s\"]", key, version
+    private static Matcher<String> hasKeyXpath(final String key,
+        final String version) {
+        return XhtmlMatchers.hasXPath(
+            String.format(
+                "/versions/version[@key=\"%s\" and .=\"%s\"]", key, version
+            )
         );
     }
 }

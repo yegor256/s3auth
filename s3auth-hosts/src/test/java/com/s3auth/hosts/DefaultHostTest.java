@@ -248,7 +248,7 @@ public final class DefaultHostTest {
                 ).fetch(new URI(key), Range.ENTIRE, Version.LIST)
             ),
             XhtmlMatchers.hasXPaths(
-                "/versions[@prefix=\"README.md\"]",
+                "/versions[@object=\"README.md\"]",
                 "/versions/version[@key=\"README.md\" and .=\"abc\"]"
             )
         );
