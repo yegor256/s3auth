@@ -91,6 +91,16 @@ public final class HostMocker {
     }
 
     /**
+     * With this syslog.
+     * @param syslog The syslog to return
+     * @return This object
+     */
+    public HostMocker withSyslog(final String syslog) {
+        Mockito.doReturn(syslog).when(this.host).syslog();
+        return this;
+    }
+
+    /**
      * Mock it.
      * @return The host
      */

@@ -41,8 +41,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.productivity.java.syslog4j.Syslog;
 import org.productivity.java.syslog4j.SyslogIF;
+import org.productivity.java.syslog4j.impl.net.udp.UDPNetSyslog;
+import org.productivity.java.syslog4j.impl.net.udp.UDPNetSyslogConfig;
 
 /**
  * Decorator of {@link Hosts}, adds syslog capabilities for each domain.
@@ -132,9 +133,7 @@ public final class SyslogHosts implements Hosts {
             final Version version) throws IOException {
             final Matcher matcher = PATTERN.matcher(this.host.syslog());
             final Resource res;
-            if (matcher.group(1) == null) {
-                res = this.host.fetch(uri, range, version);
-            } else {
+            if (matcher.find()) {
                 final String syslg = matcher.group(1);
                 final int port;
                 // @checkstyle MagicNumber (4 lines)
@@ -146,6 +145,8 @@ public final class SyslogHosts implements Hosts {
                 res = new SyslogResource(
                     this.host.fetch(uri, range, version), uri, syslg, port
                 );
+            } else {
+                res = this.host.fetch(uri, range, version);
             }
             return res;
         }
@@ -192,9 +193,8 @@ public final class SyslogHosts implements Hosts {
             final int port) {
             this.resource = res;
             this.location = uri;
-            this.syslog = Syslog.getInstance("udp");
-            this.syslog.getConfig().setHost(syslg);
-            this.syslog.getConfig().setPort(port);
+            this.syslog = new UDPNetSyslog();
+            this.syslog.initialize("udp", new UDPNetSyslogConfig(syslg, port));
         }
         @Override
         public int status() {
