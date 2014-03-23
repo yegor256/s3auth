@@ -123,6 +123,11 @@ final class SecuredHost implements Host {
         this.host.close();
     }
 
+    @Override
+    public String syslog() {
+        return this.host.syslog();
+    }
+
     /**
      * Fetch this URI in a secure way.
      * @param uri The URI to fetch

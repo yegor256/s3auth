@@ -73,6 +73,12 @@ public interface Host extends Closeable {
     boolean authorized(String user, String password) throws IOException;
 
     /**
+     * Get this resource's syslog host and port.
+     * @return Syslog host and port
+     */
+    String syslog();
+
+    /**
      * Client to Amazon CloudWatch.
      */
     @Immutable
