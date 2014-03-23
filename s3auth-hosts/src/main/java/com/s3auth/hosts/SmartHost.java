@@ -83,6 +83,11 @@ final class SmartHost implements Host {
     }
 
     @Override
+    public String syslog() {
+        return this.host.syslog();
+    }
+
+    @Override
     @Loggable(value = Loggable.DEBUG, ignore = IOException.class)
     public Resource fetch(@NotNull final URI uri, @NotNull final Range range,
         @NotNull final Version version) throws IOException {

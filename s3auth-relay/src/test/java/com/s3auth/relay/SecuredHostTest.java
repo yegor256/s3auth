@@ -147,6 +147,10 @@ public final class SecuredHostTest {
                     public void close() {
                         throw new UnsupportedOperationException();
                     }
+                    @Override
+                    public String syslog() {
+                        throw new UnsupportedOperationException();
+                    }
                 },
                 HttpRequestMocker.toRequest(
                     "GET / HTTP/1.1\nAuthorization: Basic dGVzdDp0ZXN0\n\n"

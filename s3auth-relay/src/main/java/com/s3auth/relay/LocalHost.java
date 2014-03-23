@@ -117,6 +117,11 @@ final class LocalHost implements Host {
     }
 
     @Override
+    public String syslog() {
+        return "localhost:514";
+    }
+
+    @Override
     public String toString() {
         return "localhost";
     }

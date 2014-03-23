@@ -201,6 +201,11 @@ final class DefaultHost implements Host {
         return auth;
     }
 
+    @Override
+    public String syslog() {
+        return this.bucket.syslog();
+    }
+
     /**
      * Convert URI to all possible S3 object names (in order of importance).
      * @param uri The URI
