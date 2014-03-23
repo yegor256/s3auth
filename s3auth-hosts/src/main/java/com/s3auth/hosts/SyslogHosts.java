@@ -52,19 +52,6 @@ import org.productivity.java.syslog4j.impl.net.udp.UDPNetSyslogConfig;
  *
  * @author Carlos Miranda (miranda.cma@gmail.com)
  * @version $Id$
- * @todo #34 SyslogHosts should add syslog capabilities to the operations of its
- *  underlying Hosts instance. The way that I imagine that this will be done is
- *  that {@link SyslogHosts#find(String)}) should create instances of Host,
- *  in turn {@link Host#fetch(java.net.URI, Range)} will create instances of
- *  {@link Resource} that sends messages to the syslog host when
- *  {@link Resource#writeTo(java.io.OutputStream)} is invoked. I'm making a few
- *  assumptions about what remains to be done here, namely: 1) The Host and
- *  Resource decorator objects will probably be inner classes within Hosts or
- *  find, or even anonymous inner classes - whatever seems best, and 2) the
- *  underlying Hosts' close() and domains() operations will be unchanged, and
- *  thus I made simple implementations that directly delegate to the underlying
- *  instance. Go ahead and change any of the above if the initial design
- *  considerations are incorrect.
  */
 @Immutable
 @ToString
