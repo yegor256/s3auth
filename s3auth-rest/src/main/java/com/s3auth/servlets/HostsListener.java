@@ -34,6 +34,7 @@ import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.s3auth.hosts.DynamoHosts;
 import com.s3auth.hosts.Hosts;
+import com.s3auth.hosts.SyslogHosts;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -71,7 +72,7 @@ public final class HostsListener implements ServletContextListener {
     public void contextInitialized(final ServletContextEvent event) {
         try {
             Manifests.append(event.getServletContext());
-            this.hosts = new DynamoHosts();
+            this.hosts = new SyslogHosts(new DynamoHosts());
         } catch (final java.io.IOException ex) {
             Logger.error(
                 this,

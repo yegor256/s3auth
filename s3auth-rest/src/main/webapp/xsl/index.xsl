@@ -113,6 +113,12 @@
                     <xsl:text>:</xsl:text>
                 </label>
                 <input name="region" value="s3" size="25" maxlength="30"/>
+                <!-- 
+                  * @todo #112 SyslogHosts has been implemented, but the syslog
+                  *  field is still not visible to the user. Let's make it visible.
+                  *  Let's also update Domain.Validator to ensure that the user
+                  *  input is correct.
+                 -->
                 <input name="syslog" value="syslog.s3auth.com:514" type="hidden"/>
                 <input class="submit" type="submit" value=""/>
             </p>
