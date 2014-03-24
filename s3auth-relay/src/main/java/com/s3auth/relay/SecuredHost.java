@@ -33,6 +33,7 @@ import com.jcabi.aspects.Loggable;
 import com.s3auth.hosts.Host;
 import com.s3auth.hosts.Range;
 import com.s3auth.hosts.Resource;
+import com.s3auth.hosts.Stats;
 import com.s3auth.hosts.Version;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -126,6 +127,11 @@ final class SecuredHost implements Host {
     @Override
     public String syslog() {
         return this.host.syslog();
+    }
+
+    @Override
+    public Stats stats() {
+        return this.host.stats();
     }
 
     /**

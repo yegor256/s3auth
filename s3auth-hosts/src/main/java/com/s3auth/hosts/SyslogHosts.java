@@ -150,6 +150,10 @@ public final class SyslogHosts implements Hosts {
         public String syslog() {
             return this.host.syslog();
         }
+        @Override
+        public Stats stats() {
+            return this.host.stats();
+        }
     }
 
     /**

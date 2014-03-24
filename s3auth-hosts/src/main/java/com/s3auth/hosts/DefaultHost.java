@@ -34,6 +34,10 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchAsyncClient;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
+import com.amazonaws.services.cloudwatch.model.Datapoint;
+import com.amazonaws.services.cloudwatch.model.Dimension;
+import com.amazonaws.services.cloudwatch.model.GetMetricStatisticsRequest;
+import com.amazonaws.services.cloudwatch.model.StandardUnit;
 import com.amazonaws.services.s3.model.BucketWebsiteConfiguration;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
@@ -42,10 +46,14 @@ import com.jcabi.manifests.Manifests;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 
 /**
  * Default implementation of {@link Host}.
@@ -64,6 +72,13 @@ final class DefaultHost implements Host {
      * The suffix index.html.
      */
     private static final String SUFFIX = "index.html";
+
+    /**
+     * Week duration in seconds, used for CloudWatch statistics.
+     * @checkstyle MagicNumber (3 lines)
+     */
+    private static final Integer WEEK_SECONDS =
+        (int) TimeUnit.DAYS.toSeconds(7);
 
     /**
      * The S3 bucket.
@@ -206,6 +221,11 @@ final class DefaultHost implements Host {
         return this.bucket.syslog();
     }
 
+    @Override
+    public Stats stats() {
+        return new HostStats();
+    }
+
     /**
      * Convert URI to all possible S3 object names (in order of importance).
      * @param uri The URI
@@ -296,6 +316,36 @@ final class DefaultHost implements Host {
     }
 
     /**
+     * Stats for this domain.
+     */
+    @Loggable(Loggable.DEBUG)
+    private final class HostStats implements Stats {
+        @Override
+        public long bytesTransferred() {
+            final Date now = new Date();
+            final List<Datapoint> datapoints =
+                DefaultHost.this.cloudwatch.get().getMetricStatistics(
+                    new GetMetricStatisticsRequest()
+                        .withMetricName("BytesTransferred")
+                        .withDimensions(
+                            new Dimension()
+                                .withName("Bucket")
+                                .withValue(DefaultHost.this.bucket.bucket())
+                        )
+                        .withUnit(StandardUnit.Bytes)
+                        .withPeriod(WEEK_SECONDS)
+                        .withStartTime(DateUtils.addWeeks(now, -1))
+                        .withEndTime(now)
+                ).getDatapoints();
+            long sum = 0L;
+            for (final Datapoint datapoint : datapoints) {
+                sum += datapoint.getSum();
+            }
+            return sum;
+        }
+    }
+
+    /**
      * Name of an S3 Object, context dependent.
      */
     private interface ObjectName {
@@ -305,5 +355,4 @@ final class DefaultHost implements Host {
          */
         String get();
     }
-
 }

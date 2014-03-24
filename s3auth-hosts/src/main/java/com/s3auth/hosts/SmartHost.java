@@ -88,6 +88,11 @@ final class SmartHost implements Host {
     }
 
     @Override
+    public Stats stats() {
+        return this.host.stats();
+    }
+
+    @Override
     @Loggable(value = Loggable.DEBUG, ignore = IOException.class)
     public Resource fetch(@NotNull final URI uri, @NotNull final Range range,
         @NotNull final Version version) throws IOException {

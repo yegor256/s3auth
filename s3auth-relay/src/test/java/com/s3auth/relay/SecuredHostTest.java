@@ -33,6 +33,7 @@ import com.s3auth.hosts.Host;
 import com.s3auth.hosts.HostMocker;
 import com.s3auth.hosts.Range;
 import com.s3auth.hosts.Resource;
+import com.s3auth.hosts.Stats;
 import com.s3auth.hosts.Version;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -149,6 +150,10 @@ public final class SecuredHostTest {
                     }
                     @Override
                     public String syslog() {
+                        throw new UnsupportedOperationException();
+                    }
+                    @Override
+                    public Stats stats() {
                         throw new UnsupportedOperationException();
                     }
                 },
