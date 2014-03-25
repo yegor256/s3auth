@@ -92,6 +92,9 @@ final class DirectoryListing implements Resource {
         final Directives dirs = new Directives()
             .pi("xml-stylesheet", "href=\"http://www.s3auth.com/xsl/directory.xsl\" type=\"text/xsl\"")
             .add("directory").attr("prefix", key);
+        for (final String prefix : listing.getCommonPrefixes()) {
+            dirs.add("commonPrefix").set(prefix).up();
+        }
         for (final S3ObjectSummary object : objects) {
             dirs.add("object").set(object.getKey()).up();
         }

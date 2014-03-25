@@ -36,7 +36,9 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.common.collect.ImmutableList;
 import com.rexsl.test.XhtmlMatchers;
 import org.apache.commons.io.Charsets;
+import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -58,7 +60,10 @@ public final class DirectoryListingTest {
         final ObjectListing listing = Mockito.mock(ObjectListing.class);
         Mockito.doReturn(listing).when(client)
             .listObjects(Mockito.any(ListObjectsRequest.class));
-        final String[] names = {"foo/bar/baa", "foo/bar/bee", "foo/bar/boo"};
+        final String[] prefixes = {"baz/", "biz/", "boz/"};
+        Mockito.doReturn(ImmutableList.copyOf(prefixes)).when(listing)
+            .getCommonPrefixes();
+        final String[] names = {"baa.txt", "bee.jpg", "boo.png"};
         final ImmutableList.Builder<S3ObjectSummary> builder =
             ImmutableList.builder();
         for (final String key : names) {
@@ -76,21 +81,42 @@ public final class DirectoryListingTest {
                 ),
                 Charsets.UTF_8
             ),
-            XhtmlMatchers.hasXPaths(
-                String.format("/directory[@prefix=\"%s\"]", prefix),
-                objectXPath(names[0]),
-                objectXPath(names[1]),
-                objectXPath(names[2])
+            Matchers.allOf(
+                XhtmlMatchers.hasXPaths(
+                    String.format("/directory[@prefix=\"%s\"]", prefix)
+                ),
+                hasCommonPrefixXPath(prefixes[0]),
+                hasCommonPrefixXPath(prefixes[1]),
+                hasObjectXPath(names[0]),
+                hasObjectXPath(names[1]),
+                hasObjectXPath(names[2])
             )
         );
     }
 
     /**
-     * Get XML object element XPath.
+     * Get Matcher for XML object element XPath checking.
      * @param key The key
-     * @return The XML element
+     * @return Matcher for object element
      */
-    private static String objectXPath(final String key) {
-        return String.format("/directory[object=\"%s\"]", key);
+    private static Matcher<String> hasObjectXPath(final String key) {
+        return XhtmlMatchers.hasXPath(
+            String.format(
+                String.format("/directory[object=\"%s\"]", key)
+            )
+        );
+    }
+
+    /**
+     * Get Matcher for XML commonPrefix element XPath checking.
+     * @param prefix The key
+     * @return Matcher for common prefix element
+     */
+    private static Matcher<String> hasCommonPrefixXPath(final String prefix) {
+        return XhtmlMatchers.hasXPath(
+            String.format(
+                String.format("/directory[commonPrefix=\"%s\"]", prefix)
+            )
+        );
     }
 }
