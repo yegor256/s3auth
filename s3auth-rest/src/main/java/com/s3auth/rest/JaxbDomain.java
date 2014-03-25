@@ -32,6 +32,7 @@ package com.s3auth.rest;
 import com.jcabi.aspects.Loggable;
 import com.rexsl.page.Link;
 import com.s3auth.hosts.Domain;
+import com.s3auth.hosts.Stats;
 import java.util.Collection;
 import java.util.LinkedList;
 import javax.ws.rs.core.UriInfo;
@@ -66,6 +67,11 @@ public final class JaxbDomain {
     private final transient UriInfo info;
 
     /**
+     * The stats for this domain.
+     */
+    private final transient JaxbStats stats;
+
+    /**
      * Public ctor for JAXB.
      */
     public JaxbDomain() {
@@ -77,9 +83,11 @@ public final class JaxbDomain {
      * @param dmn The domain
      * @param inf URI info of the home
      */
-    public JaxbDomain(final Domain dmn, final UriInfo inf) {
+    public JaxbDomain(final Domain dmn, final UriInfo inf,
+        final Stats statistics) {
         this.domain = dmn;
         this.info = inf;
+        this.stats = new JaxbStats(statistics);
     }
 
     /**
@@ -137,6 +145,15 @@ public final class JaxbDomain {
     }
 
     /**
+     * Get stats for this domain.
+     * @return The stats
+     */
+    @XmlElement
+    public JaxbStats getStats() {
+        return this.stats;
+    }
+
+    /**
      * Get links.
      * @return The links
      */
@@ -154,6 +171,41 @@ public final class JaxbDomain {
             )
         );
         return links;
+    }
+
+    /**
+     * JAXB domain stats.
+     */
+    @XmlRootElement(name = "stats")
+    private static final class JaxbStats {
+        /**
+         * The underlying stats.
+         */
+        private final transient Stats stats;
+        /**
+         * Default ctor required by JAXB.
+         */
+        @SuppressWarnings("unused")
+        JaxbStats() {
+            throw new IllegalStateException(
+                "Default constructor should never be called"
+            );
+        }
+        /**
+         * Constructor.
+         * @param statistics The stats for this domain.
+         */
+        JaxbStats(final Stats statistics) {
+            this.stats = statistics;
+        }
+        /**
+         * Get bytes transferred
+         * @return Bytes transferred.
+         */
+        @XmlElement
+        public long getBytesTransferred() {
+            return this.stats.bytesTransferred();
+        }
     }
 
 }

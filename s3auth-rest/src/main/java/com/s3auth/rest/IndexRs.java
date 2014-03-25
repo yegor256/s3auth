@@ -181,7 +181,13 @@ public final class IndexRs extends BaseRs {
     private Collection<JaxbDomain> domains() throws IOException {
         final Collection<JaxbDomain> domains = new LinkedList<JaxbDomain>();
         for (final Domain domain : this.hosts().domains(this.user())) {
-            domains.add(new JaxbDomain(domain, this.uriInfo()));
+            domains.add(
+                new JaxbDomain(
+                    domain,
+                    this.uriInfo(),
+                    this.hosts().find(domain.name()).stats()
+                )
+            );
         }
         return domains;
     }
