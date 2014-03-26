@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml-stylesheet href="../../main/webapp/xsl/directory.xsl" type="text/xsl"?>
+<directory prefix="hey/">
+    <commonPrefix>test/</commonPrefix>
+    <commonPrefix>test-2/</commonPrefix>
+    <object>a.html</object>
+    <object>b.html</object>
+    <object>c.html</object>
+</directory>

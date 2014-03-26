@@ -115,6 +115,7 @@ ul {
  */
 .tt,
 .fixed,
+code,
 pre {
     font-family: 'Consolas', 'Menlo', 'Monaco', 'Courier New', monospace;
     background-color: #f3f3f1;
