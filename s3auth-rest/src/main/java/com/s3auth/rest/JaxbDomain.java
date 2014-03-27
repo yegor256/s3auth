@@ -82,6 +82,7 @@ public final class JaxbDomain {
      * Private ctor.
      * @param dmn The domain
      * @param inf URI info of the home
+     * @param statistics The stats for this domain
      */
     public JaxbDomain(final Domain dmn, final UriInfo inf,
         final Stats statistics) {
@@ -199,7 +200,7 @@ public final class JaxbDomain {
             this.stats = statistics;
         }
         /**
-         * Get bytes transferred
+         * Get bytes transferred.
          * @return Bytes transferred.
          */
         @XmlElement
