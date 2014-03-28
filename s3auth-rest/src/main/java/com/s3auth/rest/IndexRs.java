@@ -30,11 +30,13 @@
 package com.s3auth.rest;
 
 import com.jcabi.aspects.Loggable;
+import com.jcabi.manifests.Manifests;
 import com.rexsl.page.JaxbGroup;
 import com.rexsl.page.Link;
 import com.rexsl.page.PageBuilder;
 import com.rexsl.page.inset.FlashInset;
 import com.s3auth.hosts.Domain;
+import com.s3auth.hosts.Stats;
 import com.s3auth.hosts.User;
 import java.io.IOException;
 import java.util.Collection;
@@ -181,7 +183,22 @@ public final class IndexRs extends BaseRs {
     private Collection<JaxbDomain> domains() throws IOException {
         final Collection<JaxbDomain> domains = new LinkedList<JaxbDomain>();
         for (final Domain domain : this.hosts().domains(this.user())) {
-            domains.add(new JaxbDomain(domain, this.uriInfo()));
+            final Stats stats;
+            if (
+                "AAAAAAAAAAAAAAAAAAAA"
+                    .equals(Manifests.read("S3Auth-AwsCloudWatchKey"))
+            ) {
+                stats = new DummyStats();
+            } else {
+                stats = this.hosts().find(domain.name()).stats();
+            }
+            domains.add(
+                new JaxbDomain(
+                    domain,
+                    this.uriInfo(),
+                    stats
+                )
+            );
         }
         return domains;
     }
@@ -257,6 +274,16 @@ public final class IndexRs extends BaseRs {
         @Override
         public String syslog() {
             return this.slog;
+        }
+    }
+
+    /**
+     * Dummy stats, if AWS credentials are invalid.
+     */
+    private static final class DummyStats implements Stats {
+        @Override
+        public long bytesTransferred() {
+            return 0L;
         }
     }
 

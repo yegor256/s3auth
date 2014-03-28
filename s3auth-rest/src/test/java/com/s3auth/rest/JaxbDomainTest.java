@@ -33,6 +33,7 @@ import com.rexsl.page.UriInfoMocker;
 import com.rexsl.test.JaxbConverter;
 import com.rexsl.test.XhtmlMatchers;
 import com.s3auth.hosts.Domain;
+import com.s3auth.hosts.Stats;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 
@@ -78,7 +79,14 @@ public final class JaxbDomainTest {
                     return "localhost:12345";
                 }
             },
-            new UriInfoMocker().mock()
+            new UriInfoMocker().mock(),
+            new Stats() {
+                @Override
+                public long bytesTransferred() {
+                    //@checkstyle MagicNumber (1 line)
+                    return 42L;
+                }
+            }
         );
         MatcherAssert.assertThat(
             JaxbConverter.the(obj),
@@ -89,7 +97,8 @@ public final class JaxbDomainTest {
                 "/domain[bucket='def']",
                 "/domain[region='s3-sa-east-1']",
                 "/domain[syslog='localhost:12345']",
-                "/domain/links/link[@rel='remove']"
+                "/domain/links/link[@rel='remove']",
+                "/domain/stats[bytesTransferred='42']"
             )
         );
     }

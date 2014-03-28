@@ -36,6 +36,7 @@ import com.jcabi.manifests.Manifests;
 import com.s3auth.hosts.Host;
 import com.s3auth.hosts.Range;
 import com.s3auth.hosts.Resource;
+import com.s3auth.hosts.Stats;
 import com.s3auth.hosts.Version;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.IOException;
@@ -126,6 +127,11 @@ final class LocalHost implements Host {
         return "localhost";
     }
 
+    @Override
+    public Stats stats() {
+        return new DummyStats();
+    }
+
     /**
      * Shutdown.
      * @param uri URI just dispatched
@@ -148,6 +154,16 @@ final class LocalHost implements Host {
                 )
             )
         );
+    }
+
+    /**
+     * Dummy host stats.
+     */
+    private static final class DummyStats implements Stats {
+        @Override
+        public long bytesTransferred() {
+            return 0;
+        }
     }
 
 }

@@ -31,6 +31,9 @@ package com.s3auth.hosts;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
+import com.amazonaws.services.cloudwatch.model.Datapoint;
+import com.amazonaws.services.cloudwatch.model.GetMetricStatisticsRequest;
+import com.amazonaws.services.cloudwatch.model.GetMetricStatisticsResult;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.BucketWebsiteConfiguration;
 import com.amazonaws.services.s3.model.GetObjectRequest;
@@ -65,6 +68,7 @@ import org.mockito.stubbing.Answer;
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
+@SuppressWarnings("PMD.ExcessiveImports")
 public final class DefaultHostTest {
 
     /**
@@ -255,14 +259,39 @@ public final class DefaultHostTest {
     }
 
     /**
+     * DefaultHost can retrieve Cloudwatch stats.
+     */
+    @Test
+    public void retrievesCloudWatchStats() {
+        final long sum = 10;
+        final CloudWatch cloudwatch = this.cloudWatch();
+        final GetMetricStatisticsResult result = new GetMetricStatisticsResult()
+            .withDatapoints(new Datapoint().withSum(Double.valueOf(sum)));
+        Mockito.doReturn(result).when(cloudwatch.get())
+            .getMetricStatistics(Mockito.any(GetMetricStatisticsRequest.class));
+        MatcherAssert.assertThat(
+            new DefaultHost(
+                new BucketMocker().mock(),
+                cloudwatch
+            ).stats().bytesTransferred(),
+            Matchers.is(sum)
+        );
+    }
+
+    /**
      * Mock Host.Cloudwatch for test.
      * @return Mock Cloudwatch
      */
     private CloudWatch cloudWatch() {
         return new Host.CloudWatch() {
+            /**
+             * Mock Cloudwatch client.
+             */
+            private final transient AmazonCloudWatchClient cwatch =
+                Mockito.mock(AmazonCloudWatchClient.class);
             @Override
             public AmazonCloudWatchClient get() {
-                return Mockito.mock(AmazonCloudWatchClient.class);
+                return this.cwatch;
             }
         };
     }
