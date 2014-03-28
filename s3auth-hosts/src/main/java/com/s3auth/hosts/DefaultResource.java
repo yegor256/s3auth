@@ -193,8 +193,9 @@ final class DefaultResource implements Resource {
                                 new Dimension()
                                     .withName("Bucket")
                                     .withValue(this.bucket)
-                            ).withUnit(StandardUnit.Bytes)
-                            .withValue(Double.valueOf(total))
+                            )
+                            .withUnit(StandardUnit.Bytes)
+                            .withValue((double) total)
                     )
             );
         } finally {

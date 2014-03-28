@@ -41,6 +41,7 @@ import com.amazonaws.services.cloudwatch.model.StandardUnit;
 import com.amazonaws.services.s3.model.BucketWebsiteConfiguration;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import java.io.IOException;
@@ -72,13 +73,6 @@ final class DefaultHost implements Host {
      * The suffix index.html.
      */
     private static final String SUFFIX = "index.html";
-
-    /**
-     * Week duration in seconds, used for CloudWatch statistics.
-     * @checkstyle MagicNumber (3 lines)
-     */
-    private static final Integer WEEK_SECONDS =
-        (int) TimeUnit.DAYS.toSeconds(7);
 
     /**
      * The S3 bucket.
@@ -327,13 +321,15 @@ final class DefaultHost implements Host {
                 DefaultHost.this.cloudwatch.get().getMetricStatistics(
                     new GetMetricStatisticsRequest()
                         .withMetricName("BytesTransferred")
+                        .withNamespace("S3Auth")
+                        .withStatistics("Sum")
                         .withDimensions(
                             new Dimension()
                                 .withName("Bucket")
                                 .withValue(DefaultHost.this.bucket.bucket())
                         )
                         .withUnit(StandardUnit.Bytes)
-                        .withPeriod(WEEK_SECONDS)
+                        .withPeriod((int) TimeUnit.DAYS.toSeconds(Tv.SEVEN))
                         .withStartTime(DateUtils.addWeeks(now, -1))
                         .withEndTime(now)
                 ).getDatapoints();
