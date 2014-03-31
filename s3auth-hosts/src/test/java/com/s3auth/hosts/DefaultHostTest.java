@@ -53,6 +53,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpStatus;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Rule;
@@ -68,7 +69,7 @@ import org.mockito.stubbing.Answer;
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@SuppressWarnings("PMD.ExcessiveImports")
+@SuppressWarnings({ "PMD.ExcessiveImports", "PMD.TooManyMethods" })
 public final class DefaultHostTest {
 
     /**
@@ -275,6 +276,53 @@ public final class DefaultHostTest {
                 cloudwatch
             ).stats().bytesTransferred(),
             Matchers.is(sum)
+        );
+    }
+
+    /**
+     * DefaultHost can load error document from S3 if status code is 4xx.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void loadsErrorDocument() throws Exception {
+        final AmazonS3 aws = Mockito.mock(AmazonS3.class);
+        final String suffix = "nonExistent.html";
+        final String error = "error.html";
+        final String message = "Test output for error page";
+        Mockito.doAnswer(
+            new Answer<S3Object>() {
+                @Override
+                public S3Object answer(final InvocationOnMock invocation) {
+                    final String key = GetObjectRequest.class.cast(
+                        invocation.getArguments()[0]
+                    ).getKey();
+                    if (key.endsWith(suffix)) {
+                        final AmazonServiceException ex =
+                            new AmazonServiceException("Object not found");
+                        ex.setStatusCode(HttpStatus.SC_NOT_FOUND);
+                        throw ex;
+                    }
+                    MatcherAssert.assertThat(key, Matchers.is(error));
+                    final S3Object object = new S3Object();
+                    object.setObjectContent(IOUtils.toInputStream(message));
+                    object.setKey(message);
+                    return object;
+                }
+            }
+        ).when(aws).getObject(Mockito.any(GetObjectRequest.class));
+        Mockito.doReturn(
+            new BucketWebsiteConfiguration(suffix, error)
+        ).when(aws).getBucketWebsiteConfiguration(Mockito.anyString());
+        final Host host = new DefaultHost(
+            new BucketMocker().withClient(aws).mock(), this.cloudWatch()
+        );
+        MatcherAssert.assertThat(
+            ResourceMocker.toString(
+                host.fetch(
+                    URI.create(suffix), Range.ENTIRE, Version.LATEST
+                )
+            ),
+            Matchers.equalTo(message)
         );
     }
 
