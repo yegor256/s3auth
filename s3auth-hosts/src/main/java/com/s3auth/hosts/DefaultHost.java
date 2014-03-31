@@ -55,6 +55,7 @@ import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.apache.http.HttpStatus;
 
 /**
  * Default implementation of {@link Host}.
@@ -67,6 +68,7 @@ import org.apache.commons.lang3.time.DateUtils;
 @Immutable
 @EqualsAndHashCode(of = "bucket")
 @Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.CyclomaticComplexity")
 final class DefaultHost implements Host {
 
     /**
@@ -134,6 +136,7 @@ final class DefaultHost implements Host {
         // nothing to do
     }
 
+    // @checkstyle CyclomaticComplexity (100 lines)
     @Override
     @NotNull
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
@@ -174,8 +177,28 @@ final class DefaultHost implements Host {
                         ),
                         ex
                     );
+                } else if (ex.getStatusCode() >= HttpStatus.SC_BAD_REQUEST
+                    && ex.getStatusCode() < HttpStatus.SC_INTERNAL_SERVER_ERROR
+                ) {
+                    try {
+                        final BucketWebsiteConfiguration config =
+                            this.bucket.client().getBucketWebsiteConfiguration(
+                                this.bucket.bucket()
+                            );
+                        if (config.getErrorDocument() != null) {
+                            resource = new DefaultResource(
+                                this.bucket.client(), this.bucket.bucket(),
+                                config.getErrorDocument(), Range.ENTIRE,
+                                Version.LATEST, this.cloudwatch.get()
+                            );
+                        }
+                    } catch (final AmazonClientException exc) {
+                        // @checkstyle MultipleStringLiterals (7 lines)
+                        errors.add(
+                            String.format("'%s': %s", name, exc.getMessage())
+                        );
+                    }
                 }
-                // @checkstyle MultipleStringLiterals (1 line)
                 errors.add(String.format("'%s': %s", name, ex.getMessage()));
             } catch (final AmazonClientException ex) {
                 errors.add(String.format("'%s': %s", name, ex.getMessage()));
