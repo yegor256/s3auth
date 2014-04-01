@@ -78,6 +78,7 @@
                         <configuration>
                             <executable>java</executable>
                             <arguments>
+                                <argument>-DentityExpansionLimit=256000</argument>
                                 <argument>-classpath</argument>
                                 <classpath/>
                                 <argument>com.s3auth.relay.Main</argument>
