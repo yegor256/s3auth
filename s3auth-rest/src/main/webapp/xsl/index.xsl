@@ -274,25 +274,44 @@ maven.s3auth.com with .htpasswd(3 user(s) updated 2min ago)]]></pre>
                 </xsl:attribute>
                 <xsl:value-of select="name"/>
             </a>
-            <xsl:text> (key: </xsl:text>
-            <span class="tt">
-                <xsl:value-of select="key"/>
-            </span>
-            <xsl:text>, secret: </xsl:text>
-            <span class="tt">
-                <xsl:value-of select="secret"/>
-            </span>
-            <xsl:text>, endpoint: </xsl:text>
-            <span class="tt">
-                <xsl:value-of select="region"/>
-            </span>
-            <xsl:text>) </xsl:text>
+            <xsl:text> | </xsl:text>
             <a>
                 <xsl:attribute name="href">
                     <xsl:value-of select="links/link[@rel='remove']/@href"/>
                 </xsl:attribute>
                 <xsl:text>delete</xsl:text>
             </a>
+            <ul>
+                <li>
+                    <xsl:text>key: </xsl:text>
+                    <span class="tt">
+                        <xsl:value-of select="key"/>
+                    </span>
+                </li>
+                <li>
+                    <xsl:text>secret: </xsl:text>
+                    <span class="tt">
+                        <xsl:value-of select="secret"/>
+                    </span>
+                </li>
+                <li>
+                    <xsl:text>7-days traffic: </xsl:text>
+                    <xsl:choose>
+                        <xsl:when test="stats/bytesTransferred &gt; 1024 * 1024">
+                            <xsl:value-of select="format-number(stats/bytesTransferred div (1024 * 1024), '#.0')"/>
+                            <xsl:text> Mb</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="stats/bytesTransferred &gt; 1024">
+                            <xsl:value-of select="format-number(stats/bytesTransferred div 1024, '#.0')"/>
+                            <xsl:text> Kb</xsl:text>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="stats/bytesTransferred"/>
+                            <xsl:text> bytes</xsl:text>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </li>
+            </ul>
         </li>
     </xsl:template>
     <xsl:template name="entrance">
