@@ -63,7 +63,7 @@ final class DefaultDomain implements Domain {
      * @checkstyle ParameterNumber (3 lines)
      */
     DefaultDomain(@NotNull final String name, @NotNull final String key,
-        @NotNull final String secret, final String bucket,
+        @NotNull final String secret, @NotNull final String bucket,
         @NotNull final String region, @NotNull final String syslog) {
         this(
             // @checkstyle AnonInnerLength (50 lines)

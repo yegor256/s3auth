@@ -295,6 +295,18 @@ maven.s3auth.com with .htpasswd(3 user(s) updated 2min ago)]]></pre>
                     </span>
                 </li>
                 <li>
+                    <xsl:text>region: </xsl:text>
+                    <span class="tt">
+                        <xsl:value-of select="region"/>
+                    </span>
+                </li>
+                <li>
+                    <xsl:text>bucket: </xsl:text>
+                    <span class="tt">
+                        <xsl:value-of select="bucket"/>
+                    </span>
+                </li>
+                <li>
                     <xsl:text>7-days traffic: </xsl:text>
                     <xsl:choose>
                         <xsl:when test="stats/bytesTransferred &gt; 1024 * 1024">

@@ -212,6 +212,7 @@ final class DefaultDynamo implements Dynamo {
         attrs.put(DefaultDynamo.SECRET, new AttributeValue(domain.secret()));
         attrs.put(DefaultDynamo.REGION, new AttributeValue(domain.region()));
         attrs.put(DefaultDynamo.SYSLOG, new AttributeValue(domain.syslog()));
+        attrs.put(DefaultDynamo.BUCKET, new AttributeValue(domain.bucket()));
         final AmazonDynamoDB amazon = this.client.get();
         amazon.putItem(new PutItemRequest(this.table, attrs));
         amazon.shutdown();

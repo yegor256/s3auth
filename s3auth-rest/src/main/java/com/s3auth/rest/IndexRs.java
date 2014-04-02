@@ -246,7 +246,11 @@ public final class IndexRs extends BaseRs {
             this.host = hst;
             this.acc = access;
             this.sec = scrt;
-            this.buckt = bckt;
+            if (bckt == null) {
+                this.buckt = hst;
+            } else {
+                this.buckt = bckt;
+            }
             this.regn = rgn;
             this.slog = syslg;
         }
