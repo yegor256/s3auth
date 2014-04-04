@@ -36,6 +36,8 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.common.collect.ImmutableSet;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.xml.XMLDocument;
+import com.jcabi.xml.XSLDocument;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -57,17 +59,31 @@ import org.xembly.Xembler;
  * XML Directory Listing.
  * @author Carlos Miranda (miranda.cma@gmail.com)
  * @version $Id$
+ * @checkstyle ClassDataAbstraction (200 lines)
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "xml")
+@EqualsAndHashCode(of = "content")
 @Loggable(Loggable.DEBUG)
 final class DirectoryListing implements Resource {
+    /**
+     * The XSL used for transforming the output.
+     */
+    private static final XSLDocument XSL;
+    static {
+        try {
+            XSL = new XSLDocument(
+                DirectoryListing.class.getResourceAsStream("directory.xsl")
+            );
+        } catch (final IOException ex) {
+            throw new IllegalStateException("Cannot get XSL document", ex);
+        }
+    }
 
     /**
-     * Byte representation of XML data.
+     * Byte representation of transformed data.
      */
-    private final transient byte[] xml;
+    private final transient byte[] content;
 
     /**
      * Public constructor.
@@ -90,7 +106,6 @@ final class DirectoryListing implements Resource {
         }
         // @checkstyle LineLength (2 lines)
         final Directives dirs = new Directives()
-            .pi("xml-stylesheet", "href=\"http://www.s3auth.com/xsl/directory.xsl\" type=\"text/xsl\"")
             .add("directory").attr("prefix", key);
         for (final String prefix : listing.getCommonPrefixes()) {
             dirs.add("commonPrefix").set(prefix).up();
@@ -99,7 +114,9 @@ final class DirectoryListing implements Resource {
             dirs.add("object").set(object.getKey()).up();
         }
         try {
-            this.xml = new Xembler(dirs).xml().getBytes(Charsets.UTF_8);
+            this.content = XSL.transform(
+                new XMLDocument(new Xembler(dirs).xml())
+            ).toString().getBytes(Charsets.UTF_8);
         } catch (final ImpossibleModificationException ex) {
             throw new IllegalStateException(
                 "Unable to generate directory listing", ex
@@ -114,18 +131,18 @@ final class DirectoryListing implements Resource {
 
     @Override
     public long writeTo(final OutputStream stream) throws IOException {
-        stream.write(this.xml);
-        return this.xml.length;
+        stream.write(this.content);
+        return this.content.length;
     }
 
     @Override
     public Collection<String> headers() throws IOException {
         final ImmutableSet.Builder<String> headers = ImmutableSet.builder();
-        headers.add(header(HttpHeaders.CONTENT_TYPE, "text/xml"));
+        headers.add(header(HttpHeaders.CONTENT_TYPE, "application/xhtml+xml"));
         headers.add(
             header(
                 HttpHeaders.CONTENT_LENGTH,
-                String.valueOf(this.xml.length)
+                String.valueOf(this.content.length)
             )
         );
         return headers.build();
@@ -134,7 +151,7 @@ final class DirectoryListing implements Resource {
     @Override
     public String etag() {
         final CRC32 crc = new CRC32();
-        crc.update(this.xml);
+        crc.update(this.content);
         return Long.toHexString(crc.getValue());
     }
     @Override

@@ -34,7 +34,6 @@ import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.common.collect.ImmutableList;
-import com.rexsl.test.XhtmlMatchers;
 import org.apache.commons.io.Charsets;
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
@@ -50,11 +49,11 @@ import org.mockito.Mockito;
  */
 public final class DirectoryListingTest {
     /**
-     * Fetches directory listing for bucket, if bucket does not exist.
+     * Fetches directory listing for bucket, if object does not exist.
      * @throws Exception If something goes wrong
      */
     @Test
-    public void fetchesDirectoryListingInXml()
+    public void fetchesDirectoryListingInXhtml()
         throws Exception {
         final AmazonS3 client = Mockito.mock(AmazonS3.class);
         final ObjectListing listing = Mockito.mock(ObjectListing.class);
@@ -82,28 +81,27 @@ public final class DirectoryListingTest {
                 Charsets.UTF_8
             ),
             Matchers.allOf(
-                XhtmlMatchers.hasXPaths(
-                    String.format("/directory[@prefix=\"%s\"]", prefix)
-                ),
-                hasCommonPrefixXPath(prefixes[0]),
-                hasCommonPrefixXPath(prefixes[1]),
-                hasObjectXPath(names[0]),
-                hasObjectXPath(names[1]),
-                hasObjectXPath(names[2])
+                hasCommonPrefix(prefixes[0]),
+                hasCommonPrefix(prefixes[1]),
+                hasObject(names[0]),
+                hasObject(names[1]),
+                hasObject(names[2])
             )
         );
     }
 
     /**
-     * Get Matcher for XML object element XPath checking.
+     * Get Matcher for object element checking.
      * @param key The key
      * @return Matcher for object element
+     * @todo #133 Better to use XPath for this. However, I wasn't able to get it
+     *  to work because of XHTML namespace issues. Let's fix it. Let's also
+     *  address the same issue with hasCommonPrefix below and
+     *  {@link DefaultHostTest#showsDirectoryListing()}.
      */
-    private static Matcher<String> hasObjectXPath(final String key) {
-        return XhtmlMatchers.hasXPath(
-            String.format(
-                String.format("/directory[object=\"%s\"]", key)
-            )
+    private static Matcher<String> hasObject(final String key) {
+        return Matchers.containsString(
+            String.format("<a href=\"%s\">%s</a>", key, key)
         );
     }
 
@@ -112,11 +110,9 @@ public final class DirectoryListingTest {
      * @param prefix The key
      * @return Matcher for common prefix element
      */
-    private static Matcher<String> hasCommonPrefixXPath(final String prefix) {
-        return XhtmlMatchers.hasXPath(
-            String.format(
-                String.format("/directory[commonPrefix=\"%s\"]", prefix)
-            )
+    private static Matcher<String> hasCommonPrefix(final String prefix) {
+        return Matchers.containsString(
+            String.format("<a href=\"%sindex.html\">%s</a>", prefix, prefix)
         );
     }
 }
