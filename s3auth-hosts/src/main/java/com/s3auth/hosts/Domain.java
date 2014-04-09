@@ -113,11 +113,14 @@ public interface Domain {
     /**
      * Validator of Domain.
      */
+    @SuppressWarnings("PMD.NPathComplexity")
     class Validator implements ConstraintValidator<Domain.Valid, Domain> {
         @Override
         public void initialize(final Domain.Valid annotation) {
             //nothing to do
         }
+        // @checkstyle CyclomaticComplexity (60 lines)
+        // @checkstyle ExecutableStatementCount (60 lines)
         @Override
         public boolean isValid(final Domain domain,
             final ConstraintValidatorContext ctx) {
@@ -165,6 +168,15 @@ public interface Domain {
                 ctx.buildConstraintViolationWithTemplate(
                     String.format("invalid AWS secret '%s'", domain.secret())
                 ).addPropertyNode("secret").addConstraintViolation();
+                isValid = false;
+            }
+            if (domain.syslog() != null
+                && !domain.syslog()
+                    .matches("\\s*[a-zA-Z0-9\\-\\.]+(:\\d+)?\\s*")
+            ) {
+                ctx.buildConstraintViolationWithTemplate(
+                    String.format("invalid syslog host '%s'", domain.syslog())
+                ).addPropertyNode("syslog").addConstraintViolation();
                 isValid = false;
             }
             return isValid;

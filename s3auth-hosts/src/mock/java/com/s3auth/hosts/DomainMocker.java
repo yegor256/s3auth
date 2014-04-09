@@ -107,6 +107,16 @@ public final class DomainMocker {
     }
 
     /**
+     * With this syslog.
+     * @param syslog The syslog
+     * @return This object
+     */
+    public DomainMocker withSyslog(final String syslog) {
+        Mockito.doReturn(syslog).when(this.domain).syslog();
+        return this;
+    }
+
+    /**
      * Mock it.
      * @return The domain
      */
