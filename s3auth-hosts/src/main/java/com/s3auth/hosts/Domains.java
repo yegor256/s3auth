@@ -31,9 +31,9 @@ package com.s3auth.hosts;
 
 import com.jcabi.aspects.Loggable;
 import java.util.AbstractSet;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -53,7 +53,8 @@ final class Domains extends AbstractSet<Domain> {
     /**
      * List of domains.
      */
-    private final transient Set<Domain> all = new HashSet<Domain>();
+    private final transient ConcurrentMap<String, Domain> all =
+        new ConcurrentHashMap<String, Domain>();
 
     /**
      * Has this domain inside?
@@ -61,14 +62,7 @@ final class Domains extends AbstractSet<Domain> {
      * @return TRUE if it is inside already
      */
     public boolean has(@NotNull final String name) {
-        boolean has = false;
-        for (final Domain domain : this.all) {
-            if (domain.name().equals(name)) {
-                has = true;
-                break;
-            }
-        }
-        return has;
+        return this.all.containsKey(name);
     }
 
     /**
@@ -78,13 +72,9 @@ final class Domains extends AbstractSet<Domain> {
      */
     public Domain get(@NotNull final String name) {
         Domain found = null;
-        for (final Domain domain : this.all) {
-            if (domain.name().equals(name)) {
-                found = domain;
-                break;
-            }
-        }
-        if (found == null) {
+        if (this.has(name)) {
+            found = this.all.get(name);
+        } else {
             throw new IllegalArgumentException(
                 String.format("domain %s not found", name)
             );
@@ -96,7 +86,7 @@ final class Domains extends AbstractSet<Domain> {
     public boolean add(final Domain domain) {
         boolean added = false;
         if (!this.has(domain.name())) {
-            this.all.add(domain);
+            this.all.put(domain.name(), domain);
             added = true;
         }
         return added;
@@ -109,7 +99,7 @@ final class Domains extends AbstractSet<Domain> {
 
     @Override
     public Iterator<Domain> iterator() {
-        return this.all.iterator();
+        return this.all.values().iterator();
     }
 
     @Override
