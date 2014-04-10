@@ -101,7 +101,7 @@ public final class DirectoryListingTest {
      */
     private static Matcher<String> hasObject(final String key) {
         return Matchers.containsString(
-            String.format("<a href=\"%s\">%s</a>", key, key)
+            String.format("<a href=\"/%s\">%s</a>", key, key)
         );
     }
 
