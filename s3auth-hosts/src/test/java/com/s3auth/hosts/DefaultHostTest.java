@@ -222,10 +222,7 @@ public final class DefaultHostTest {
                     this.cloudWatch()
                 ).fetch(new URI(key), Range.ENTIRE, Version.LATEST)
             ),
-            XhtmlMatchers.hasXPaths(
-                "/directory[@prefix=\"foo/bar/\"]",
-                "/directory[object=\"foo/bar/boo\"]"
-            )
+            Matchers.containsString("<a href=\"foo/bar/boo\">foo/bar/boo</a>")
         );
     }
 
