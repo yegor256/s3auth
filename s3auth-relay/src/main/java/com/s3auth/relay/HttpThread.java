@@ -157,6 +157,7 @@ final class HttpThread {
                     );
                 }
                 bytes = response.withBody(resource).send(socket);
+                Logger.info(this, "#run(): %d bytes sent to %s", bytes, socket);
             } else {
                 bytes = HttpThread.failure(
                     new HttpException(
@@ -165,6 +166,7 @@ final class HttpThread {
                     ),
                     socket
                 );
+                Logger.info(this, "#run(): failure sent to %s", socket);
             }
         } catch (final HttpException ex) {
             bytes = HttpThread.failure(ex, socket);
