@@ -113,7 +113,10 @@
                     <xsl:text>:</xsl:text>
                 </label>
                 <input name="region" value="s3" size="25" maxlength="30"/>
-                <input name="syslog" value="syslog.s3auth.com:514"/>
+                <label>
+                    <xsl:text>Optional syslog UDP end-point:</xsl:text>
+                </label>
+                <input name="syslog" value="syslog.s3auth.com:514" size="40" maxlength="200"/>
                 <input class="submit" type="submit" value=""/>
             </p>
         </form>
