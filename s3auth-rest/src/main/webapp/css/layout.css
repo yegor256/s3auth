@@ -43,12 +43,12 @@ h1,
 h2,
 h3,
 textarea {
-    font-family: verdana, arial, helvetica, clean, sans-serif;
-    font-size: 12px;
+    font-family: HelveticaNeue, Helvetica, Helvetica, Arial, sans-serif;
+    font-size: 14px;
     font-variant: normal;
     font-stretch: normal;
     font-weight: normal;
-    color: black;
+    color: #333;
     padding: 0;
     margin: 0;
     border: 0;
@@ -212,4 +212,3 @@ img.icon {
     width: 32px;
     height: 32px;
 }
-
