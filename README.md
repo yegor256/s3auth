@@ -1,5 +1,7 @@
 <img src="http://img.s3auth.com/logo.png" width="200px" height="35px"/>
 
+[![Build Status](https://travis-ci.org/yegor256/s3auth.svg?branch=master)](https://travis-ci.org/yegor256/s3auth)
+
 ## Amazon S3 HTTP Basic Auth Gateway
 
 [s3auth.com](http://www.s3auth.com) is a Basic HTTP Auth gateway
