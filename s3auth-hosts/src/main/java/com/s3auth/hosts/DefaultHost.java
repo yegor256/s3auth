@@ -31,6 +31,8 @@ package com.s3auth.hosts;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.ClientConfiguration;
+import com.amazonaws.Protocol;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchAsyncClient;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
@@ -50,6 +52,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -68,7 +71,7 @@ import org.apache.http.HttpStatus;
 @Immutable
 @EqualsAndHashCode(of = "bucket")
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings("PMD.CyclomaticComplexity")
+@SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ExcessiveImports" })
 final class DefaultHost implements Host {
 
     /**
@@ -101,11 +104,16 @@ final class DefaultHost implements Host {
             new Host.CloudWatch() {
                 @Override
                 public AmazonCloudWatchClient get() {
+                    final ClientConfiguration config =
+                        new ClientConfiguration();
+                    config.setProtocol(Protocol.HTTP);
                     return new AmazonCloudWatchAsyncClient(
                         new BasicAWSCredentials(
                             Manifests.read("S3Auth-AwsCloudWatchKey"),
                             Manifests.read("S3Auth-AwsCloudWatchSecret")
-                        )
+                        ),
+                        config,
+                        Executors.newFixedThreadPool(Tv.FIFTY)
                     );
                 }
             }
