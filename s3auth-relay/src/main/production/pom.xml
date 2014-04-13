@@ -78,7 +78,11 @@
                         <configuration>
                             <executable>java</executable>
                             <arguments>
-                                <argument>-DentityExpansionLimit=256000</argument>
+                                <argument>-DentityExpansionLimit=0</argument>
+                                <argument>-Dcom.sun.management.jmxremote.authenticate=false</argument>
+                                <argument>-Dcom.sun.management.jmxremote.port=5000</argument>
+                                <argument>-Dcom.sun.management.jmxremote.ssl=false</argument>
+                                <argument>-Djava.rmi.server.hostname=relay.s3auth.com</argument>
                                 <argument>-classpath</argument>
                                 <classpath/>
                                 <argument>com.s3auth.relay.Main</argument>
