@@ -41,6 +41,7 @@ import java.net.HttpURLConnection;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.SynchronousQueue;
@@ -111,7 +112,7 @@ final class HttpFacade implements Closeable {
         this.server = new ServerSocket(port);
         final HttpThread thread = new HttpThread(this.sockets, hosts);
         final Runnable runnable = new VerboseRunnable(
-            new HttpThreadRunnable(thread), true, false
+            new HttpFacade.HttpThreadRunnable(thread), true, false
         );
         for (int idx = 0; idx < HttpFacade.THREADS; ++idx) {
             this.backend.scheduleWithFixedDelay(
@@ -161,8 +162,8 @@ final class HttpFacade implements Closeable {
             throw new IllegalStateException(ex);
         }
         try {
-            if (!this.sockets.offer(socket, Tv.TEN, TimeUnit.SECONDS)) {
-                this.overflow(socket);
+            if (!this.sockets.offer(socket, (long) Tv.TEN, TimeUnit.SECONDS)) {
+                HttpFacade.overflow(socket);
                 Logger.warn(this, "too many open connections");
             }
         } catch (final InterruptedException ex) {
@@ -175,7 +176,7 @@ final class HttpFacade implements Closeable {
      * Report overflow problem to the socket and close it.
      * @param socket The socket to report to
      */
-    private void overflow(final Socket socket) {
+    private static void overflow(final Socket socket) {
         try {
             new HttpResponse()
                 .withStatus(HttpURLConnection.HTTP_GATEWAY_TIMEOUT)
@@ -197,15 +198,15 @@ final class HttpFacade implements Closeable {
      * @param service The service to shut down
      * @throws InterruptedException If fails to shutdown
      */
-    private void shutdown(final ScheduledExecutorService service)
+    private void shutdown(final ExecutorService service)
         throws InterruptedException {
         service.shutdown();
-        if (service.awaitTermination(2L, TimeUnit.SECONDS)) {
+        if (service.awaitTermination((long) Tv.TEN, TimeUnit.SECONDS)) {
             Logger.info(this, "#shutdown(): succeeded");
         } else {
             Logger.warn(this, "#shutdown(): failed");
             service.shutdownNow();
-            if (service.awaitTermination(2L, TimeUnit.SECONDS)) {
+            if (service.awaitTermination((long) Tv.TEN, TimeUnit.SECONDS)) {
                 Logger.info(this, "#shutdown(): shutdownNow() succeeded");
             } else {
                 Logger.error(this, "#shutdown(): failed to stop threads");
