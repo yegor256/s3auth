@@ -73,7 +73,7 @@ final class HttpFacade implements Closeable {
      * How many threads to use.
      */
     private static final int THREADS =
-        Runtime.getRuntime().availableProcessors() * Tv.TWENTY;
+        Runtime.getRuntime().availableProcessors() * 2;
 
     /**
      * Executor service, with socket openers.
