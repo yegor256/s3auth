@@ -29,7 +29,6 @@
  */
 package com.s3auth.relay;
 
-import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.s3auth.hosts.Host;
@@ -69,7 +68,6 @@ import org.apache.http.client.utils.DateUtils;
 @ToString
 @EqualsAndHashCode(of = { "hosts", "sockets" })
 @SuppressWarnings({ "PMD.DoNotUseThreads", "PMD.UseConcurrentHashMap" })
-@Loggable(Loggable.DEBUG)
 final class HttpThread {
 
     /**
@@ -118,7 +116,6 @@ final class HttpThread {
      * @return Amount of bytes sent to socket
      * @throws InterruptedException If interrupted while waiting for the queue
      */
-    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public long dispatch() throws InterruptedException {
         final Socket socket = this.sockets.take();
