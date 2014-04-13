@@ -141,7 +141,7 @@ final class HttpThread {
                         Long.toString(System.currentTimeMillis() - start)
                     );
                 final Resource resource =
-                    this.resource(this.host(request), request);
+                    HttpThread.resource(this.host(request), request);
                 response = response.withHeader(
                     org.apache.http.HttpHeaders.AGE,
                     String.valueOf(
@@ -157,7 +157,7 @@ final class HttpThread {
                     );
                 }
                 bytes = response.withBody(resource).send(socket);
-                Logger.info(this, "#run(): %d bytes sent to %s", bytes, socket);
+                Logger.info(this, "#run(): %d bytes of %s", bytes, resource);
             } else {
                 bytes = HttpThread.failure(
                     new HttpException(
@@ -195,7 +195,7 @@ final class HttpThread {
      * @return The resource
      * @throws IOException If some IO exception
      */
-    private Resource resource(final Host host, final HttpRequest request)
+    private static Resource resource(final Host host, final HttpRequest request)
         throws IOException {
         final Version version;
         if (request.parameters().containsKey(HttpThread.ALL_VERSIONS)) {

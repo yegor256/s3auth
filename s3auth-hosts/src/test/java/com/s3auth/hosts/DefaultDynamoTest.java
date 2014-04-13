@@ -33,6 +33,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ScanRequest;
 import com.amazonaws.services.dynamodbv2.model.ScanResult;
+import com.jcabi.urn.URN;
 import com.jcabi.urn.URNMocker;
 import java.util.LinkedList;
 import java.util.List;
@@ -73,7 +74,7 @@ public final class DefaultDynamoTest {
             Matchers.equalTo(dynamo.load().size())
         );
         final int size = dynamo.load().size();
-        dynamo.add(new URNMocker().mock(), new DomainMocker().mock());
+        dynamo.add(new URN("urn:test:alpha"), new DomainMocker().mock());
         MatcherAssert.assertThat(
             dynamo.load().size(),
             Matchers.not(Matchers.equalTo(size))

@@ -49,7 +49,6 @@ import java.util.LinkedList;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -61,7 +60,6 @@ import org.apache.commons.lang3.StringUtils;
  * @version $Id$
  * @since 0.0.1
  */
-@ToString
 @EqualsAndHashCode(of = { "bucket", "key", "range" })
 @Loggable(Loggable.DEBUG)
 final class DefaultResource implements Resource {
@@ -124,6 +122,11 @@ final class DefaultResource implements Resource {
             this.request(this.range, this.version)
         );
         this.cloudwatch = cwatch;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s:%s", this.bucket, this.key);
     }
 
     @Override
