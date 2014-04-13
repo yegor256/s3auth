@@ -54,6 +54,7 @@
         <p>
             <a>
                 <xsl:attribute name="href">
+                    <xsl:text>/</xsl:text>
                     <xsl:value-of select="."/>
                     <xsl:text>index.html</xsl:text>
                 </xsl:attribute>

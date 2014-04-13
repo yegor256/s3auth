@@ -112,7 +112,7 @@ public final class DirectoryListingTest {
      */
     private static Matcher<String> hasCommonPrefix(final String prefix) {
         return Matchers.containsString(
-            String.format("<a href=\"%sindex.html\">%s</a>", prefix, prefix)
+            String.format("<a href=\"/%sindex.html\">%s</a>", prefix, prefix)
         );
     }
 }
