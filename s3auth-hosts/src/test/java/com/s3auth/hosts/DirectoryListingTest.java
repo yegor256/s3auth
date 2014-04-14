@@ -34,6 +34,7 @@ import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.common.collect.ImmutableList;
+import com.rexsl.test.XhtmlMatchers;
 import org.apache.commons.io.Charsets;
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
@@ -94,14 +95,10 @@ public final class DirectoryListingTest {
      * Get Matcher for object element checking.
      * @param key The key
      * @return Matcher for object element
-     * @todo #133 Better to use XPath for this. However, I wasn't able to get it
-     *  to work because of XHTML namespace issues. Let's fix it. Let's also
-     *  address the same issue with hasCommonPrefix below and
-     *  {@link DefaultHostTest#showsDirectoryListing()}.
      */
     private static Matcher<String> hasObject(final String key) {
-        return Matchers.containsString(
-            String.format("<a href=\"/%s\">%s</a>", key, key)
+        return XhtmlMatchers.hasXPath(
+            String.format("//xhtml:a[@href=\"/%s\" and .=\"%s\"]", key, key)
         );
     }
 
@@ -111,8 +108,11 @@ public final class DirectoryListingTest {
      * @return Matcher for common prefix element
      */
     private static Matcher<String> hasCommonPrefix(final String prefix) {
-        return Matchers.containsString(
-            String.format("<a href=\"/%sindex.html\">%s</a>", prefix, prefix)
+        return XhtmlMatchers.hasXPath(
+            String.format(
+                "//xhtml:a[@href=\"/%sindex.html\" and .=\"%s\"]",
+                prefix, prefix
+            )
         );
     }
 }
