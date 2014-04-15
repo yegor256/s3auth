@@ -257,6 +257,36 @@ public final class DefaultHostTest {
     }
 
     /**
+     * DefaultHost can correctly return index.html version listing.
+     * @throws Exception If a problem occurs.
+     */
+    @Test
+    public void showsVersionListingForIndexHtml() throws Exception {
+        final AmazonS3 client = Mockito.mock(AmazonS3.class);
+        final VersionListing listing = Mockito.mock(VersionListing.class);
+        final S3VersionSummary summary = new S3VersionSummary();
+        final String key = "hello/index.html";
+        summary.setKey(key);
+        summary.setVersionId("def");
+        Mockito.doReturn(Collections.singletonList(summary))
+            .when(listing).getVersionSummaries();
+        Mockito.doReturn(listing).when(client)
+            .listVersions(Mockito.any(ListVersionsRequest.class));
+        MatcherAssert.assertThat(
+            ResourceMocker.toString(
+                new DefaultHost(
+                    new BucketMocker().withClient(client).mock(),
+                    this.cloudWatch()
+                ).fetch(new URI(key), Range.ENTIRE, Version.LIST)
+            ),
+            XhtmlMatchers.hasXPaths(
+                "/versions[@object=\"hello/index.html\"]",
+                "/versions/version[@key=\"hello/index.html\" and .=\"def\"]"
+            )
+        );
+    }
+
+    /**
      * DefaultHost can retrieve Cloudwatch stats.
      */
     @Test
