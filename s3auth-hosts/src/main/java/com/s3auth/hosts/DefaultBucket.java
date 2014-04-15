@@ -30,7 +30,6 @@
 package com.s3auth.hosts;
 
 import com.amazonaws.ClientConfiguration;
-import com.amazonaws.Protocol;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -70,7 +69,6 @@ final class DefaultBucket implements Bucket {
                         final ClientConfiguration config =
                             new ClientConfiguration();
                         config.setSocketTimeout(0);
-                        config.setProtocol(Protocol.HTTPS);
                         final AmazonS3 client = new AmazonS3Client(
                             new BasicAWSCredentials(dmn.key(), dmn.secret()),
                             config
