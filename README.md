@@ -21,6 +21,5 @@ which is not readable anonymously otherwise.
 
 Continuous integration environment is here: http://www.rultor/s/s3auth
 
-
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/yegor256/s3auth/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
