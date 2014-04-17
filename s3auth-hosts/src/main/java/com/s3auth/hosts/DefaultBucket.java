@@ -34,8 +34,11 @@ import com.amazonaws.Protocol;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
+import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
@@ -66,15 +69,17 @@ final class DefaultBucket implements Bucket {
 
     @Override
     @NotNull
+    @Cacheable(lifetime = Tv.TEN, unit = TimeUnit.MINUTES)
     public AmazonS3 client() {
-        final ClientConfiguration config = new ClientConfiguration();
-        config.setSocketTimeout(0);
-        config.setProtocol(Protocol.HTTP);
         final AmazonS3 client = new AmazonS3Client(
-            new BasicAWSCredentials(this.key(), this.secret()),
-            config
+            new BasicAWSCredentials(this.domain.key(), this.domain.secret()),
+            new ClientConfiguration()
+                .withSocketTimeout(0)
+                .withProtocol(Protocol.HTTP)
         );
-        client.setEndpoint(String.format("%s.amazonaws.com", this.region()));
+        client.setEndpoint(
+            String.format("%s.amazonaws.com", this.domain.region())
+        );
         return client;
     }
 

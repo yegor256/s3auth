@@ -41,6 +41,7 @@ import com.amazonaws.services.cloudwatch.model.Dimension;
 import com.amazonaws.services.cloudwatch.model.GetMetricStatisticsRequest;
 import com.amazonaws.services.cloudwatch.model.StandardUnit;
 import com.amazonaws.services.s3.model.BucketWebsiteConfiguration;
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
@@ -80,6 +81,24 @@ final class DefaultHost implements Host {
     private static final String SUFFIX = "index.html";
 
     /**
+     * Caching Host.CloudWatch instance.
+     */
+    private static final Host.CloudWatch CLOUDWATCH = new Host.CloudWatch() {
+        @Override
+        @Cacheable(lifetime = 1, unit = TimeUnit.HOURS)
+        public AmazonCloudWatchClient get() {
+            return new AmazonCloudWatchAsyncClient(
+                new BasicAWSCredentials(
+                    Manifests.read("S3Auth-AwsCloudWatchKey"),
+                    Manifests.read("S3Auth-AwsCloudWatchSecret")
+                ),
+                new ClientConfiguration().withProtocol(Protocol.HTTP),
+                Executors.newFixedThreadPool(Tv.FIFTY)
+            );
+        }
+    };
+
+    /**
      * The S3 bucket.
      */
     private final transient Bucket bucket;
@@ -101,22 +120,7 @@ final class DefaultHost implements Host {
     DefaultHost(@NotNull final Bucket bckt) {
         this(
             bckt,
-            new Host.CloudWatch() {
-                @Override
-                public AmazonCloudWatchClient get() {
-                    final ClientConfiguration config =
-                        new ClientConfiguration();
-                    config.setProtocol(Protocol.HTTP);
-                    return new AmazonCloudWatchAsyncClient(
-                        new BasicAWSCredentials(
-                            Manifests.read("S3Auth-AwsCloudWatchKey"),
-                            Manifests.read("S3Auth-AwsCloudWatchSecret")
-                        ),
-                        config,
-                        Executors.newFixedThreadPool(Tv.FIFTY)
-                    );
-                }
-            }
+            DefaultHost.CLOUDWATCH
         );
     }
 
@@ -158,8 +162,7 @@ final class DefaultHost implements Host {
             try {
                 if (version.list()) {
                     resource = new ObjectVersionListing(
-                        this.bucket.client(), this.bucket.bucket(),
-                        StringUtils.removeEnd(name.get(), SUFFIX)
+                        this.bucket.client(), this.bucket.bucket(), name.get()
                     );
                 } else {
                     resource = new DefaultResource(
@@ -382,4 +385,5 @@ final class DefaultHost implements Host {
          */
         String get();
     }
+
 }
