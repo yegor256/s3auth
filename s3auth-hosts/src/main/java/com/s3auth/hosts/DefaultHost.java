@@ -31,6 +31,8 @@ package com.s3auth.hosts;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.ClientConfiguration;
+import com.amazonaws.Protocol;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchAsyncClient;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
@@ -90,6 +92,7 @@ final class DefaultHost implements Host {
                     Manifests.read("S3Auth-AwsCloudWatchKey"),
                     Manifests.read("S3Auth-AwsCloudWatchSecret")
                 ),
+                new ClientConfiguration().withProtocol(Protocol.HTTP),
                 Executors.newFixedThreadPool(Tv.FIFTY)
             );
         }

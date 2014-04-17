@@ -30,6 +30,7 @@
 package com.s3auth.hosts;
 
 import com.amazonaws.ClientConfiguration;
+import com.amazonaws.Protocol;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -70,11 +71,11 @@ final class DefaultBucket implements Bucket {
     @NotNull
     @Cacheable(lifetime = Tv.TEN, unit = TimeUnit.MINUTES)
     public AmazonS3 client() {
-        final ClientConfiguration config = new ClientConfiguration();
-        config.setSocketTimeout(0);
         final AmazonS3 client = new AmazonS3Client(
             new BasicAWSCredentials(this.domain.key(), this.domain.secret()),
-            config
+            new ClientConfiguration()
+                .withSocketTimeout(0)
+                .withProtocol(Protocol.HTTP)
         );
         client.setEndpoint(
             String.format("%s.amazonaws.com", this.domain.region())
