@@ -158,8 +158,7 @@ final class DefaultHost implements Host {
             try {
                 if (version.list()) {
                     resource = new ObjectVersionListing(
-                        this.bucket.client(), this.bucket.bucket(),
-                        StringUtils.removeEnd(name.get(), SUFFIX)
+                        this.bucket.client(), this.bucket.bucket(), name.get()
                     );
                 } else {
                     resource = new DefaultResource(
