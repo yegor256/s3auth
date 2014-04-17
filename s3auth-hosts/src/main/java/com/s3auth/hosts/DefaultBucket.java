@@ -33,13 +33,10 @@ import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -57,31 +54,6 @@ import lombok.EqualsAndHashCode;
 final class DefaultBucket implements Bucket {
 
     /**
-     * Cache of AmazonS3 clients.
-     */
-    private static final LoadingCache<Domain, AmazonS3> CLIENTS =
-        CacheBuilder.newBuilder()
-            .expireAfterAccess(Tv.TEN, TimeUnit.MINUTES)
-            .build(
-                new CacheLoader<Domain, AmazonS3>() {
-                    @Override
-                    public AmazonS3 load(final Domain dmn) {
-                        final ClientConfiguration config =
-                            new ClientConfiguration();
-                        config.setSocketTimeout(0);
-                        final AmazonS3 client = new AmazonS3Client(
-                            new BasicAWSCredentials(dmn.key(), dmn.secret()),
-                            config
-                        );
-                        client.setEndpoint(
-                            String.format("%s.amazonaws.com", dmn.region())
-                        );
-                        return client;
-                    }
-                }
-            );
-
-    /**
      * The domain.
      */
     private final transient Domain domain;
@@ -97,19 +69,7 @@ final class DefaultBucket implements Bucket {
     @Override
     @NotNull
     public AmazonS3 client() {
-        final AmazonS3 client;
-        try {
-            client = CLIENTS.get(this.domain);
-        } catch (final ExecutionException exp) {
-            throw new IllegalStateException(
-                String.format(
-                    "Failed to fetch AmazonS3 client for domain: %s",
-                    this.name()
-                ),
-                exp
-            );
-        }
-        return client;
+        return DefaultBucket.client(this.domain);
     }
 
     @Override
@@ -152,4 +112,23 @@ final class DefaultBucket implements Bucket {
         return this.domain.syslog();
     }
 
+    /**
+     * Get the client for a given domain.
+     * @param dmn The domain
+     * @return S3 client for the given domain
+     */
+    @Cacheable(lifetime = Tv.TEN, unit = TimeUnit.MINUTES)
+    private static AmazonS3 client(final Domain dmn) {
+        final ClientConfiguration config =
+            new ClientConfiguration();
+        config.setSocketTimeout(0);
+        final AmazonS3 client = new AmazonS3Client(
+            new BasicAWSCredentials(dmn.key(), dmn.secret()),
+            config
+        );
+        client.setEndpoint(
+            String.format("%s.amazonaws.com", dmn.region())
+        );
+        return client;
+    }
 }
