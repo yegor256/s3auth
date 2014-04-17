@@ -96,8 +96,8 @@
                         </a>
                         <xsl:text>, although we provide a service for their clients.</xsl:text>
                         <xsl:text> The service is absolutely free of charge, since it is sponsored by </xsl:text>
-                        <a href="http://www.tpc2.com/">
-                            <xsl:text>tpc2.com</xsl:text>
+                        <a href="http://www.teamed.io/">
+                            <xsl:text>teamed.io</xsl:text>
                         </a>
                         <xsl:text> (a </xsl:text>
                         <a href="https://aws.amazon.com/solution-providers/isv/technopark-corp">
