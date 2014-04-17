@@ -68,8 +68,18 @@ final class DefaultBucket implements Bucket {
 
     @Override
     @NotNull
+    @Cacheable(lifetime = Tv.TEN, unit = TimeUnit.MINUTES)
     public AmazonS3 client() {
-        return DefaultBucket.client(this.domain);
+        final ClientConfiguration config = new ClientConfiguration();
+        config.setSocketTimeout(0);
+        final AmazonS3 client = new AmazonS3Client(
+            new BasicAWSCredentials(this.domain.key(), this.domain.secret()),
+            config
+        );
+        client.setEndpoint(
+            String.format("%s.amazonaws.com", this.domain.region())
+        );
+        return client;
     }
 
     @Override
@@ -112,23 +122,4 @@ final class DefaultBucket implements Bucket {
         return this.domain.syslog();
     }
 
-    /**
-     * Get the client for a given domain.
-     * @param dmn The domain
-     * @return S3 client for the given domain
-     */
-    @Cacheable(lifetime = Tv.TEN, unit = TimeUnit.MINUTES)
-    private static AmazonS3 client(final Domain dmn) {
-        final ClientConfiguration config =
-            new ClientConfiguration();
-        config.setSocketTimeout(0);
-        final AmazonS3 client = new AmazonS3Client(
-            new BasicAWSCredentials(dmn.key(), dmn.secret()),
-            config
-        );
-        client.setEndpoint(
-            String.format("%s.amazonaws.com", dmn.region())
-        );
-        return client;
-    }
 }
