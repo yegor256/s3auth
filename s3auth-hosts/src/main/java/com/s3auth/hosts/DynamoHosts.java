@@ -82,6 +82,7 @@ public final class DynamoHosts implements Hosts {
 
     @Override
     @NotNull
+    @Loggable(value = Loggable.DEBUG, ignore = Hosts.NotFoundException.class)
     public Host find(
         @NotNull(message = "host name can't be NULL")
         @Pattern(regexp = "[a-zA-Z0-9\\-\\.]+", message = "invalid host name")
