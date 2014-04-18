@@ -150,37 +150,43 @@ final class HttpResponse {
      * @throws IOException If some IO problem inside
      * @see <a href="http://stackoverflow.com/questions/8179547">discussion</a>
      */
-    @Loggable(value = Loggable.DEBUG, limit = Integer.MAX_VALUE)
+    @Loggable(
+        value = Loggable.DEBUG, limit = Integer.MAX_VALUE,
+        ignore = IOException.class
+    )
     public long send(@NotNull final Socket socket) throws IOException {
         final OutputStream stream = socket.getOutputStream();
         final Writer writer = new OutputStreamWriter(stream, Charsets.UTF_8);
-        writer.write(
-            String.format(
-                "HTTP/1.1 %d %s%s",
-                this.status,
-                HttpStatus.getStatusText(this.status),
-                HttpResponse.EOL
-            )
-        );
-        for (final ConcurrentMap.Entry<String, Collection<String>> hdr
-            : this.hdrs.entrySet()) {
-            for (final String value : hdr.getValue()) {
-                writer.write(hdr.getKey());
-                writer.write(": ");
-                writer.write(value);
+        try {
+            writer.write(
+                String.format(
+                    "HTTP/1.1 %d %s%s",
+                    this.status,
+                    HttpStatus.getStatusText(this.status),
+                    HttpResponse.EOL
+                )
+            );
+            for (final ConcurrentMap.Entry<String, Collection<String>> hdr
+                : this.hdrs.entrySet()) {
+                for (final String value : hdr.getValue()) {
+                    writer.write(hdr.getKey());
+                    writer.write(": ");
+                    writer.write(value);
+                    writer.write(HttpResponse.EOL);
+                }
+            }
+            for (final String hdr : this.body.headers()) {
+                writer.write(hdr);
                 writer.write(HttpResponse.EOL);
             }
-        }
-        for (final String hdr : this.body.headers()) {
-            writer.write(hdr);
             writer.write(HttpResponse.EOL);
+            writer.flush();
+            long bytes = 0L;
+            bytes += this.body.writeTo(stream);
+            return bytes;
+        } finally {
+            writer.close();
         }
-        writer.write(HttpResponse.EOL);
-        writer.flush();
-        long bytes = 0L;
-        bytes += this.body.writeTo(stream);
-        writer.close();
-        return bytes;
     }
 
 }
