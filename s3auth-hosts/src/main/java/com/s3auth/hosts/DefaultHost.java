@@ -196,7 +196,8 @@ final class DefaultHost implements Host {
                             this.bucket.client().getBucketWebsiteConfiguration(
                                 this.bucket.bucket()
                             );
-                        if (config.getErrorDocument() != null) {
+                        if (config != null && config.getErrorDocument() != null)
+                        {
                             resource = new DefaultResource(
                                 this.bucket.client(), this.bucket.bucket(),
                                 config.getErrorDocument(), Range.ENTIRE,
