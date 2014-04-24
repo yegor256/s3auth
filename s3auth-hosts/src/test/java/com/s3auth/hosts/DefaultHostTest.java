@@ -358,6 +358,25 @@ public final class DefaultHostTest {
     }
 
     /**
+     * DefaultHost throws exception from S3 if status code is 4xx and there
+     * is no BucketWebsiteConfiguration.
+     * @throws Exception If there is some problem inside
+     */
+    @Test(expected = IOException.class)
+    public void throwsExceptionIfNoBucketWebsiteConfiguration()
+        throws Exception {
+        final AmazonS3 aws = Mockito.mock(AmazonS3.class);
+        final AmazonServiceException ex =
+            new AmazonServiceException("The object is not found");
+        ex.setStatusCode(HttpStatus.SC_NOT_FOUND);
+        Mockito.doThrow(ex).when(aws)
+            .getObject(Mockito.any(GetObjectRequest.class));
+        new DefaultHost(
+            new BucketMocker().withClient(aws).mock(), this.cloudWatch()
+        ).fetch(URI.create("failed.html"), Range.ENTIRE, Version.LATEST);
+    }
+
+    /**
      * Mock Host.Cloudwatch for test.
      * @return Mock Cloudwatch
      */
