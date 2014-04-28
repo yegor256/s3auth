@@ -30,4 +30,162 @@ s3auth.com knows that you care how information about you is
 used and shared, and we appreciate your trust that we will do
 so carefully and sensibly.
 
-To be continued...
+Terms of Service
+April 24, 2014
+
+1. About the Terms of Service
+
+Within these Terms of Service ("Terms") the term "s3auth.com" or "we" will refer
+to TechnoPark Corp., and its respective subsidiaries and affiliates that own and
+operate s3auth.com on their behalf. The term "you" refers to you as a user
+of s3auth.com.
+
+You specifically agree not to:
+
+- use the s3auth.com to undertake or accomplish any unlawful purpose, including
+but not limited to, posting, storing, transmitting or disseminating information,
+data or material which is libelous, obscene, unlawful, threatening or
+defamatory, or which infringes the intellectual property rights of any person or
+entity, or which in any way constitutes or encourages conduct that would
+constitute a criminal offense, or otherwise violate any local, state, federal,
+or non-U.S. law, order, or regulation;
+
+- post, store, send, transmit, or disseminate on the s3auth.com any information
+or material which a reasonable person could deem to be unlawful;
+
+- upload, post, publish, transmit, reproduce, create derivative works of, or
+distribute on the s3auth.com in any way information, software or other material
+that is protected by copyright or other proprietary right, without obtaining any
+required permission of the owner;
+
+- post on the s3auth.com unsolicited bulk or commercial messages commonly known
+as "spam;"
+
+- initiate, perpetuate, or in any way participate in any pyramid or other
+illegal scheme through the s3auth.com;
+
+- participate in the collection of very large numbers of e-mail addresses,
+screen names, or other identifiers of others (without their prior consent) from
+the s3auth.com, a practice sometimes known as spidering or harvesting, or
+participate in the use of software (including "spyware") designed to facilitate
+this activity;
+
+- collect responses from unsolicited bulk messages posted on the s3auth.com;
+
+- impersonate any person or entity, engage in sender address falsification,
+forge anyone else's digital or manual signature, or perform any other similar
+fraudulent activity (for example, "phishing") on the s3auth.com;
+
+- restrict, inhibit, or otherwise interfere with the ability of any other
+person, regardless of intent, purpose or knowledge, to use or enjoy the
+s3auth.com (except for tools for safety and security functions such as parental
+controls, for example), including, without limitation, posting or transmitting
+any information or software which contains a worm, virus, or other harmful
+feature, or generating levels of traffic sufficient to impede others' ability to
+use, send, or retrieve information;
+
+- register under the name of, nor attempt to use the s3auth.com under the name
+of, another person;
+
+- allow another person to access the s3auth.com using your credentials;
+
+- access (or attempt to access) the s3auth.com through any automated means
+(including use of scripts or web crawlers), except through APIs or other
+interfaces specifically provided for this purpose, or violate the instructions
+set out in any robots.txt or similar file present within the s3auth.com;
+
+- engage in the systematic retrieval of data or other content from the
+s3auth.com, except though APIs or other interfaces specifically provided for
+this purpose, to create or compile, directly or indirectly, a collection,
+compilation, database or directory, without s3auth.com's prior written consent;
+
+- take any actions for the purpose of manipulating or distorting, or that may
+undermine the integrity and accuracy of, any ratings or reviews of any movie or
+other entertainment program, service or product that may be presented by the
+s3auth.com; or
+
+- attempt to or actually circumvent any method used by s3auth.com to control
+access to the service, including, but not limited to, spoofing or otherwise
+impersonating an IP address for your computer that is not actually assigned to
+your computer or setting up a proxy or other device that allows others to access
+s3auth.com through it.
+
+You are responsible for maintaining the confidentiality of your s3auth.com
+account and its password(s) and access cookies. In addition you are responsible
+for controlling access to any PCs, mobile devices, or other end points that you
+allow to store your password, or on which you enable a "Remember Me" or similar
+functionality ("Activated Device"). Accordingly, you agree that you will be
+solely responsible to s3auth.com for all activities that occur under your
+s3auth.com accounts, including the activities of any individual with whom you
+share your s3auth.com account or an Activated Device, and will be responsible
+for any breach of these Terms caused by these activities. If you become aware of
+any unauthorized use of your password or of your account, you agree to notify
+s3auth.com immediately. To protect your privacy, s3auth.com recommends logging
+out of the s3auth.com after each visit, when you are using a public or shared
+PC, mobile device, or other end point.
+
+YOU AGREE THAT YOUR USE OF S3AUTH.COM IS AT YOUR SOLE RISK. BECAUSE OF THE
+NUMBER OF POSSIBLE SOURCES OF INFORMATION AVAILABLE THROUGH S3AUTH.COM, AND THE
+INHERENT HAZARDS AND UNCERTAINTIES OF ELECTRONIC DISTRIBUTION, THERE MAY BE
+INTERRUPTIONS, DELAYS, OMISSIONS, INACCURACIES, OR OTHER PROBLEMS WITH THIS
+INFORMATION. IF YOU RELY ON S3AUTH.COM OR ANY MATERIAL AVAILABLE THROUGH THEM,
+YOU DO SO AT YOUR OWN RISK. YOU UNDERSTAND THAT YOU ARE SOLELY RESPONSIBLE FOR
+ANY DAMAGE TO YOUR COMPUTER SYSTEM OR LOSS OF DATA THAT RESULTS FROM ANY
+MATERIAL AND/OR DATA DOWNLOADED FROM OR OTHERWISE PROVIDED THROUGH S3AUTH.COM.
+
+S3AUTH.COM IS PROVIDED TO YOU "AS IS," "WITH ALL FAULTS," AND "AS AVAILABLE."
+TECHNOPARK CORP. AND ITS AGENTS AND LICENSORS CANNOT AND DO NOT WARRANT THE
+ACCURACY, COMPLETENESS, USEFULNESS, TIMELINESS, NONINFRINGEMENT, MERCHANTABILITY
+OR FITNESS FOR A PARTICULAR PURPOSE OF THE INFORMATION AVAILABLE THROUGH
+S3AUTH.COM, NOR DO THEY GUARANTEE THAT S3AUTH.COM WILL BE ERROR-FREE, OR
+CONTINUOUSLY AVAILABLE, OR THAT S3AUTH.COM WILL BE FREE OF VIRUSES OR OTHER
+HARMFUL COMPONENTS.
+
+UNDER NO CIRCUMSTANCES SHALL TECHNOPARK CORP. (INCLUDING ITS PARENTS,
+SUBSIDIARIES, AND AFFILIATES) OR ITS AGENTS OR LICENSORS BE LIABLE TO YOU OR
+ANYONE ELSE FOR ANY DAMAGES ARISING OUT OF ANY USE OR MISUSE OF S3AUTH.COM,
+INCLUDING, WITHOUT LIMITATION, LIABILITY FOR CONSEQUENTIAL, SPECIAL, INCIDENTAL,
+INDIRECT, OR SIMILAR DAMAGES, EVEN IF ADVISED BEFOREHAND OF THE POSSIBILITY OF
+THESE DAMAGES, REGARDLESS OF THE FORM OR CAUSE OF ACTION INCLUDING, BUT NOT
+LIMITED TO, CONTRACT, NEGLIGENCE, AND OTHER TORT ACTIONS. BECAUSE SOME STATES DO
+NOT ALLOW THE EXCLUSION OR LIMITATION OF CERTAIN CATEGORIES OF DAMAGES, THE
+ABOVE LIMITATION MAY NOT APPLY TO YOU. IN THESE STATES, THE LIABILITY OF
+TECHNOPARK CORP. AND ITS AGENTS AND LICENSORS IS LIMITED TO THE FULLEST EXTENT
+PERMITTED BY APPLICABLE STATE LAW. YOU AGREE THAT THE LIABILITY OF TECHNOPARK
+CORP. (INCLUDING ITS PARENTS, SUBSIDIARIES, AND AFFILIATES) AND ITS AGENTS AND
+LICENSORS, IF ANY, ARISING OUT OF ANY KIND OF LEGAL CLAIM IN ANY WAY CONNECTED
+TO S3AUTH.COM SHALL NOT EXCEED THE AMOUNT YOU PAID TO TECHNOPARK CORP. FOR THE
+USE OF S3AUTH.COM.
+
+If you are the owner of any copyrighted work and believe your rights under U.S.
+copyright law have been infringed by any material on the s3auth.com, you may
+take advantage of certain provisions of the Digital Millennium Copyright Act
+(the "DMCA") by sending s3auth.com's authorized agent a notification of claimed
+infringement that satisfies the requirements of the DMCA. Upon s3auth.com's
+receipt of a satisfactory notice of claimed infringement, s3auth.com will
+respond expeditiously either directly or indirectly (i) to remove the allegedly
+infringing work(s) accessible through the s3auth.com or (ii) to disable access
+to the work(s). It is s3auth.com's policy in accordance with the DMCA and other
+applicable laws to reserve the right to terminate access to the s3auth.com (or
+any part of those services) for any user who is either found to infringe third-
+party copyright or other intellectual property rights, including repeat
+infringers, or who s3auth.com, in its sole discretion, believes is infringing
+these rights. s3auth.com may terminate access to the s3auth.com at any time with
+or without notice for any affected customer or user. If the affected user
+believes in good faith that the allegedly infringing works have been removed or
+blocked by mistake or misidentification, then that person may send a counter
+notification to s3auth.com. Upon s3auth.com's receipt of a counter notification
+that satisfies the requirements of DMCA, s3auth.com will provide a copy of the
+counter notification to the person who sent the original notification of claimed
+infringement and will follow the DMCA's procedures with respect to a received
+counter notification. In all events, you expressly agree that s3auth.com will
+not be a party to any disputes or lawsuits regarding alleged copyright
+infringement.
+
+Copyright owners may send s3auth.com a notification of claimed infringement to
+report alleged infringements of their works to:
+
+568 Ninth Street South, 202
+Naples, Florida 34102
+The United States
+copyright@s3auth.com
