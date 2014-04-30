@@ -124,6 +124,11 @@ final class HttpThread {
         try {
             final HttpRequest request = new HttpRequest(socket);
             if ("GET".equals(request.method())) {
+                // @todo #101 HttpResponse can now write responses with gzip
+                //  compressed body. However, we aren't actually sending gzip
+                //  compressed responses yet. Let's set the value of
+                //  response.withCompression() in accordance with the request's
+                //  Accept-Encoding and Content-Type headers.
                 HttpResponse response = new HttpResponse()
                     .withHeader("Server", HttpThread.NAME)
                     .withHeader(
