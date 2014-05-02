@@ -38,17 +38,14 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.zip.GZIPOutputStream;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.Charsets;
-import org.apache.http.HttpHeaders;
 
 /**
  * HTTP response, writable to IO socket.
@@ -96,11 +93,6 @@ final class HttpResponse {
      * Resource to deliver.
      */
     private transient Resource body = new Resource.PlainText("");
-
-    /**
-     * If response body is compressed.
-     */
-    private transient boolean compressed;
 
     /**
      * Set HTTP status.
@@ -152,23 +144,6 @@ final class HttpResponse {
     }
 
     /**
-     * With HTTP compression.
-     * @param comp Whether the response body is compressed
-     * @return This object
-     */
-    public HttpResponse withCompression(final boolean comp) {
-        this.compressed = comp;
-        if (this.compressed) {
-            this.hdrs.put(
-                HttpHeaders.CONTENT_ENCODING, Collections.singleton("gzip")
-            );
-        } else {
-            this.hdrs.remove(HttpHeaders.CONTENT_ENCODING);
-        }
-        return this;
-    }
-
-    /**
      * Send it to the socket.
      * @param socket The socket to write to
      * @return How many bytes were actually sent
@@ -206,31 +181,12 @@ final class HttpResponse {
             }
             writer.write(HttpResponse.EOL);
             writer.flush();
-            return this.writeBody(stream);
+            long bytes = 0L;
+            bytes += this.body.writeTo(stream);
+            return bytes;
         } finally {
             writer.close();
         }
-    }
-
-    /**
-     * Write the response body to the output.
-     * @param stream The output stream.
-     * @return Number of bytes written
-     * @throws IOException If something goes wrong
-     */
-    private long writeBody(final OutputStream stream) throws IOException {
-        long bytes = 0L;
-        if (this.compressed) {
-            final GZIPOutputStream gzip = new GZIPOutputStream(stream);
-            try {
-                bytes += this.body.writeTo(gzip);
-            } finally {
-                gzip.finish();
-            }
-        } else {
-            bytes += this.body.writeTo(stream);
-        }
-        return bytes;
     }
 
 }

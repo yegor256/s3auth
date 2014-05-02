@@ -31,7 +31,6 @@ package com.s3auth.relay;
 
 import com.jcabi.log.VerboseRunnable;
 import com.s3auth.hosts.Resource;
-import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -44,12 +43,10 @@ import java.util.Date;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.zip.GZIPOutputStream;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -79,37 +76,6 @@ public final class HttpResponseTest {
                 Matchers.startsWith("HTTP/1.1 404"),
                 Matchers.containsString("\n\nhi!")
             )
-        );
-    }
-
-    /**
-     * HttpResponse can send compressed HTTP response.
-     * @throws Exception If there is some problem inside
-     */
-    @Test
-    public void sendsCompressedDataToSocket() throws Exception {
-        final String content = "Hello world!";
-        final HttpResponse resp = new HttpResponse()
-            .withBody(content).withCompression(true);
-        final String header = "Content-Encoding: gzip";
-        MatcherAssert.assertThat(
-            HttpResponseMocker.toString(resp),
-            Matchers.containsString(header)
-        );
-        final byte[] bytes = HttpResponseMocker.toByteArray(resp);
-        final ByteArrayOutputStream body = new ByteArrayOutputStream();
-        final GZIPOutputStream gzip = new GZIPOutputStream(body);
-        IOUtils.write(content, gzip, Charsets.UTF_8);
-        gzip.finish();
-        MatcherAssert.assertThat(
-            ArrayUtils.toObject(
-                ArrayUtils.subarray(
-                    bytes,
-                    bytes.length - body.toByteArray().length,
-                    bytes.length
-                )
-            ),
-            Matchers.arrayContaining(ArrayUtils.toObject(body.toByteArray()))
         );
     }
 

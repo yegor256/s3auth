@@ -31,7 +31,6 @@ package com.s3auth.relay;
 
 import java.io.ByteArrayOutputStream;
 import java.net.Socket;
-import org.apache.commons.io.Charsets;
 import org.mockito.Mockito;
 
 /**
@@ -49,29 +48,17 @@ public final class HttpResponseMocker {
     }
 
     /**
-     * Convert response to byte array.
-     * @param resp The response
-     * @return Byte form
-     * @throws Exception If there is some problem inside.
-     */
-    public static byte[] toByteArray(final HttpResponse resp) throws Exception {
-        final Socket socket = Mockito.mock(Socket.class);
-        final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        Mockito.doReturn(stream).when(socket).getOutputStream();
-        resp.send(socket);
-        return stream.toByteArray();
-    }
-
-    /**
      * Convert response to string.
      * @param resp The response
      * @return Text form
      * @throws Exception If there is some problem inside
      */
     public static String toString(final HttpResponse resp) throws Exception {
-        return new String(
-            HttpResponseMocker.toByteArray(resp), Charsets.UTF_8
-        );
+        final Socket socket = Mockito.mock(Socket.class);
+        final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        Mockito.doReturn(stream).when(socket).getOutputStream();
+        resp.send(socket);
+        return new String(stream.toByteArray());
     }
 
 }
