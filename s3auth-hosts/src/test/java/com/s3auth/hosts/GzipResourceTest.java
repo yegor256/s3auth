@@ -69,4 +69,16 @@ public final class GzipResourceTest {
         );
     }
 
+    /**
+     * GzipResource returns Content-Encoding header.
+     * @throws Exception If something goes wrong.
+     */
+    @Test
+    public void containsContentEncodingHeader() throws Exception {
+        MatcherAssert.assertThat(
+            new GzipResource(new Resource.PlainText("foo")).headers(),
+            Matchers.hasItem("Content-Encoding: gzip")
+        );
+    }
+
 }

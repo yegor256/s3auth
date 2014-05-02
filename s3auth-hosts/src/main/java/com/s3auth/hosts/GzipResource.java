@@ -29,11 +29,16 @@
  */
 package com.s3auth.hosts;
 
+import com.google.common.collect.ImmutableList;
+import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Date;
 import java.util.zip.GZIPOutputStream;
+import lombok.EqualsAndHashCode;
+import org.apache.http.HttpHeaders;
 
 /**
  * Wrapper for {@link Resource} that writes GZIP compressed output.
@@ -41,6 +46,9 @@ import java.util.zip.GZIPOutputStream;
  * @author Carlos Miranda (miranda.cma@gmail.com)
  * @version $Id$
  */
+@Immutable
+@EqualsAndHashCode(of = "resource")
+@Loggable(Loggable.DEBUG)
 public final class GzipResource implements Resource {
 
     /**
@@ -75,7 +83,10 @@ public final class GzipResource implements Resource {
 
     @Override
     public Collection<String> headers() throws IOException {
-        return this.resource.headers();
+        return ImmutableList.<String>builder()
+            .addAll(this.resource.headers())
+            .add(String.format("%s: %s", HttpHeaders.CONTENT_ENCODING, "gzip"))
+            .build();
     }
 
     @Override

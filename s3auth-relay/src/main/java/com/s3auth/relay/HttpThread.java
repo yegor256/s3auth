@@ -118,8 +118,7 @@ final class HttpThread {
      * @todo #101 Let's handle GZIP HTTP compression. We should
      *  parse the request's Accept-Encoding and Content-Type headers, and use
      *  GZIP compression if appropriate. If we are returning compressed input,
-     *  we should wrap the resource in a GzipResource instance and set the
-     *  Content-Encoding response header.
+     *  we should wrap the resource in a GzipResource instance.
      */
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public long dispatch() throws InterruptedException {
