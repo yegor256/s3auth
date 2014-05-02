@@ -115,6 +115,11 @@ final class HttpThread {
      * Dispatch one request from the encapsulated queue.
      * @return Amount of bytes sent to socket
      * @throws InterruptedException If interrupted while waiting for the queue
+     * @todo #101 Let's handle GZIP HTTP compression. We should
+     *  parse the request's Accept-Encoding and Content-Type headers, and use
+     *  GZIP compression if appropriate. If we are returning compressed input,
+     *  we should wrap the resource in a GzipResource instance and set the
+     *  Content-Encoding response header.
      */
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public long dispatch() throws InterruptedException {
@@ -124,11 +129,6 @@ final class HttpThread {
         try {
             final HttpRequest request = new HttpRequest(socket);
             if ("GET".equals(request.method())) {
-                // @todo #101 HttpResponse can now write responses with gzip
-                //  compressed body. However, we aren't actually sending gzip
-                //  compressed responses yet. Let's set the value of
-                //  response.withCompression() in accordance with the request's
-                //  Accept-Encoding and Content-Type headers.
                 HttpResponse response = new HttpResponse()
                     .withHeader("Server", HttpThread.NAME)
                     .withHeader(
