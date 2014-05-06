@@ -252,7 +252,11 @@ public final class IndexRs extends BaseRs {
                 this.buckt = bckt;
             }
             this.regn = rgn;
-            this.slog = syslg;
+            if (syslg.isEmpty()) {
+                this.slog = "syslog.s3auth.com:514";
+            } else {
+                this.slog = syslg;
+            }
         }
 
         @Override
