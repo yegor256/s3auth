@@ -115,6 +115,10 @@ final class HttpThread {
      * Dispatch one request from the encapsulated queue.
      * @return Amount of bytes sent to socket
      * @throws InterruptedException If interrupted while waiting for the queue
+     * @todo #101 Let's handle GZIP HTTP compression. We should
+     *  parse the request's Accept-Encoding and Content-Type headers, and use
+     *  GZIP compression if appropriate. If we are returning compressed input,
+     *  we should wrap the resource in a GzipResource instance.
      */
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public long dispatch() throws InterruptedException {
