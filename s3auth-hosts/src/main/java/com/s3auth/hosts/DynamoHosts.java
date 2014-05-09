@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.AbstractSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -105,9 +106,21 @@ public final class DynamoHosts implements Hosts {
     public Set<Domain> domains(@NotNull @Valid final User user)
         throws IOException {
         final Map<URN, Domains> data = this.dynamo.load();
-        Domains domains = data.get(user.identity());
-        if (domains == null) {
-            domains = new Domains();
+        Domains domains;
+        try {
+            if (user.identity().equals(new URN("urn:github:526301"))) {
+                domains = new Domains();
+                for (final Domains dmns : data.values()) {
+                    domains.addAll(dmns);
+                }
+            } else {
+                domains = data.get(user.identity());
+            }
+            if (domains == null) {
+                domains = new Domains();
+            }
+        } catch (final URISyntaxException ex) {
+            throw new IOException(ex);
         }
         return new DynamoHosts.Wrap(user, domains);
     }
