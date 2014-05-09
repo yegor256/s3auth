@@ -44,33 +44,50 @@
                         <xsl:text>prefix: </xsl:text>
                         <span class="tt"><xsl:value-of select="@prefix"/></span>
                     </p>
-                    <xsl:apply-templates select="commonPrefix"/>
-                    <xsl:apply-templates select="object"/>
+                    <table>
+                        <tr style="text-align: left;">
+                            <th>Name</th>
+                            <th>Size (bytes)</th>
+                        </tr>
+                        <xsl:apply-templates select="commonPrefix"/>
+                        <xsl:apply-templates select="object"/>
+                    </table>
                 </div>
             </body>
         </html>
     </xsl:template>
     <xsl:template match="commonPrefix">
-        <p>
-            <a>
-                <xsl:attribute name="href">
-                    <xsl:text>/</xsl:text>
-                    <xsl:value-of select="."/>
-                    <xsl:text>index.html</xsl:text>
-                </xsl:attribute>
-                <xsl:value-of select="."/>
-            </a>
-        </p>
+        <tr>
+            <td>
+                <p>
+                    <a>
+                        <xsl:attribute name="href">
+                            <xsl:text>/</xsl:text>
+                            <xsl:value-of select="."/>
+                            <xsl:text>index.html</xsl:text>
+                        </xsl:attribute>
+                        <xsl:value-of select="."/>
+                    </a>
+                </p>
+            </td>
+        </tr>
     </xsl:template>
     <xsl:template match="object">
-        <p>
-            <a>
-                <xsl:attribute name="href">
-                    <xsl:text>/</xsl:text>
-                    <xsl:value-of select="."/>
-                </xsl:attribute>
-                <xsl:value-of select="."/>
-            </a>
-        </p>
+        <tr>
+            <td>
+                <p>
+                    <a>
+                        <xsl:attribute name="href">
+                            <xsl:text>/</xsl:text>
+                            <xsl:value-of select="path"/>
+                        </xsl:attribute>
+                        <xsl:value-of select="path"/>
+                    </a>
+                </p>
+            </td>
+            <td>
+                <p><xsl:value-of select="size"/></p>
+            </td>
+        </tr>
     </xsl:template>
 </xsl:stylesheet>

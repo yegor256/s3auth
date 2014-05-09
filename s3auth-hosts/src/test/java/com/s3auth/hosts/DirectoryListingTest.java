@@ -34,6 +34,7 @@ import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.common.collect.ImmutableList;
+import com.jcabi.aspects.Tv;
 import com.rexsl.test.XhtmlMatchers;
 import org.apache.commons.io.Charsets;
 import org.hamcrest.Matcher;
@@ -70,6 +71,7 @@ public final class DirectoryListingTest {
             @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
             final S3ObjectSummary summary = new S3ObjectSummary();
             summary.setKey(key);
+            summary.setSize(Tv.TEN);
             builder.add(summary);
         }
         Mockito.doReturn(builder.build()).when(listing).getObjectSummaries();
@@ -84,9 +86,9 @@ public final class DirectoryListingTest {
             Matchers.allOf(
                 hasCommonPrefix(prefixes[0]),
                 hasCommonPrefix(prefixes[1]),
-                hasObject(names[0]),
-                hasObject(names[1]),
-                hasObject(names[2])
+                hasObject(names[0], Tv.TEN),
+                hasObject(names[1], Tv.TEN),
+                hasObject(names[2], Tv.TEN)
             )
         );
     }
@@ -94,11 +96,16 @@ public final class DirectoryListingTest {
     /**
      * Get Matcher for object element checking.
      * @param key The key
+     * @param size The size
      * @return Matcher for object element
      */
-    private static Matcher<String> hasObject(final String key) {
-        return XhtmlMatchers.hasXPath(
-            String.format("//xhtml:a[@href=\"/%s\" and .=\"%s\"]", key, key)
+    private static Matcher<String> hasObject(final String key, final int size) {
+        return XhtmlMatchers.hasXPaths(
+            String.format(
+                "//xhtml:a[@href=\"/%s\" and .=\"%s\"]",
+                key, key
+            ),
+            String.format("//xhtml:p[.=\"%d\"]", size)
         );
     }
 
