@@ -111,7 +111,12 @@ final class DirectoryListing implements Resource {
             dirs.add("commonPrefix").set(prefix).up();
         }
         for (final S3ObjectSummary object : objects) {
-            dirs.add("object").set(object.getKey()).up();
+            dirs.add("object")
+                .add("path")
+                .set(object.getKey()).up()
+                .add("size")
+                .set(Long.toString(object.getSize())).up()
+                .up();
         }
         try {
             this.content = XSL.transform(
