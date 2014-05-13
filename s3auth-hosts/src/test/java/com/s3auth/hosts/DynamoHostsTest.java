@@ -29,6 +29,7 @@
  */
 package com.s3auth.hosts;
 
+import java.util.Set;
 import org.hamcrest.CustomMatcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -194,6 +195,31 @@ public final class DynamoHostsTest {
                 MatcherAssert.assertThat(ex, Matchers.notNullValue());
             }
         }
+        hosts.close();
+    }
+
+    /**
+     * DynamoHosts can fetch all domains from any user for the super user.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void fetchesAllDomainsForSuperUser() throws Exception {
+        final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
+        final Domain first = new DomainMocker().withName("first.com").mock();
+        final Domain second = new DomainMocker().withName("second.com").mock();
+        hosts.domains(
+            new UserMocker().withIdentity("urn:facebook:5547").mock()
+        ).add(first);
+        hosts.domains(
+            new UserMocker().withIdentity("urn:facebook:5548").mock()
+        ).add(second);
+        final Set<Domain> domains = hosts.domains(
+            new UserMocker().withIdentity("urn:github:526301").mock()
+        );
+        MatcherAssert.assertThat(
+            domains,
+            Matchers.<Domain>iterableWithSize(2)
+        );
         hosts.close();
     }
 
