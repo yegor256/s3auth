@@ -53,6 +53,7 @@ import org.apache.commons.io.IOUtils;
  * @since 0.0.1
  */
 @Immutable
+@SuppressWarnings("PMD.TooManyMethods")
 public interface Resource {
 
     /**

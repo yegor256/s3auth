@@ -29,8 +29,10 @@
  */
 package com.s3auth.relay;
 
+import com.google.common.collect.ImmutableSet;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
+import com.s3auth.hosts.GzipResource;
 import com.s3auth.hosts.Host;
 import com.s3auth.hosts.Hosts;
 import com.s3auth.hosts.Resource;
@@ -64,10 +66,15 @@ import org.apache.http.client.utils.DateUtils;
  * @version $Id$
  * @since 0.0.1
  * @see HttpFacade
+ * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @ToString
 @EqualsAndHashCode(of = { "hosts", "sockets" })
-@SuppressWarnings({ "PMD.DoNotUseThreads", "PMD.UseConcurrentHashMap" })
+@SuppressWarnings({
+    "PMD.DoNotUseThreads",
+    "PMD.UseConcurrentHashMap",
+    "PMD.CyclomaticComplexity"
+})
 final class HttpThread {
 
     /**
@@ -89,6 +96,23 @@ final class HttpThread {
         Manifests.read("S3Auth-Revision"),
         Manifests.read("S3Auth-Date")
     );
+
+    /**
+     * Compressible content types.
+     */
+    private static final Collection<String> COMPRESSIBLE =
+        ImmutableSet.<String>builder()
+            .add("text/plain")
+            .add("text/html")
+            .add("text/xml")
+            .add("text/css")
+            .add("application/xml")
+            .add("application/xhtml")
+            .add("application/xhtml+xml")
+            .add("application/rss+xml")
+            .add("application/javascript")
+            .add("application/x-javascript")
+            .build();
 
     /**
      * Queue of sockets to get from.
@@ -115,10 +139,6 @@ final class HttpThread {
      * Dispatch one request from the encapsulated queue.
      * @return Amount of bytes sent to socket
      * @throws InterruptedException If interrupted while waiting for the queue
-     * @todo #101 Let's handle GZIP HTTP compression. We should
-     *  parse the request's Accept-Encoding and Content-Type headers, and use
-     *  GZIP compression if appropriate. If we are returning compressed input,
-     *  we should wrap the resource in a GzipResource instance.
      */
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public long dispatch() throws InterruptedException {
@@ -209,7 +229,7 @@ final class HttpThread {
         } else {
             version = Version.LATEST;
         }
-        final Resource resource = host.fetch(
+        Resource resource = host.fetch(
             request.requestUri(), request.range(), version
         );
         if (request.headers().containsKey(HttpHeaders.IF_NONE_MATCH)) {
@@ -228,6 +248,12 @@ final class HttpThread {
             if (resource.lastModified().before(since)) {
                 throw new HttpException(HttpURLConnection.HTTP_NOT_MODIFIED);
             }
+        }
+        if (request.headers().containsKey(HttpHeaders.ACCEPT_ENCODING)
+            && request.headers().get(HttpHeaders.ACCEPT_ENCODING)
+                .contains("gzip")
+            && COMPRESSIBLE.contains(resource.contentType())) {
+            resource = new GzipResource(resource);
         }
         return resource;
     }

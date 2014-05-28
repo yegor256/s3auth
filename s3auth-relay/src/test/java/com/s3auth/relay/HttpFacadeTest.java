@@ -38,15 +38,20 @@ import com.s3auth.hosts.Host;
 import com.s3auth.hosts.Hosts;
 import com.s3auth.hosts.Range;
 import com.s3auth.hosts.Resource;
+import com.s3auth.hosts.ResourceMocker;
 import com.s3auth.hosts.Version;
+import java.io.ByteArrayInputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.GZIPInputStream;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.Charsets;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.client.utils.DateUtils;
 import org.hamcrest.MatcherAssert;
@@ -63,7 +68,11 @@ import org.mockito.stubbing.Answer;
  * @checkstyle MultipleStringLiteralsCheck (500 lines)
  * @checkstyle MagicNumberCheck (500 lines)
  */
-@SuppressWarnings({ "PMD.AvoidDuplicateLiterals", "PMD.TooManyMethods" })
+@SuppressWarnings({
+    "PMD.AvoidDuplicateLiterals",
+    "PMD.TooManyMethods",
+    "PMD.ExcessiveImports"
+})
 public final class HttpFacadeTest {
 
     /**
@@ -426,6 +435,66 @@ public final class HttpFacadeTest {
                 ).uri().path("/a").queryParam("all-versions", "")
                 .back().fetch().as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK);
+        } finally {
+            facade.close();
+        }
+    }
+
+    /**
+     * HttpFacade can return compressed content with the appropriate request
+     * content-encoding and response content-type.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void getsCompressedContent() throws Exception {
+        final Host host = Mockito.mock(Host.class);
+        final String body = "compressed";
+        Mockito.doAnswer(
+            new Answer<Resource>() {
+                @Override
+                public Resource answer(final InvocationOnMock inv) {
+                    final Resource answer = new ResourceMocker()
+                        .withContent(body).mock();
+                    Mockito.doReturn("text/plain")
+                        .when(answer).contentType();
+                    return answer;
+                }
+            }
+        ).when(host)
+            .fetch(
+                Mockito.any(URI.class),
+                Mockito.any(Range.class),
+                Mockito.any(Version.class)
+            );
+        final Hosts hosts = Mockito.mock(Hosts.class);
+        Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
+        final int port = PortMocker.reserve();
+        final HttpFacade facade = new HttpFacade(hosts, port);
+        try {
+            facade.listen();
+            final Response resp =
+                new JdkRequest(String.format("http://localhost:%d/", port))
+                    .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
+                    .header(HttpHeaders.ACCEPT_ENCODING, "gzip")
+                    .header(
+                        HttpHeaders.AUTHORIZATION,
+                        String.format(
+                            "Basic %s",
+                            Base64.encodeBase64String("a:b".getBytes())
+                        )
+                    ).uri().path("/a").queryParam("all-versions", "")
+                    .back().fetch().as(RestResponse.class)
+                    .assertStatus(HttpURLConnection.HTTP_OK)
+                    .assertHeader(HttpHeaders.CONTENT_ENCODING, "gzip");
+            MatcherAssert.assertThat(
+                IOUtils.toString(
+                    new GZIPInputStream(
+                        new ByteArrayInputStream(resp.binary())
+                    ),
+                    Charsets.UTF_8
+                ),
+                Matchers.is(body)
+            );
         } finally {
             facade.close();
         }
