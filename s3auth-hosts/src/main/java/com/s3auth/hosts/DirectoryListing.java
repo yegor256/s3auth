@@ -143,7 +143,7 @@ final class DirectoryListing implements Resource {
     @Override
     public Collection<String> headers() throws IOException {
         final ImmutableSet.Builder<String> headers = ImmutableSet.builder();
-        headers.add(header(HttpHeaders.CONTENT_TYPE, "application/xhtml+xml"));
+        headers.add(header(HttpHeaders.CONTENT_TYPE, this.contentType()));
         headers.add(
             header(
                 HttpHeaders.CONTENT_LENGTH,
@@ -162,6 +162,11 @@ final class DirectoryListing implements Resource {
     @Override
     public Date lastModified() {
         return new Date();
+    }
+
+    @Override
+    public String contentType() {
+        return "application/xhtml+xml";
     }
 
     /**

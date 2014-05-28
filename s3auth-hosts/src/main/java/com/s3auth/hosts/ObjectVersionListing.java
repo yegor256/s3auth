@@ -118,7 +118,7 @@ final class ObjectVersionListing implements Resource {
     @Override
     public Collection<String> headers() throws IOException {
         final ImmutableSet.Builder<String> headers = ImmutableSet.builder();
-        headers.add(header(HttpHeaders.CONTENT_TYPE, "text/xml"));
+        headers.add(header(HttpHeaders.CONTENT_TYPE, this.contentType()));
         headers.add(
             header(
                 HttpHeaders.CONTENT_LENGTH,
@@ -137,6 +137,11 @@ final class ObjectVersionListing implements Resource {
     @Override
     public Date lastModified() {
         return new Date();
+    }
+
+    @Override
+    public String contentType() {
+        return "text/xml";
     }
 
     /**

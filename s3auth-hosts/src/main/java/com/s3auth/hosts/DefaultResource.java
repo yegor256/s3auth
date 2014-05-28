@@ -276,6 +276,11 @@ final class DefaultResource implements Resource {
         );
     }
 
+    @Override
+    public String contentType() {
+        return this.object.getObjectMetadata().getContentType();
+    };
+
     /**
      * Create a HTTP header from name and value.
      * @param name Name of the header

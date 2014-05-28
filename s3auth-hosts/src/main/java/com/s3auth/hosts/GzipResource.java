@@ -99,4 +99,9 @@ public final class GzipResource implements Resource {
         return this.resource.lastModified();
     }
 
+    @Override
+    public String contentType() {
+        return this.resource.contentType();
+    }
+
 }

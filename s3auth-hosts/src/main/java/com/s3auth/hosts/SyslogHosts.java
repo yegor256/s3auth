@@ -225,6 +225,10 @@ public final class SyslogHosts implements Hosts {
         public Date lastModified() {
             return this.resource.lastModified();
         }
+        @Override
+        public String contentType() {
+            return this.resource.contentType();
+        }
     }
 
 }
