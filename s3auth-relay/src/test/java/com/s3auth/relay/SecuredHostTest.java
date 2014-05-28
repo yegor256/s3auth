@@ -177,7 +177,7 @@ public final class SecuredHostTest {
 
     /**
      * SecuredHost can use credentials containing special characters.
-     * @throws Exception
+     * @throws Exception If something wrong occurs
      */
     @Test
     public void recognizesCredentialsWithSpecialCharacters() throws Exception {
@@ -205,7 +205,7 @@ public final class SecuredHostTest {
                     )
                 )
             ).fetch(
-                URI.create("/test-request.html"), Range.ENTIRE, Version.LATEST
+                URI.create("/test-special.html"), Range.ENTIRE, Version.LATEST
             ),
             Matchers.is(res)
         );
