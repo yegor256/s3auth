@@ -254,8 +254,7 @@ public final class DefaultHostTest {
                 ).fetch(new URI(key), Range.ENTIRE, Version.LIST)
             ),
             XhtmlMatchers.hasXPaths(
-                "/versions[@object=\"README.md\"]",
-                "/versions/version[@key=\"README.md\" and .=\"abc\"]"
+                "//xhtml:a[@href=\"/README.md?ver=abc\" and .=\"abc\"]"
             )
         );
     }
@@ -284,8 +283,7 @@ public final class DefaultHostTest {
                 ).fetch(new URI(key), Range.ENTIRE, Version.LIST)
             ),
             XhtmlMatchers.hasXPaths(
-                "/versions[@object=\"hello/index.html\"]",
-                "/versions/version[@key=\"hello/index.html\" and .=\"def\"]"
+                "//xhtml:a[@href=\"/hello/index.html?ver=def\" and .=\"def\"]"
             )
         );
     }

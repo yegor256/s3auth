@@ -79,9 +79,6 @@ public final class ObjectVersionListingTest {
                 Charsets.UTF_8
             ),
             Matchers.allOf(
-                XhtmlMatchers.hasXPath(
-                    String.format("/versions[@object=\"%s\"]", key)
-                ),
                 ObjectVersionListingTest.hasKeyXpath(key, versions[0]),
                 ObjectVersionListingTest.hasKeyXpath(key, versions[1]),
                 ObjectVersionListingTest.hasKeyXpath(key, versions[2])
@@ -99,7 +96,8 @@ public final class ObjectVersionListingTest {
         final String version) {
         return XhtmlMatchers.hasXPath(
             String.format(
-                "/versions/version[@key=\"%s\" and .=\"%s\"]", key, version
+                "//xhtml:a[@href=\"/%s?ver=%s\" and .=\"%s\"]",
+                key, version, version
             )
         );
     }
