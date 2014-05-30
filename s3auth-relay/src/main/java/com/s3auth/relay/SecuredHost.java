@@ -39,7 +39,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URLDecoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
@@ -173,11 +172,8 @@ final class SecuredHost implements Host {
         }
         final String[] parts;
         try {
-            parts = URLDecoder.decode(
-                new String(
-                    Base64.decodeBase64(matcher.group(1)),
-                    CharEncoding.UTF_8
-                ),
+            parts = new String(
+                Base64.decodeBase64(matcher.group(1)),
                 CharEncoding.UTF_8
             ).split(":", 2);
         } catch (final UnsupportedEncodingException ex) {
