@@ -38,10 +38,13 @@ import com.s3auth.hosts.Version;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import javax.ws.rs.core.HttpHeaders;
+import org.apache.commons.codec.Charsets;
+import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Test case for {@link SecuredHost}.
@@ -172,4 +175,39 @@ public final class SecuredHostTest {
         }
     }
 
+    /**
+     * SecuredHost can use credentials containing special characters.
+     * @throws Exception If something wrong occurs
+     */
+    @Test
+    public void recognizesCredentialsWithSpecialCharacters() throws Exception {
+        final String user = "user";
+        final String password = "password%oD\u20ac";
+        final Host host = Mockito.mock(Host.class);
+        final Resource res = Mockito.mock(Resource.class);
+        Mockito.doReturn(res).when(host).fetch(
+            Mockito.any(URI.class),
+            Mockito.any(Range.class),
+            Mockito.any(Version.class)
+        );
+        Mockito.doReturn(true).when(host).authorized(user, password);
+        Mockito.doReturn(true).when(host).isHidden(Mockito.any(URI.class));
+        MatcherAssert.assertThat(
+            new SecuredHost(
+                host,
+                HttpRequestMocker.toRequest(
+                    String.format(
+                        "GET / HTTP/1.1\nAuthorization: Basic %s\n\n",
+                        Base64.encodeBase64String(
+                            String.format("%s:%s", user, password)
+                                .getBytes(Charsets.UTF_8)
+                        )
+                    )
+                )
+            ).fetch(
+                URI.create("/test-special.html"), Range.ENTIRE, Version.LATEST
+            ),
+            Matchers.is(res)
+        );
+    }
 }

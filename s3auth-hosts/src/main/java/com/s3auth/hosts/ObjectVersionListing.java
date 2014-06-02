@@ -37,6 +37,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.xml.XMLDocument;
+import com.jcabi.xml.XSLDocument;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -59,14 +61,26 @@ import org.xembly.Xembler;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "xml")
+@EqualsAndHashCode(of = "content")
 @Loggable(Loggable.DEBUG)
 final class ObjectVersionListing implements Resource {
-
+    /**
+     * The XSL used for transforming the output.
+     */
+    private static final XSLDocument XSL;
+    static {
+        try {
+            XSL = new XSLDocument(
+                ObjectVersionListing.class.getResourceAsStream("versions.xsl")
+            );
+        } catch (final IOException ex) {
+            throw new IllegalStateException("Cannot get XSL document", ex);
+        }
+    }
     /**
      * Byte representation of XML data.
      */
-    private final transient byte[] xml;
+    private final transient byte[] content;
 
     /**
      * Public constructor.
@@ -88,7 +102,6 @@ final class ObjectVersionListing implements Resource {
         }
         // @checkstyle LineLength (2 lines)
         final Directives dirs = new Directives()
-            .pi("xml-stylesheet", "href=\"http://www.s3auth.com/xsl/versions.xsl\" type=\"text/xsl\"")
             .add("versions").attr("object", key);
         for (final S3VersionSummary version : versions.build()) {
             dirs.add("version")
@@ -96,7 +109,9 @@ final class ObjectVersionListing implements Resource {
                 .set(version.getVersionId()).up();
         }
         try {
-            this.xml = new Xembler(dirs).xml().getBytes(Charsets.UTF_8);
+            this.content = XSL.transform(
+                new XMLDocument(new Xembler(dirs).xml())
+            ).toString().getBytes(Charsets.UTF_8);
         } catch (final ImpossibleModificationException ex) {
             throw new IllegalStateException(
                 "Unable to generate version listing", ex
@@ -111,8 +126,8 @@ final class ObjectVersionListing implements Resource {
 
     @Override
     public long writeTo(final OutputStream stream) throws IOException {
-        stream.write(this.xml);
-        return this.xml.length;
+        stream.write(this.content);
+        return this.content.length;
     }
 
     @Override
@@ -122,7 +137,7 @@ final class ObjectVersionListing implements Resource {
         headers.add(
             header(
                 HttpHeaders.CONTENT_LENGTH,
-                String.valueOf(this.xml.length)
+                String.valueOf(this.content.length)
             )
         );
         return headers.build();
@@ -131,7 +146,7 @@ final class ObjectVersionListing implements Resource {
     @Override
     public String etag() {
         final CRC32 crc = new CRC32();
-        crc.update(this.xml);
+        crc.update(this.content);
         return Long.toHexString(crc.getValue());
     }
     @Override
@@ -141,7 +156,7 @@ final class ObjectVersionListing implements Resource {
 
     @Override
     public String contentType() {
-        return "text/xml";
+        return "application/xhtml+xml";
     }
 
     /**
