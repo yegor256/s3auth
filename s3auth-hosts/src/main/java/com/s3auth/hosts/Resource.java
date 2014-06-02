@@ -53,6 +53,7 @@ import org.apache.commons.io.IOUtils;
  * @since 0.0.1
  */
 @Immutable
+@SuppressWarnings("PMD.TooManyMethods")
 public interface Resource {
 
     /**
@@ -88,6 +89,12 @@ public interface Resource {
      * @return The last modified date.
      */
     Date lastModified();
+
+    /**
+     * Get the resource's HTTP Content-Type.
+     * @return The HTTP Content-Type of the resource.
+     */
+    String contentType();
 
     /**
      * Simple resource made out of plain text.
@@ -131,12 +138,17 @@ public interface Resource {
             return new Date(this.modified);
         }
         @Override
+        public String contentType() {
+            return "text/plain";
+        }
+        @Override
         @NotNull
         public Collection<String> headers() {
             return Arrays.asList(
                 String.format(
-                    "%s: text/plain",
-                    HttpHeaders.CONTENT_TYPE
+                    "%s: %s",
+                    HttpHeaders.CONTENT_TYPE,
+                    this.contentType()
                 ),
                 String.format(
                     "%s: %d",

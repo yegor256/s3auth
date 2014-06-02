@@ -119,6 +119,10 @@ public final class HttpResponseTest {
             public Date lastModified() {
                 return new Date();
             }
+            @Override
+            public String contentType() {
+                return "text/plain";
+            }
         };
         final HttpResponse response = new HttpResponse().withBody(res);
         final ServerSocket server = new ServerSocket(0);
