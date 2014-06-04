@@ -54,6 +54,7 @@ public final class DomainMocker {
         this.withBucket("bucket");
         this.withKey("AAAAAAAAAAAAAAAAAAAA");
         this.withSecret("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+        this.withSyslog("localhost:514");
     }
 
     /**
