@@ -31,6 +31,7 @@ package com.s3auth.hosts;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -54,7 +55,7 @@ import org.apache.commons.io.IOUtils;
  */
 @Immutable
 @SuppressWarnings("PMD.TooManyMethods")
-public interface Resource {
+public interface Resource extends Closeable {
 
     /**
      * Get HTTP status.
@@ -156,6 +157,10 @@ public interface Resource {
                     this.text.getBytes(Charsets.UTF_8).length
                 )
             );
+        }
+        @Override
+        public void close() {
+            // nothing to do
         }
     }
 

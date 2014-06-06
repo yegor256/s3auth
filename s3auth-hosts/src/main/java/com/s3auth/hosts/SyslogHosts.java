@@ -229,6 +229,10 @@ public final class SyslogHosts implements Hosts {
         public String contentType() {
             return this.resource.contentType();
         }
+        @Override
+        public void close() throws IOException {
+            this.resource.close();
+        }
     }
 
 }

@@ -104,4 +104,9 @@ public final class GzipResource implements Resource {
         return this.resource.contentType();
     }
 
+    @Override
+    public void close() throws IOException {
+        this.resource.close();
+    }
+
 }

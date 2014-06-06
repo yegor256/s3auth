@@ -149,6 +149,7 @@ final class DefaultHost implements Host {
     }
 
     // @checkstyle CyclomaticComplexity (100 lines)
+    // @checkstyle ExecutableStatementCount (100 lines)
     @Override
     @NotNull
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
@@ -214,6 +215,10 @@ final class DefaultHost implements Host {
                 errors.add(String.format("'%s': %s", name, ex.getMessage()));
             } catch (final AmazonClientException ex) {
                 errors.add(String.format("'%s': %s", name, ex.getMessage()));
+            } finally {
+                if (resource != null) {
+                    resource.close();
+                }
             }
         }
         if (resource == null) {

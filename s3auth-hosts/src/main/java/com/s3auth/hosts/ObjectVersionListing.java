@@ -159,6 +159,11 @@ final class ObjectVersionListing implements Resource {
         return "application/xhtml+xml";
     }
 
+    @Override
+    public void close() {
+        // nothing to do
+    }
+
     /**
      * Create a HTTP header from name and value.
      * @param name Name of the header
