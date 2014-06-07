@@ -57,6 +57,7 @@ import org.junit.Test;
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
+@SuppressWarnings("PMD.CyclomaticComplexity")
 public final class HttpResponseTest {
 
     /**
@@ -122,6 +123,11 @@ public final class HttpResponseTest {
             @Override
             public String contentType() {
                 return "text/plain";
+            }
+            @Override
+            // @checkstyle MethodBodyComments (2 lines)
+            public void close() {
+                // Nothing to do here.
             }
         };
         final HttpResponse response = new HttpResponse().withBody(res);

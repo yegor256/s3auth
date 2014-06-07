@@ -62,8 +62,8 @@ import org.apache.commons.lang3.StringUtils;
  */
 @EqualsAndHashCode(of = { "bucket", "key", "range" })
 @Loggable(Loggable.DEBUG)
+@SuppressWarnings("PMD.TooManyMethods")
 final class DefaultResource implements Resource {
-
     /**
      * Amazon S3 client.
      */
@@ -279,7 +279,12 @@ final class DefaultResource implements Resource {
     @Override
     public String contentType() {
         return this.object.getObjectMetadata().getContentType();
-    };
+    }
+
+    @Override
+    public void close() throws IOException {
+        this.object.close();
+    }
 
     /**
      * Create a HTTP header from name and value.
