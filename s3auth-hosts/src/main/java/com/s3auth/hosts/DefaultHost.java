@@ -174,12 +174,12 @@ final class DefaultHost implements Host {
                 }
                 break;
             } catch (final AmazonServiceException ex) {
-                if (StringUtils.endsWith(name.get(), SUFFIX)
+                if (StringUtils.endsWith(name.get(), DefaultHost.SUFFIX)
                     && "NoSuchKey".equals(ex.getErrorCode())
                 ) {
                     resource = new DirectoryListing(
                         this.bucket.client(), this.bucket.bucket(),
-                        StringUtils.removeEnd(name.get(), SUFFIX)
+                        StringUtils.removeEnd(name.get(), DefaultHost.SUFFIX)
                     );
                     break;
                 } else if ("NoSuchBucket".equals(ex.getErrorCode())) {
@@ -309,7 +309,7 @@ final class DefaultHost implements Host {
                 suffix = "";
             }
             if (suffix == null || suffix.isEmpty()) {
-                suffix = SUFFIX;
+                suffix = DefaultHost.SUFFIX;
             }
             final StringBuilder text = new StringBuilder(this.origin);
             if (text.length() > 0) {
@@ -352,6 +352,11 @@ final class DefaultHost implements Host {
 
     /**
      * Stats for this domain.
+     *
+     * @todo #173 We should be caching the results of this method for a short
+     *  period somehow, or at least prevent unnecessary repeated requests to
+     *  Amazon CloudWatch API. This is so that we can improve performance and
+     *  reduce access costs.
      */
     @Loggable(Loggable.DEBUG)
     private final class HostStats implements Stats {
