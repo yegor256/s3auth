@@ -29,11 +29,6 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
-import com.amazonaws.services.cloudwatch.model.Dimension;
-import com.amazonaws.services.cloudwatch.model.MetricDatum;
-import com.amazonaws.services.cloudwatch.model.PutMetricDataRequest;
-import com.amazonaws.services.cloudwatch.model.StandardUnit;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -95,9 +90,9 @@ final class DefaultResource implements Resource {
     private final transient S3Object object;
 
     /**
-     * Amazon Cloudwatch Client.
+     * Domain Stats.
      */
-    private final transient AmazonCloudWatchClient cloudwatch;
+    private final transient DomainStatsData stats;
 
     /**
      * Public ctor.
@@ -106,13 +101,13 @@ final class DefaultResource implements Resource {
      * @param name Key name
      * @param rng Range to deliver
      * @param ver Version of object to retrieve
-     * @param cwatch Amazon Cloudwatch Client
+     * @param dstats Domain stats data
      * @checkstyle ParameterNumber (5 lines)
      */
     DefaultResource(@NotNull final AmazonS3 clnt,
         @NotNull final String bckt, @NotNull final String name,
         @NotNull final Range rng, @NotNull final Version ver,
-        @NotNull final AmazonCloudWatchClient cwatch) {
+        @NotNull final DomainStatsData dstats) {
         this.client = clnt;
         this.bucket = bckt;
         this.key = name;
@@ -121,7 +116,7 @@ final class DefaultResource implements Resource {
         this.object = this.client.getObject(
             this.request(this.range, this.version)
         );
-        this.cloudwatch = cwatch;
+        this.stats = dstats;
     }
 
     @Override
@@ -189,21 +184,7 @@ final class DefaultResource implements Resource {
                 }
                 total += count;
             }
-            this.cloudwatch.putMetricData(
-                new PutMetricDataRequest()
-                    .withNamespace("S3Auth")
-                    .withMetricData(
-                        new MetricDatum()
-                            .withMetricName("BytesTransferred")
-                            .withDimensions(
-                                new Dimension()
-                                    .withName("Bucket")
-                                    .withValue(this.bucket)
-                            )
-                            .withUnit(StandardUnit.Bytes)
-                            .withValue((double) total)
-                    )
-            );
+            this.stats.put(this.bucket, new Stats.Simple(total));
         } finally {
             input.close();
         }

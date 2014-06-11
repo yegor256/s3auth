@@ -30,6 +30,7 @@
 package com.s3auth.hosts;
 
 import com.jcabi.aspects.Immutable;
+import lombok.EqualsAndHashCode;
 
 /**
  * Statistics for a given domain.
@@ -46,4 +47,28 @@ public interface Stats {
      */
     long bytesTransferred();
 
+    /**
+     * Simple stats.
+     */
+    @Immutable
+    @EqualsAndHashCode(of = "bytes")
+    final class Simple implements Stats {
+        /**
+         * Bytes transferred.
+         */
+        private final transient long bytes;
+
+        /**
+         * Ctor.
+         * @param transferred Number of bytes transferred.
+         */
+        public Simple(final long transferred) {
+            this.bytes = transferred;
+        }
+
+        @Override
+        public long bytesTransferred() {
+            return this.bytes;
+        }
+    }
 }

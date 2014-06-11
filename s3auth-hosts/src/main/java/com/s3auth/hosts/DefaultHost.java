@@ -159,6 +159,7 @@ final class DefaultHost implements Host {
         throws IOException {
         Resource resource = null;
         final Collection<String> errors = new LinkedList<String>();
+        final DomainStatsData data = new H2DomainStatsData();
         for (final DefaultHost.ObjectName name : this.names(uri)) {
             try {
                 if (version.list()) {
@@ -168,7 +169,7 @@ final class DefaultHost implements Host {
                 } else {
                     resource = new DefaultResource(
                         this.bucket.client(), this.bucket.bucket(),
-                        name.get(), range, version, this.cloudwatch.get()
+                        name.get(), range, version, data
                     );
                 }
                 break;
@@ -202,7 +203,7 @@ final class DefaultHost implements Host {
                             resource = new DefaultResource(
                                 this.bucket.client(), this.bucket.bucket(),
                                 config.getErrorDocument(), Range.ENTIRE,
-                                Version.LATEST, this.cloudwatch.get()
+                                Version.LATEST, data
                             );
                         }
                     } catch (final AmazonClientException exc) {

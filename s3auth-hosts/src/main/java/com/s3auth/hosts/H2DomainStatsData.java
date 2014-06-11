@@ -82,7 +82,7 @@ final class H2DomainStatsData implements DomainStatsData {
         public Stats handle(final ResultSet rset, final Statement stmt)
             throws SQLException {
             rset.next();
-            return new Simple(rset.getLong(1));
+            return new Stats.Simple(rset.getLong(1));
         }
     };
 
@@ -97,7 +97,9 @@ final class H2DomainStatsData implements DomainStatsData {
                 final Statement stmt) throws SQLException {
                 final Map<String, Stats> stats = new HashMap<String, Stats>();
                 while (rset.next()) {
-                    stats.put(rset.getString(1), new Simple(rset.getLong(2)));
+                    stats.put(
+                        rset.getString(1), new Stats.Simple(rset.getLong(2))
+                    );
                 }
                 return stats;
             }
@@ -174,29 +176,5 @@ final class H2DomainStatsData implements DomainStatsData {
      */
     private Connection connection() throws SQLException {
         return new Driver().connect(this.jdbc, new Properties());
-    }
-
-    /**
-     * Simple stats.
-     */
-    @Immutable
-    private static final class Simple implements Stats {
-        /**
-         * Bytes transferred.
-         */
-        private final transient long bytes;
-
-        /**
-         * Ctor.
-         * @param transferred Number of bytes transferred.
-         */
-        public Simple(final long transferred) {
-            this.bytes = transferred;
-        }
-
-        @Override
-        public long bytesTransferred() {
-            return this.bytes;
-        }
     }
 }
