@@ -39,6 +39,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import lombok.EqualsAndHashCode;
@@ -84,6 +85,23 @@ final class H2DomainStatsData implements DomainStatsData {
             return new Simple(rset.getLong(1));
         }
     };
+
+    /**
+     * Outcome for obtaining a single Stats for all domains.
+     */
+    private static final Outcome<Map<String, Stats>> STATS_ALL =
+        new Outcome<Map<String, Stats>>() {
+            @Override
+            @SuppressWarnings("PMD.UseConcurrentHashMap")
+            public Map<String, Stats> handle(final ResultSet rset,
+                final Statement stmt) throws SQLException {
+                final Map<String, Stats> stats = new HashMap<String, Stats>();
+                while (rset.next()) {
+                    stats.put(rset.getString(1), new Simple(rset.getLong(2)));
+                }
+                return stats;
+            }
+        };
 
     /**
      * The JDBC URL.
@@ -139,7 +157,14 @@ final class H2DomainStatsData implements DomainStatsData {
 
     @Override
     public Map<String, Stats> all() throws IOException {
-        throw new UnsupportedOperationException("Not yet implemented.");
+        try {
+            // @checkstyle LineLength (2 lines)
+            return new JdbcSession(this.connection())
+                .sql("SELECT DOMAIN, SUM(BYTES) FROM DOMAIN_STATS GROUP BY DOMAIN")
+                .select(STATS_ALL);
+        } catch (final SQLException ex) {
+            throw new IOException(ex);
+        }
     }
 
     /**

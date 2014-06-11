@@ -31,6 +31,7 @@ package com.s3auth.hosts;
 
 import com.jcabi.aspects.Tv;
 import java.io.File;
+import java.util.Map;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -54,7 +55,8 @@ public final class H2DomainStatsDataTest {
         );
         final String domain = "test-put-domain";
         final long bytes = Tv.HUNDRED;
-        data.put(domain,
+        data.put(
+            domain,
             new Stats() {
                 @Override
                 public long bytesTransferred() {
@@ -65,6 +67,59 @@ public final class H2DomainStatsDataTest {
         final long result = data.get(domain).bytesTransferred();
         MatcherAssert.assertThat(
             result, Matchers.is(bytes)
+        );
+    }
+
+    /**
+     * H2DomainStatsData can put and get data for all domains.
+     * @throws Exception If something goes wrong.
+     */
+    @Test
+    @SuppressWarnings("PMD.UseConcurrentHashMap")
+    public void getsDataForAllDomains() throws Exception {
+        final H2DomainStatsData data = new H2DomainStatsData(
+            File.createTempFile("testAll", "tempAll")
+        );
+        final String first = "test-put-domain1";
+        final String second = "test-put-domain2";
+        data.put(
+            first,
+            new Stats() {
+                @Override
+                public long bytesTransferred() {
+                    return Tv.HUNDRED;
+                }
+            }
+        );
+        data.put(
+            first,
+            new Stats() {
+                @Override
+                public long bytesTransferred() {
+                    return Tv.FIFTY;
+                }
+            }
+        );
+        data.put(
+            second,
+            new Stats() {
+                @Override
+                public long bytesTransferred() {
+                    return Tv.THOUSAND;
+                }
+            }
+        );
+        final Map<String, Stats> stats = data.all();
+        MatcherAssert.assertThat(
+            stats.size(), Matchers.is(2)
+        );
+        MatcherAssert.assertThat(
+            stats.get(first).bytesTransferred(),
+            Matchers.is((long) (Tv.HUNDRED + Tv.FIFTY))
+        );
+        MatcherAssert.assertThat(
+            stats.get(second).bytesTransferred(),
+            Matchers.is((long) Tv.THOUSAND)
         );
     }
 
