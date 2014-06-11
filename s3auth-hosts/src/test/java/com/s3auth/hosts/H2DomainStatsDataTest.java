@@ -29,38 +29,43 @@
  */
 package com.s3auth.hosts;
 
-import java.io.IOException;
-import java.util.Map;
+import com.jcabi.aspects.Tv;
+import java.io.File;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Store of {@link Stats} per domain.
+ * Test case for {@link H2DomainStatsData}.
  *
  * @author Carlos Miranda (miranda.cma@gmail.com)
  * @version $Id$
  */
-interface DomainStatsData {
+public final class H2DomainStatsDataTest {
 
     /**
-     * Post the statistics of the given domain, for this particular time.
-     * @param domain The domain of this stats.
-     * @param stats The stats to keep.
-     * @throws IOException If something goes wrong.
+     * H2DomainStatsData can put and get data for a single domain.
+     * @throws Exception If something goes wrong.
      */
-    void put(final String domain, final Stats stats) throws IOException;
-
-    /**
-     * Get the stats for the given domain.
-     * @param domain The domain whose stats we're interested in
-     * @return The stats for this domain
-     * @throws IOException If something goes wrong.
-     */
-    Stats get(final String domain) throws IOException;
-
-    /**
-     * Get the stats for all domains.
-     * @return Map of each domain and their corresponding stats.
-     * @throws IOException If something goes wrong.
-     */
-    Map<String, Stats> all() throws IOException;
+    @Test
+    public void putsAndGetsDataPerDomain() throws Exception {
+        final H2DomainStatsData data = new H2DomainStatsData(
+            File.createTempFile("test", "temp")
+        );
+        final String domain = "test-put-domain";
+        final long bytes = Tv.HUNDRED;
+        data.put(domain,
+            new Stats() {
+                @Override
+                public long bytesTransferred() {
+                    return bytes;
+                }
+            }
+        );
+        final long result = data.get(domain).bytesTransferred();
+        MatcherAssert.assertThat(
+            result, Matchers.is(bytes)
+        );
+    }
 
 }
