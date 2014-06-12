@@ -215,10 +215,6 @@ final class DefaultHost implements Host {
                 errors.add(String.format("'%s': %s", name, ex.getMessage()));
             } catch (final AmazonClientException ex) {
                 errors.add(String.format("'%s': %s", name, ex.getMessage()));
-            } finally {
-                if (resource != null) {
-                    resource.close();
-                }
             }
         }
         if (resource == null) {

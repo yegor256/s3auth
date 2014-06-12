@@ -65,8 +65,8 @@ import org.mockito.stubbing.Answer;
  * Test case for {@link HttpFacade}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @checkstyle MultipleStringLiteralsCheck (500 lines)
- * @checkstyle MagicNumberCheck (500 lines)
+ * @checkstyle MultipleStringLiteralsCheck (600 lines)
+ * @checkstyle MagicNumberCheck (600 lines)
  */
 @SuppressWarnings({
     "PMD.AvoidDuplicateLiterals",
@@ -495,6 +495,44 @@ public final class HttpFacadeTest {
                 ),
                 Matchers.is(body)
             );
+        } finally {
+            facade.close();
+        }
+    }
+
+    /**
+     * HttpFacade closes the Resource after fetching data.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void closesUnderlyingResource() throws Exception {
+        final Host host = Mockito.mock(Host.class);
+        final Resource resource = new ResourceMocker().mock();
+        Mockito.doReturn(resource).when(host)
+            .fetch(
+                Mockito.any(URI.class),
+                Mockito.any(Range.class),
+                Mockito.any(Version.class)
+            );
+        final Hosts hosts = Mockito.mock(Hosts.class);
+        Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
+        final int port = PortMocker.reserve();
+        final HttpFacade facade = new HttpFacade(hosts, port);
+        try {
+            facade.listen();
+            final URI uri = UriBuilder
+                .fromUri(String.format("http://localhost:%d/", port))
+                .path("/a").build();
+            new JdkRequest(uri)
+                .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
+                .header(
+                    HttpHeaders.AUTHORIZATION,
+                    String.format(
+                        "Basic %s",
+                        Base64.encodeBase64String("a:b".getBytes())
+                    )
+                ).uri().back().fetch();
+            Mockito.verify(resource, Mockito.times(1)).close();
         } finally {
             facade.close();
         }
