@@ -117,7 +117,7 @@ public interface Resource extends Closeable {
          * Public ctor.
          * @param txt The text to show
          */
-        public PlainText(final String txt) {
+        public PlainText(@NotNull final String txt) {
             this.text = txt;
         }
         @Override
