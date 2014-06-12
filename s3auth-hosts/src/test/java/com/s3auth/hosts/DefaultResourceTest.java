@@ -311,4 +311,24 @@ public final class DefaultResourceTest {
         );
     }
 
+    /**
+     * DefaultResource can close the underlying S3Object.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void closesUnderlyingObject() throws Exception {
+        final AmazonS3 client = Mockito.mock(AmazonS3.class);
+        final S3Object object = Mockito.mock(S3Object.class);
+        Mockito.doReturn(object).when(client)
+            .getObject(Mockito.any(GetObjectRequest.class));
+        final ObjectMetadata meta = Mockito.mock(ObjectMetadata.class);
+        Mockito.doReturn(meta).when(object).getObjectMetadata();
+        Mockito.doReturn(1L).when(meta).getContentLength();
+        new DefaultResource(
+            client, "i", "", Range.ENTIRE, Version.LATEST,
+            Mockito.mock(AmazonCloudWatchClient.class)
+        ).close();
+        Mockito.verify(object, Mockito.times(1)).close();
+    }
+
 }
