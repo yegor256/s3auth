@@ -508,12 +508,11 @@ public final class HttpFacadeTest {
     public void closesUnderlyingResource() throws Exception {
         final Host host = Mockito.mock(Host.class);
         final Resource resource = new ResourceMocker().mock();
-        Mockito.doReturn(resource).when(host)
-            .fetch(
-                Mockito.any(URI.class),
-                Mockito.any(Range.class),
-                Mockito.any(Version.class)
-            );
+        Mockito.doReturn(resource).when(host).fetch(
+            Mockito.any(URI.class),
+            Mockito.any(Range.class),
+            Mockito.any(Version.class)
+        );
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
