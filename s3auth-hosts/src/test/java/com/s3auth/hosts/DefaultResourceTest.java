@@ -309,7 +309,7 @@ public final class DefaultResourceTest {
         Mockito.doReturn(1L).when(meta).getContentLength();
         new DefaultResource(
             client, "i", "", Range.ENTIRE, Version.LATEST,
-            Mockito.mock(AmazonCloudWatchClient.class)
+            Mockito.mock(DomainStatsData.class)
         ).close();
         Mockito.verify(object, Mockito.times(1)).close();
     }
