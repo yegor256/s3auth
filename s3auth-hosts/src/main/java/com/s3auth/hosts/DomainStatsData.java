@@ -29,6 +29,7 @@
  */
 package com.s3auth.hosts;
 
+import com.jcabi.aspects.Immutable;
 import java.io.IOException;
 import java.util.Map;
 
@@ -38,6 +39,7 @@ import java.util.Map;
  * @author Carlos Miranda (miranda.cma@gmail.com)
  * @version $Id$
  */
+@Immutable
 interface DomainStatsData {
 
     /**
@@ -46,7 +48,7 @@ interface DomainStatsData {
      * @param stats The stats to keep.
      * @throws IOException If something goes wrong.
      */
-    void put(final String domain, final Stats stats) throws IOException;
+    void put(String domain, Stats stats) throws IOException;
 
     /**
      * Get the stats for the given domain.
@@ -54,7 +56,7 @@ interface DomainStatsData {
      * @return The stats for this domain
      * @throws IOException If something goes wrong.
      */
-    Stats get(final String domain) throws IOException;
+    Stats get(String domain) throws IOException;
 
     /**
      * Get the stats for all domains.

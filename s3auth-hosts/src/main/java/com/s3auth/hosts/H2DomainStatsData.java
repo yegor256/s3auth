@@ -148,22 +148,35 @@ final class H2DomainStatsData implements DomainStatsData {
     @Override
     public Stats get(final String domain) throws IOException {
         try {
-            return new JdbcSession(this.connection())
-                .sql("SELECT SUM(BYTES) FROM DOMAIN_STATS WHERE DOMAIN = ?")
+            final JdbcSession session = new JdbcSession(this.connection())
+                .autocommit(false);
+            // @checkstyle LineLength (2 lines)
+            final Stats result = session
+                .sql("SELECT SUM(BYTES) FROM DOMAIN_STATS WHERE DOMAIN = ? FOR UPDATE")
                 .set(domain)
                 .select(STATS);
+            session.sql("DELETE FROM DOMAIN_STATS WHERE DOMAIN = ?")
+                .set(domain)
+                .execute()
+                .commit();
+            return result;
         } catch (final SQLException ex) {
             throw new IOException(ex);
         }
     }
 
     @Override
+    @SuppressWarnings("PMD.UseConcurrentHashMap")
     public Map<String, Stats> all() throws IOException {
         try {
+            final JdbcSession session = new JdbcSession(this.connection())
+                .autocommit(false);
             // @checkstyle LineLength (2 lines)
-            return new JdbcSession(this.connection())
-                .sql("SELECT DOMAIN, SUM(BYTES) FROM DOMAIN_STATS GROUP BY DOMAIN")
+            final Map<String, Stats> result = session
+                .sql("SELECT DOMAIN, SUM(BYTES) FROM DOMAIN_STATS GROUP BY DOMAIN FOR UPDATE")
                 .select(STATS_ALL);
+            session.sql("DELETE FROM DOMAIN_STATS").execute().commit();
+            return result;
         } catch (final SQLException ex) {
             throw new IOException(ex);
         }
