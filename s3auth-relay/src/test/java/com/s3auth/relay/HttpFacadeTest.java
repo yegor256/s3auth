@@ -531,6 +531,7 @@ public final class HttpFacadeTest {
                         Base64.encodeBase64String("a:b".getBytes())
                     )
                 ).uri().back().fetch();
+            TimeUnit.SECONDS.sleep((long) Tv.THREE);
             Mockito.verify(resource, Mockito.times(1)).close();
         } finally {
             facade.close();
