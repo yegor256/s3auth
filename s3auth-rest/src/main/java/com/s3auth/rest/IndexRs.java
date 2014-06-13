@@ -99,6 +99,7 @@ public final class IndexRs extends BaseRs {
     @POST
     @Path("/add")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @SuppressWarnings("PMD.UseObjectForClearerAPI")
     public Response add(
         @FormParam("host") final String host,
         @FormParam("key") final String key,

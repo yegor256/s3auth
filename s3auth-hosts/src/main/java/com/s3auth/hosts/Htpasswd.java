@@ -61,6 +61,7 @@ import org.apache.commons.io.Charsets;
 @Immutable
 @Loggable(Loggable.DEBUG)
 @EqualsAndHashCode(of = "host")
+@SuppressWarnings("PMD.UnusedPrivateField")
 final class Htpasswd {
 
     /**
@@ -207,7 +208,6 @@ final class Htpasswd {
          */
         private static final Pattern PATTERN =
             Pattern.compile("\\$apr1\\$([^\\$]+)\\$([a-zA-Z0-9/\\.]+=*)");
-
         @Override
         public boolean matches(final String hash, final String password)
             throws IOException {

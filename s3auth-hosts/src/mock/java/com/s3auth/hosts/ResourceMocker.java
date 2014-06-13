@@ -82,7 +82,7 @@ public final class ResourceMocker {
                     }
                 }
             ).when(this.resource).writeTo(Mockito.any(OutputStream.class));
-        } catch (final java.io.IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
         return this;
