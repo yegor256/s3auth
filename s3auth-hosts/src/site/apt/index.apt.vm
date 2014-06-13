@@ -40,5 +40,5 @@ Persistence Layer
   in a object-oriented way the data we have in Amazon DynamoDB and the
   information we fetch from Amazon S3:
 
-[../texry/classes-hosts.png] UML class diagram of s3auth-hosts
+[../latex/classes-hosts.png] UML class diagram of s3auth-hosts
 

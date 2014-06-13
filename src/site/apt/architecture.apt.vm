@@ -53,14 +53,14 @@ s3auth.com High-Level Architecture
 
   This UML class/package diagram explains how these modules depend on each other:
 
-[texry/packages.png] UML package diagram
+[latex/packages.png] UML package diagram
 
   <<<s3auth-hosts>>> exposes a number of interfaces and just one class
   {{{./s3auth-hosts/apidocs/com/s3auth/hosts/DynamoHosts.html}<<<DynamoHosts>>>}},
   which implements {{{./s3auth-hosts/apidocs/com/s3auth/hosts/Hosts.html}<<<Hosts>>>}}
   interface. As the name explains, we persist user data in Amazon DynamoDB.
 
-[texry/classes-hosts.png] UML class diagram of s3auth-hosts
+[latex/classes-hosts.png] UML class diagram of s3auth-hosts
 
   <<<s3auth-rest>>> is a collection of JAX-RS resources, JAXB-annotated
   entities, XSL pages, Groovy end-to-end tests
@@ -74,5 +74,5 @@ s3auth.com High-Level Architecture
   {{{./s3auth-hosts/apidocs/com/s3auth/hosts/DynamoHosts.html}<<<DynamoHosts>>>}}
   to get access to our persistence layer.
 
-[texry/classes-relay.png] UML class diagram of s3auth-relay
+[latex/classes-relay.png] UML class diagram of s3auth-relay
 

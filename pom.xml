@@ -79,7 +79,7 @@
             <name>Yegor Bugayenko</name>
             <email>yegor@tpc2.com</email>
             <organization>tpc2.com</organization>
-            <organizationUrl>http://www.tpc2.com</organizationUrl>
+            <organizationUrl>http://www.teamed.io</organizationUrl>
             <roles>
                 <role>Architect</role>
                 <role>Developer</role>
@@ -111,7 +111,6 @@
         </repository>
         <site>
             <id>maven.s3auth.com</id>
-            <name>s3auth.com Project Site</name>
             <url>s3://maven.s3auth.com</url>
         </site>
     </distributionManagement>
@@ -154,9 +153,9 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>com.texry</groupId>
-                    <artifactId>texry-maven-plugin</artifactId>
-                    <version>0.2.1</version>
+                    <groupId>com.jcabi</groupId>
+                    <artifactId>jcabi-latex-maven-plugin</artifactId>
+                    <version>1.0</version>
                     <configuration>
                         <closures>
                             <file>header.tex</file>
@@ -168,8 +167,8 @@
         </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>com.texry</groupId>
-                <artifactId>texry-maven-plugin</artifactId>
+                <groupId>com.jcabi</groupId>
+                <artifactId>jcabi-latex-maven-plugin</artifactId>
                 <inherited>false</inherited>
                 <executions>
                     <execution>

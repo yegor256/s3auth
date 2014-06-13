@@ -38,4 +38,4 @@ Standalone HTTP-to-S3 Relay
 
   <<<s3auth-relay>>> is a relay between HTTP and Amazon S3:
 
-[../texry/classes-relay.png] UML class diagram of s3auth-relay
+[../latex/classes-relay.png] UML class diagram of s3auth-relay
