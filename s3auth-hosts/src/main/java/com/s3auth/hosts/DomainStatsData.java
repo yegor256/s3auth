@@ -30,45 +30,39 @@
 package com.s3auth.hosts;
 
 import com.jcabi.aspects.Immutable;
-import lombok.EqualsAndHashCode;
+import java.io.IOException;
+import java.util.Map;
 
 /**
- * Statistics for a given domain.
+ * Store of {@link Stats} per domain.
  *
  * @author Carlos Miranda (miranda.cma@gmail.com)
  * @version $Id$
  */
 @Immutable
-public interface Stats {
+interface DomainStatsData {
 
     /**
-     * The bytes transferred for this domain for the previous week.
-     * @return Bytes transferred
+     * Post the statistics of the given domain, for this particular time.
+     * @param domain The domain of this stats.
+     * @param stats The stats to keep.
+     * @throws IOException If something goes wrong.
      */
-    long bytesTransferred();
+    void put(String domain, Stats stats) throws IOException;
 
     /**
-     * Simple stats.
+     * Get the stats for the given domain.
+     * @param domain The domain whose stats we're interested in
+     * @return The stats for this domain
+     * @throws IOException If something goes wrong.
      */
-    @Immutable
-    @EqualsAndHashCode(of = "bytes")
-    final class Simple implements Stats {
-        /**
-         * Bytes transferred.
-         */
-        private final transient long bytes;
+    Stats get(String domain) throws IOException;
 
-        /**
-         * Ctor.
-         * @param transferred Number of bytes transferred.
-         */
-        public Simple(final long transferred) {
-            this.bytes = transferred;
-        }
+    /**
+     * Get the stats for all domains.
+     * @return Map of each domain and their corresponding stats.
+     * @throws IOException If something goes wrong.
+     */
+    Map<String, Stats> all() throws IOException;
 
-        @Override
-        public long bytesTransferred() {
-            return this.bytes;
-        }
-    }
 }
