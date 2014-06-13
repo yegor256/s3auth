@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, s3auth.com
+ * Copyright (c) 2012-2014, s3auth.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -82,7 +82,7 @@ public final class ResourceMocker {
                     }
                 }
             ).when(this.resource).writeTo(Mockito.any(OutputStream.class));
-        } catch (final java.io.IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
         return this;

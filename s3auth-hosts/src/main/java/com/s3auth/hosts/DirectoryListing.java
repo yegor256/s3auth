@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, s3auth.com
+ * Copyright (c) 2012-2014, s3auth.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,6 +37,7 @@ import com.google.common.collect.ImmutableSet;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.xml.XMLDocument;
+import com.jcabi.xml.XSL;
 import com.jcabi.xml.XSLDocument;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -44,7 +45,6 @@ import java.net.HttpURLConnection;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.zip.CRC32;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
@@ -66,19 +66,13 @@ import org.xembly.Xembler;
 @EqualsAndHashCode(of = "content")
 @Loggable(Loggable.DEBUG)
 final class DirectoryListing implements Resource {
+
     /**
-     * The XSL used for transforming the output.
+     * The STYLESHEET used for transforming the output.
      */
-    private static final XSLDocument XSL;
-    static {
-        try {
-            XSL = new XSLDocument(
-                DirectoryListing.class.getResourceAsStream("directory.xsl")
-            );
-        } catch (final IOException ex) {
-            throw new IllegalStateException("Cannot get XSL document", ex);
-        }
-    }
+    private static final XSL STYLESHEET = XSLDocument.make(
+        DirectoryListing.class.getResourceAsStream("directory.xsl")
+    );
 
     /**
      * Byte representation of transformed data.
@@ -97,7 +91,7 @@ final class DirectoryListing implements Resource {
             new ListObjectsRequest().withDelimiter("/").withPrefix(key)
                 .withBucketName(bucket)
         );
-        final List<S3ObjectSummary> objects =
+        final Collection<S3ObjectSummary> objects =
             new LinkedList<S3ObjectSummary>();
         objects.addAll(listing.getObjectSummaries());
         while (listing.isTruncated()) {
@@ -119,7 +113,7 @@ final class DirectoryListing implements Resource {
                 .up();
         }
         try {
-            this.content = XSL.transform(
+            this.content = DirectoryListing.STYLESHEET.transform(
                 new XMLDocument(new Xembler(dirs).xml())
             ).toString().getBytes(Charsets.UTF_8);
         } catch (final ImpossibleModificationException ex) {
@@ -137,15 +131,20 @@ final class DirectoryListing implements Resource {
     @Override
     public long writeTo(final OutputStream stream) throws IOException {
         stream.write(this.content);
-        return this.content.length;
+        return (long) this.content.length;
     }
 
     @Override
-    public Collection<String> headers() throws IOException {
+    public Collection<String> headers() {
         final ImmutableSet.Builder<String> headers = ImmutableSet.builder();
-        headers.add(header(HttpHeaders.CONTENT_TYPE, this.contentType()));
         headers.add(
-            header(
+            DirectoryListing.header(
+                HttpHeaders.CONTENT_TYPE,
+                this.contentType()
+            )
+        );
+        headers.add(
+            DirectoryListing.header(
                 HttpHeaders.CONTENT_LENGTH,
                 String.valueOf(this.content.length)
             )

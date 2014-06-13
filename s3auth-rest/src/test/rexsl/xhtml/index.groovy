@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, s3auth.com
+ * Copyright (c) 2012-2014, s3auth.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,6 @@ package com.s3auth.rest.rexsl.xhtml
 
 import com.rexsl.test.XhtmlMatchers
 import org.hamcrest.MatcherAssert
-import org.hamcrest.Matchers
 
 MatcherAssert.assertThat(
     rexsl.document,

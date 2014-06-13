@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
- * Copyright (c) 2012, s3auth.com
+ * Copyright (c) 2012-2014, s3auth.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,7 @@
  * build and re-builds everything from scratch. I already reported this
  * problem: http://jira.codehaus.org/browse/MNG-4885.
  *
- * @author Yegor Bugayenko (yegor@tpc.com)
+ * @author Yegor Bugayenko (yegor@tpc2.com)
  * @link http://maven.apache.org/
  * @link http://en.wikipedia.org/wiki/List_of_build_automation_software
  -->
@@ -47,7 +47,7 @@
     <parent>
         <groupId>com.jcabi</groupId>
         <artifactId>parent</artifactId>
-        <version>0.18.1</version>
+        <version>0.22</version>
     </parent>
     <groupId>com.s3auth</groupId>
     <artifactId>s3auth</artifactId>
@@ -79,7 +79,7 @@
             <name>Yegor Bugayenko</name>
             <email>yegor@tpc2.com</email>
             <organization>tpc2.com</organization>
-            <organizationUrl>http://www.tpc2.com</organizationUrl>
+            <organizationUrl>http://www.teamed.io</organizationUrl>
             <roles>
                 <role>Architect</role>
                 <role>Developer</role>
@@ -111,7 +111,6 @@
         </repository>
         <site>
             <id>maven.s3auth.com</id>
-            <name>s3auth.com Project Site</name>
             <url>s3://maven.s3auth.com</url>
         </site>
     </distributionManagement>
@@ -154,9 +153,9 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>com.texry</groupId>
-                    <artifactId>texry-maven-plugin</artifactId>
-                    <version>0.2.1</version>
+                    <groupId>com.jcabi</groupId>
+                    <artifactId>jcabi-latex-maven-plugin</artifactId>
+                    <version>1.0</version>
                     <configuration>
                         <closures>
                             <file>header.tex</file>
@@ -168,8 +167,8 @@
         </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>com.texry</groupId>
-                <artifactId>texry-maven-plugin</artifactId>
+                <groupId>com.jcabi</groupId>
+                <artifactId>jcabi-latex-maven-plugin</artifactId>
                 <inherited>false</inherited>
                 <executions>
                     <execution>

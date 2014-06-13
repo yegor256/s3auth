@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2012-2014, s3auth.com
  * All rights reserved.
  *
@@ -27,21 +26,43 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
-    <xsl:output method="xml" omit-xml-declaration="yes"/>
-    <xsl:include href="/xsl/layout.xsl"/>
-    <xsl:template name="head">
-        <title>
-            <xsl:text>error</xsl:text>
-        </title>
-    </xsl:template>
-    <xsl:template name="content">
-        <h1>
-            <xsl:text>Page not found</xsl:text>
-        </h1>
-        <p>
-            <xsl:text>Invalid request or page not found.</xsl:text>
-        </p>
-    </xsl:template>
-</xsl:stylesheet>
+ */
+package com.s3auth.hosts;
+
+import com.jcabi.aspects.Immutable;
+import java.io.IOException;
+import java.util.Map;
+
+/**
+ * Store of {@link Stats} per domain.
+ *
+ * @author Carlos Miranda (miranda.cma@gmail.com)
+ * @version $Id$
+ */
+@Immutable
+interface DomainStatsData {
+
+    /**
+     * Post the statistics of the given domain, for this particular time.
+     * @param domain The domain of this stats.
+     * @param stats The stats to keep.
+     * @throws IOException If something goes wrong.
+     */
+    void put(String domain, Stats stats) throws IOException;
+
+    /**
+     * Get the stats for the given domain.
+     * @param domain The domain whose stats we're interested in
+     * @return The stats for this domain
+     * @throws IOException If something goes wrong.
+     */
+    Stats get(String domain) throws IOException;
+
+    /**
+     * Get the stats for all domains.
+     * @return Map of each domain and their corresponding stats.
+     * @throws IOException If something goes wrong.
+     */
+    Map<String, Stats> all() throws IOException;
+
+}

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, s3auth.com
+ * Copyright (c) 2012-2014, s3auth.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -99,6 +99,7 @@ public final class IndexRs extends BaseRs {
     @POST
     @Path("/add")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @SuppressWarnings("PMD.UseObjectForClearerAPI")
     public Response add(
         @FormParam("host") final String host,
         @FormParam("key") final String key,

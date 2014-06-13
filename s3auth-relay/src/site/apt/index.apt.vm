@@ -6,7 +6,7 @@
  2012-08-26
  ------
 
-~~ Copyright (c) 2012, s3auth.com
+~~ Copyright (c) 2012-2014, s3auth.com
 ~~ All rights reserved.
 ~~
 ~~ Redistribution and use in source and binary forms, with or without
@@ -38,4 +38,4 @@ Standalone HTTP-to-S3 Relay
 
   <<<s3auth-relay>>> is a relay between HTTP and Amazon S3:
 
-[../texry/classes-relay.png] UML class diagram of s3auth-relay
+[../latex/classes-relay.png] UML class diagram of s3auth-relay

@@ -1,6 +1,6 @@
 target/
 .idea
 *.iml
-src/main/texry/*.pdf
-src/main/texry/*.aux
-src/main/texry/*.gz
+src/main/latex/*.pdf
+src/main/latex/*.aux
+src/main/latex/*.gz

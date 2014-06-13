@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, s3auth.com
+ * Copyright (c) 2012-2014, s3auth.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,7 +68,7 @@ final class SmartHost implements Host {
      * Public ctor.
      * @param hst Original host
      */
-    public SmartHost(@NotNull final Host hst) {
+    SmartHost(@NotNull final Host hst) {
         this.host = hst;
     }
 
@@ -96,7 +96,7 @@ final class SmartHost implements Host {
     @Loggable(value = Loggable.DEBUG, ignore = IOException.class)
     public Resource fetch(@NotNull final URI uri, @NotNull final Range range,
         @NotNull final Version version) throws IOException {
-        Resource resource;
+        final Resource resource;
         if (SmartHost.HTPASSWD.matcher(uri.toString()).matches()) {
             String text;
             try {
@@ -107,7 +107,7 @@ final class SmartHost implements Host {
                     "%d byte(s)",
                     baos.toByteArray().length
                 );
-            } catch (final java.io.IOException ex) {
+            } catch (final IOException ex) {
                 text = Logger.format("%[exception]s", ex);
             }
             resource = new Resource.PlainText(text);
