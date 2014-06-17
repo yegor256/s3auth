@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, s3auth.com
+ * Copyright (c) 2012-2014, s3auth.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,6 +29,7 @@
  */
 package com.s3auth.relay;
 
+import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseRunnable;
 import com.s3auth.hosts.Resource;
 import java.io.OutputStream;
@@ -37,8 +38,8 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
@@ -93,7 +94,7 @@ public final class HttpResponseTest {
             @Override
             public long writeTo(final OutputStream stream) {
                 try {
-                    TimeUnit.SECONDS.sleep(2);
+                    TimeUnit.SECONDS.sleep(2L);
                 } catch (final InterruptedException ex) {
                     throw new IllegalStateException(ex);
                 }
@@ -102,7 +103,7 @@ public final class HttpResponseTest {
                 );
                 writer.print(content);
                 writer.flush();
-                return content.getBytes().length;
+                return (long) content.getBytes().length;
             }
             @Override
             public int status() {
@@ -110,7 +111,7 @@ public final class HttpResponseTest {
             }
             @Override
             public Collection<String> headers() {
-                return new ArrayList<String>();
+                return Collections.emptyList();
             }
             @Override
             public String etag() {
@@ -133,7 +134,7 @@ public final class HttpResponseTest {
         final HttpResponse response = new HttpResponse().withBody(res);
         final ServerSocket server = new ServerSocket(0);
         final CountDownLatch done = new CountDownLatch(1);
-        final StringBuffer received = new StringBuffer();
+        final StringBuffer received = new StringBuffer(Tv.HUNDRED);
         new Thread(
             new VerboseRunnable(
                 new Callable<Void>() {
@@ -157,7 +158,7 @@ public final class HttpResponseTest {
         response.send(writing);
         writing.close();
         MatcherAssert.assertThat(
-            done.await(1, TimeUnit.SECONDS),
+            done.await(1L, TimeUnit.SECONDS),
             Matchers.is(true)
         );
         MatcherAssert.assertThat(

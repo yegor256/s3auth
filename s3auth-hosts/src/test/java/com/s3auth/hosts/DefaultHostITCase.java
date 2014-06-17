@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, s3auth.com
+ * Copyright (c) 2012-2014, s3auth.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -67,17 +67,18 @@ public final class DefaultHostITCase {
             ),
             this.cloudWatch()
         );
-        MatcherAssert.assertThat(
-            ResourceMocker.toString(
-                // @checkstyle MagicNumber (3 lines)
-                host.fetch(
-                    URI.create("/index.html"),
-                    new Range.Simple(3, 500),
-                    Version.LATEST
-                )
-            ),
-            Matchers.startsWith("OCTYPE html>\n")
+        // @checkstyle MagicNumber (2 lines)
+        final Resource resource = host.fetch(
+            URI.create("/index.html"), new Range.Simple(3, 500), Version.LATEST
         );
+        try {
+            MatcherAssert.assertThat(
+                ResourceMocker.toString(resource),
+                Matchers.startsWith("OCTYPE html>\n")
+            );
+        } finally {
+            resource.close();
+        }
     }
 
     /**

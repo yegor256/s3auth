@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, s3auth.com
+ * Copyright (c) 2012-2014, s3auth.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,11 +29,6 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
-import com.amazonaws.services.cloudwatch.model.Dimension;
-import com.amazonaws.services.cloudwatch.model.MetricDatum;
-import com.amazonaws.services.cloudwatch.model.PutMetricDataRequest;
-import com.amazonaws.services.cloudwatch.model.StandardUnit;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -74,7 +69,7 @@ public final class DefaultResourceTest {
         Mockito.doReturn(1L).when(meta).getContentLength();
         final Resource res = new DefaultResource(
             client, "a", "", Range.ENTIRE, Version.LATEST,
-            Mockito.mock(AmazonCloudWatchClient.class)
+            Mockito.mock(DomainStatsData.class)
         );
         MatcherAssert.assertThat(
             res.headers(),
@@ -100,7 +95,7 @@ public final class DefaultResourceTest {
             ResourceMocker.toString(
                 new DefaultResource(
                     client, "b", "", Range.ENTIRE, Version.LATEST,
-                    Mockito.mock(AmazonCloudWatchClient.class)
+                    Mockito.mock(DomainStatsData.class)
                 )
             ),
             Matchers.equalTo("")
@@ -132,7 +127,7 @@ public final class DefaultResourceTest {
             ResourceMocker.toByteArray(
                 new DefaultResource(
                     client, "c", "", Range.ENTIRE, Version.LATEST,
-                    Mockito.mock(AmazonCloudWatchClient.class)
+                    Mockito.mock(DomainStatsData.class)
                 )
             ),
             Matchers.equalTo(data)
@@ -158,7 +153,7 @@ public final class DefaultResourceTest {
             ResourceMocker.toString(
                 new DefaultResource(
                     client, "d", "", Range.ENTIRE, Version.LATEST,
-                    Mockito.mock(AmazonCloudWatchClient.class)
+                    Mockito.mock(DomainStatsData.class)
                 )
             ),
             Matchers.equalTo("")
@@ -181,7 +176,7 @@ public final class DefaultResourceTest {
         Mockito.doReturn(date).when(meta).getLastModified();
         final Resource res = new DefaultResource(
             client, "x", "", Range.ENTIRE, Version.LATEST,
-            Mockito.mock(AmazonCloudWatchClient.class)
+            Mockito.mock(DomainStatsData.class)
         );
         MatcherAssert.assertThat(
             res.lastModified(),
@@ -204,7 +199,7 @@ public final class DefaultResourceTest {
         Mockito.doReturn("max-age: 600, public").when(meta).getCacheControl();
         final Resource res = new DefaultResource(
             client, "e", "", Range.ENTIRE, Version.LATEST,
-            Mockito.mock(AmazonCloudWatchClient.class)
+            Mockito.mock(DomainStatsData.class)
         );
         MatcherAssert.assertThat(
             res.headers(),
@@ -228,7 +223,7 @@ public final class DefaultResourceTest {
         Mockito.doReturn(null).when(meta).getCacheControl();
         final Resource res = new DefaultResource(
             client, "f", "", Range.ENTIRE, Version.LATEST,
-            Mockito.mock(AmazonCloudWatchClient.class)
+            Mockito.mock(DomainStatsData.class)
         );
         MatcherAssert.assertThat(
             res.headers(),
@@ -237,11 +232,11 @@ public final class DefaultResourceTest {
     }
 
     /**
-     * DefaultResource can post metrics to Amazon CloudWatch.
+     * DefaultResource can post metrics.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void postsCloudWatchMetricData() throws Exception {
+    public void postsMetricData() throws Exception {
         final int size = 100;
         final byte[] data = new byte[size];
         final Random random = new Random();
@@ -257,30 +252,18 @@ public final class DefaultResourceTest {
         Mockito.doReturn(object).when(client)
             .getObject(Mockito.any(GetObjectRequest.class));
         Mockito.doReturn(stream).when(object).getObjectContent();
-        final AmazonCloudWatchClient cloudwatch =
-            Mockito.mock(AmazonCloudWatchClient.class);
-        final String bucket = "CloudWatchTest";
+        final DomainStatsData stats = Mockito.mock(DomainStatsData.class);
+        final String bucket = "MetricsTest";
         MatcherAssert.assertThat(
             ResourceMocker.toByteArray(
                 new DefaultResource(
-                    client, bucket, "", Range.ENTIRE, Version.LATEST, cloudwatch
+                    client, bucket, "", Range.ENTIRE, Version.LATEST, stats
                 )
             ),
             Matchers.equalTo(data)
         );
-        Mockito.verify(cloudwatch, Mockito.only()).putMetricData(
-            new PutMetricDataRequest()
-                .withNamespace("S3Auth")
-                .withMetricData(
-                    new MetricDatum()
-                        .withMetricName("BytesTransferred")
-                        .withDimensions(
-                            new Dimension()
-                                .withName("Bucket")
-                                .withValue(bucket)
-                        ).withUnit(StandardUnit.Bytes)
-                        .withValue(Double.valueOf(size))
-                )
+        Mockito.verify(stats, Mockito.only()).put(
+            bucket, new Stats.Simple(data.length)
         );
     }
 
@@ -307,8 +290,28 @@ public final class DefaultResourceTest {
         ).when(client).getObject(Mockito.any(GetObjectRequest.class));
         new DefaultResource(
             client, "h", "", Range.ENTIRE, new Version.Simple(version),
-            Mockito.mock(AmazonCloudWatchClient.class)
+            Mockito.mock(DomainStatsData.class)
         );
+    }
+
+    /**
+     * DefaultResource can close the underlying S3Object.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void closesUnderlyingObject() throws Exception {
+        final AmazonS3 client = Mockito.mock(AmazonS3.class);
+        final S3Object object = Mockito.mock(S3Object.class);
+        Mockito.doReturn(object).when(client)
+            .getObject(Mockito.any(GetObjectRequest.class));
+        final ObjectMetadata meta = Mockito.mock(ObjectMetadata.class);
+        Mockito.doReturn(meta).when(object).getObjectMetadata();
+        Mockito.doReturn(1L).when(meta).getContentLength();
+        new DefaultResource(
+            client, "i", "", Range.ENTIRE, Version.LATEST,
+            Mockito.mock(DomainStatsData.class)
+        ).close();
+        Mockito.verify(object, Mockito.times(1)).close();
     }
 
 }

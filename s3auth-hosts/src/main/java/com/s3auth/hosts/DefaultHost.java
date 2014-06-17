@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, s3auth.com
+ * Copyright (c) 2012-2014, s3auth.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -159,6 +159,7 @@ final class DefaultHost implements Host {
         throws IOException {
         Resource resource = null;
         final Collection<String> errors = new LinkedList<String>();
+        final DomainStatsData data = new H2DomainStatsData();
         for (final DefaultHost.ObjectName name : this.names(uri)) {
             try {
                 if (version.list()) {
@@ -168,17 +169,17 @@ final class DefaultHost implements Host {
                 } else {
                     resource = new DefaultResource(
                         this.bucket.client(), this.bucket.bucket(),
-                        name.get(), range, version, this.cloudwatch.get()
+                        name.get(), range, version, data
                     );
                 }
                 break;
             } catch (final AmazonServiceException ex) {
-                if (StringUtils.endsWith(name.get(), SUFFIX)
+                if (StringUtils.endsWith(name.get(), DefaultHost.SUFFIX)
                     && "NoSuchKey".equals(ex.getErrorCode())
                 ) {
                     resource = new DirectoryListing(
                         this.bucket.client(), this.bucket.bucket(),
-                        StringUtils.removeEnd(name.get(), SUFFIX)
+                        StringUtils.removeEnd(name.get(), DefaultHost.SUFFIX)
                     );
                     break;
                 } else if ("NoSuchBucket".equals(ex.getErrorCode())) {
@@ -202,7 +203,7 @@ final class DefaultHost implements Host {
                             resource = new DefaultResource(
                                 this.bucket.client(), this.bucket.bucket(),
                                 config.getErrorDocument(), Range.ENTIRE,
-                                Version.LATEST, this.cloudwatch.get()
+                                Version.LATEST, data
                             );
                         }
                     } catch (final AmazonClientException exc) {
@@ -215,10 +216,6 @@ final class DefaultHost implements Host {
                 errors.add(String.format("'%s': %s", name, ex.getMessage()));
             } catch (final AmazonClientException ex) {
                 errors.add(String.format("'%s': %s", name, ex.getMessage()));
-            } finally {
-                if (resource != null) {
-                    resource.close();
-                }
             }
         }
         if (resource == null) {
@@ -308,7 +305,7 @@ final class DefaultHost implements Host {
                 suffix = "";
             }
             if (suffix == null || suffix.isEmpty()) {
-                suffix = SUFFIX;
+                suffix = DefaultHost.SUFFIX;
             }
             final StringBuilder text = new StringBuilder(this.origin);
             if (text.length() > 0) {
@@ -351,6 +348,11 @@ final class DefaultHost implements Host {
 
     /**
      * Stats for this domain.
+     *
+     * @todo #173 We should be caching the results of this method for a short
+     *  period somehow, or at least prevent unnecessary repeated requests to
+     *  Amazon CloudWatch API. This is so that we can improve performance and
+     *  reduce access costs.
      */
     @Loggable(Loggable.DEBUG)
     private final class HostStats implements Stats {

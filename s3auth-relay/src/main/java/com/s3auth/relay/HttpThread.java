@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, s3auth.com
+ * Copyright (c) 2012-2014, s3auth.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -139,6 +139,7 @@ final class HttpThread {
      * Dispatch one request from the encapsulated queue.
      * @return Amount of bytes sent to socket
      * @throws InterruptedException If interrupted while waiting for the queue
+     * @checkstyle ExecutableStatementCount (100 lines)
      */
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public long dispatch() throws InterruptedException {
@@ -161,24 +162,32 @@ final class HttpThread {
                         "X-S3auth-Time",
                         Long.toString(System.currentTimeMillis() - start)
                     );
-                final Resource resource =
-                    HttpThread.resource(this.host(request), request);
-                response = response.withHeader(
-                    org.apache.http.HttpHeaders.AGE,
-                    String.valueOf(
-                        TimeUnit.MILLISECONDS.toSeconds(
-                            System.currentTimeMillis() - start
-                        )
-                    )
-                );
-                if (resource.lastModified() != null) {
+                Resource resource = null;
+                try {
+                    resource = HttpThread.resource(this.host(request), request);
                     response = response.withHeader(
-                        HttpHeaders.LAST_MODIFIED,
-                        DateUtils.formatDate(resource.lastModified())
+                        org.apache.http.HttpHeaders.AGE,
+                        String.valueOf(
+                            TimeUnit.MILLISECONDS.toSeconds(
+                                System.currentTimeMillis() - start
+                            )
+                        )
                     );
+                    if (resource.lastModified() != null) {
+                        response = response.withHeader(
+                            HttpHeaders.LAST_MODIFIED,
+                            DateUtils.formatDate(resource.lastModified())
+                        );
+                    }
+                    bytes = response.withBody(resource).send(socket);
+                    Logger.info(
+                        this, "#run(): %d bytes of %s", bytes, resource
+                    );
+                } finally {
+                    if (resource != null) {
+                        resource.close();
+                    }
                 }
-                bytes = response.withBody(resource).send(socket);
-                Logger.info(this, "#run(): %d bytes of %s", bytes, resource);
             } else {
                 bytes = HttpThread.failure(
                     new HttpException(
@@ -252,7 +261,7 @@ final class HttpThread {
         if (request.headers().containsKey(HttpHeaders.ACCEPT_ENCODING)
             && request.headers().get(HttpHeaders.ACCEPT_ENCODING)
                 .contains("gzip")
-            && COMPRESSIBLE.contains(resource.contentType())) {
+            && HttpThread.COMPRESSIBLE.contains(resource.contentType())) {
             resource = new GzipResource(resource);
         }
         return resource;

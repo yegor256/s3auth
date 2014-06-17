@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, s3auth.com
+ * Copyright (c) 2012-2014, s3auth.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -372,25 +372,6 @@ public final class DefaultHostTest {
         new DefaultHost(
             new BucketMocker().withClient(aws).mock(), this.cloudWatch()
         ).fetch(URI.create("failed.html"), Range.ENTIRE, Version.LATEST);
-    }
-
-    /**
-     * DefaultHost closes the S3Object after fetching data.
-     * @throws Exception If there is some problem inside
-     */
-    @Test
-    public void closesUnderlyingObject() throws Exception {
-        final AmazonS3 aws = Mockito.mock(AmazonS3.class);
-        final S3Object object = Mockito.mock(S3Object.class);
-        Mockito.doReturn(object).when(aws)
-            .getObject(Mockito.any(GetObjectRequest.class));
-        final String suffix = "closed.htm";
-        Mockito.doReturn(new BucketWebsiteConfiguration(suffix))
-            .when(aws).getBucketWebsiteConfiguration(Mockito.anyString());
-        new DefaultHost(
-            new BucketMocker().withClient(aws).mock(), this.cloudWatch()
-        ).fetch(URI.create(suffix), Range.ENTIRE, Version.LATEST);
-        Mockito.verify(object).close();
     }
 
     /**
