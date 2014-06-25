@@ -116,9 +116,8 @@ final class HttpFacade implements Closeable {
     HttpFacade(@NotNull final Hosts hosts, final int port, final int sslport)
         throws IOException {
         this.server = new ServerSocket(port);
-        this.secured =
-            ((SSLServerSocketFactory) SSLServerSocketFactory.getDefault())
-                .createServerSocket(sslport);
+        this.secured = SSLServerSocketFactory.getDefault()
+            .createServerSocket(sslport);
         final HttpThread thread = new HttpThread(this.sockets, hosts);
         final Runnable runnable = new VerboseRunnable(
             new HttpFacade.HttpThreadRunnable(thread), true, false
