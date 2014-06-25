@@ -46,6 +46,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
+import javax.net.ssl.SSLServerSocketFactory;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -78,7 +79,7 @@ final class HttpFacade implements Closeable {
      * Executor service, with socket openers.
      */
     private final transient ScheduledExecutorService frontend =
-        Executors.newSingleThreadScheduledExecutor(new VerboseThreads("front"));
+        Executors.newScheduledThreadPool(2, new VerboseThreads("front"));
 
     /**
      * Executor service, with consuming threads.
@@ -101,14 +102,23 @@ final class HttpFacade implements Closeable {
     private final transient ServerSocket server;
 
     /**
+     * Secured Server socket.
+     */
+    private final transient ServerSocket secured;
+
+    /**
      * Public ctor.
      * @param hosts Hosts
      * @param port Port number
+     * @param sslport SSL port number.
      * @throws IOException If can't initialize
      */
-    HttpFacade(@NotNull final Hosts hosts, final int port)
+    HttpFacade(@NotNull final Hosts hosts, final int port, final int sslport)
         throws IOException {
         this.server = new ServerSocket(port);
+        this.secured =
+            ((SSLServerSocketFactory) SSLServerSocketFactory.getDefault())
+                .createServerSocket(sslport);
         final HttpThread thread = new HttpThread(this.sockets, hosts);
         final Runnable runnable = new VerboseRunnable(
             new HttpFacade.HttpThreadRunnable(thread), true, false
@@ -122,7 +132,7 @@ final class HttpFacade implements Closeable {
     }
 
     /**
-     * Start listening to the port.
+     * Start listening to the ports.
      */
     public void listen() {
         this.frontend.scheduleWithFixedDelay(
@@ -130,7 +140,18 @@ final class HttpFacade implements Closeable {
                 new Runnable() {
                     @Override
                     public void run() {
-                        HttpFacade.this.process();
+                        HttpFacade.this.process(HttpFacade.this.server);
+                    }
+                }
+            ),
+            0L, 1L, TimeUnit.NANOSECONDS
+        );
+        this.frontend.scheduleWithFixedDelay(
+            new VerboseRunnable(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        HttpFacade.this.process(HttpFacade.this.secured);
                     }
                 }
             ),
@@ -151,17 +172,18 @@ final class HttpFacade implements Closeable {
     }
 
     /**
-     * Process one socket.
+     * Process one server socket.
+     * @param svr The server socket
      */
-    private void process() {
+    private void process(final ServerSocket svr) {
         final Socket socket;
         try {
-            socket = this.server.accept();
+            socket = svr.accept();
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }
         try {
-            if (!this.sockets.offer(socket, (long) Tv.TEN, TimeUnit.SECONDS)) {
+            if (!this.sockets.offer(socket, Tv.TEN, TimeUnit.SECONDS)) {
                 HttpFacade.overflow(socket);
                 Logger.warn(this, "too many open connections");
             }
@@ -200,12 +222,12 @@ final class HttpFacade implements Closeable {
     private void shutdown(final ExecutorService service)
         throws InterruptedException {
         service.shutdown();
-        if (service.awaitTermination((long) Tv.TEN, TimeUnit.SECONDS)) {
+        if (service.awaitTermination(Tv.TEN, TimeUnit.SECONDS)) {
             Logger.info(this, "#shutdown(): succeeded");
         } else {
             Logger.warn(this, "#shutdown(): failed");
             service.shutdownNow();
-            if (service.awaitTermination((long) Tv.TEN, TimeUnit.SECONDS)) {
+            if (service.awaitTermination(Tv.TEN, TimeUnit.SECONDS)) {
                 Logger.info(this, "#shutdown(): shutdownNow() succeeded");
             } else {
                 Logger.error(this, "#shutdown(): failed to stop threads");
