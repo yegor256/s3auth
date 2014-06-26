@@ -243,18 +243,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>com.jcabi</groupId>
-                <artifactId>jcabi-ssl-maven-plugin</artifactId>
-                <version>0.7.22</version>
-                <executions>
-                    <execution>
-                        <goals>
-                          <goal>keygen</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
     <profiles>
