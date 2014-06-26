@@ -58,6 +58,7 @@
                         <configuration>
                             <portNames>
                                 <portName>relay.port</portName>
+                                <portName>ssl.port</portName>
                             </portNames>
                         </configuration>
                     </execution>
@@ -81,6 +82,7 @@
                                 <classpath/>
                                 <argument>com.s3auth.relay.Main</argument>
                                 <argument>-p=${relay.port}</argument>
+                                <argument>-s=${ssl.port}</argument>
                             </arguments>
                         </configuration>
                     </execution>

@@ -100,7 +100,8 @@ public final class HttpFacadeTest {
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
-        final HttpFacade facade = new HttpFacade(hosts, port);
+        final HttpFacade facade =
+            new HttpFacade(hosts, port, PortMocker.reserve());
         facade.listen();
         final URI uri = UriBuilder
             .fromUri(String.format("http://localhost:%d/", port))
@@ -141,7 +142,8 @@ public final class HttpFacadeTest {
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
-        final HttpFacade facade = new HttpFacade(hosts, port);
+        final HttpFacade facade =
+            new HttpFacade(hosts, port, PortMocker.reserve());
         facade.listen();
         final URI uri = UriBuilder
             .fromUri(String.format("http://localhost:%d/", port))
@@ -210,7 +212,8 @@ public final class HttpFacadeTest {
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
-        final HttpFacade facade = new HttpFacade(hosts, port);
+        final HttpFacade facade =
+            new HttpFacade(hosts, port, PortMocker.reserve());
         try {
             facade.listen();
             final URI uri = UriBuilder
@@ -263,7 +266,8 @@ public final class HttpFacadeTest {
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
-        final HttpFacade facade = new HttpFacade(hosts, port);
+        final HttpFacade facade =
+            new HttpFacade(hosts, port, PortMocker.reserve());
         try {
             facade.listen();
             final URI uri = UriBuilder
@@ -320,7 +324,8 @@ public final class HttpFacadeTest {
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
-        final HttpFacade facade = new HttpFacade(hosts, port);
+        final HttpFacade facade =
+            new HttpFacade(hosts, port, PortMocker.reserve());
         try {
             facade.listen();
             final URI uri = UriBuilder
@@ -371,7 +376,8 @@ public final class HttpFacadeTest {
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
-        final HttpFacade facade = new HttpFacade(hosts, port);
+        final HttpFacade facade =
+            new HttpFacade(hosts, port, PortMocker.reserve());
         try {
             facade.listen();
             final URI uri = UriBuilder
@@ -421,7 +427,8 @@ public final class HttpFacadeTest {
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
-        final HttpFacade facade = new HttpFacade(hosts, port);
+        final HttpFacade facade =
+            new HttpFacade(hosts, port, PortMocker.reserve());
         try {
             facade.listen();
             new JdkRequest(String.format("http://localhost:%d/", port))
@@ -469,7 +476,8 @@ public final class HttpFacadeTest {
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
-        final HttpFacade facade = new HttpFacade(hosts, port);
+        final HttpFacade facade =
+            new HttpFacade(hosts, port, PortMocker.reserve());
         try {
             facade.listen();
             final Response resp =
@@ -501,6 +509,50 @@ public final class HttpFacadeTest {
     }
 
     /**
+     * HttpFacade can return content thought a secured
+     * content-encoding and response content-type.
+     * @throws Exception If there is some problem inside
+     * @todo #8 For some reason this test is not passing in Travis and Rultor,
+     *  even with the jcabi-ssl-maven-plugin. It does work on my local machine.
+     *  It fails with javax.net.ssl.SSLHandshakeException with message:
+     *  Received fatal alert: handshake_failure. Let's investigate and fix.
+     */
+    @org.junit.Ignore
+    @Test
+    public void getsContentOverSSL() throws Exception {
+        final Host host = Mockito.mock(Host.class);
+        final String body = "secured";
+        final Resource answer = new ResourceMocker().withContent(body).mock();
+        Mockito.doReturn(answer).when(host).fetch(
+            Mockito.any(URI.class),
+            Mockito.any(Range.class),
+            Mockito.any(Version.class)
+        );
+        final Hosts hosts = Mockito.mock(Hosts.class);
+        Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
+        final int port = PortMocker.reserve();
+        final HttpFacade facade =
+            new HttpFacade(hosts, PortMocker.reserve(), port);
+        try {
+            facade.listen();
+            new JdkRequest(String.format("https://localhost:%d/", port))
+                .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
+                .header(
+                    HttpHeaders.AUTHORIZATION,
+                    String.format(
+                        "Basic %s",
+                        Base64.encodeBase64String("a:b".getBytes())
+                    )
+                ).uri().path("/a")
+                .back().fetch().as(RestResponse.class)
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .assertBody(Matchers.is(body));
+        } finally {
+            facade.close();
+        }
+    }
+
+    /**
      * HttpFacade closes the Resource after fetching data.
      * @throws Exception If there is some problem inside
      */
@@ -516,7 +568,8 @@ public final class HttpFacadeTest {
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
-        final HttpFacade facade = new HttpFacade(hosts, port);
+        final HttpFacade facade =
+            new HttpFacade(hosts, port, PortMocker.reserve());
         try {
             facade.listen();
             final URI uri = UriBuilder
@@ -531,7 +584,7 @@ public final class HttpFacadeTest {
                         Base64.encodeBase64String("a:b".getBytes())
                     )
                 ).uri().back().fetch();
-            TimeUnit.SECONDS.sleep((long) Tv.THREE);
+            TimeUnit.SECONDS.sleep(Tv.THREE);
             Mockito.verify(resource, Mockito.times(1)).close();
         } finally {
             facade.close();

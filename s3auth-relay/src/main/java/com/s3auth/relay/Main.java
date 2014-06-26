@@ -65,10 +65,24 @@ public final class Main {
      * @throws Exception If something is wrong
      */
     public static void main(final String[] args) throws Exception {
-        final OptionParser parser = new OptionParser("p:d");
+        final OptionParser parser = new OptionParser("p:s:d");
         final OptionSet options = parser.parse(args);
-        final int port = Integer.parseInt(options.valueOf("p").toString());
-        final HttpFacade facade = new HttpFacade(new DynamoHosts(), port);
+        // @checkstyle MultipleStringLiterals (10 lines)
+        // @checkstyle MagicNumber (11 lines)
+        final int port;
+        if (options.has("p")) {
+            port = Integer.parseInt(options.valueOf("p").toString());
+        } else {
+            port = 80;
+        }
+        final int secured;
+        if (options.has("s")) {
+            secured = Integer.parseInt(options.valueOf("s").toString());
+        } else {
+            secured = 443;
+        }
+        final HttpFacade facade =
+            new HttpFacade(new DynamoHosts(), port, secured);
         facade.listen();
         Logger.warn(Main.class, "started at http://localhost:%d...", port);
         if (options.has("d")) {
