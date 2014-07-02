@@ -109,6 +109,11 @@ final class DefaultHost implements Host {
     private final transient Htpasswd htpasswd;
 
     /**
+     * Holder of host stats.
+     */
+    private final transient Stats statistics;
+
+    /**
      * Amazon Cloudwatch Client.
      */
     private final transient Host.CloudWatch cloudwatch;
@@ -136,6 +141,7 @@ final class DefaultHost implements Host {
         this.bucket = bckt;
         this.htpasswd = new Htpasswd(this);
         this.cloudwatch = cwatch;
+        this.statistics = new HostStats(this.bucket.bucket());
     }
 
     @Override
@@ -254,7 +260,7 @@ final class DefaultHost implements Host {
 
     @Override
     public Stats stats() {
-        return new HostStats();
+        return this.statistics;
     }
 
     /**
@@ -348,15 +354,23 @@ final class DefaultHost implements Host {
 
     /**
      * Stats for this domain.
-     *
-     * @todo #173 We should be caching the results of this method for a short
-     *  period somehow, or at least prevent unnecessary repeated requests to
-     *  Amazon CloudWatch API. This is so that we can improve performance and
-     *  reduce access costs.
      */
     @Loggable(Loggable.DEBUG)
+    @EqualsAndHashCode(of = "bucket")
     private final class HostStats implements Stats {
+        /**
+         * The S3 bucket.
+         */
+        private final transient String bucket;
+        /**
+         * Public ctor.
+         * @param bckt The name of the bucket
+         */
+        public HostStats(final String bckt) {
+            this.bucket = bckt;
+        }
         @Override
+        @Cacheable(lifetime = Tv.THIRTY, unit = TimeUnit.MINUTES)
         public long bytesTransferred() {
             final Date now = new Date();
             final List<Datapoint> datapoints =
@@ -368,7 +382,7 @@ final class DefaultHost implements Host {
                         .withDimensions(
                             new Dimension()
                                 .withName("Bucket")
-                                .withValue(DefaultHost.this.bucket.bucket())
+                                .withValue(this.bucket)
                         )
                         .withUnit(StandardUnit.Bytes)
                         .withPeriod((int) TimeUnit.DAYS.toSeconds(Tv.SEVEN))

@@ -289,10 +289,10 @@ public final class DefaultHostTest {
     }
 
     /**
-     * DefaultHost can retrieve Cloudwatch stats.
+     * DefaultHost can retrieve Cloudwatch stats and cache the results.
      */
     @Test
-    public void retrievesCloudWatchStats() {
+    public void retrievesAndCachesCloudWatchStats() {
         final long sum = 10;
         final CloudWatch cloudwatch = this.cloudWatch();
         final GetMetricStatisticsResult result = new GetMetricStatisticsResult()
@@ -304,7 +304,18 @@ public final class DefaultHostTest {
                 new BucketMocker().mock(),
                 cloudwatch
             ).stats().bytesTransferred(),
-            Matchers.is(sum)
+            Matchers.allOf(
+                Matchers.is(sum),
+                Matchers.is(
+                    new DefaultHost(
+                        new BucketMocker().mock(),
+                        cloudwatch
+                    ).stats().bytesTransferred()
+                )
+            )
+        );
+        Mockito.verify(cloudwatch.get(), Mockito.times(1)).getMetricStatistics(
+            Mockito.any(GetMetricStatisticsRequest.class)
         );
     }
 
