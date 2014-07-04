@@ -54,14 +54,6 @@ import org.apache.commons.lang3.StringUtils;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
- * @todo #173 Due to the large cost of having very many small CloudWatch
- *  requests, we changed the implementation of DefaultResource so that it now
- *  retains information to a local H2 database instead of directly making
- *  CloudWatch API requests. However, we still don't have a way to post it to
- *  CloudWatch. Let's create a way to do this, such as a cron job that runs
- *  every hour. It should post aggregated traffic metrics to Amazon CloudWatch
- *  per domain, and also perform cleanup of old data after it manages to post
- *  the information.
  */
 @EqualsAndHashCode(of = { "bucket", "key", "range" })
 @Loggable(Loggable.DEBUG)
