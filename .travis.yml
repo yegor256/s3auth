@@ -1,3 +1,4 @@
 language: java
-env: MAVEN_OPTS="-Xms1g -Xmx2g -XX:MaxPermSize=2g"
+before_script:
+  - export MAVEN_OPTS="-Xms1g -Xmx2g -XX:MaxPermSize=2g"
 script: mvn clean install -Pqulice --batch-mode --errors --quiet
