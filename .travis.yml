@@ -2,6 +2,5 @@ language: java
 env: MAVEN_OPTS="-Xms1024m -Xmx2048m -XX:MaxPermSize=2048m"
 jdk:
   - openjdk7
-  - oraclejdk7
-  - openjdk6
+install: true
 script: mvn clean install -Pqulice --batch-mode --errors --quiet
