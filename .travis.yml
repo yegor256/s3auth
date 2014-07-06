@@ -1,5 +1,5 @@
 language: java
-env: MAVEN_OPTS="-Xms1024m -Xmx2048m -XX:PermSize=1024m -XX:MaxPermSize=2048m"
+env: MAVEN_OPTS="-Xms1024m -Xmx2048m -XX:PermSize=1024m -XX:MaxPermSize=2048m -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC"
 jdk:
   - openjdk7
 install: true
