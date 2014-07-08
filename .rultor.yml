@@ -1,0 +1,3 @@
+merge
+  script: mvn clean install -Pqulice
+
