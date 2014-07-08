@@ -1,3 +1,7 @@
+assets:
+  settings.xml: yegor256/home#assets/s3auth/settings.xml 
 merge:
-  script: mvn clean install -Pqulice
-
+  env:
+    MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
+  script: 
+    - "mvn help:system clean install -Pqulice --settings settings.xml"
