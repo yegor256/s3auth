@@ -7,13 +7,13 @@ merge:
   env:
     MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
   script: 
-    - "mvn help:system clean install -Pqulice --settings ../settings.xml"
+    - "mvn help:system clean install -e -Pqulice --settings ../settings.xml"
 
 deploy:
   env:
     MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
   script:
     - "chmod 600 ../*.gpg"
-    - "mvn clean deploy -Ps3auth -Pqulice --settings ../settings.xml"
-    - "mvn clean site-deploy -Psite -Prempl --settings ../settings.xml"
+    - "mvn clean deploy -e -Ps3auth -Pqulice --settings ../settings.xml"
+    - "mvn clean site-deploy -e -Psite -Prempl --settings ../settings.xml"
 
