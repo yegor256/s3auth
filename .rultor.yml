@@ -15,5 +15,5 @@ deploy:
   script:
     - "chmod 600 ../*.gpg"
     - "mvn clean deploy -e -Ps3auth -Pqulice --settings ../settings.xml"
-    - "mvn clean site-deploy -e -Psite -Prempl --settings ../settings.xml"
+    - "mvn clean install site-deploy -e -Psite -Prempl --settings ../settings.xml"
 
