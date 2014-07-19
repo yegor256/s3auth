@@ -1,0 +1,19 @@
+assets:
+  settings.xml: "yegor256/home#assets/s3auth/settings.xml"
+  pubring.gpg: "yegor256/home#assets/pubring.gpg"
+  secring.gpg: "yegor256/home#assets/secring.gpg"
+
+merge:
+  env:
+    MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
+  script: 
+    - "mvn help:system clean install -e -Pqulice --settings ../settings.xml"
+
+deploy:
+  env:
+    MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
+  script:
+    - "chmod 600 ../*.gpg"
+    - "mvn clean deploy -e -Ps3auth -Pqulice --settings ../settings.xml"
+    - "mvn clean install site-deploy -e -Psite -Prempl --settings ../settings.xml"
+

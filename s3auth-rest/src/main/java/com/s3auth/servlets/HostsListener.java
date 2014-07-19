@@ -34,6 +34,7 @@ import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.s3auth.hosts.DynamoHosts;
 import com.s3auth.hosts.Hosts;
+import com.s3auth.hosts.ScheduledCloudWatch;
 import com.s3auth.hosts.SyslogHosts;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -62,6 +63,11 @@ public final class HostsListener implements ServletContextListener {
     private transient Hosts hosts;
 
     /**
+     * The Scheduled CloudWatch data sender.
+     */
+    private transient ScheduledCloudWatch cloudwatch;
+
+    /**
      * {@inheritDoc}
      *
      * <p>These attributes is used later in
@@ -73,6 +79,7 @@ public final class HostsListener implements ServletContextListener {
         try {
             Manifests.append(event.getServletContext());
             this.hosts = new SyslogHosts(new DynamoHosts());
+            this.cloudwatch = new ScheduledCloudWatch();
         } catch (final java.io.IOException ex) {
             Logger.error(
                 this,
@@ -94,6 +101,7 @@ public final class HostsListener implements ServletContextListener {
         } else {
             try {
                 this.hosts.close();
+                this.cloudwatch.close();
             } catch (final java.io.IOException ex) {
                 Logger.error(
                     this,
