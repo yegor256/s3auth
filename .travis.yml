@@ -1,6 +1,8 @@
 language: java
-env: MAVEN_OPTS="-Xms1024m -Xmx2048m -XX:PermSize=1024m -XX:MaxPermSize=2048m -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC"
+env:
+  global:
+    - MAVEN_OPTS="-XX:MaxPermSize=512m -Xmx2g"
 jdk:
   - openjdk7
 install: true
-script: mvn clean install -Pqulice --batch-mode --errors --quiet
+script: mvn clean install -Pqulice
