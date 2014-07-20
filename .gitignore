@@ -1,6 +1,7 @@
 target/
 .idea
 *.iml
+*.h2.db
 src/main/latex/*.pdf
 src/main/latex/*.aux
 src/main/latex/*.gz
