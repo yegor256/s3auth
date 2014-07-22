@@ -34,8 +34,10 @@ import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.jcabi.aspects.Tv;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Random;
 import org.apache.http.client.methods.HttpGet;
@@ -311,6 +313,33 @@ public final class DefaultResourceTest {
             client, "i", "", Range.ENTIRE, Version.LATEST,
             Mockito.mock(DomainStatsData.class)
         ).close();
+        Mockito.verify(object, Mockito.times(1)).close();
+    }
+
+    /**
+     * DefaultResource closes the underlying object when obtaining the full
+     * object size from the Content-Range header.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void closesUnderlyingObjectWhenSizeIsInvoked() throws Exception {
+        final AmazonS3 client = Mockito.mock(AmazonS3.class);
+        final S3Object object = Mockito.mock(S3Object.class);
+        Mockito.doReturn(object).when(client)
+            .getObject(Mockito.any(GetObjectRequest.class));
+        final ObjectMetadata meta = Mockito.mock(ObjectMetadata.class);
+        Mockito.doReturn(meta).when(object).getObjectMetadata();
+        Mockito.doReturn((long) Tv.TEN).when(meta).getContentLength();
+        final Collection<String> headers = new DefaultResource(
+            client, "j", "", new Range.Simple(0, 1), Version.LATEST,
+            Mockito.mock(DomainStatsData.class)
+        ).headers();
+        MatcherAssert.assertThat(
+            headers,
+            Matchers.hasItem(
+                Matchers.containsString("Content-Range: bytes 0-1/10")
+            )
+        );
         Mockito.verify(object, Mockito.times(1)).close();
     }
 
