@@ -77,6 +77,7 @@ final class DirectoryListing implements Resource {
     /**
      * Byte representation of transformed data.
      */
+    @Immutable.Array
     private final transient byte[] content;
 
     /**

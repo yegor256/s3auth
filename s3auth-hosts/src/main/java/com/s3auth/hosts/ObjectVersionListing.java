@@ -76,6 +76,7 @@ final class ObjectVersionListing implements Resource {
     /**
      * Byte representation of XML data.
      */
+    @Immutable.Array
     private final transient byte[] content;
 
     /**
@@ -123,7 +124,7 @@ final class ObjectVersionListing implements Resource {
     @Override
     public long writeTo(final OutputStream stream) throws IOException {
         stream.write(this.content);
-        return (long) this.content.length;
+        return this.content.length;
     }
 
     @Override
