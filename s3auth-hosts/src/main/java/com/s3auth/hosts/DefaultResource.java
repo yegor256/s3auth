@@ -44,6 +44,7 @@ import java.util.LinkedList;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -306,9 +307,15 @@ final class DefaultResource implements Resource {
         if (this.range.equals(Range.ENTIRE)) {
             size = this.object.getObjectMetadata().getContentLength();
         } else {
-            size = this.client.getObject(
-                this.request(Range.ENTIRE, this.version)
-            ).getObjectMetadata().getContentLength();
+            S3Object obj = null;
+            try {
+                obj = this.client.getObject(
+                    this.request(Range.ENTIRE, this.version)
+                );
+                size = obj.getObjectMetadata().getContentLength();
+            } finally {
+                IOUtils.closeQuietly(obj);
+            }
         }
         return size;
     }
