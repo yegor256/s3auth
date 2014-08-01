@@ -212,3 +212,10 @@ img.icon {
     width: 32px;
     height: 32px;
 }
+
+.badges {
+    list-style: none;
+}
+.badges li {
+    display: inline-block;
+}
