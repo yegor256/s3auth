@@ -1,5 +1,7 @@
 <img src="http://img.s3auth.com/logo.png" width="200px" height="35px"/>
 
+[![Made By Teamed.io](http://img.teamed.io/btn.svg)](http://www.teamed.io)
+
 [![Build Status](https://travis-ci.org/yegor256/s3auth.svg?branch=master)](https://travis-ci.org/yegor256/s3auth)
 
 ## Amazon S3 HTTP Basic Auth Gateway
