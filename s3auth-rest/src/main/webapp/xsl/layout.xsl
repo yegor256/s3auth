@@ -105,27 +105,11 @@
                         </a>
                         <xsl:text>, Java RESTful development framework.</xsl:text>
                     </p>
-                    <ul class="badges">
-                        <li>
-                            made by<br/>
-                            <a href="http://www.teamed.io">
-                                <img src="http://img.teamed.io/logo-light.svg" alt="teamed.io logo"
-                                    style="width:96px;height:19px;"/>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="https://aws.amazon.com/solution-providers/isv/technopark-corp">
-                                <img src="http://img.s3auth.com/apn-logo.png" alt="AWS Partner Network Logo"
-                                    style="width: 8%;"/>
-                            </a>
-                        </li>
-                        <li>
-                            <iframe src="http://ghbtns.com/github-btn.html?user=yegor256&amp;repo=s3auth&amp;type=watch&amp;count=true&amp;"
-                                style="border-width: 0px;overflow:hidden;width:152px;height:30px;">
-                                <xsl:comment>empty</xsl:comment>
-                            </iframe>
-                        </li>
-                    </ul>
+                    <p>
+                        <a href="http://www.teamed.io">
+                            <img src="http://img.teamed.io/btn.svg" alt="teamed.io logo"/>
+                        </a>
+                    </p>
                 </div>
             </body>
         </html>
