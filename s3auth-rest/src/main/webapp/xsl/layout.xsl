@@ -94,7 +94,7 @@
                             <xsl:text>Standard Technology Partner</xsl:text>
                         </a>
                         <xsl:text> of AWS). </xsl:text>
-                        <xsl:text>Sea also terms of use, privacy policy and license agreement at </xsl:text>
+                        <xsl:text>See also terms of use, privacy policy and license agreement at </xsl:text>
                         <a href="/misc/LICENSE.txt">
                             <xsl:text>LICENSE.txt</xsl:text>
                         </a>
