@@ -4,4 +4,7 @@ env:
     - MAVEN_OPTS="-XX:MaxPermSize=1g -Xmx2g -Xms2g"
 jdk:
   - openjdk7
+cache:
+  directories:
+    - $HOME/.m2
 script: mvn clean install -Pqulice --batch-mode --errors --quiet

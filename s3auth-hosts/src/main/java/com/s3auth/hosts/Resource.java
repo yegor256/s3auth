@@ -31,20 +31,20 @@ package com.s3auth.hosts;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.immutable.Array;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.core.HttpHeaders;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpHeaders;
 
 /**
  * Found resource.
@@ -108,17 +108,33 @@ public interface Resource extends Closeable {
         /**
          * Plain text to show.
          */
-        private final transient String text;
+        private final transient byte[] text;
         /**
          * Last modified date to return. Equal to the time of object creation.
          */
         private final transient long modified = System.currentTimeMillis();
         /**
+         * Headers associated with this resource.
+         */
+        private final Array<String> hdrs;
+        /**
          * Public ctor.
          * @param txt The text to show
          */
         public PlainText(@NotNull final String txt) {
-            this.text = txt;
+            this.text = txt.getBytes(Charsets.UTF_8);
+            this.hdrs = new Array<String>(
+                String.format(
+                    "%s: %s",
+                    HttpHeaders.CONTENT_TYPE,
+                    this.contentType()
+                ),
+                String.format(
+                    "%s: %d",
+                    HttpHeaders.CONTENT_LENGTH,
+                    this.text.length
+                )
+            );
         }
         @Override
         public int status() {
@@ -127,8 +143,8 @@ public interface Resource extends Closeable {
         @Override
         public long writeTo(@NotNull final OutputStream stream)
             throws IOException {
-            IOUtils.write(this.text, stream, Charsets.UTF_8);
-            return this.text.getBytes(Charsets.UTF_8).length;
+            IOUtils.write(this.text, stream);
+            return this.text.length;
         }
         @Override
         public String etag() {
@@ -145,18 +161,7 @@ public interface Resource extends Closeable {
         @Override
         @NotNull
         public Collection<String> headers() {
-            return Arrays.asList(
-                String.format(
-                    "%s: %s",
-                    HttpHeaders.CONTENT_TYPE,
-                    this.contentType()
-                ),
-                String.format(
-                    "%s: %d",
-                    HttpHeaders.CONTENT_LENGTH,
-                    this.text.getBytes(Charsets.UTF_8).length
-                )
-            );
+            return this.hdrs;
         }
         @Override
         public void close() {
