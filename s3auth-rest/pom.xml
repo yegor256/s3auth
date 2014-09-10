@@ -231,13 +231,6 @@
                         </archive>
                     </configuration>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <configuration>
-                        <argLine>${argLine} -XX:MaxPermSize=2g -Xmx3g -Xms3g</argLine>
-                    </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -307,7 +300,6 @@
                     <systemPropertyVariables>
                         <log4j.configuration>file:${basedir}/src/test/resources/log4j.properties</log4j.configuration>
                     </systemPropertyVariables>
-                    <argLine>${argLine} -XX:MaxPermSize=2g -Xmx3g -Xms3g</argLine>
                 </configuration>
                 <executions>
                     <execution>

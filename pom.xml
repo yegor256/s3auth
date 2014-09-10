@@ -150,7 +150,7 @@
                             <failsafe.aws.key>${aws.key}</failsafe.aws.key>
                             <failsafe.aws.secret>${aws.secret}</failsafe.aws.secret>
                         </systemPropertyVariables>
-                        <argLine>${argLine} -XX:MaxPermSize=2g -Xmx3g -Xms3g</argLine>
+                        <argLine>${argLine} -XX:MaxPermSize=2g -Xmx3g -Xms3g -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC</argLine>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -168,7 +168,7 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
-                        <argLine>${argLine} -XX:MaxPermSize=2g -Xmx3g -Xms3g</argLine>
+                        <argLine>${argLine} -XX:MaxPermSize=2g -Xmx3g -Xms3g -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC</argLine>
                     </configuration>
                 </plugin>
             </plugins>
