@@ -150,6 +150,7 @@
                             <failsafe.aws.key>${aws.key}</failsafe.aws.key>
                             <failsafe.aws.secret>${aws.secret}</failsafe.aws.secret>
                         </systemPropertyVariables>
+                        <argLine>${argLine} -XX:MaxPermSize=1g -Xmx2g -Xms2g</argLine>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -161,6 +162,13 @@
                             <file>header.tex</file>
                             <file>uml2.tex</file>
                         </closures>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <argLine>${argLine} -XX:MaxPermSize=1g -Xmx2g -Xms2g</argLine>
                     </configuration>
                 </plugin>
             </plugins>
