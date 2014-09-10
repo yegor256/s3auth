@@ -1,5 +1,13 @@
 language: java
+env:
+  global:
+    - MAVEN_OPTS="-XX:MaxPermSize=2g -Xmx3g -Xms3g -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC"
+    - JAVA_OPTS="-XX:MaxPermSize=2g -Xmx3g -Xms3g -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC"
+jdk:
+  - openjdk7
 cache:
   directories:
     - $HOME/.m2
+before_script:
+  - ulimit -u 4096
 script: mvn clean install -Pqulice --batch-mode --errors --quiet
