@@ -8,15 +8,15 @@ env:
   MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
 
 merge:
-  script: 
+  script:
     - "mvn help:system clean install site --errors -Psite -Pqulice --settings ../settings.xml"
 
 deploy:
-  script:
-    - "chmod 600 ../*.gpg"
-    - "mvn clean deploy --errors -Ps3auth -Pqulice --settings ../settings.xml"
-    - "mvn clean install site-deploy --errors -Psite -Prempl --settings ../settings.xml"
-    - "gem install pdd"
-    - "mvn clean"
-    - "pdd --source=$(pwd) --verbose --file=s3auth.xml"
-    - "s3cmd --no-progress put s3auth.xml --config=../s3cfg s3://pdd.teamed.io/s3auth.xml > /dev/null"
+  script: |
+    chmod 600 ../*.gpg
+    mvn clean deploy --errors -Ps3auth -Pqulice --settings ../settings.xml
+    mvn clean install site-deploy --errors -Psite -Prempl --settings ../settings.xml
+    gem install pdd
+    mvn clean
+    pdd --source=$(pwd) --verbose --file=s3auth.xml
+    s3cmd --no-progress put s3auth.xml --config=../s3cfg s3://pdd.teamed.io/s3auth.xml > /dev/null
