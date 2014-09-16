@@ -211,6 +211,14 @@ final class DefaultResource implements Resource {
                 )
             );
         }
+        if (meta.getContentEncoding() != null) {
+            headers.add(
+                DefaultResource.header(
+                    HttpHeaders.CONTENT_ENCODING,
+                    meta.getContentEncoding()
+                )
+            );
+        }
         if (meta.getETag() != null) {
             headers.add(
                 DefaultResource.header(
