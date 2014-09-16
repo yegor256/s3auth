@@ -29,7 +29,9 @@
  */
 package com.s3auth.relay;
 
+import com.google.common.collect.Lists;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.s3auth.hosts.Range;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -185,7 +187,7 @@ final class HttpRequest {
      * @return Headers
      */
     public Map<String, Collection<String>> headers() {
-        return this.hdrs;
+        return Collections.unmodifiableMap(this.hdrs);
     }
 
     /**
@@ -194,7 +196,7 @@ final class HttpRequest {
      * @return Headers
      */
     public Map<String, Collection<String>> parameters() {
-        return this.parms;
+        return Collections.unmodifiableMap(this.parms);
     }
 
     /**
@@ -250,7 +252,6 @@ final class HttpRequest {
      * @return Map of headers
      * @throws HttpException If some socket problem
      */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private Map<String, Collection<String>> parseHeaders(
         final Iterable<String> lines) throws HttpException {
         final Map<String, Collection<String>> map =
@@ -266,7 +267,7 @@ final class HttpRequest {
             final String name =
                 matcher.group(1).trim().toLowerCase(Locale.ENGLISH);
             if (!map.containsKey(name)) {
-                map.put(name, new LinkedList<String>());
+                map.put(name, Lists.<String>newLinkedList());
             }
             map.get(name).add(matcher.group(2));
         }
@@ -278,19 +279,19 @@ final class HttpRequest {
      * @param request Request string
      * @return Map of headers
      */
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     private Map<String, Collection<String>> parseParameters(
-        final String request) {
+        final CharSequence request) {
         final Map<String, Collection<String>> map =
-            new HashMap<String, Collection<String>>();
+            new HashMap<String, Collection<String>>(0);
         final Matcher matcher = HttpRequest.PARAMS.matcher(request);
         while (matcher.find()) {
             final String name = matcher.group(1).trim();
             if (!map.containsKey(name)) {
-                map.put(name, new LinkedList<String>());
+                map.put(name, Lists.<String>newLinkedList());
             }
-            //@checkstyle MagicNumber (1 line)
-            map.get(name).add(StringUtils.defaultString(matcher.group(3)));
+            map.get(name).add(
+                StringUtils.defaultString(matcher.group(Tv.THREE))
+            );
         }
         return map;
     }
