@@ -51,7 +51,10 @@ import org.mockito.Mockito;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-@SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+@SuppressWarnings({
+    "PMD.AvoidInstantiatingObjectsInLoops",
+    "PMD.TooManyMethods"
+})
 public final class SecuredHostTest {
 
     /**
