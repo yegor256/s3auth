@@ -43,7 +43,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -217,7 +216,7 @@ public final class SecuredHostTest {
      * @throws Exception If something wrong occurs
      */
     @Test
-    public void acceptsBase64() throws Exception {
+    public void acceptsBaseEncoding() throws Exception {
         final Host host = Mockito.mock(Host.class);
         Mockito.doReturn(true).when(host).authorized(
             Mockito.anyString(), Mockito.anyString()
