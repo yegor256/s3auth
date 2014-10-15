@@ -43,6 +43,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -208,6 +209,28 @@ public final class SecuredHostTest {
                 URI.create("/test-special.html"), Range.ENTIRE, Version.LATEST
             ),
             Matchers.is(res)
+        );
+    }
+
+    /**
+     * SecuredHost can accept Base64 header.
+     * @throws Exception If something wrong occurs
+     */
+    @Test
+    public void acceptsBase64() throws Exception {
+        final Host host = Mockito.mock(Host.class);
+        Mockito.doReturn(true).when(host).authorized(
+            Mockito.anyString(), Mockito.anyString()
+        );
+        Mockito.doReturn(true).when(host).isHidden(Mockito.any(URI.class));
+        MatcherAssert.assertThat(
+            new SecuredHost(
+                host,
+                HttpRequestMocker.toRequest(
+                    "GET / HTTP/1.1\nAuthorization: Basic YT+hYTp4\n\n"
+                )
+            ).fetch(new URI("#1"), Range.ENTIRE, Version.LATEST),
+            Matchers.nullValue()
         );
     }
 }
