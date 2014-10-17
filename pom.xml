@@ -114,10 +114,6 @@
             <url>s3://maven.s3auth.com</url>
         </site>
     </distributionManagement>
-    <properties>
-        <jersey.version>1.17.1</jersey.version>
-        <rexsl.version>0.13.3</rexsl.version>
-    </properties>
     <repositories>
         <repository>
             <id>repo.s3auth.com</id>

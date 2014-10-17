@@ -36,6 +36,7 @@ import com.s3auth.hosts.DynamoHosts;
 import com.s3auth.hosts.Hosts;
 import com.s3auth.hosts.ScheduledCloudWatch;
 import com.s3auth.hosts.SyslogHosts;
+import java.io.IOException;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -67,20 +68,13 @@ public final class HostsListener implements ServletContextListener {
      */
     private transient ScheduledCloudWatch cloudwatch;
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>These attributes is used later in
-     * {@link com.netbout.rest.BaseRs
-     *  #setServletContext(javax.servlet.ServletContext)}.
-     */
     @Override
     public void contextInitialized(final ServletContextEvent event) {
         try {
             Manifests.append(event.getServletContext());
             this.hosts = new SyslogHosts(new DynamoHosts());
             this.cloudwatch = new ScheduledCloudWatch();
-        } catch (final java.io.IOException ex) {
+        } catch (final IOException ex) {
             Logger.error(
                 this,
                 "#contextInitialized(): %[exception]s",
@@ -102,7 +96,7 @@ public final class HostsListener implements ServletContextListener {
             try {
                 this.hosts.close();
                 this.cloudwatch.close();
-            } catch (final java.io.IOException ex) {
+            } catch (final IOException ex) {
                 Logger.error(
                     this,
                     "#contextDestroyed(): %[exception]s",

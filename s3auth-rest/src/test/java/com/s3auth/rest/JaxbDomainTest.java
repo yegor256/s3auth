@@ -29,9 +29,9 @@
  */
 package com.s3auth.rest;
 
-import com.rexsl.page.UriInfoMocker;
-import com.rexsl.test.JaxbConverter;
-import com.rexsl.test.XhtmlMatchers;
+import com.jcabi.matchers.JaxbConverter;
+import com.jcabi.matchers.XhtmlMatchers;
+import com.rexsl.mock.UriInfoMocker;
 import com.s3auth.hosts.Domain;
 import com.s3auth.hosts.Stats;
 import org.hamcrest.MatcherAssert;

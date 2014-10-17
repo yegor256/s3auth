@@ -102,7 +102,7 @@
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-log</artifactId>
         </dependency>
-        <!-- 
+        <!--
             @todo #185 jcabi-manifests version here should be managed by the
              parent. Version 1.0.2 fixes some multithreading bugs that causes
              the build to fail. The reason why we're specifying it here is
@@ -150,7 +150,7 @@
         <dependency>
             <groupId>com.rexsl</groupId>
             <artifactId>rexsl-test</artifactId>
-            <version>${rexsl.version}</version>
+            <version>0.13.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
