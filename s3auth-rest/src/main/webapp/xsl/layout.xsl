@@ -77,8 +77,8 @@
                             <xsl:text>Github</xsl:text>
                         </a>
                         <xsl:text> and </xsl:text>
-                        <a href="https://www.cloudbees.com">
-                            <xsl:text>CloudBees</xsl:text>
+                        <a href="https://www.heroku.com">
+                            <xsl:text>Heroku</xsl:text>
                         </a>
                         <xsl:text>. We are not affiliated anyhow with </xsl:text>
                         <a href="http://aws.amazon.com/">
