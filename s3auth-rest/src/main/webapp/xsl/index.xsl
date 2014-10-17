@@ -28,7 +28,9 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://www.w3.org/1999/xhtml" version="1.0" exclude-result-prefixes="xs">
     <xsl:output method="xml" omit-xml-declaration="yes"/>
     <xsl:include href="/xsl/layout.xsl"/>
     <xsl:template name="head">
@@ -330,21 +332,21 @@ maven.s3auth.com with .htpasswd(3 user(s) updated 2min ago)]]></pre>
         <p style="font-size: 2.5em;">
             <a>
                 <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='auth-facebook']/@href"/>
+                    <xsl:value-of select="/page/links/link[@rel='rexsl-facebook']/@href"/>
                 </xsl:attribute>
                 <i class="fa fa-facebook-square"><xsl:comment>facebook</xsl:comment></i>
             </a>
             <xsl:text> </xsl:text>
             <a>
                 <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='auth-google']/@href"/>
+                    <xsl:value-of select="/page/links/link[@rel='rexsl-google']/@href"/>
                 </xsl:attribute>
                 <i class="fa fa-google-plus-square"><xsl:comment>google-plus</xsl:comment></i>
             </a>
             <xsl:text> </xsl:text>
             <a>
                 <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='auth-github']/@href"/>
+                    <xsl:value-of select="/page/links/link[@rel='rexsl-github']/@href"/>
                 </xsl:attribute>
                 <i class="fa fa-github-square"><xsl:comment>github</xsl:comment></i>
             </a>
