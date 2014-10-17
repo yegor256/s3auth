@@ -56,9 +56,7 @@ public final class Launch {
         final Tomcat tomcat = new Tomcat();
         final String port = System.getenv("PORT");
         tomcat.setPort(Integer.valueOf(port));
-        tomcat.addWebapp(
-            "/", new File("s3auth-rest/target/s3auth-rest").getAbsolutePath()
-        );
+        tomcat.addWebapp("/", new File("target/s3auth-rest").getAbsolutePath());
         tomcat.start();
         tomcat.getServer().await();
     }
