@@ -52,7 +52,7 @@ public final class Launch {
      * @param args Command line args
      * @throws Exception If fails
      */
-    public static void main(final String... args) throws Exception {
+    public static void main(final String[] args) throws Exception {
         final Tomcat tomcat = new Tomcat();
         final String port = System.getenv("PORT");
         tomcat.setPort(Integer.valueOf(port));

@@ -82,12 +82,6 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>javax.el</groupId>
-            <artifactId>javax.el-api</artifactId>
-            <version>3.0.0</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-log</artifactId>
         </dependency>
@@ -390,6 +384,8 @@
                             <excludes>
                                 <exclude>xml:/src/main/webapp/WEB-INF/web.xml</exclude>
                                 <exclude>xml:/src/test/.*</exclude>
+                                <exclude>duplicatefinder:.*</exclude>
+                                <exclude>findbugs:.*</exclude>
                             </excludes>
                         </configuration>
                     </plugin>
