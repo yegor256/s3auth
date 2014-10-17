@@ -332,21 +332,21 @@ maven.s3auth.com with .htpasswd(3 user(s) updated 2min ago)]]></pre>
         <p style="font-size: 2.5em;">
             <a>
                 <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='rexsl-facebook']/@href"/>
+                    <xsl:value-of select="/page/links/link[@rel='rexsl:facebook']/@href"/>
                 </xsl:attribute>
                 <i class="fa fa-facebook-square"><xsl:comment>facebook</xsl:comment></i>
             </a>
             <xsl:text> </xsl:text>
             <a>
                 <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='rexsl-google']/@href"/>
+                    <xsl:value-of select="/page/links/link[@rel='rexsl:google']/@href"/>
                 </xsl:attribute>
                 <i class="fa fa-google-plus-square"><xsl:comment>google-plus</xsl:comment></i>
             </a>
             <xsl:text> </xsl:text>
             <a>
                 <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='rexsl-github']/@href"/>
+                    <xsl:value-of select="/page/links/link[@rel='rexsl:github']/@href"/>
                 </xsl:attribute>
                 <i class="fa fa-github-square"><xsl:comment>github</xsl:comment></i>
             </a>
