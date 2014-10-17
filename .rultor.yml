@@ -22,7 +22,7 @@ deploy:
   script: |
     chmod 600 ../*.gpg
     cp ../settings.xml settings.xml
-    mvn clean package --errors -DskipTests -Ps3auth -Pqulice
+    mvn clean package --errors -DskipTests -Ps3auth -Pqulice --settings settings.xml
     git remote add heroku git@heroku.com:s3auth.git
     mkdir ~/.ssh
     mv ../id_rsa ../id_rsa.pub ~/.ssh
@@ -34,7 +34,7 @@ deploy:
     git push -f heroku $(git symbolic-ref --short HEAD):master
     git reset HEAD~1
     curl -f --connect-timeout 15 --retry 5 --retry-delay 30 http://www.s3auth.com
-    mvn clean install site-deploy -DskipTests --errors -Psite -Prempl --settings ../settings.xml
+    mvn clean install site-deploy -DskipTests --errors -Psite -Prempl --settings settings.xml
     mvn clean
     pdd --source=$(pwd) --verbose --file=s3auth.xml
     s3cmd --no-progress put s3auth.xml --config=../s3cfg s3://pdd.teamed.io/s3auth.xml > /dev/null
