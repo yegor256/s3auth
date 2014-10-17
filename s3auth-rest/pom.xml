@@ -373,11 +373,6 @@
                                 <goals>
                                     <goal>jar</goal>
                                 </goals>
-                                <configuration>
-                                    <archive>
-                                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
-                                    </archive>
-                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
