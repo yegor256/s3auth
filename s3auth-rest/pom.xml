@@ -163,7 +163,6 @@
                 <plugin>
                     <artifactId>maven-war-plugin</artifactId>
                     <configuration>
-                        <warSourceExcludes>js/**, css/**, xsl/**</warSourceExcludes>
                         <archive>
                             <manifestEntries>
                                 <S3Auth-Revision>${buildNumber}</S3Auth-Revision>
