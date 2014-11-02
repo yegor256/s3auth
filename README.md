@@ -5,10 +5,9 @@
 
 [![Build Status](https://travis-ci.org/yegor256/s3auth.svg?branch=master)](https://travis-ci.org/yegor256/s3auth)
 
-## Amazon S3 HTTP Basic Auth Gateway
-
 [s3auth.com](http://www.s3auth.com) is a Basic HTTP Auth gateway
-in front of your private Amazon S3 bucket.
+in front of your private Amazon S3 bucket. Read this blog post
+for a more detailed explanation: [Basic HTTP Auth for S3 Buckets](http://www.yegor256.com/2014/04/21/s3-http-basic-auth.html).
 
 Point your `test.example.com` CNAME to `relay.s3auth.com`,
 and register the domain in [s3auth.com](http://www.s3auth.com) web panel.
