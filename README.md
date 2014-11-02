@@ -20,8 +20,3 @@ For example, try [http://maven.s3auth.com/](http://maven.s3auth.com/)
 (with username `s3auth` and password `s3auth`).
 You will access content of Amazon S3 bucket `maven.s3auth.com`,
 which is not readable anonymously otherwise.
-
-Continuous integration environment is here: http://www.rultor/s/s3auth
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/yegor256/s3auth/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
