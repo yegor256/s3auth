@@ -2,4 +2,9 @@ language: java
 cache:
   directories:
     - $HOME/.m2
-script: mvn clean install -Pqulice --batch-mode --errors --quiet
+env:
+  global:
+    - MAVEN_OPTS="-XX:MaxPermSize=2g -Xmx4g"
+    - JAVA_OPTS="-XX:MaxPermSize=2g -Xmx4g"
+script:
+  - mvn clean install -Pqulice --batch-mode --errors --quiet
