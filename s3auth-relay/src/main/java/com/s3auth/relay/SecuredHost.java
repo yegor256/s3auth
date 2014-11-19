@@ -71,7 +71,7 @@ final class SecuredHost implements Host {
      * Authorization header pattern.
      */
     private static final Pattern AUTH_PATTERN =
-        Pattern.compile("Basic ([a-zA-Z0-9/]+=*)");
+        Pattern.compile("Basic ([a-zA-Z0-9/+]+=*)");
 
     /**
      * Original host.

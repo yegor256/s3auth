@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2012-2014, s3auth.com
  * All rights reserved.
  *
@@ -27,39 +26,39 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package com.s3auth;
+
+import java.io.File;
+import org.apache.catalina.startup.Tomcat;
+
+/**
+ * Launch (used only for heroku).
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
- -->
-<project xmlns="http://maven.apache.org/DECORATION/1.3.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/DECORATION/1.3.0 http://maven.apache.org/xsd/decoration-1.3.0.xsd"
-    name="s3auth">
-    <skin>
-        <groupId>com.jcabi</groupId>
-        <artifactId>jcabi-maven-skin</artifactId>
-        <version>1.4</version>
-    </skin>
-    <googleAnalyticsAccountId>UA-1963507-21</googleAnalyticsAccountId>
-    <bannerLeft>
-        <name>s3auth.com</name>
-        <src>http://img.s3auth.com/logo.svg</src>
-        <href>http://maven.s3auth.com/</href>
-        <width>250</width>
-        <height>43</height>
-    </bannerLeft>
-    <body>
-        <head>
-            <link href="http://img.s3auth.com/favicon.ico" rel="shortcut icon"/>
-        </head>
-        <breadcrumbs>
-            <item name="s3auth.com" href="http://maven.s3auth.com"/>
-        </breadcrumbs>
-        <menu name="Overview">
-            <item name="Introduction" href="./index.html"/>
-            <item name="Architecture" href="./architecture.html"/>
-            <item name="JavaDoc" href="./apidocs/index.html"/>
-        </menu>
-        <menu ref="modules"/>
-        <menu ref="reports"/>
-    </body>
-</project>
+ * @version $Id$
+ */
+public final class Launch {
+
+    /**
+     * Utility class.
+     */
+    private Launch() {
+        // intentionally empty
+    }
+
+    /**
+     * Entry point.
+     * @param args Command line args
+     * @throws Exception If fails
+     */
+    public static void main(final String[] args) throws Exception {
+        final Tomcat tomcat = new Tomcat();
+        final String port = System.getenv("PORT");
+        tomcat.setPort(Integer.valueOf(port));
+        tomcat.addWebapp("/", new File("target/s3auth-rest").getAbsolutePath());
+        tomcat.start();
+        tomcat.getServer().await();
+    }
+
+}

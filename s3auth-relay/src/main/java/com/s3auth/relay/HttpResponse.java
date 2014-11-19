@@ -87,7 +87,7 @@ final class HttpResponse {
      * HTTP headers.
      */
     private final transient ConcurrentMap<String, Collection<String>> hdrs =
-        new ConcurrentHashMap<String, Collection<String>>();
+        new ConcurrentHashMap<String, Collection<String>>(0);
 
     /**
      * Resource to deliver.

@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+/**
  * Copyright (c) 2012-2014, s3auth.com
  * All rights reserved.
  *
@@ -27,39 +26,12 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/**
+ * Main.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
- -->
-<project xmlns="http://maven.apache.org/DECORATION/1.3.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/DECORATION/1.3.0 http://maven.apache.org/xsd/decoration-1.3.0.xsd"
-    name="s3auth">
-    <skin>
-        <groupId>com.jcabi</groupId>
-        <artifactId>jcabi-maven-skin</artifactId>
-        <version>1.4</version>
-    </skin>
-    <googleAnalyticsAccountId>UA-1963507-21</googleAnalyticsAccountId>
-    <bannerLeft>
-        <name>s3auth.com</name>
-        <src>http://img.s3auth.com/logo.svg</src>
-        <href>http://maven.s3auth.com/</href>
-        <width>250</width>
-        <height>43</height>
-    </bannerLeft>
-    <body>
-        <head>
-            <link href="http://img.s3auth.com/favicon.ico" rel="shortcut icon"/>
-        </head>
-        <breadcrumbs>
-            <item name="s3auth.com" href="http://maven.s3auth.com"/>
-        </breadcrumbs>
-        <menu name="Overview">
-            <item name="Introduction" href="./index.html"/>
-            <item name="Architecture" href="./architecture.html"/>
-            <item name="JavaDoc" href="./apidocs/index.html"/>
-        </menu>
-        <menu ref="modules"/>
-        <menu ref="reports"/>
-    </body>
-</project>
+ * @version $Id$
+ */
+package com.s3auth;

@@ -29,6 +29,7 @@
  */
 package com.s3auth.relay;
 
+import com.amazonaws.SDKGlobalConfiguration;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
@@ -84,6 +85,10 @@ public final class Main {
         final HttpFacade facade =
             new HttpFacade(new DynamoHosts(), port, secured);
         facade.listen();
+        System.setProperty(
+            SDKGlobalConfiguration.ENABLE_S3_SIGV4_SYSTEM_PROPERTY,
+            "true"
+        );
         Logger.warn(Main.class, "started at http://localhost:%d...", port);
         if (options.has("d")) {
             while (true) {

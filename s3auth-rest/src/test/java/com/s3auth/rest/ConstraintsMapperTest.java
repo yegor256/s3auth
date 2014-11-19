@@ -29,7 +29,7 @@
  */
 package com.s3auth.rest;
 
-import com.rexsl.page.UriInfoMocker;
+import com.rexsl.mock.UriInfoMocker;
 import javax.validation.ConstraintViolationException;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;

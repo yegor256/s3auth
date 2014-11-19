@@ -41,18 +41,8 @@
                 <meta name="description" content="HTTP Basic Authentication gateway for Amazon S3 buckets"/>
                 <meta name="keywords" content="S3 Basic Auth, Amazon S3 Auth, S3 Auth, S3 HTTP Auth, S3 Basic Authentication"/>
                 <meta name="author" content="s3auth.com"/>
-                <link rel="stylesheet" type="text/css" media="all">
-                    <xsl:attribute name="href">
-                        <xsl:text>/css/layout.css?</xsl:text>
-                        <xsl:value-of select="/page/version/revision"/>
-                    </xsl:attribute>
-                </link>
-                <link rel="icon" type="image/gif">
-                    <xsl:attribute name="href">
-                        <xsl:text>http://img.s3auth.com/favicon.ico?</xsl:text>
-                        <xsl:value-of select="/page/version/revision"/>
-                    </xsl:attribute>
-                </link>
+                <link rel="stylesheet" type="text/css" media="all" href="/css/layout.css?{version/revision}"/>
+                <link rel="icon" type="image/gif" href="http://img.s3auth.com/favicon.ico?{version/revision}"/>
                 <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"/>
                 <xsl:call-template name="head"/>
                 <script type="text/javascript"><![CDATA[
@@ -74,8 +64,8 @@
                             <xsl:attribute name="href">
                                 <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
                             </xsl:attribute>
-                            <img src="http://img.s3auth.com/logo.png" alt="s3auth.com logo"
-                                style="width: 20em; height: 3.4em;"/>
+                            <img src="http://img.s3auth.com/logo.svg" alt="s3auth.com logo"
+                                style="width:20em;height:3.4em;"/>
                         </a>
                     </p>
                     <xsl:apply-templates select="identity"/>
@@ -87,8 +77,8 @@
                             <xsl:text>Github</xsl:text>
                         </a>
                         <xsl:text> and </xsl:text>
-                        <a href="https://www.cloudbees.com">
-                            <xsl:text>CloudBees</xsl:text>
+                        <a href="https://www.heroku.com">
+                            <xsl:text>Heroku</xsl:text>
                         </a>
                         <xsl:text>. We are not affiliated anyhow with </xsl:text>
                         <a href="http://aws.amazon.com/">
@@ -96,15 +86,15 @@
                         </a>
                         <xsl:text>, although we provide a service for their clients.</xsl:text>
                         <xsl:text> The service is absolutely free of charge, since it is sponsored by </xsl:text>
-                        <a href="http://www.teamed.io/">
-                            <xsl:text>teamed.io</xsl:text>
+                        <a href="http://www.technoparkcorp.com/">
+                            <xsl:text>TechnoPark Corp.</xsl:text>
                         </a>
                         <xsl:text> (a </xsl:text>
                         <a href="https://aws.amazon.com/solution-providers/isv/technopark-corp">
                             <xsl:text>Standard Technology Partner</xsl:text>
                         </a>
                         <xsl:text> of AWS). </xsl:text>
-                        <xsl:text>Sea also terms of use, privacy policy and license agreement at </xsl:text>
+                        <xsl:text>See also terms of use, privacy policy and license agreement at </xsl:text>
                         <a href="/misc/LICENSE.txt">
                             <xsl:text>LICENSE.txt</xsl:text>
                         </a>
@@ -116,14 +106,9 @@
                         <xsl:text>, Java RESTful development framework.</xsl:text>
                     </p>
                     <p>
-                        <a href="https://aws.amazon.com/solution-providers/isv/technopark-corp">
-                            <img src="http://img.s3auth.com/apn-logo.png" alt="AWS Partner Network Logo" style="width: 8%;"/>
+                        <a href="http://www.teamed.io">
+                            <img src="http://img.teamed.io/btn.svg" alt="teamed.io logo"/>
                         </a>
-                        <xsl:text> </xsl:text>
-                        <iframe src="http://ghbtns.com/github-btn.html?user=yegor256&amp;repo=s3auth&amp;type=watch&amp;count=true&amp;"
-                            style="border-width: 0px;overflow:hidden;width:152px;height:30px;">
-                            <xsl:comment>empty</xsl:comment>
-                        </iframe>
                     </p>
                 </div>
             </body>
@@ -175,7 +160,7 @@
             <xsl:text> </xsl:text>
             <a>
                 <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='auth-logout']/@href"/>
+                    <xsl:value-of select="/page/links/link[@rel='rexsl:logout']/@href"/>
                 </xsl:attribute>
                 <xsl:text>logout</xsl:text>
             </a>

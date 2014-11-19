@@ -2,18 +2,39 @@ assets:
   settings.xml: "yegor256/home#assets/s3auth/settings.xml"
   pubring.gpg: "yegor256/home#assets/pubring.gpg"
   secring.gpg: "yegor256/home#assets/secring.gpg"
+  id_rsa: "yegor256/home#assets/heroku-key"
+  id_rsa.pub: "yegor256/home#assets/heroku-key.pub"
+  s3cfg: "yegor256/home#assets/s3cfg"
+
+env:
+  MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
+
+install: |
+  sudo gem install pdd
 
 merge:
-  env:
-    MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
-  script: 
-    - "mvn help:system clean install -e -Pqulice --settings ../settings.xml"
+  script: |
+    mvn help:system clean install site --errors -Psite -Pqulice --settings ../settings.xml
+    mvn clean
+    pdd --source=$(pwd) --verbose --file=/dev/null
 
 deploy:
-  env:
-    MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
-  script:
-    - "chmod 600 ../*.gpg"
-    - "mvn clean deploy -e -Ps3auth -Pqulice --settings ../settings.xml"
-    - "mvn clean install site-deploy -e -Psite -Prempl --settings ../settings.xml"
-
+  script: |
+    chmod 600 ../*.gpg
+    cp ../settings.xml settings.xml
+    mvn clean install --errors -Ps3auth -Pqulice --settings settings.xml
+    git remote add heroku git@heroku.com:s3auth.git
+    mkdir ~/.ssh
+    mv ../id_rsa ../id_rsa.pub ~/.ssh
+    chmod -R 600 ~/.ssh/*
+    echo -e "Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile=/dev/null" > ~/.ssh/config
+    git add settings.xml
+    git commit -m 'settings.xml'
+    git fetch --unshallow
+    git push -f heroku $(git symbolic-ref --short HEAD):master
+    git reset HEAD~1
+    curl -f --connect-timeout 15 --retry 5 --retry-delay 30 http://www.s3auth.com
+    mvn clean install site-deploy --errors -Psite -Prempl --settings settings.xml
+    mvn clean
+    pdd --source=$(pwd) --verbose --file=s3auth.xml
+    s3cmd --no-progress put s3auth.xml --config=../s3cfg s3://pdd.teamed.io/s3auth.xml

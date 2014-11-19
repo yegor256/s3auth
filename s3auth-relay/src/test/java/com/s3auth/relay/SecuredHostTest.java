@@ -51,7 +51,10 @@ import org.mockito.Mockito;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-@SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+@SuppressWarnings({
+    "PMD.AvoidInstantiatingObjectsInLoops",
+    "PMD.TooManyMethods"
+})
 public final class SecuredHostTest {
 
     /**
@@ -208,6 +211,28 @@ public final class SecuredHostTest {
                 URI.create("/test-special.html"), Range.ENTIRE, Version.LATEST
             ),
             Matchers.is(res)
+        );
+    }
+
+    /**
+     * SecuredHost can accept Base64 header.
+     * @throws Exception If something wrong occurs
+     */
+    @Test
+    public void acceptsBaseEncoding() throws Exception {
+        final Host host = Mockito.mock(Host.class);
+        Mockito.doReturn(true).when(host).authorized(
+            Mockito.anyString(), Mockito.anyString()
+        );
+        Mockito.doReturn(true).when(host).isHidden(Mockito.any(URI.class));
+        MatcherAssert.assertThat(
+            new SecuredHost(
+                host,
+                HttpRequestMocker.toRequest(
+                    "GET / HTTP/1.1\nAuthorization: Basic YT+hYTp4\n\n"
+                )
+            ).fetch(new URI("#1"), Range.ENTIRE, Version.LATEST),
+            Matchers.nullValue()
         );
     }
 }

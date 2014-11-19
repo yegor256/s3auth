@@ -37,6 +37,7 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.jcabi.aspects.Tv;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Random;
@@ -112,7 +113,7 @@ public final class DefaultResourceTest {
     public void writesInputToOutputStream() throws Exception {
         final int size = 100 * 1024;
         final byte[] data = new byte[size];
-        final Random random = new Random();
+        final Random random = new SecureRandom();
         for (int pos = 0; pos < size; ++pos) {
             data[pos] = (byte) random.nextInt();
         }
@@ -341,6 +342,29 @@ public final class DefaultResourceTest {
             )
         );
         Mockito.verify(object, Mockito.times(1)).close();
+    }
+
+    /**
+     * DefaultResource can get Content-Encoding info.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void getsContentEncodingHeaderFromAmazonObject() throws Exception {
+        final AmazonS3 client = Mockito.mock(AmazonS3.class);
+        final S3Object object = Mockito.mock(S3Object.class);
+        Mockito.doReturn(object).when(client)
+            .getObject(Mockito.any(GetObjectRequest.class));
+        final ObjectMetadata meta = Mockito.mock(ObjectMetadata.class);
+        Mockito.doReturn(meta).when(object).getObjectMetadata();
+        Mockito.doReturn("gzip").when(meta).getContentEncoding();
+        final Resource res = new DefaultResource(
+            client, "abcdef", "", Range.ENTIRE, Version.LATEST,
+            Mockito.mock(DomainStatsData.class)
+        );
+        MatcherAssert.assertThat(
+            res.headers(),
+            Matchers.hasItem("Content-Encoding: gzip")
+        );
     }
 
 }
