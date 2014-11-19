@@ -108,6 +108,7 @@ public interface Resource extends Closeable {
         /**
          * Plain text to show.
          */
+        @Immutable.Array
         private final transient byte[] text;
         /**
          * Last modified date to return. Equal to the time of object creation.
