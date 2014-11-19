@@ -47,7 +47,7 @@
     <parent>
         <groupId>com.jcabi</groupId>
         <artifactId>parent</artifactId>
-        <version>0.26</version>
+        <version>0.27</version>
     </parent>
     <groupId>com.s3auth</groupId>
     <artifactId>s3auth</artifactId>
@@ -192,18 +192,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <!--
-                @todo #192 maven-invoker-plugin is declared here to override
-                 the version provided by the parent. The parent-managed version
-                 is 1.8, which has a bug that causes the build to fail when run
-                 under Maven 3.2.2. Let's remove the plugin declaration below
-                 when a new jcabi:parent version is released and revert back to
-                 having this plugin managed by the parent.
-            -->
-            <plugin>
-                <artifactId>maven-invoker-plugin</artifactId>
-                <version>1.9</version>
             </plugin>
         </plugins>
     </build>
