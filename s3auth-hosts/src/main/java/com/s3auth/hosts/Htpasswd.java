@@ -209,8 +209,7 @@ final class Htpasswd {
         private static final Pattern PATTERN =
             Pattern.compile("\\$apr1\\$([^\\$]+)\\$([a-zA-Z0-9/\\.]+=*)");
         @Override
-        public boolean matches(final String hash, final String password)
-            throws IOException {
+        public boolean matches(final String hash, final String password) {
             final Matcher matcher = Htpasswd.Md5.PATTERN.matcher(hash);
             final boolean matches;
             if (matcher.matches()) {
@@ -262,7 +261,6 @@ final class Htpasswd {
          */
         private static final Pattern PATTERN =
             Pattern.compile("(\\$[156]\\$)?[a-zA-Z0-9./]+(\\$.*)*");
-
         @Override
         public boolean matches(final String hash, final String password) {
             return Htpasswd.UnixCrypt.PATTERN.matcher(hash).matches()

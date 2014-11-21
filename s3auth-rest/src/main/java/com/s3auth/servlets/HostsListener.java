@@ -32,6 +32,7 @@ package com.s3auth.servlets;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
+import com.jcabi.manifests.ServletMfs;
 import com.s3auth.hosts.DynamoHosts;
 import com.s3auth.hosts.Hosts;
 import com.s3auth.hosts.ScheduledCloudWatch;
@@ -71,7 +72,7 @@ public final class HostsListener implements ServletContextListener {
     @Override
     public void contextInitialized(final ServletContextEvent event) {
         try {
-            Manifests.append(event.getServletContext());
+            Manifests.DEFAULT.append(new ServletMfs(event.getServletContext()));
             this.hosts = new SyslogHosts(new DynamoHosts());
             this.cloudwatch = new ScheduledCloudWatch();
         } catch (final IOException ex) {

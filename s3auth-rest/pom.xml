@@ -130,7 +130,6 @@
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-http</artifactId>
-            <version>1.3.3</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>

@@ -38,8 +38,8 @@ import com.s3auth.hosts.Version;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import javax.ws.rs.core.HttpHeaders;
-import org.apache.commons.codec.Charsets;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
@@ -63,7 +63,7 @@ public final class SecuredHostTest {
      */
     @Test
     public void requestsAuthorization() throws Exception {
-        final String[] hosts = new String[] {
+        final String[] hosts = {
             "example.com",
             "maven.s3auth.com",
         };
@@ -96,7 +96,7 @@ public final class SecuredHostTest {
      */
     @Test
     public void requestsAuthorizationWhenBrokenData() throws Exception {
-        final String[] requests = new String[] {
+        final String[] requests = {
             "GET / HTTP/1.1\nAuthorization: xxx\n\n",
             "GET / HTTP/1.1\nAuthorization: Basic a1b2c3==\n\n",
             "GET / HTTP/1.1\nAuthorization: Basic \n\n",
@@ -203,7 +203,7 @@ public final class SecuredHostTest {
                         "GET / HTTP/1.1\nAuthorization: Basic %s\n\n",
                         Base64.encodeBase64String(
                             String.format("%s:%s", user, password)
-                                .getBytes(Charsets.UTF_8)
+                                .getBytes(CharEncoding.UTF_8)
                         )
                     )
                 )

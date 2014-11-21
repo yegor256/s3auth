@@ -41,6 +41,7 @@ import com.google.common.collect.ImmutableMap;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Tv;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
 import java.util.Map;
@@ -104,11 +105,6 @@ final class DefaultDynamo implements Dynamo {
     public static final String SYSLOG = "domain.syslog";
 
     /**
-     * Lifetime of registry in memory, in minutes.
-     */
-    private static final int LIFETIME = 5;
-
-    /**
      * Client.
      */
     private final transient Dynamo.Client client;
@@ -164,7 +160,7 @@ final class DefaultDynamo implements Dynamo {
     @Override
     @NotNull
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    @Cacheable(lifetime = DefaultDynamo.LIFETIME, unit = TimeUnit.MINUTES)
+    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public ConcurrentMap<URN, Domains> load() {
         final ConcurrentMap<URN, Domains> domains =
             new ConcurrentHashMap<URN, Domains>(0);
