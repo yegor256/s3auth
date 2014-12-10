@@ -32,6 +32,7 @@ package com.s3auth.relay;
 import com.jcabi.aspects.Parallel;
 import com.jcabi.aspects.Tv;
 import com.jcabi.http.Response;
+import com.jcabi.http.request.ApacheRequest;
 import com.jcabi.http.request.JdkRequest;
 import com.jcabi.http.response.RestResponse;
 import com.s3auth.hosts.Host;
@@ -41,6 +42,7 @@ import com.s3auth.hosts.Resource;
 import com.s3auth.hosts.ResourceMocker;
 import com.s3auth.hosts.Version;
 import java.io.ByteArrayInputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.Date;
@@ -65,8 +67,8 @@ import org.mockito.stubbing.Answer;
  * Test case for {@link HttpFacade}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @checkstyle MultipleStringLiteralsCheck (600 lines)
- * @checkstyle MagicNumberCheck (600 lines)
+ * @checkstyle MultipleStringLiteralsCheck (700 lines)
+ * @checkstyle MagicNumberCheck (700 lines)
  */
 @SuppressWarnings({
     "PMD.AvoidDuplicateLiterals",
@@ -586,6 +588,51 @@ public final class HttpFacadeTest {
                 ).uri().back().fetch();
             TimeUnit.SECONDS.sleep(Tv.THREE);
             Mockito.verify(resource, Mockito.times(1)).close();
+        } finally {
+            facade.close();
+        }
+    }
+
+    /**
+     * HttpFacade can service HTTP HEAD methods.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void servicesHeadMethod() throws Exception {
+        final Host host = Mockito.mock(Host.class);
+        final Resource resource = new ResourceMocker()
+            .withContent("should not appear in body")
+            .mock();
+        Mockito.doReturn(resource).when(host).fetch(
+            Mockito.any(URI.class),
+            Mockito.any(Range.class),
+            Mockito.any(Version.class)
+        );
+        final Hosts hosts = Mockito.mock(Hosts.class);
+        Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
+        final int port = PortMocker.reserve();
+        final HttpFacade facade =
+            new HttpFacade(hosts, port, PortMocker.reserve());
+        try {
+            facade.listen();
+            final URI uri = UriBuilder
+                .fromUri(String.format("http://localhost:%d/", port))
+                .path("/a").build();
+            MatcherAssert.assertThat(
+                new ApacheRequest(uri)
+                    .method("HEAD")
+                    .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
+                    .header(
+                        HttpHeaders.AUTHORIZATION,
+                        String.format(
+                            "Basic %s",
+                            Base64.encodeBase64String("a:b".getBytes())
+                        )
+                    ).uri().back().fetch().body(),
+                Matchers.is("")
+            );
+            Mockito.verify(resource, Mockito.never())
+                .writeTo(Mockito.any(OutputStream.class));
         } finally {
             facade.close();
         }
