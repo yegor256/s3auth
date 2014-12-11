@@ -69,6 +69,7 @@ import org.mockito.stubbing.Answer;
  * @version $Id$
  * @checkstyle MultipleStringLiteralsCheck (700 lines)
  * @checkstyle MagicNumberCheck (700 lines)
+ * @checkstyle ClassDataAbstractionCoupling (700 lines)
  */
 @SuppressWarnings({
     "PMD.AvoidDuplicateLiterals",
