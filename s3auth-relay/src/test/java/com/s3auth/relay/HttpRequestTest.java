@@ -206,4 +206,23 @@ public final class HttpRequestTest {
         );
     }
 
+    /**
+     * HttpRequest supports HTTP HEAD method.
+     * @throws Exception If something goes wrong
+     */
+    @Test
+    public void supportsHeadMethod() throws Exception {
+        final HttpRequest request = HttpRequestMocker.toRequest(
+            "HEAD /test.html HTTP/1.1\nHost:local\nAccept:text/plain\n"
+        );
+        MatcherAssert.assertThat(
+            request.requestUri().toString(),
+            Matchers.equalTo("/test.html")
+        );
+        MatcherAssert.assertThat(
+            request.headers().get("Host"),
+            Matchers.hasItem("local")
+        );
+    }
+
 }

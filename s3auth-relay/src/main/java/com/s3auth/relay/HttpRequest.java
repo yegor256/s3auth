@@ -97,7 +97,7 @@ final class HttpRequest {
      * TOP line pattern.
      */
     private static final Pattern TOP =
-        Pattern.compile("(GET|POST|PUT|OPTIONS) (/[^ ]*) HTTP/1\\.(0|1)");
+        Pattern.compile("(GET|POST|PUT|OPTIONS|HEAD) (/[^ ]*) HTTP/1\\.(0|1)");
 
     /**
      * Header line pattern.
@@ -160,10 +160,11 @@ final class HttpRequest {
             );
         }
         this.parms = Collections.unmodifiableMap(this.parseParameters(top));
-        if (!"GET".equals(matcher.group(1))) {
+        final String method = matcher.group(1);
+        if (!"GET".equals(method) && !"HEAD".equals(method)) {
             throw new HttpException(
                 HttpURLConnection.HTTP_BAD_METHOD,
-                "only GET mtd is supported"
+                "only GET or HEAD methods are supported"
             );
         }
         this.mtd = matcher.group(1);
