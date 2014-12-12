@@ -40,6 +40,7 @@ deploy:
     git push -f heroku $(git symbolic-ref --short HEAD):master
     git reset HEAD~1
     curl -f --connect-timeout 15 --retry 5 --retry-delay 30 http://www.s3auth.com
+    mvn clean deploy --errors -Ps3auth -Pqulice --settings settings.xml -pl :s3auth-relay
     mvn clean install site-deploy --errors -Psite -Prempl --settings settings.xml
     mvn clean
     pdd --source=$(pwd) --verbose --file=s3auth.xml
