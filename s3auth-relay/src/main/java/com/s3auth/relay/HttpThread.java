@@ -181,11 +181,12 @@ final class HttpThread {
                         );
                     }
                     if (get) {
-                        bytes = response.withBody(resource).send(socket);
-                        Logger.info(
-                            this, "#run(): %d bytes of %s", bytes, resource
-                        );
+                        response = response.withBody(resource);
                     }
+                    bytes = response.send(socket);
+                    Logger.info(
+                        this, "#run(): %d bytes of %s", bytes, resource
+                    );
                 } finally {
                     if (resource != null) {
                         resource.close();
