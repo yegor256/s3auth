@@ -46,6 +46,7 @@ import org.apache.commons.io.IOUtils;
  * @version $Id$
  * @since 0.0.1
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public final class ResourceMocker {
 
     /**
@@ -103,36 +104,39 @@ public final class ResourceMocker {
     }
 
     @Builder
+    @SuppressWarnings({ "PMD.TooManyMethods",
+        "PMD.AvoidFieldNameMatchingMethodName" })
     private static class MkResource implements Resource {
         /**
          * The resource content.
          */
-        private char[] content;
+        private final transient char[] content;
         /**
          * The resource status.
          */
-        private int status;
+        private final transient int status;
         /**
          * The resource headers.
          */
-        private Collection<String> headers;
+        private final transient Collection<String> headers;
         /**
          * The resource etag.
          */
-        private String etag;
+        private final transient String etag;
         /**
          * The resource lastModified.
          * @checkstyle MemberName (3 lines)
          */
-        private Date lastModified;
+        private final transient Date lastModified;
         /**
          * The resource contentType.
          * @checkstyle MemberName (3 lines)
          */
-        private String contentType;
+        private final transient String contentType;
 
         @Override
         public void close() throws IOException {
+            // do nothing.
         }
 
         @Override

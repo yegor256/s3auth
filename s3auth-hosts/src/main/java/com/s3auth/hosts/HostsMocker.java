@@ -57,6 +57,7 @@ public final class HostsMocker {
     private static class MkHosts implements Hosts {
         @Override
         public void close() throws IOException {
+            // do nothing.
         }
 
         @Override

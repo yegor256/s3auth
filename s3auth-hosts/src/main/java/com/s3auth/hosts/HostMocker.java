@@ -87,30 +87,33 @@ public final class HostMocker {
     }
 
     @Builder
+    @SuppressWarnings({ "PMD.TooManyMethods",
+        "PMD.AvoidFieldNameMatchingMethodName" })
     private static class MkHost implements Host {
         /**
          * The host resource.
          */
-        private Resource resource;
+        private final transient Resource resource;
         /**
          * Whether the host authorized.
          */
-        private boolean authorized;
+        private final transient boolean authorized;
         /**
          * Whether the host is hidden.
          */
-        private boolean hidden;
+        private final transient boolean hidden;
         /**
          * The host syslog.
          */
-        private String syslog;
+        private final transient String syslog;
         /**
          * The host stats.
          */
-        private Stats stats;
+        private final transient Stats stats;
 
         @Override
         public void close() throws IOException {
+            // do nothing.
         }
 
         @Override

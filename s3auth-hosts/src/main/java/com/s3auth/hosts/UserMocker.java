@@ -90,19 +90,21 @@ public final class UserMocker {
     }
 
     @Builder
+    @SuppressWarnings({ "PMD.TooManyMethods",
+        "PMD.AvoidFieldNameMatchingMethodName" })
     private static class MkUser implements User {
         /**
          * The User identity.
          */
-        private final URN identity;
+        private final transient URN identity;
         /**
          * The User name.
          */
-        private final String name;
+        private final transient String name;
         /**
          * The User photo.
          */
-        private final URI photo;
+        private final transient URI photo;
 
         @Override
         public URN identity() {

@@ -38,6 +38,7 @@ import lombok.experimental.Builder;
  * @version $Id$
  * @since 0.0.1
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public final class DomainMocker {
 
     /**
@@ -127,31 +128,33 @@ public final class DomainMocker {
     }
 
     @Builder
+    @SuppressWarnings({ "PMD.TooManyMethods",
+        "PMD.AvoidFieldNameMatchingMethodName" })
     private static class MkDomain implements Domain {
         /**
          * The Domain Name.
          */
-        private String name;
+        private final transient String name;
         /**
          * The Domain key.
          */
-        private String key;
+        private final transient String key;
         /**
          * The Domain secret.
          */
-        private String secret;
+        private final transient String secret;
         /**
          * The Domain bucket.
          */
-        private String bucket;
+        private final transient String bucket;
         /**
          * The Domain region.
          */
-        private String region;
+        private final transient String region;
         /**
          * The Domain syslog.
          */
-        private String syslog;
+        private final transient String syslog;
 
         @Override
         public String name() {

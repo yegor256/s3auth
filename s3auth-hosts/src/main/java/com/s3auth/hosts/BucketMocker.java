@@ -39,6 +39,7 @@ import lombok.experimental.Builder;
  * @version $Id$
  * @since 0.0.1
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public final class BucketMocker {
 
     /**
@@ -128,35 +129,37 @@ public final class BucketMocker {
     }
 
     @Builder
+    @SuppressWarnings({ "PMD.TooManyMethods",
+        "PMD.AvoidFieldNameMatchingMethodName" })
     private static class MkBucket implements Bucket {
         /**
          * The Bucket Name.
          */
-        private String name;
+        private final transient String name;
         /**
          * The Bucket key.
          */
-        private String key;
+        private final transient String key;
         /**
          * The Bucket secret.
          */
-        private String secret;
+        private final transient String secret;
         /**
          * The Bucket bucket.
          */
-        private String bucket;
+        private final transient String bucket;
         /**
          * The Bucket region.
          */
-        private String region;
+        private final transient String region;
         /**
          * The Bucket syslog.
          */
-        private String syslog;
+        private final transient String syslog;
         /**
          * The Bucket client.
          */
-        private AmazonS3 client;
+        private final transient AmazonS3 client;
 
         @Override
         public String name() {

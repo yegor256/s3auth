@@ -127,6 +127,7 @@ import org.apache.http.client.methods.HttpGet;
  * @checkstyle LineLength (1000 lines)
  * @checkstyle ClassFanOutComplexity (1000 lines)
  */
+@SuppressWarnings("PMD")
 public class MkAmazonS3 implements AmazonS3 {
     @Override
     public void abortMultipartUpload(AbortMultipartUploadRequest arg0)
