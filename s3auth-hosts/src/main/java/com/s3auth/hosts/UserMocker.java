@@ -111,5 +111,4 @@ public final class UserMocker {
             return photo;
         }
     }
-
 }

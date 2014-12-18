@@ -30,12 +30,7 @@
 package com.s3auth.hosts;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
-import org.apache.commons.io.IOUtils;
-import org.apache.http.client.methods.HttpGet;
-import org.mockito.Mockito;
+import lombok.experimental.Builder;
 
 /**
  * Mocker of {@link Bucket}.
@@ -49,7 +44,8 @@ public final class BucketMocker {
     /**
      * The mock.
      */
-    private final transient Bucket bucket = Mockito.mock(Bucket.class);
+    private final transient MkBucket.MkBucketBuilder bucket = MkBucket
+        .builder();
 
     /**
      * Public ctor.
@@ -60,17 +56,7 @@ public final class BucketMocker {
         this.withRegion("s3-ap-southeast-1");
         this.withKey("AAAAAAAAAAAAAAAAAAAA");
         this.withSecret("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-        final S3Object object = Mockito.mock(S3Object.class);
-        Mockito.doReturn(
-            new S3ObjectInputStream(
-                IOUtils.toInputStream("TXT"),
-                new HttpGet()
-            )
-        ).when(object).getObjectContent();
-        final AmazonS3 client = Mockito.mock(AmazonS3.class);
-        Mockito.doReturn(object).when(client)
-            .getObject(Mockito.any(GetObjectRequest.class));
-        this.withClient(client);
+        this.withClient(new MkAmazonS3());
     }
 
     /**
@@ -79,7 +65,7 @@ public final class BucketMocker {
      * @return This object
      */
     public BucketMocker withName(final String name) {
-        Mockito.doReturn(name).when(this.bucket).name();
+        this.bucket.name(name);
         return this;
     }
 
@@ -89,7 +75,7 @@ public final class BucketMocker {
      * @return This object
      */
     public BucketMocker withKey(final String key) {
-        Mockito.doReturn(key).when(this.bucket).key();
+        this.bucket.key(key);
         return this;
     }
 
@@ -99,7 +85,7 @@ public final class BucketMocker {
      * @return This object
      */
     public BucketMocker withSecret(final String secret) {
-        Mockito.doReturn(secret).when(this.bucket).secret();
+        this.bucket.secret(secret);
         return this;
     }
 
@@ -109,7 +95,7 @@ public final class BucketMocker {
      * @return This object
      */
     public BucketMocker withBucket(final String bckt) {
-        Mockito.doReturn(bckt).when(this.bucket).bucket();
+        this.bucket.bucket(bckt);
         return this;
     }
 
@@ -119,7 +105,7 @@ public final class BucketMocker {
      * @return This object
      */
     public BucketMocker withRegion(final String region) {
-        Mockito.doReturn(region).when(this.bucket).region();
+        this.bucket.region(region);
         return this;
     }
 
@@ -129,7 +115,7 @@ public final class BucketMocker {
      * @return This object
      */
     public BucketMocker withClient(final AmazonS3 client) {
-        Mockito.doReturn(client).when(this.bucket).client();
+        this.bucket.client(client);
         return this;
     }
 
@@ -138,7 +124,52 @@ public final class BucketMocker {
      * @return The bucket
      */
     public Bucket mock() {
-        return this.bucket;
+        return this.bucket.build();
     }
 
+    @Builder
+    private static class MkBucket implements Bucket {
+        private String name;
+        private String key;
+        private String secret;
+        private String bucket;
+        private String region;
+        private String syslog;
+        private AmazonS3 client;
+
+        @Override
+        public String name() {
+            return name;
+        }
+
+        @Override
+        public String key() {
+            return key;
+        }
+
+        @Override
+        public String secret() {
+            return secret;
+        }
+
+        @Override
+        public String bucket() {
+            return bucket;
+        }
+
+        @Override
+        public String region() {
+            return region;
+        }
+
+        @Override
+        public String syslog() {
+            return syslog;
+        }
+
+        @Override
+        public AmazonS3 client() {
+            return client;
+        }
+    }
 }
