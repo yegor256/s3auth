@@ -145,10 +145,11 @@ final class HttpThread {
     public long dispatch() throws InterruptedException {
         final Socket socket = this.sockets.take();
         final long start = System.currentTimeMillis();
-        long bytes;
+        long bytes = 0L;
         try {
             final HttpRequest request = new HttpRequest(socket);
-            if ("GET".equals(request.method())) {
+            final boolean get = "GET".equals(request.method());
+            if (get || "HEAD".equals(request.method())) {
                 HttpResponse response = new HttpResponse()
                     .withHeader("Server", HttpThread.NAME)
                     .withHeader(
@@ -179,7 +180,10 @@ final class HttpThread {
                             DateUtils.formatDate(resource.lastModified())
                         );
                     }
-                    bytes = response.withBody(resource).send(socket);
+                    if (get) {
+                        response = response.withBody(resource);
+                    }
+                    bytes = response.send(socket);
                     Logger.info(
                         this, "#run(): %d bytes of %s", bytes, resource
                     );
@@ -192,7 +196,7 @@ final class HttpThread {
                 bytes = HttpThread.failure(
                     new HttpException(
                         HttpURLConnection.HTTP_BAD_METHOD,
-                        "only GET method is supported at the moment"
+                        "only GET and HEAD methods are supported at the moment"
                     ),
                     socket
                 );
