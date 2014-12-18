@@ -47,13 +47,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.s3auth</groupId>
-            <artifactId>s3auth-hosts</artifactId>
-            <version>${project.version}</version>
-            <classifier>mock</classifier>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
