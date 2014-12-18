@@ -88,41 +88,57 @@ public final class HostMocker {
 
     @Builder
     private static class MkHost implements Host {
-        private final transient Resource resource;
-        private final transient boolean authorized;
-        private final transient boolean hidden;
-        private final transient String syslog;
-        private final transient Stats stats;
+        /**
+         * The host resource.
+         */
+        private Resource resource;
+        /**
+         * Whether the host authorized.
+         */
+        private boolean authorized;
+        /**
+         * Whether the host is hidden.
+         */
+        private boolean hidden;
+        /**
+         * The host syslog.
+         */
+        private String syslog;
+        /**
+         * The host stats.
+         */
+        private Stats stats;
 
         @Override
         public void close() throws IOException {
         }
 
         @Override
-        public Resource fetch(URI uri, Range range, Version version)
+        public Resource fetch(final URI uri, final Range range,
+            final Version version)
             throws IOException {
-            return resource;
+            return this.resource;
         }
 
         @Override
-        public boolean isHidden(URI uri) throws IOException {
-            return hidden;
+        public boolean isHidden(final URI uri) throws IOException {
+            return this.hidden;
         }
 
         @Override
-        public boolean authorized(String user, String password)
+        public boolean authorized(final String user, final String password)
             throws IOException {
-            return authorized;
+            return this.authorized;
         }
 
         @Override
         public String syslog() {
-            return syslog;
+            return this.syslog;
         }
 
         @Override
         public Stats stats() {
-            return stats;
+            return this.stats;
         }
     }
 }

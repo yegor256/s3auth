@@ -200,7 +200,7 @@ public final class HtpasswdTest {
      * @throws Exception If there is some problem inside
      */
     private Host host(final String htpasswd) throws Exception {
-        final Host host = new HostMocker().mock();
+        final Host host = Mockito.spy(new HostMocker().mock());
         Mockito.doReturn(new ResourceMocker().withContent(htpasswd).mock())
             .when(host)
             .fetch(URI.create("/.htpasswd"), Range.ENTIRE, Version.LATEST);

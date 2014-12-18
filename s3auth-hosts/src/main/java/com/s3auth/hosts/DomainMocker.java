@@ -128,41 +128,59 @@ public final class DomainMocker {
 
     @Builder
     private static class MkDomain implements Domain {
+        /**
+         * The Domain Name.
+         */
         private String name;
+        /**
+         * The Domain key.
+         */
         private String key;
+        /**
+         * The Domain secret.
+         */
         private String secret;
+        /**
+         * The Domain bucket.
+         */
         private String bucket;
+        /**
+         * The Domain region.
+         */
         private String region;
+        /**
+         * The Domain syslog.
+         */
         private String syslog;
 
         @Override
         public String name() {
-            return name;
+            return this.name;
         }
 
         @Override
         public String key() {
-            return key;
+            return this.key;
         }
 
         @Override
         public String secret() {
-            return secret;
+            return this.secret;
         }
 
         @Override
         public String bucket() {
-            return bucket;
+            return this.bucket;
         }
 
         @Override
         public String region() {
-            return region;
+            return this.region;
         }
 
         @Override
         public String syslog() {
-            return syslog;
+            return this.syslog;
         }
     }
 }

@@ -129,47 +129,68 @@ public final class BucketMocker {
 
     @Builder
     private static class MkBucket implements Bucket {
+        /**
+         * The Bucket Name.
+         */
         private String name;
+        /**
+         * The Bucket key.
+         */
         private String key;
+        /**
+         * The Bucket secret.
+         */
         private String secret;
+        /**
+         * The Bucket bucket.
+         */
         private String bucket;
+        /**
+         * The Bucket region.
+         */
         private String region;
+        /**
+         * The Bucket syslog.
+         */
         private String syslog;
+        /**
+         * The Bucket client.
+         */
         private AmazonS3 client;
 
         @Override
         public String name() {
-            return name;
+            return this.name;
         }
 
         @Override
         public String key() {
-            return key;
+            return this.key;
         }
 
         @Override
         public String secret() {
-            return secret;
+            return this.secret;
         }
 
         @Override
         public String bucket() {
-            return bucket;
+            return this.bucket;
         }
 
         @Override
         public String region() {
-            return region;
+            return this.region;
         }
 
         @Override
         public String syslog() {
-            return syslog;
+            return this.syslog;
         }
 
         @Override
         public AmazonS3 client() {
-            return client;
+            return this.client;
         }
     }
 }

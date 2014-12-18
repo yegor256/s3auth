@@ -30,7 +30,6 @@
 package com.s3auth.hosts;
 
 import com.jcabi.urn.URN;
-import com.jcabi.urn.URNMocker;
 import java.net.URI;
 import java.util.Random;
 import lombok.experimental.Builder;
@@ -54,10 +53,10 @@ public final class UserMocker {
      */
     public UserMocker() {
         this.withIdentity(
-            new URNMocker()
-                .withNid("facebook")
-                .withNss(Long.toString(Math.abs(new Random().nextLong())))
-                .mock()
+            new URN(
+                "facebook",
+                Long.toString(Math.abs(new Random().nextLong()))
+            )
         );
         this.user.name("John Doe");
         this.user.photo(URI.create("#"));
@@ -89,26 +88,35 @@ public final class UserMocker {
     public User mock() {
         return this.user.build();
     }
-    
+
     @Builder
     private static class MkUser implements User {
+        /**
+         * The User identity.
+         */
         private final URN identity;
+        /**
+         * The User name.
+         */
         private final String name;
+        /**
+         * The User photo.
+         */
         private final URI photo;
 
         @Override
         public URN identity() {
-            return identity;
+            return this.identity;
         }
 
         @Override
         public String name() {
-            return name;
+            return this.name;
         }
 
         @Override
         public URI photo() {
-            return photo;
+            return this.photo;
         }
     }
 }

@@ -60,12 +60,12 @@ public final class HostsMocker {
         }
 
         @Override
-        public Host find(String domain) throws IOException {
+        public Host find(final String domain) throws IOException {
             return new HostMocker().mock();
         }
 
         @Override
-        public Set<Domain> domains(User user) throws IOException {
+        public Set<Domain> domains(final User user) throws IOException {
             return null;
         }
     }

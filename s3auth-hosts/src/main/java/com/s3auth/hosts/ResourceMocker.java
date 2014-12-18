@@ -104,47 +104,66 @@ public final class ResourceMocker {
 
     @Builder
     private static class MkResource implements Resource {
-        private final transient char[] content;
-        private final transient int status;
-        private final transient Collection<String> headers;
-        private final transient String etag;
-        private final transient Date lastModified;
-        private final transient String contentType;
+        /**
+         * The resource content.
+         */
+        private char[] content;
+        /**
+         * The resource status.
+         */
+        private int status;
+        /**
+         * The resource headers.
+         */
+        private Collection<String> headers;
+        /**
+         * The resource etag.
+         */
+        private String etag;
+        /**
+         * The resource lastModified.
+         * @checkstyle MemberName (3 lines)
+         */
+        private Date lastModified;
+        /**
+         * The resource contentType.
+         * @checkstyle MemberName (3 lines)
+         */
+        private String contentType;
 
         @Override
         public void close() throws IOException {
-
         }
 
         @Override
         public int status() {
-            return status;
+            return this.status;
         }
 
         @Override
-        public long writeTo(OutputStream output) throws IOException {
-            IOUtils.write(content, output, Charsets.UTF_8);
+        public long writeTo(final OutputStream output) throws IOException {
+            IOUtils.write(this.content, output, Charsets.UTF_8);
             return 0;
         }
 
         @Override
         public Collection<String> headers() throws IOException {
-            return headers;
+            return this.headers;
         }
 
         @Override
         public String etag() {
-            return etag;
+            return this.etag;
         }
 
         @Override
         public Date lastModified() {
-            return lastModified;
+            return this.lastModified;
         }
 
         @Override
         public String contentType() {
-            return contentType;
+            return this.contentType;
         }
     }
 }
