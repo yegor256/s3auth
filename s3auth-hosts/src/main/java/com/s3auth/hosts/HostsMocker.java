@@ -27,11 +27,46 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.s3auth.hosts;
+
+import java.io.IOException;
+import java.util.Set;
 
 /**
- * Configuration of hosts, mocker.
+ * Mocker of {@link Hosts}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
  * @since 0.0.1
  */
-package com.s3auth.hosts;
+public final class HostsMocker {
+
+    /**
+     * The mock.
+     */
+    private final transient Hosts hosts = new MkHosts();
+
+    /**
+     * Mock it.
+     * @return The hosts
+     */
+    public Hosts mock() {
+        return this.hosts;
+    }
+
+    private static class MkHosts implements Hosts {
+        @Override
+        public void close() throws IOException {
+        }
+
+        @Override
+        public Host find(String domain) throws IOException {
+            return new HostMocker().mock();
+        }
+
+        @Override
+        public Set<Domain> domains(User user) throws IOException {
+            return null;
+        }
+    }
+}

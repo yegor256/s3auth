@@ -33,11 +33,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.util.Collection;
+import java.util.Date;
+import lombok.experimental.Builder;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 /**
  * Mocker of {@link Resource}.
@@ -51,15 +51,15 @@ public final class ResourceMocker {
     /**
      * The mock.
      */
-    private final transient Resource resource = Mockito.mock(Resource.class);
+    private final transient MkResource.MkResourceBuilder resource = MkResource
+        .builder();
 
     /**
      * Public ctor.
      */
     public ResourceMocker() {
         this.withContent("no content");
-        Mockito.doReturn(HttpURLConnection.HTTP_OK)
-            .when(this.resource).status();
+        this.resource.status(HttpURLConnection.HTTP_OK);
     }
 
     /**
@@ -68,23 +68,7 @@ public final class ResourceMocker {
      * @return This object
      */
     public ResourceMocker withContent(final String content) {
-        try {
-            Mockito.doAnswer(
-                new Answer<Void>() {
-                    @Override
-                    public Void answer(final InvocationOnMock invocation)
-                        throws Exception {
-                        final OutputStream output = OutputStream.class.cast(
-                            invocation.getArguments()[0]
-                        );
-                        IOUtils.write(content, output, Charsets.UTF_8);
-                        return null;
-                    }
-                }
-            ).when(this.resource).writeTo(Mockito.any(OutputStream.class));
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
-        }
+        this.resource.content(content.toCharArray());
         return this;
     }
 
@@ -115,7 +99,52 @@ public final class ResourceMocker {
      * @return The resource
      */
     public Resource mock() {
-        return this.resource;
+        return this.resource.build();
     }
 
+    @Builder
+    private static class MkResource implements Resource {
+        private final transient char[] content;
+        private final transient int status;
+        private final transient Collection<String> headers;
+        private final transient String etag;
+        private final transient Date lastModified;
+        private final transient String contentType;
+
+        @Override
+        public void close() throws IOException {
+
+        }
+
+        @Override
+        public int status() {
+            return status;
+        }
+
+        @Override
+        public long writeTo(OutputStream output) throws IOException {
+            IOUtils.write(content, output, Charsets.UTF_8);
+            return 0;
+        }
+
+        @Override
+        public Collection<String> headers() throws IOException {
+            return headers;
+        }
+
+        @Override
+        public String etag() {
+            return etag;
+        }
+
+        @Override
+        public Date lastModified() {
+            return lastModified;
+        }
+
+        @Override
+        public String contentType() {
+            return contentType;
+        }
+    }
 }

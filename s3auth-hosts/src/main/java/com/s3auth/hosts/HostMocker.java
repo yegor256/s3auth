@@ -29,8 +29,9 @@
  */
 package com.s3auth.hosts;
 
+import java.io.IOException;
 import java.net.URI;
-import org.mockito.Mockito;
+import lombok.experimental.Builder;
 
 /**
  * Mocker of {@link Host}.
@@ -44,29 +45,16 @@ public final class HostMocker {
     /**
      * The mock.
      */
-    private final transient Host host = Mockito.mock(Host.class);
+    private final transient MkHost.MkHostBuilder host = MkHost.builder();
 
     /**
      * Public ctor.
      */
     public HostMocker() {
-        try {
-            Mockito.doReturn(new ResourceMocker().withContent("hello").mock())
-                .when(this.host)
-                .fetch(
-                    Mockito.any(URI.class),
-                    Mockito.any(Range.class),
-                    Mockito.any(Version.class)
-                );
-            Mockito.doReturn(true).when(this.host).authorized(
-                Mockito.anyString(),
-                Mockito.anyString()
-            );
-            Mockito.doReturn(true).when(this.host)
-                .isHidden(Mockito.any(URI.class));
-        } catch (final java.io.IOException ex) {
-            throw new IllegalStateException(ex);
-        }
+        this.host
+            .resource(new ResourceMocker().withContent("hello").mock())
+            .authorized(true)
+            .hidden(true);
     }
 
     /**
@@ -76,17 +64,7 @@ public final class HostMocker {
      * @return This object
      */
     public HostMocker withContent(final URI uri, final String content) {
-        try {
-            Mockito.doReturn(new ResourceMocker().withContent(content).mock())
-                .when(this.host)
-                .fetch(
-                    Mockito.eq(uri),
-                    Mockito.any(Range.class),
-                    Mockito.any(Version.class)
-                );
-        } catch (final java.io.IOException ex) {
-            throw new IllegalStateException(ex);
-        }
+        this.host.resource(new ResourceMocker().withContent(content).mock());
         return this;
     }
 
@@ -96,7 +74,7 @@ public final class HostMocker {
      * @return This object
      */
     public HostMocker withSyslog(final String syslog) {
-        Mockito.doReturn(syslog).when(this.host).syslog();
+        this.host.syslog(syslog);
         return this;
     }
 
@@ -105,7 +83,46 @@ public final class HostMocker {
      * @return The host
      */
     public Host mock() {
-        return this.host;
+        return this.host.build();
     }
 
+    @Builder
+    private static class MkHost implements Host {
+        private final transient Resource resource;
+        private final transient boolean authorized;
+        private final transient boolean hidden;
+        private final transient String syslog;
+        private final transient Stats stats;
+
+        @Override
+        public void close() throws IOException {
+        }
+
+        @Override
+        public Resource fetch(URI uri, Range range, Version version)
+            throws IOException {
+            return resource;
+        }
+
+        @Override
+        public boolean isHidden(URI uri) throws IOException {
+            return hidden;
+        }
+
+        @Override
+        public boolean authorized(String user, String password)
+            throws IOException {
+            return authorized;
+        }
+
+        @Override
+        public String syslog() {
+            return syslog;
+        }
+
+        @Override
+        public Stats stats() {
+            return stats;
+        }
+    }
 }

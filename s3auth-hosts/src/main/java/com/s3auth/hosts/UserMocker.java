@@ -29,41 +29,87 @@
  */
 package com.s3auth.hosts;
 
-import java.io.IOException;
-import org.mockito.Mockito;
+import com.jcabi.urn.URN;
+import com.jcabi.urn.URNMocker;
+import java.net.URI;
+import java.util.Random;
+import lombok.experimental.Builder;
 
 /**
- * Mocker of {@link Hosts}.
+ * Mocker of {@link User}.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
  */
-public final class HostsMocker {
+public final class UserMocker {
 
     /**
      * The mock.
      */
-    private final transient Hosts hosts = Mockito.mock(Hosts.class);
+    private final transient MkUser.MkUserBuilder user = MkUser.builder();
 
     /**
      * Public ctor.
      */
-    public HostsMocker() {
-        try {
-            Mockito.doReturn(new HostMocker().mock()).when(this.hosts)
-                .find(Mockito.anyString());
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
-        }
+    public UserMocker() {
+        this.withIdentity(
+            new URNMocker()
+                .withNid("facebook")
+                .withNss(Long.toString(Math.abs(new Random().nextLong())))
+                .mock()
+        );
+        this.user.name("John Doe");
+        this.user.photo(URI.create("#"));
+    }
+
+    /**
+     * With provided identity.
+     * @param identity The identity
+     * @return This object
+     */
+    public UserMocker withIdentity(final URN identity) {
+        this.user.identity(identity);
+        return this;
+    }
+
+    /**
+     * With provided identity.
+     * @param identity The identity
+     * @return This object
+     */
+    public UserMocker withIdentity(final String identity) {
+        return this.withIdentity(URN.create(identity));
     }
 
     /**
      * Mock it.
-     * @return The hosts
+     * @return The user
      */
-    public Hosts mock() {
-        return this.hosts;
+    public User mock() {
+        return this.user.build();
+    }
+    
+    @Builder
+    private static class MkUser implements User {
+        private final URN identity;
+        private final String name;
+        private final URI photo;
+
+        @Override
+        public URN identity() {
+            return identity;
+        }
+
+        @Override
+        public String name() {
+            return name;
+        }
+
+        @Override
+        public URI photo() {
+            return photo;
+        }
     }
 
 }

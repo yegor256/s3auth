@@ -29,7 +29,7 @@
  */
 package com.s3auth.hosts;
 
-import org.mockito.Mockito;
+import lombok.experimental.Builder;
 
 /**
  * Mocker of {@link Domain}.
@@ -43,7 +43,8 @@ public final class DomainMocker {
     /**
      * The mock.
      */
-    private final transient Domain domain = Mockito.mock(Domain.class);
+    private final transient MkDomain.MkDomainBuilder domain = MkDomain
+        .builder();
 
     /**
      * Public ctor.
@@ -63,7 +64,7 @@ public final class DomainMocker {
      * @return This object
      */
     public DomainMocker withName(final String name) {
-        Mockito.doReturn(name).when(this.domain).name();
+        this.domain.name(name);
         return this;
     }
 
@@ -73,7 +74,7 @@ public final class DomainMocker {
      * @return This object
      */
     public DomainMocker withKey(final String key) {
-        Mockito.doReturn(key).when(this.domain).key();
+        this.domain.key(key);
         return this;
     }
 
@@ -83,7 +84,7 @@ public final class DomainMocker {
      * @return This object
      */
     public DomainMocker withSecret(final String secret) {
-        Mockito.doReturn(secret).when(this.domain).secret();
+        this.domain.secret(secret);
         return this;
     }
 
@@ -93,7 +94,7 @@ public final class DomainMocker {
      * @return This object
      */
     public DomainMocker withBucket(final String bckt) {
-        Mockito.doReturn(bckt).when(this.domain).bucket();
+        this.domain.bucket(bckt);
         return this;
     }
 
@@ -103,7 +104,7 @@ public final class DomainMocker {
      * @return This object
      */
     public DomainMocker withRegion(final String region) {
-        Mockito.doReturn(region).when(this.domain).region();
+        this.domain.region(region);
         return this;
     }
 
@@ -113,7 +114,7 @@ public final class DomainMocker {
      * @return This object
      */
     public DomainMocker withSyslog(final String syslog) {
-        Mockito.doReturn(syslog).when(this.domain).syslog();
+        this.domain.syslog(syslog);
         return this;
     }
 
@@ -122,7 +123,46 @@ public final class DomainMocker {
      * @return The domain
      */
     public Domain mock() {
-        return this.domain;
+        return this.domain.build();
     }
 
+    @Builder
+    private static class MkDomain implements Domain {
+        private String name;
+        private String key;
+        private String secret;
+        private String bucket;
+        private String region;
+        private String syslog;
+
+        @Override
+        public String name() {
+            return name;
+        }
+
+        @Override
+        public String key() {
+            return key;
+        }
+
+        @Override
+        public String secret() {
+            return secret;
+        }
+
+        @Override
+        public String bucket() {
+            return bucket;
+        }
+
+        @Override
+        public String region() {
+            return region;
+        }
+
+        @Override
+        public String syslog() {
+            return syslog;
+        }
+    }
 }
