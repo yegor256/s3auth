@@ -139,7 +139,8 @@ final class DefaultDynamo implements Dynamo {
 
     DefaultDynamo(@NotNull final Credentials credentials, @NotNull final String tbl)
     {
-
+        this.credentials = credentials;
+        this.table = tbl;
     }
 
     @Override
