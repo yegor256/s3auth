@@ -42,8 +42,16 @@ import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.jcabi.dynamo.Attributes;
+import com.jcabi.dynamo.Item;
+import com.jcabi.dynamo.Region;
+import com.jcabi.dynamo.Table;
+import com.jcabi.dynamo.retry.ReRegion;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
+
+import java.io.IOException;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -154,36 +162,53 @@ final class DefaultDynamo implements Dynamo {
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public ConcurrentMap<URN, Domains> load() {
         final ConcurrentMap<URN, Domains> domains =
-            new ConcurrentHashMap<URN, Domains>(0);
-        final AmazonDynamoDB amazon = this.client.get();
-        final ScanResult result = amazon.scan(new ScanRequest(this.table));
-        for (final Map<String, AttributeValue> item : result.getItems()) {
-            final String syslog;
-            if (item.containsKey(DefaultDynamo.SYSLOG)) {
-                syslog = item.get(DefaultDynamo.SYSLOG).getS();
-            } else {
-                syslog = "syslog.s3auth.com:514";
+                new ConcurrentHashMap<URN, Domains>(0);
+        final Region region = new ReRegion(new Region.Simple(credentials));
+
+        try
+        {
+            final Iterator<Item> items = region.table(this.table).frame().iterator();
+
+            while (items.hasNext())
+            {
+                final Item item = items.next();
+
+                final String syslog;
+
+                if (item.has(DefaultDynamo.SYSLOG))
+                {
+                    syslog = item.get(DefaultDynamo.SYSLOG).getS();
+                }
+                else
+                {
+                    syslog = "syslog.s3auth.com:514";
+                }
+
+                final String bucket;
+                if (item.has(DefaultDynamo.BUCKET)) {
+                    bucket = item.get(DefaultDynamo.BUCKET).getS();
+                } else {
+                    bucket = item.get(DefaultDynamo.NAME).getS();
+                }
+
+                final URN user = URN.create(item.get(DefaultDynamo.USER).getS());
+                domains.putIfAbsent(user, new Domains());
+                domains.get(user).add(
+                        new DefaultDomain(
+                                item.get(DefaultDynamo.NAME).getS(),
+                                item.get(DefaultDynamo.KEY).getS(),
+                                item.get(DefaultDynamo.SECRET).getS(),
+                                bucket,
+                                item.get(DefaultDynamo.REGION).getS(),
+                                syslog
+                        )
+                );
+
             }
-            final String bucket;
-            if (item.containsKey(DefaultDynamo.BUCKET)) {
-                bucket = item.get(DefaultDynamo.BUCKET).getS();
-            } else {
-                bucket = item.get(DefaultDynamo.NAME).getS();
-            }
-            final URN user = URN.create(item.get(DefaultDynamo.USER).getS());
-            domains.putIfAbsent(user, new Domains());
-            domains.get(user).add(
-                new DefaultDomain(
-                    item.get(DefaultDynamo.NAME).getS(),
-                    item.get(DefaultDynamo.KEY).getS(),
-                    item.get(DefaultDynamo.SECRET).getS(),
-                    bucket,
-                    item.get(DefaultDynamo.REGION).getS(),
-                    syslog
-                )
-            );
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        amazon.shutdown();
+
         return domains;
     }
 
