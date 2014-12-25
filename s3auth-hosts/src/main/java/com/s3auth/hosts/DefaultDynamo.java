@@ -43,6 +43,7 @@ import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.Table;
 import com.jcabi.dynamo.retry.ReRegion;
+import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
 import lombok.EqualsAndHashCode;
@@ -230,7 +231,8 @@ final class DefaultDynamo implements Dynamo {
                     with(DefaultDynamo.SYSLOG, new AttributeValue(domain.syslog())).
                     with(DefaultDynamo.BUCKET, new AttributeValue(domain.bucket())));
             success = true;
-        } catch (IOException e) {
+        } catch (final IOException e) {
+            Logger.error(this, e.getMessage());
             return success;
         }
         finally {
