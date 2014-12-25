@@ -51,6 +51,7 @@ import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import com.jcabi.dynamo.Credentials;
 
 /**
  * Abstraction on top of DynamoDB SDK.
@@ -105,51 +106,40 @@ final class DefaultDynamo implements Dynamo {
     public static final String SYSLOG = "domain.syslog";
 
     /**
-     * Client.
-     */
-    private final transient Dynamo.Client client;
-
-    /**
      * Table name.
      */
     private final transient String table;
 
     /**
+     * JCabi-Dynamo access credentials.
+     */
+    private final Credentials credentials;
+
+    /**
      * Public ctor.
      */
     DefaultDynamo() {
-        this(
-            new Dynamo.Client() {
-                @Override
-                public AmazonDynamoDB get() {
-                    final AmazonDynamoDB aws = new AmazonDynamoDBClient(
-                        new BasicAWSCredentials(
-                            Manifests.read("S3Auth-AwsDynamoKey"),
-                            Manifests.read("S3Auth-AwsDynamoSecret")
-                        )
-                    );
-                    // @checkstyle MultipleStringLiterals (1 line)
-                    if (Manifests.exists("S3Auth-AwsDynamoEntryPoint")) {
-                        aws.setEndpoint(
-                            Manifests.read("S3Auth-AwsDynamoEntryPoint")
-                        );
-                    }
-                    return aws;
-                }
-            },
-            Manifests.read("S3Auth-AwsDynamoTable")
-        );
+        credentials = new Credentials.Simple(Manifests.read
+                ("S3Auth-AwsDynamoKey"), Manifests.read("S3Auth-AwsDynamoSecret"));
+        final AmazonDynamoDB amazonDynamoDB = credentials.aws();
+        if (Manifests.exists("S3Auth-AwsDynamoEntryPoint")) {
+            amazonDynamoDB.setEndpoint(
+                    Manifests.read("S3Auth-AwsDynamoEntryPoint")
+            );
+        }
+        this.table = Manifests.read("S3Auth-AwsDynamoTable");
     }
+
 
     /**
      * Ctor for unit tests.
-     * @param clnt The client to Dynamo DB
+     * @param credentials JCabi-Dynamo access credentials
      * @param tbl Table name
      */
-    DefaultDynamo(@NotNull final Dynamo.Client clnt,
-        @NotNull final String tbl) {
-        this.client = clnt;
-        this.table = tbl;
+
+    DefaultDynamo(@NotNull final Credentials credentials, @NotNull final String tbl)
+    {
+
     }
 
     @Override
