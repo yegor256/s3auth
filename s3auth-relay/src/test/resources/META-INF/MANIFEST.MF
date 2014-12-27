@@ -2,3 +2,4 @@ S3Auth-Version: 1.0-SNAPSHOT
 S3Auth-Revision: 123
 S3Auth-Date: 22-Aug-2012
 S3Auth-ExitKey: boom
+S3Auth-AwsDynamoTable: s3auth

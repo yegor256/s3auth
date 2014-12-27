@@ -35,19 +35,28 @@ import com.jcabi.log.Logger;
 import com.jcabi.log.VerboseRunnable;
 import com.jcabi.log.VerboseThreads;
 import com.s3auth.hosts.Hosts;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.NoSuchAlgorithmException;
+import java.security.Provider;
+import java.util.Arrays;
+import java.util.Map.Entry;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.validation.constraints.NotNull;
+
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -73,13 +82,13 @@ final class HttpFacade implements Closeable {
     /**
      * How many threads to use.
      */
-    private static final int THREADS = Tv.HUNDRED;
+    private static final int THREADS = 1;
 
     /**
      * Executor service, with socket openers.
      */
     private final transient ScheduledExecutorService frontend =
-        Executors.newScheduledThreadPool(2, new VerboseThreads("front"));
+        Executors.newScheduledThreadPool(2, new VerboseThreads("frontAnak"));
 
     /**
      * Executor service, with consuming threads.
@@ -87,7 +96,7 @@ final class HttpFacade implements Closeable {
     private final transient ScheduledExecutorService backend =
         Executors.newScheduledThreadPool(
             HttpFacade.THREADS,
-            new VerboseThreads("back")
+            new VerboseThreads("backAnak")
         );
 
     /**
@@ -112,12 +121,29 @@ final class HttpFacade implements Closeable {
      * @param port Port number
      * @param sslport SSL port number.
      * @throws IOException If can't initialize
+     * @throws NoSuchAlgorithmException 
      */
     HttpFacade(@NotNull final Hosts hosts, final int port, final int sslport)
-        throws IOException {
+        throws IOException, NoSuchAlgorithmException {
+    	Logger.warn(this, "anak.ssl.ServerSocketFactory.provider: " + System.getProperty("ssl.ServerSocketFactory.provider"));
         this.server = new ServerSocket(port);
         this.secured = SSLServerSocketFactory.getDefault()
             .createServerSocket(sslport);
+        
+        Logger.warn(this, "anak.getEnabledCipherSuites: " + 
+        		Arrays.toString(((SSLServerSocket)secured).getEnabledCipherSuites()));
+        Logger.warn(this, "anak.getSSLParameters().getCipherSuites: " + 
+        		Arrays.toString(((SSLServerSocket)secured).getSSLParameters().getCipherSuites()));
+        
+        SSLContext defSslContext = SSLContext.getDefault();
+        Logger.warn(this, "anak.SSLContext.getDefault().getProtocol: " + defSslContext.getProtocol());
+        Provider provider = defSslContext.getProvider();
+        for (Entry<Object, Object> el : provider.entrySet()) {
+        	Logger.warn(this, "anak.el.getKey() + el.getValue(): " + el.getKey() + el.getValue());
+		} 
+        
+        
+        
         final HttpThread thread = new HttpThread(this.sockets, hosts);
         final Runnable runnable = new VerboseRunnable(
             new HttpFacade.HttpThreadRunnable(thread), true, false

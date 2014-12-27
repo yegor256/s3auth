@@ -5,3 +5,6 @@ target/
 src/main/latex/*.pdf
 src/main/latex/*.aux
 src/main/latex/*.gz
+.settings
+.project
+.classpath
