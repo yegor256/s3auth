@@ -20,3 +20,16 @@ For example, try [http://maven.s3auth.com/](http://maven.s3auth.com/)
 (with username `s3auth` and password `s3auth`).
 You will access content of Amazon S3 bucket `maven.s3auth.com`,
 which is not readable anonymously otherwise.
+
+## How to contribute
+
+Fork repository, make changes, send us a pull request. We will review
+your changes and apply them to the `master` branch shortly, provided
+they don't violate our quality standards. To avoid frustration, before
+sending us your pull request please run full Maven build:
+
+```
+$ mvn clean install -Pqulice
+```
+
+To avoid build errors use maven 3.2+
