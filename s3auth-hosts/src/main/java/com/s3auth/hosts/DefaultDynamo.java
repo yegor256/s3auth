@@ -48,7 +48,6 @@ import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.Iterator;
