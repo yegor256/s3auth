@@ -216,6 +216,7 @@
                                 <!-- there is a bug in qulice, that's why the file is excluded, try to remove this line -->
                                 <exclude>checkstyle:/src/main/java/com/s3auth/hosts/Htpasswd.java</exclude>
                             </excludes>
+                            <license>file:${basedir}/LICENSE.txt</license>
                         </configuration>
                     </plugin>
                 </plugins>

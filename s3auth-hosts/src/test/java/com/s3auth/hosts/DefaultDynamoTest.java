@@ -62,6 +62,10 @@ import org.mockito.stubbing.Answer;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 public final class DefaultDynamoTest {
+    /**
+     * Test table name.
+     */
+    public static final String TABLE = "table";
 
     /**
      * DefaultDynamo can load configuration.
@@ -83,10 +87,8 @@ public final class DefaultDynamoTest {
         final Region region = new MkRegion(data);
         final RegionFactory regionFactory = Mockito.mock(RegionFactory.class);
         Mockito.when(regionFactory.createRegion()).thenReturn(region);
-
         final DefaultDynamo dynamo = new DefaultDynamo(
             regionFactory, TABLE);
-
         final int size = dynamo.load().size();
         MatcherAssert.assertThat(
             dynamo.load().size(),
@@ -166,6 +168,4 @@ public final class DefaultDynamoTest {
         item.put(DefaultDynamo.SYSLOG, new AttributeValue(""));
         return item;
     }
-
-    public static final String TABLE = "table";
 }

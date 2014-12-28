@@ -58,16 +58,15 @@ import lombok.ToString;
  * Abstraction on top of DynamoDB SDK.
  *
  * <p>The class is mutable and thread-safe.
- *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 0.0.1
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  * @todo #1 Would be nice to migrate to jcabi-dynamo
+ * @since 0.0.1
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "table" })
+@EqualsAndHashCode(of = {"table"})
 @Loggable(Loggable.INFO)
 final class DefaultDynamo implements Dynamo {
 
@@ -122,12 +121,12 @@ final class DefaultDynamo implements Dynamo {
     DefaultDynamo() {
         regionFactory = new ReRegionFactory(new Credentials.Simple(
             Manifests.read
-            ("S3Auth-AwsDynamoKey"), Manifests.read("S3Auth-AwsDynamoSecret")));
+                ("S3Auth-AwsDynamoKey"), Manifests.read("S3Auth-AwsDynamoSecret")));
 
         final AmazonDynamoDB amazonDynamoDB = regionFactory.aws();
         if (Manifests.exists("S3Auth-AwsDynamoEntryPoint")) {
             amazonDynamoDB.setEndpoint(
-                    Manifests.read("S3Auth-AwsDynamoEntryPoint")
+                Manifests.read("S3Auth-AwsDynamoEntryPoint")
             );
         }
         this.table = Manifests.read("S3Auth-AwsDynamoTable");
@@ -155,21 +154,18 @@ final class DefaultDynamo implements Dynamo {
     @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
     public ConcurrentMap<URN, Domains> load() {
         final ConcurrentMap<URN, Domains> domains =
-                new ConcurrentHashMap<URN, Domains>(0);
+            new ConcurrentHashMap<URN, Domains>(0);
         final Region region = this.regionFactory.createRegion();
 
-        try
-        {
+        try {
             final Iterator<Item> items = region.table(this.table).frame().iterator();
 
-            while (items.hasNext())
-            {
+            while (items.hasNext()) {
                 final Item item = items.next();
 
                 final String syslog;
 
-                if (item.has(DefaultDynamo.SYSLOG))
-                {
+                if (item.has(DefaultDynamo.SYSLOG)) {
                     syslog = item.get(DefaultDynamo.SYSLOG).getS();
                 } else {
                     syslog = "syslog.s3auth.com:514";
@@ -184,21 +180,20 @@ final class DefaultDynamo implements Dynamo {
                 final URN user = URN.create(item.get(DefaultDynamo.USER).getS());
                 domains.putIfAbsent(user, new Domains());
                 domains.get(user).add(
-                        new DefaultDomain(
-                                item.get(DefaultDynamo.NAME).getS(),
-                                item.get(DefaultDynamo.KEY).getS(),
-                                item.get(DefaultDynamo.SECRET).getS(),
-                                bucket,
-                                item.get(DefaultDynamo.REGION).getS(),
-                                syslog
-                        )
+                    new DefaultDomain(
+                        item.get(DefaultDynamo.NAME).getS(),
+                        item.get(DefaultDynamo.KEY).getS(),
+                        item.get(DefaultDynamo.SECRET).getS(),
+                        bucket,
+                        item.get(DefaultDynamo.REGION).getS(),
+                        syslog
+                    )
                 );
 
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             shutdownAws(region);
         }
 
@@ -215,17 +210,16 @@ final class DefaultDynamo implements Dynamo {
 
         try {
             curTable.put(new Attributes().with(DefaultDynamo.USER, new AttributeValue(user.toString())).
-                    with(DefaultDynamo.NAME, new AttributeValue(domain.name())).
-                    with(DefaultDynamo.KEY, new AttributeValue(domain.key())).
-                    with(DefaultDynamo.SECRET, new AttributeValue(domain.secret())).
-                    with(DefaultDynamo.REGION, new AttributeValue(domain.region())).
-                    with(DefaultDynamo.SYSLOG, new AttributeValue(domain.syslog())).
-                    with(DefaultDynamo.BUCKET, new AttributeValue(domain.bucket())));
+                with(DefaultDynamo.NAME, new AttributeValue(domain.name())).
+                with(DefaultDynamo.KEY, new AttributeValue(domain.key())).
+                with(DefaultDynamo.SECRET, new AttributeValue(domain.secret())).
+                with(DefaultDynamo.REGION, new AttributeValue(domain.region())).
+                with(DefaultDynamo.SYSLOG, new AttributeValue(domain.syslog())).
+                with(DefaultDynamo.BUCKET, new AttributeValue(domain.bucket())));
             success = true;
         } catch (final IOException e) {
             Logger.error(this, e.getMessage());
-        }
-        finally {
+        } finally {
             shutdownAws(region);
         }
         return success;
@@ -249,10 +243,9 @@ final class DefaultDynamo implements Dynamo {
         final Table curTable = region.table(this.table);
 
         final Iterator<Item> itemsToRemove = curTable.frame().where(DefaultDynamo.NAME,
-                new Condition().withComparisonOperator(ComparisonOperator.EQ)).iterator();
+            new Condition().withComparisonOperator(ComparisonOperator.EQ)).iterator();
 
-        while (itemsToRemove.hasNext())
-        {
+        while (itemsToRemove.hasNext()) {
             itemsToRemove.next();
             itemsToRemove.remove();
         }
