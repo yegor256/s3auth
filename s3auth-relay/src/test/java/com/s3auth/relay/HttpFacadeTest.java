@@ -41,6 +41,7 @@ import com.s3auth.hosts.Range;
 import com.s3auth.hosts.Resource;
 import com.s3auth.hosts.ResourceMocker;
 import com.s3auth.hosts.Version;
+
 import java.io.ByteArrayInputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -48,9 +49,11 @@ import java.net.URI;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
+
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
@@ -58,6 +61,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.client.utils.DateUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -165,7 +169,7 @@ public final class HttpFacadeTest {
     			System.getProperty("javax.net.ssl.trustStore"), 
     			System.getProperty("javax.net.ssl.trustStorePassword")));
     	
-    	System.out.println("anak. setting properties");
+    	/*System.out.println("anak. setting properties");
     	System.setProperty("javax.net.ssl.keyStore", "C:\\work\\odesk\\5 xdsd\\s3auth\\s3auth-relay\\target\\keystore.jks");
 		System.setProperty("javax.net.ssl.keyStorePassword", "1d63a34a52d39fe956a94d979e04ef6d");
 		System.setProperty("javax.net.ssl.trustStore", "C:\\work\\odesk\\5 xdsd\\s3auth\\s3auth-relay\\target\\cacerts.jks"); 
@@ -174,7 +178,12 @@ public final class HttpFacadeTest {
     			System.getProperty("javax.net.ssl.keyStore"),
     			System.getProperty("javax.net.ssl.keyStorePassword"),
     			System.getProperty("javax.net.ssl.trustStore"), 
-    			System.getProperty("javax.net.ssl.trustStorePassword")));
+    			System.getProperty("javax.net.ssl.trustStorePassword")));*/
+    	
+    	Assert.assertNotNull(System.getProperty("javax.net.ssl.keyStore"));
+    	Assert.assertNotNull(System.getProperty("javax.net.ssl.keyStorePassword"));
+    	Assert.assertNotNull(System.getProperty("javax.net.ssl.trustStore"));
+    	Assert.assertNotNull(System.getProperty("javax.net.ssl.trustStorePassword"));
     			
         final Host host = Mockito.mock(Host.class);
         final String body = "secured";
