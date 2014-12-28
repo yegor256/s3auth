@@ -87,13 +87,13 @@ public final class DefaultDynamoTest {
                 DefaultDynamo.REGION,
                 DefaultDynamo.BUCKET,
                 DefaultDynamo.SYSLOG,
-        }
+            }
         );
         for (int num = 0; num < Tv.TWENTY; ++num) {
             data.put(
                 TABLE,
                 new Attributes(
-                    item()
+                    this.item()
                 )
             );
         }
@@ -101,7 +101,8 @@ public final class DefaultDynamoTest {
         final RegionFactory regionFactory = Mockito.mock(RegionFactory.class);
         Mockito.when(regionFactory.createRegion()).thenReturn(region);
         final DefaultDynamo dynamo = new DefaultDynamo(
-            regionFactory, TABLE);
+            regionFactory, TABLE
+        );
         final int size = dynamo.load().size();
         MatcherAssert.assertThat(
             dynamo.load().size(),
@@ -170,8 +171,10 @@ public final class DefaultDynamoTest {
                 )
             )
         );
-        item.put(DefaultDynamo.KEY,
-            new AttributeValue("aaaaaaaaaaaaaaaa"));
+        item.put(
+            DefaultDynamo.KEY,
+            new AttributeValue("aaaaaaaaaaaaaaaa")
+        );
         item.put(
             DefaultDynamo.SECRET,
             new AttributeValue("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
