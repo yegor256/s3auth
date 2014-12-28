@@ -119,13 +119,13 @@ final class DefaultDynamo implements Dynamo {
     /**
      * Region factory.
      */
-    private final RegionFactory regionfactory;
+    private final RegionCreator regionfactory;
 
     /**
      * Public ctor.
      */
     DefaultDynamo() {
-        this.regionfactory = new ReRegionFactory(
+        this.regionfactory = new ReRegionCreator(
             new Credentials.Simple(
                 Manifests.read("S3Auth-AwsDynamoKey"),
                 Manifests.read("S3Auth-AwsDynamoSecret")
@@ -145,7 +145,7 @@ final class DefaultDynamo implements Dynamo {
      * @param regfactory Region factory
      * @param tbl Table name
      */
-    DefaultDynamo(@NotNull final RegionFactory regfactory,
+    DefaultDynamo(@NotNull final RegionCreator regfactory,
         @NotNull final String tbl) {
         this.regionfactory = regfactory;
         this.table = tbl;

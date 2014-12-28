@@ -39,7 +39,7 @@ import com.jcabi.dynamo.Region;
  * @version $Id$
  */
 @Immutable
-public interface RegionFactory {
+public interface RegionCreator {
     /**
      * Creates a region.
      * @return Created region.

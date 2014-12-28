@@ -98,10 +98,10 @@ public final class DefaultDynamoTest {
             );
         }
         final Region region = new MkRegion(data);
-        final RegionFactory regionFactory = Mockito.mock(RegionFactory.class);
-        Mockito.when(regionFactory.createRegion()).thenReturn(region);
+        final RegionCreator regionCreator = Mockito.mock(RegionCreator.class);
+        Mockito.when(regionCreator.createRegion()).thenReturn(region);
         final DefaultDynamo dynamo = new DefaultDynamo(
-            regionFactory, TABLE
+            regionCreator, TABLE
         );
         final int size = dynamo.load().size();
         MatcherAssert.assertThat(

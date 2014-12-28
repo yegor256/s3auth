@@ -39,7 +39,7 @@ import com.jcabi.dynamo.retry.ReRegion;
  * @author Dmitri Pisarenko (dp@altruix.co)
  * @version $Id$
  */
-public class ReRegionFactory implements RegionFactory {
+public class ReRegionCreator implements RegionCreator {
     /**
      * JCabi-Dynamo access credentials.
      */
@@ -50,7 +50,7 @@ public class ReRegionFactory implements RegionFactory {
      * credentials.
      * @param accessdata AWS DynamoDB credentials
      */
-    public ReRegionFactory(final Credentials accessdata) {
+    public ReRegionCreator(final Credentials accessdata) {
         this.credentials = accessdata;
     }
 
