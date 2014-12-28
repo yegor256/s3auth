@@ -29,7 +29,9 @@
  */
 package com.s3auth.relay;
 
+import com.amazonaws.AmazonClientException;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.log.Logger;
 import com.s3auth.hosts.Resource;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -157,6 +159,7 @@ final class HttpResponse {
     public long send(@NotNull final Socket socket) throws IOException {
         final OutputStream stream = socket.getOutputStream();
         final Writer writer = new OutputStreamWriter(stream, Charsets.UTF_8);
+        long bytes = 0L;
         try {
             writer.write(
                 String.format(
@@ -181,12 +184,14 @@ final class HttpResponse {
             }
             writer.write(HttpResponse.EOL);
             writer.flush();
-            long bytes = 0L;
             bytes += this.body.writeTo(stream);
-            return bytes;
-        } finally {
+        }
+        catch (final AmazonClientException exception) {
+            Logger.error(this, exception.getMessage());
+        }
+        finally {
             writer.close();
         }
+        return bytes;
     }
-
 }

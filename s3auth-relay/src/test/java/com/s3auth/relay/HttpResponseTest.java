@@ -29,9 +29,11 @@
  */
 package com.s3auth.relay;
 
+import com.amazonaws.AmazonClientException;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseRunnable;
 import com.s3auth.hosts.Resource;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -51,6 +53,7 @@ import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Test case for {@link HttpResponse}.
@@ -170,4 +173,19 @@ public final class HttpResponseTest {
         );
     }
 
+    /**
+     * Test for reproducing one of the errors in issue #202.
+     */
+    @Test
+    public void testTimeoutExceptionHandlingInSend() throws IOException {
+        final HttpResponse response = new HttpResponse();
+        final OutputStream stream = Mockito.mock(OutputStream.class);
+        Mockito.doThrow(new AmazonClientException(
+            "Unable to execute HTTP request:" +
+                " Timeout waiting for connection from pool"))
+            .when(stream).write(Mockito.any(byte[].class));
+        final Socket socket = Mockito.mock(Socket.class);
+        Mockito.when(socket.getOutputStream()).thenReturn(stream);
+        response.send(socket);
+    }
 }
