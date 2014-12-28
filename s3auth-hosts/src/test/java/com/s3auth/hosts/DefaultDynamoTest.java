@@ -36,7 +36,10 @@ import com.amazonaws.services.dynamodbv2.model.PutItemResult;
 import com.amazonaws.services.dynamodbv2.model.ScanRequest;
 import com.amazonaws.services.dynamodbv2.model.ScanResult;
 import com.jcabi.aspects.Tv;
-import com.jcabi.dynamo.Credentials;
+import com.jcabi.dynamo.Attributes;
+import com.jcabi.dynamo.Region;
+import com.jcabi.dynamo.mock.H2Data;
+import com.jcabi.dynamo.mock.MkRegion;
 import com.jcabi.urn.URN;
 import com.jcabi.urn.URNMocker;
 import java.util.LinkedList;
@@ -66,8 +69,25 @@ public final class DefaultDynamoTest {
      */
     @Test
     public void loadsDynamoConfiguration() throws Exception {
-        final Dynamo dynamo = new DefaultDynamo(new
-            Credentials.Simple("key", "secret"), "table");
+        final H2Data data = new H2Data().with(TABLE, new String[] {
+            transformToH2(DefaultDynamo.USER) },
+            new String[]{transformToH2(DefaultDynamo.NAME),
+                transformToH2(DefaultDynamo.KEY),
+                transformToH2(DefaultDynamo.SECRET),
+                transformToH2(DefaultDynamo.REGION),
+                transformToH2(DefaultDynamo.BUCKET),
+                transformToH2(DefaultDynamo.SYSLOG)
+            });
+        for (int num = 0; num < Tv.TWENTY; ++num) {
+            data.put(TABLE, new Attributes(item()));
+        }
+        final Region region = new MkRegion(data);
+        final RegionFactory regionFactory = Mockito.mock(RegionFactory.class);
+        Mockito.when(regionFactory.createRegion()).thenReturn(region);
+
+        final DefaultDynamo dynamo = new DefaultDynamo(
+            regionFactory, TABLE);
+
         final int size = dynamo.load().size();
         MatcherAssert.assertThat(
             dynamo.load().size(),
@@ -124,11 +144,11 @@ public final class DefaultDynamoTest {
         final ConcurrentMap<String, AttributeValue> item =
             new ConcurrentHashMap<String, AttributeValue>(0);
         item.put(
-            DefaultDynamo.USER,
+            transformToH2(DefaultDynamo.USER),
             new AttributeValue(new URNMocker().mock().toString())
         );
         item.put(
-            DefaultDynamo.NAME,
+            transformToH2(DefaultDynamo.NAME),
             new AttributeValue(
                 String.format(
                     "google-%d.com",
@@ -136,13 +156,22 @@ public final class DefaultDynamoTest {
                 )
             )
         );
-        item.put(DefaultDynamo.KEY, new AttributeValue("aaaaaaaaaaaaaaaa"));
+        item.put(transformToH2(DefaultDynamo.KEY),
+            new AttributeValue("aaaaaaaaaaaaaaaa"));
         item.put(
-            DefaultDynamo.SECRET,
+            transformToH2(DefaultDynamo.SECRET),
             new AttributeValue("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
         );
-        item.put(DefaultDynamo.REGION, new AttributeValue("s3"));
+        item.put(transformToH2(DefaultDynamo.REGION), new AttributeValue("s3"));
+        item.put(transformToH2(DefaultDynamo.BUCKET), new AttributeValue(""));
+        item.put(transformToH2(DefaultDynamo.SYSLOG), new AttributeValue(""));
         return item;
     }
 
+    private String transformToH2(final String originalString) {
+        return originalString;
+        // return String.format("\"%s\"", originalString);
+    }
+
+    public static final String TABLE = "table";
 }

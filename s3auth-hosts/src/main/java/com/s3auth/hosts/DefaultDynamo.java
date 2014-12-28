@@ -42,18 +42,17 @@ import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.Table;
-import com.jcabi.dynamo.retry.ReRegion;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
+import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Abstraction on top of DynamoDB SDK.
@@ -75,55 +74,54 @@ final class DefaultDynamo implements Dynamo {
     /**
      * Dynamo DB key, URN of a user.
      */
-    public static final String USER = "user.urn";
+    public static final String USER = "user_urn";
 
     /**
      * Dynamo DB key, name of domain.
      */
-    public static final String NAME = "domain.name";
+    public static final String NAME = "domain_name";
 
     /**
      * Dynamo DB key, AWS key of bucket.
      */
-    public static final String KEY = "domain.key";
+    public static final String KEY = "domain_key";
 
     /**
      * Dynamo DB key, AWS secret of bucket.
      */
-    public static final String SECRET = "domain.secret";
+    public static final String SECRET = "domain_secret";
 
     /**
      * Dynamo DB key, Name of bucket.
      */
-    public static final String BUCKET = "domain.bucket";
+    public static final String BUCKET = "domain_bucket";
 
     /**
      * Dynamo DB key, AWS S3 region of bucket.
      */
-    public static final String REGION = "domain.region";
+    public static final String REGION = "domain_region";
 
     /**
      * Dynamo DB key, Syslog host and port of domain.
      */
-    public static final String SYSLOG = "domain.syslog";
+    public static final String SYSLOG = "domain_syslog";
 
     /**
      * Table name.
      */
     private final transient String table;
 
-    /**
-     * JCabi-Dynamo access credentials.
-     */
-    private final Credentials credentials;
+    private final RegionFactory regionFactory;
 
     /**
      * Public ctor.
      */
     DefaultDynamo() {
-        credentials = new Credentials.Simple(Manifests.read
-                ("S3Auth-AwsDynamoKey"), Manifests.read("S3Auth-AwsDynamoSecret"));
-        final AmazonDynamoDB amazonDynamoDB = credentials.aws();
+        regionFactory = new ReRegionFactory(new Credentials.Simple(
+            Manifests.read
+            ("S3Auth-AwsDynamoKey"), Manifests.read("S3Auth-AwsDynamoSecret")));
+
+        final AmazonDynamoDB amazonDynamoDB = regionFactory.aws();
         if (Manifests.exists("S3Auth-AwsDynamoEntryPoint")) {
             amazonDynamoDB.setEndpoint(
                     Manifests.read("S3Auth-AwsDynamoEntryPoint")
@@ -132,16 +130,14 @@ final class DefaultDynamo implements Dynamo {
         this.table = Manifests.read("S3Auth-AwsDynamoTable");
     }
 
-
     /**
      * Ctor for unit tests.
-     * @param credentials JCabi-Dynamo access credentials
+     * @param regionFactory Region factory
      * @param tbl Table name
      */
-
-    DefaultDynamo(@NotNull final Credentials credentials, @NotNull final String tbl)
-    {
-        this.credentials = credentials;
+    DefaultDynamo(@NotNull final RegionFactory regionFactory,
+        @NotNull final String tbl) {
+        this.regionFactory = regionFactory;
         this.table = tbl;
     }
 
@@ -157,7 +153,7 @@ final class DefaultDynamo implements Dynamo {
     public ConcurrentMap<URN, Domains> load() {
         final ConcurrentMap<URN, Domains> domains =
                 new ConcurrentHashMap<URN, Domains>(0);
-        final Region region = createRegion();
+        final Region region = this.regionFactory.createRegion();
 
         try
         {
@@ -209,15 +205,11 @@ final class DefaultDynamo implements Dynamo {
         return domains;
     }
 
-    protected Region createRegion() {
-        return new ReRegion(new Region.Simple(credentials));
-    }
-
     @Override
     @Cacheable.FlushBefore
     public boolean add(@NotNull final URN user,
         @NotNull final Domain domain) {
-        final Region region = createRegion();
+        final Region region = this.regionFactory.createRegion();
         final Table curTable = region.table(this.table);
         boolean success = false;
 
@@ -232,7 +224,6 @@ final class DefaultDynamo implements Dynamo {
             success = true;
         } catch (final IOException e) {
             Logger.error(this, e.getMessage());
-            return success;
         }
         finally {
             shutdownAws(region);
@@ -241,18 +232,20 @@ final class DefaultDynamo implements Dynamo {
     }
 
     protected void shutdownAws(final Region aRegion) {
+        /*
         final AmazonDynamoDB aws = aRegion.aws();
 
         if (aws != null)
         {
             aws.shutdown();
         }
+        */
     }
 
     @Override
     @Cacheable.FlushBefore
     public boolean remove(@NotNull final Domain domain) {
-        final Region region = createRegion();
+        final Region region = this.regionFactory.createRegion();
         final Table curTable = region.table(this.table);
 
         final Iterator<Item> itemsToRemove = curTable.frame().where(DefaultDynamo.NAME,
