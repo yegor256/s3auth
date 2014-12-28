@@ -123,12 +123,11 @@ public interface Resource extends Closeable {
          * @param txt The text to show
          */
         public PlainText(@NotNull final String txt) {
-            if (txt != null) {
-                this.text = txt.getBytes(Charsets.UTF_8);
-            } else {
+            if (txt == null) {
                 this.text = new byte[0];
+            } else {
+                this.text = txt.getBytes(Charsets.UTF_8);
             }
-
             this.hdrs = new Array<String>(
                 String.format(
                     "%s: %s",
