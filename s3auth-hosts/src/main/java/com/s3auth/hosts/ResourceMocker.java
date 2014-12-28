@@ -33,6 +33,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import lombok.experimental.Builder;
@@ -72,6 +73,16 @@ public final class ResourceMocker {
         this.resource.content(content.toCharArray());
         return this;
     }
+
+    /**
+    * With this headers.
+    * @param headers The headers
+    * @return This object
+    */
+   public ResourceMocker withHeaders(final String... headers) {
+       this.resource.headers(Arrays.asList(headers));
+       return this;
+   }
 
     /**
      * Convert resource to string.

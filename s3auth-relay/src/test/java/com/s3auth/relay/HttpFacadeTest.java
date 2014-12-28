@@ -464,7 +464,10 @@ public final class HttpFacadeTest {
                 @Override
                 public Resource answer(final InvocationOnMock inv) {
                     final Resource answer = Mockito.spy(
-                        new ResourceMocker().withContent(body).mock()
+                        new ResourceMocker()
+                            .withContent(body)
+                            .withHeaders("gzip")
+                            .mock()
                     );
                     Mockito.doReturn("text/plain")
                         .when(answer).contentType();
