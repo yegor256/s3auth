@@ -198,9 +198,7 @@ final class DefaultResource implements Resource {
     @NotNull
     public Collection<String> headers() {
         final Collection<String> headers = new LinkedList<String>();
-
-        try
-        {
+        try {
             final ObjectMetadata meta = this.object.getObjectMetadata();
             headers.add(
                 DefaultResource.header(
@@ -255,9 +253,7 @@ final class DefaultResource implements Resource {
                     )
                 );
             }
-        }
-        catch (final AmazonClientException exception)
-        {
+        } catch (final AmazonClientException exception) {
             Logger.error(this, exception.getMessage());
         }
         return headers;

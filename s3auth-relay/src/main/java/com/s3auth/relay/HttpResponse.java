@@ -185,11 +185,9 @@ final class HttpResponse {
             writer.write(HttpResponse.EOL);
             writer.flush();
             bytes += this.body.writeTo(stream);
-        }
-        catch (final AmazonClientException exception) {
+        } catch (final AmazonClientException exception) {
             Logger.error(this, exception.getMessage());
-        }
-        finally {
+        } finally {
             writer.close();
         }
         return bytes;

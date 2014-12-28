@@ -58,6 +58,19 @@ import org.mockito.stubbing.Answer;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 public final class DefaultResourceTest {
+    /**
+     * Test bucket.
+     */
+    public static final String BUCKET = "abcdef";
+
+    /**
+     * Message for testing AmazonClientException handling.
+     */
+    public static final String TIMEOUT_MESSAGE = String.format(
+        "%s%s",
+        "Unable to execute HTTP request: ",
+        "Timeout waiting for connection from pool"
+    );
 
     /**
      * DefaultResource can build headers.
@@ -360,7 +373,7 @@ public final class DefaultResourceTest {
         Mockito.doReturn(meta).when(object).getObjectMetadata();
         Mockito.doReturn("gzip").when(meta).getContentEncoding();
         final Resource res = new DefaultResource(
-            client, "abcdef", "", Range.ENTIRE, Version.LATEST,
+            client, BUCKET, "", Range.ENTIRE, Version.LATEST,
             Mockito.mock(DomainStatsData.class)
         );
         MatcherAssert.assertThat(
@@ -372,19 +385,17 @@ public final class DefaultResourceTest {
      * Reproduces the problem in issue 202.
      */
     @Test
-    public void testAmazonClientExceptionHandlingInHeaders()
-    {
+    public void testAmazonClientExceptionHandlingInHeaders() {
         final S3Object object = Mockito.mock(S3Object.class);
-        Mockito.doThrow(new AmazonClientException(
-            "Unable to execute HTTP request:" +
-                " Timeout waiting for connection from pool")).when(object)
-            .getObjectMetadata();
+        Mockito.doThrow(
+            new AmazonClientException(TIMEOUT_MESSAGE)
+        ).when(object).getObjectMetadata();
         final AmazonS3 client = Mockito.mock(AmazonS3.class);
         Mockito.when(client.getObject(Mockito.any(GetObjectRequest.class)))
             .thenReturn(object);
         final DefaultResource res = new DefaultResource(
             client,
-            "abcdef",
+            BUCKET,
             "",
             Range.ENTIRE,
             Version.LATEST,
