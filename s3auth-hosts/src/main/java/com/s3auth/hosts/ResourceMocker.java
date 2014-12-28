@@ -75,14 +75,14 @@ public final class ResourceMocker {
     }
 
     /**
-    * With this headers.
-    * @param headers The headers
-    * @return This object
-    */
-   public ResourceMocker withHeaders(final String... headers) {
-       this.resource.headers(Arrays.asList(headers));
-       return this;
-   }
+     * With this headers.
+     * @param headers The headers
+     * @return This object
+     */
+    public ResourceMocker withHeaders(final String... headers) {
+        this.resource.headers(Arrays.asList(headers));
+        return this;
+    }
 
     /**
      * Convert resource to string.
