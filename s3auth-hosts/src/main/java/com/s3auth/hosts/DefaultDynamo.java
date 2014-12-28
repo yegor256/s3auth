@@ -215,13 +215,13 @@ final class DefaultDynamo implements Dynamo {
                     new AttributeValue(
                         user.toString()
                     )
-                )
-                .with(DefaultDynamo.NAME, new AttributeValue(domain.name()))
-                .with(DefaultDynamo.KEY, new AttributeValue(domain.key()))
-                .with(DefaultDynamo.SECRET, new AttributeValue(domain.secret()))
-                .with(DefaultDynamo.REGION, new AttributeValue(domain.region()))
-                .with(DefaultDynamo.SYSLOG, new AttributeValue(domain.syslog()))
-                .with(DefaultDynamo.BUCKET, new AttributeValue(domain.bucket()))
+            )
+            .with(DefaultDynamo.NAME, new AttributeValue(domain.name()))
+            .with(DefaultDynamo.KEY, new AttributeValue(domain.key()))
+            .with(DefaultDynamo.SECRET, new AttributeValue(domain.secret()))
+            .with(DefaultDynamo.REGION, new AttributeValue(domain.region()))
+            .with(DefaultDynamo.SYSLOG, new AttributeValue(domain.syslog()))
+            .with(DefaultDynamo.BUCKET, new AttributeValue(domain.bucket()))
             );
             success = true;
         } catch (final IOException exception) {

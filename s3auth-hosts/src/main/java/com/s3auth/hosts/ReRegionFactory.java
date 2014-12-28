@@ -34,6 +34,10 @@ import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Region;
 import com.jcabi.dynamo.retry.ReRegion;
 
+/**
+ * Region factory, which creates ReRegions.
+ * @author Dmitri Pisarenko
+ */
 public class ReRegionFactory implements RegionFactory {
     /**
      * JCabi-Dynamo access credentials.
