@@ -29,6 +29,7 @@
  */
 package com.s3auth.hosts;
 
+import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -44,6 +45,7 @@ import java.util.Random;
 import org.apache.http.client.methods.HttpGet;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -366,5 +368,30 @@ public final class DefaultResourceTest {
             Matchers.hasItem("Content-Encoding: gzip")
         );
     }
-
+    /**
+     * Reproduces the problem in issue 202.
+     */
+    @Test
+    public void testAmazonClientExceptionHandlingInHeaders()
+    {
+        final S3Object object = Mockito.mock(S3Object.class);
+        Mockito.doThrow(new AmazonClientException(
+            "Unable to execute HTTP request:" +
+                " Timeout waiting for connection from pool")).when(object)
+            .getObjectMetadata();
+        final AmazonS3 client = Mockito.mock(AmazonS3.class);
+        Mockito.when(client.getObject(Mockito.any(GetObjectRequest.class)))
+            .thenReturn(object);
+        final DefaultResource res = new DefaultResource(
+            client,
+            "abcdef",
+            "",
+            Range.ENTIRE,
+            Version.LATEST,
+            Mockito.mock(DomainStatsData.class)
+        );
+        final Collection<String> headers = res.headers();
+        Assert.assertNotNull(headers);
+        Assert.assertTrue(headers.isEmpty());
+    }
 }

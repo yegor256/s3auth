@@ -29,11 +29,13 @@
  */
 package com.s3auth.hosts;
 
+import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.jcabi.aspects.Loggable;
+import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -195,60 +197,68 @@ final class DefaultResource implements Resource {
     @Override
     @NotNull
     public Collection<String> headers() {
-        final ObjectMetadata meta = this.object.getObjectMetadata();
         final Collection<String> headers = new LinkedList<String>();
-        headers.add(
-            DefaultResource.header(
-                HttpHeaders.CONTENT_LENGTH,
-                Long.toString(meta.getContentLength())
-            )
-        );
-        if (meta.getContentType() != null) {
+
+        try
+        {
+            final ObjectMetadata meta = this.object.getObjectMetadata();
             headers.add(
                 DefaultResource.header(
-                    HttpHeaders.CONTENT_TYPE,
-                    meta.getContentType()
+                    HttpHeaders.CONTENT_LENGTH,
+                    Long.toString(meta.getContentLength())
                 )
             );
-        }
-        if (meta.getContentEncoding() != null) {
+            if (meta.getContentType() != null) {
+                headers.add(
+                    DefaultResource.header(
+                        HttpHeaders.CONTENT_TYPE,
+                        meta.getContentType()
+                    )
+                );
+            }
+            if (meta.getContentEncoding() != null) {
+                headers.add(
+                    DefaultResource.header(
+                        HttpHeaders.CONTENT_ENCODING,
+                        meta.getContentEncoding()
+                    )
+                );
+            }
+            if (meta.getETag() != null) {
+                headers.add(
+                    DefaultResource.header(
+                        HttpHeaders.ETAG,
+                        meta.getETag()
+                    )
+                );
+            }
             headers.add(
                 DefaultResource.header(
-                    HttpHeaders.CONTENT_ENCODING,
-                    meta.getContentEncoding()
-                )
-            );
-        }
-        if (meta.getETag() != null) {
-            headers.add(
-                DefaultResource.header(
-                    HttpHeaders.ETAG,
-                    meta.getETag()
-                )
-            );
-        }
-        headers.add(
-            DefaultResource.header(
-                HttpHeaders.CACHE_CONTROL,
-                StringUtils.defaultString(
-                    meta.getCacheControl(),
-                    "must-revalidate"
-                )
-            )
-        );
-        headers.add(DefaultResource.header("Accept-Ranges", "bytes"));
-        if (!this.range.equals(Range.ENTIRE)) {
-            headers.add(
-                DefaultResource.header(
-                    "Content-Range",
-                    String.format(
-                        "bytes %d-%d/%d",
-                        this.range.first(),
-                        this.range.last(),
-                        this.size()
+                    HttpHeaders.CACHE_CONTROL,
+                    StringUtils.defaultString(
+                        meta.getCacheControl(),
+                        "must-revalidate"
                     )
                 )
             );
+            headers.add(DefaultResource.header("Accept-Ranges", "bytes"));
+            if (!this.range.equals(Range.ENTIRE)) {
+                headers.add(
+                    DefaultResource.header(
+                        "Content-Range",
+                        String.format(
+                            "bytes %d-%d/%d",
+                            this.range.first(),
+                            this.range.last(),
+                            this.size()
+                        )
+                    )
+                );
+            }
+        }
+        catch (final AmazonClientException exception)
+        {
+            Logger.error(this, exception.getMessage());
         }
         return headers;
     }
