@@ -70,14 +70,13 @@ public final class DefaultDynamoTest {
     @Test
     public void loadsDynamoConfiguration() throws Exception {
         final H2Data data = new H2Data().with(TABLE, new String[] {
-            transformToH2(DefaultDynamo.USER) },
-            new String[]{transformToH2(DefaultDynamo.NAME),
-                transformToH2(DefaultDynamo.KEY),
-                transformToH2(DefaultDynamo.SECRET),
-                transformToH2(DefaultDynamo.REGION),
-                transformToH2(DefaultDynamo.BUCKET),
-                transformToH2(DefaultDynamo.SYSLOG)
-            });
+            DefaultDynamo.USER },
+            new String[]{DefaultDynamo.NAME,
+                DefaultDynamo.KEY,
+                DefaultDynamo.SECRET,
+                DefaultDynamo.REGION,
+                DefaultDynamo.BUCKET,
+                DefaultDynamo.SYSLOG });
         for (int num = 0; num < Tv.TWENTY; ++num) {
             data.put(TABLE, new Attributes(item()));
         }
@@ -144,11 +143,11 @@ public final class DefaultDynamoTest {
         final ConcurrentMap<String, AttributeValue> item =
             new ConcurrentHashMap<String, AttributeValue>(0);
         item.put(
-            transformToH2(DefaultDynamo.USER),
+            DefaultDynamo.USER,
             new AttributeValue(new URNMocker().mock().toString())
         );
         item.put(
-            transformToH2(DefaultDynamo.NAME),
+            DefaultDynamo.NAME,
             new AttributeValue(
                 String.format(
                     "google-%d.com",
@@ -156,21 +155,16 @@ public final class DefaultDynamoTest {
                 )
             )
         );
-        item.put(transformToH2(DefaultDynamo.KEY),
+        item.put(DefaultDynamo.KEY,
             new AttributeValue("aaaaaaaaaaaaaaaa"));
         item.put(
-            transformToH2(DefaultDynamo.SECRET),
+            DefaultDynamo.SECRET,
             new AttributeValue("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
         );
-        item.put(transformToH2(DefaultDynamo.REGION), new AttributeValue("s3"));
-        item.put(transformToH2(DefaultDynamo.BUCKET), new AttributeValue(""));
-        item.put(transformToH2(DefaultDynamo.SYSLOG), new AttributeValue(""));
+        item.put(DefaultDynamo.REGION, new AttributeValue("s3"));
+        item.put(DefaultDynamo.BUCKET, new AttributeValue(""));
+        item.put(DefaultDynamo.SYSLOG, new AttributeValue(""));
         return item;
-    }
-
-    private String transformToH2(final String originalString) {
-        return originalString;
-        // return String.format("\"%s\"", originalString);
     }
 
     public static final String TABLE = "table";
