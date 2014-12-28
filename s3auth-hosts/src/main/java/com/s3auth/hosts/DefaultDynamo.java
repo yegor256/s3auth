@@ -66,7 +66,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = {"table"})
+@EqualsAndHashCode(of = {"table" })
 @Loggable(Loggable.INFO)
 final class DefaultDynamo implements Dynamo {
 
@@ -113,20 +113,26 @@ final class DefaultDynamo implements Dynamo {
     /**
      * Region factory.
      */
-    private final RegionFactory regionFactory;
+    private final RegionFactory regionfactory;
+
+    /**
+     * Name of the entry point setting.
+     */
+    public static final String S3_AUTH_AWS_DYNAMO_ENTRY_POINT =
+        "S3Auth-AwsDynamoEntryPoint";
 
     /**
      * Public ctor.
      */
     DefaultDynamo() {
-        regionFactory = new ReRegionFactory(new Credentials.Simple(
-            Manifests.read
-                ("S3Auth-AwsDynamoKey"), Manifests.read("S3Auth-AwsDynamoSecret")));
-
-        final AmazonDynamoDB amazonDynamoDB = regionFactory.aws();
-        if (Manifests.exists("S3Auth-AwsDynamoEntryPoint")) {
-            amazonDynamoDB.setEndpoint(
-                Manifests.read("S3Auth-AwsDynamoEntryPoint")
+        this.regionfactory = new ReRegionFactory(
+            new Credentials.Simple(Manifests.read("S3Auth-AwsDynamoKey"),
+                Manifests.read("S3Auth-AwsDynamoSecret"))
+        );
+        final AmazonDynamoDB aws = this.regionfactory.aws();
+        if (Manifests.exists(S3_AUTH_AWS_DYNAMO_ENTRY_POINT)) {
+            aws.setEndpoint(
+                Manifests.read(S3_AUTH_AWS_DYNAMO_ENTRY_POINT)
             );
         }
         this.table = Manifests.read("S3Auth-AwsDynamoTable");
@@ -134,12 +140,12 @@ final class DefaultDynamo implements Dynamo {
 
     /**
      * Ctor for unit tests.
-     * @param regionFactory Region factory
+     * @param regionfactory Region factory
      * @param tbl Table name
      */
-    DefaultDynamo(@NotNull final RegionFactory regionFactory,
+    DefaultDynamo(@NotNull final RegionFactory regionfactory,
         @NotNull final String tbl) {
-        this.regionFactory = regionFactory;
+        this.regionfactory = regionfactory;
         this.table = tbl;
     }
 
@@ -155,10 +161,10 @@ final class DefaultDynamo implements Dynamo {
     public ConcurrentMap<URN, Domains> load() {
         final ConcurrentMap<URN, Domains> domains =
             new ConcurrentHashMap<URN, Domains>(0);
-        final Region region = this.regionFactory.createRegion();
-
+        final Region region = this.regionfactory.createRegion();
         try {
-            final Iterator<Item> items = region.table(this.table).frame().iterator();
+            final Iterator<Item> items = region.table(this.table).frame().
+                iterator();
             while (items.hasNext()) {
                 final Item item = items.next();
                 final String syslog;
@@ -173,7 +179,8 @@ final class DefaultDynamo implements Dynamo {
                 } else {
                     bucket = item.get(DefaultDynamo.NAME).getS();
                 }
-                final URN user = URN.create(item.get(DefaultDynamo.USER).getS());
+                final URN user =
+                    URN.create(item.get(DefaultDynamo.USER).getS());
                 domains.putIfAbsent(user, new Domains());
                 domains.get(user).add(
                     new DefaultDomain(
@@ -186,8 +193,8 @@ final class DefaultDynamo implements Dynamo {
                     )
                 );
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (final IOException exception) {
+            exception.printStackTrace();
         }
         return domains;
     }
@@ -196,17 +203,19 @@ final class DefaultDynamo implements Dynamo {
     @Cacheable.FlushBefore
     public boolean add(@NotNull final URN user,
         @NotNull final Domain domain) {
-        final Region region = this.regionFactory.createRegion();
+        final Region region = this.regionfactory.createRegion();
         final Table curTable = region.table(this.table);
         boolean success = false;
         try {
-            curTable.put(new Attributes().with(DefaultDynamo.USER, new AttributeValue(user.toString())).
+            curTable.put(new Attributes().with(DefaultDynamo.USER,
+                new AttributeValue(user.toString())).
                 with(DefaultDynamo.NAME, new AttributeValue(domain.name())).
                 with(DefaultDynamo.KEY, new AttributeValue(domain.key())).
                 with(DefaultDynamo.SECRET, new AttributeValue(domain.secret())).
                 with(DefaultDynamo.REGION, new AttributeValue(domain.region())).
                 with(DefaultDynamo.SYSLOG, new AttributeValue(domain.syslog())).
-                with(DefaultDynamo.BUCKET, new AttributeValue(domain.bucket())));
+                with(DefaultDynamo.BUCKET, new AttributeValue(domain.bucket()))
+            );
             success = true;
         } catch (final IOException e) {
             Logger.error(this, e.getMessage());
@@ -217,16 +226,17 @@ final class DefaultDynamo implements Dynamo {
     @Override
     @Cacheable.FlushBefore
     public boolean remove(@NotNull final Domain domain) {
-        final Region region = this.regionFactory.createRegion();
+        final Region region = this.regionfactory.createRegion();
         final Table curTable = region.table(this.table);
-
-        final Iterator<Item> itemsToRemove = curTable.frame().where(DefaultDynamo.NAME,
-            new Condition().withComparisonOperator(ComparisonOperator.EQ)).iterator();
-
+        final Iterator<Item> itemsToRemove = curTable.frame().where(
+            DefaultDynamo.NAME, new Condition().
+            withComparisonOperator(ComparisonOperator.EQ)).iterator();
         while (itemsToRemove.hasNext()) {
             itemsToRemove.next();
             itemsToRemove.remove();
         }
         return true;
     }
+
+
 }
