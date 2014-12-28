@@ -68,7 +68,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "client", "table" })
+@EqualsAndHashCode(of = { "table" })
 @Loggable(Loggable.INFO)
 final class DefaultDynamo implements Dynamo {
 
