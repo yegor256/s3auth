@@ -36,6 +36,7 @@ import com.amazonaws.services.dynamodbv2.model.PutItemResult;
 import com.amazonaws.services.dynamodbv2.model.ScanRequest;
 import com.amazonaws.services.dynamodbv2.model.ScanResult;
 import com.jcabi.aspects.Tv;
+import com.jcabi.dynamo.Credentials;
 import com.jcabi.urn.URN;
 import com.jcabi.urn.URNMocker;
 import java.util.LinkedList;
@@ -65,16 +66,8 @@ public final class DefaultDynamoTest {
      */
     @Test
     public void loadsDynamoConfiguration() throws Exception {
-        final AmazonDynamoDB amazon = this.amazon();
-        final Dynamo dynamo = new DefaultDynamo(
-            new Dynamo.Client() {
-                @Override
-                public AmazonDynamoDB get() {
-                    return amazon;
-                }
-            },
-            "table"
-        );
+        final Dynamo dynamo = new DefaultDynamo(new
+            Credentials.Simple("key", "secret"), "table");
         final int size = dynamo.load().size();
         MatcherAssert.assertThat(
             dynamo.load().size(),
