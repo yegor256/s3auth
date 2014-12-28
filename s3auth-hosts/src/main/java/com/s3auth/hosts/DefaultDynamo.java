@@ -111,6 +111,9 @@ final class DefaultDynamo implements Dynamo {
      */
     private final transient String table;
 
+    /**
+     * Region factory.
+     */
     private final RegionFactory regionFactory;
 
     /**
@@ -168,12 +171,9 @@ final class DefaultDynamo implements Dynamo {
                 if (item.has(DefaultDynamo.SYSLOG))
                 {
                     syslog = item.get(DefaultDynamo.SYSLOG).getS();
-                }
-                else
-                {
+                } else {
                     syslog = "syslog.s3auth.com:514";
                 }
-
                 final String bucket;
                 if (item.has(DefaultDynamo.BUCKET)) {
                     bucket = item.get(DefaultDynamo.BUCKET).getS();
