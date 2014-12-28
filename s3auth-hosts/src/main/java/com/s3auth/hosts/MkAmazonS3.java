@@ -389,14 +389,7 @@ public class MkAmazonS3 implements AmazonS3 {
     @Override
     public S3Object getObject(GetObjectRequest arg0)
         throws AmazonClientException, AmazonServiceException {
-        return new S3Object() {
-            @Override
-            public S3ObjectInputStream getObjectContent() {
-                return new S3ObjectInputStream(
-                    IOUtils.toInputStream("TXT"),
-                    new HttpGet());
-            }
-        };
+        return new MkS3Object();
     }
 
     @Override
@@ -687,6 +680,16 @@ public class MkAmazonS3 implements AmazonS3 {
     public UploadPartResult uploadPart(UploadPartRequest arg0)
         throws AmazonClientException, AmazonServiceException {
         return null;
+    }
+
+    public static class MkS3Object extends S3Object {
+        @Override
+        public S3ObjectInputStream getObjectContent() {
+            return new S3ObjectInputStream(
+                IOUtils.toInputStream("TXT"),
+                new HttpGet()
+            );
+        }
     }
 
 }

@@ -47,6 +47,10 @@ public final class UserMocker {
      * The mock.
      */
     private final transient MkUser.MkUserBuilder user = MkUser.builder();
+    /**
+     * Random generator.
+     */
+    private final transient Random rand = new Random();
 
     /**
      * Public ctor.
@@ -55,7 +59,7 @@ public final class UserMocker {
         this.withIdentity(
             new URN(
                 "facebook",
-                Long.toString(Math.abs(new Random().nextLong()))
+                Integer.toString(Math.abs(this.rand.nextInt(Integer.MAX_VALUE)))
             )
         );
         this.user.name("John Doe");
