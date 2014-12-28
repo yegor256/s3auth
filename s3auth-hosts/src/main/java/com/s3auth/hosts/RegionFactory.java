@@ -35,7 +35,8 @@ import com.jcabi.dynamo.Region;
 
 /**
  * This interface represents objecs, which create JCabi-Dynamo regions.
- * @author Dmitri Pisarenko
+ * @author Dmitri Pisarenko (dp@altruix.co)
+ * @version $Id$
  */
 @Immutable
 public interface RegionFactory {

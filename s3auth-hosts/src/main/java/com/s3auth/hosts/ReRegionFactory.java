@@ -36,7 +36,8 @@ import com.jcabi.dynamo.retry.ReRegion;
 
 /**
  * Region factory, which creates ReRegions.
- * @author Dmitri Pisarenko
+ * @author Dmitri Pisarenko (dp@altruix.co)
+ * @version $Id$
  */
 public class ReRegionFactory implements RegionFactory {
     /**
@@ -45,15 +46,20 @@ public class ReRegionFactory implements RegionFactory {
     private final Credentials credentials;
 
     @Override
-    public Region createRegion() {
-        return new ReRegion(new Region.Simple(credentials));
+    public final Region createRegion() {
+        return new ReRegion(new Region.Simple(this.credentials));
     }
 
     @Override
-    public AmazonDynamoDB aws() {
-        return credentials.aws();
+    public final AmazonDynamoDB aws() {
+        return this.credentials.aws();
     }
 
+    /**
+     * Creates an instance of ReRegion factory with the provided AWS DynamoDB
+     * credentials.
+     * @param credentials AWS DynamoDB credentials
+     */
     public ReRegionFactory(final Credentials credentials) {
         this.credentials = credentials;
     }
