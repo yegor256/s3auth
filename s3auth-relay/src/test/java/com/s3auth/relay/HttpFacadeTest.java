@@ -463,8 +463,9 @@ public final class HttpFacadeTest {
             new Answer<Resource>() {
                 @Override
                 public Resource answer(final InvocationOnMock inv) {
-                    final Resource answer = new ResourceMocker()
-                        .withContent(body).mock();
+                    final Resource answer = Mockito.spy(
+                        new ResourceMocker().withContent(body).mock()
+                    );
                     Mockito.doReturn("text/plain")
                         .when(answer).contentType();
                     return answer;
