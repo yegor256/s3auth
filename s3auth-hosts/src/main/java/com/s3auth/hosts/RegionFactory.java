@@ -7,5 +7,6 @@ import com.jcabi.dynamo.Region;
 @Immutable
 public interface RegionFactory {
     Region createRegion();
+
     AmazonDynamoDB aws();
 }

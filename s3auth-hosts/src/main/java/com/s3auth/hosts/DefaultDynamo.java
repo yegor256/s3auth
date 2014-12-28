@@ -159,12 +159,9 @@ final class DefaultDynamo implements Dynamo {
 
         try {
             final Iterator<Item> items = region.table(this.table).frame().iterator();
-
             while (items.hasNext()) {
                 final Item item = items.next();
-
                 final String syslog;
-
                 if (item.has(DefaultDynamo.SYSLOG)) {
                     syslog = item.get(DefaultDynamo.SYSLOG).getS();
                 } else {
@@ -176,7 +173,6 @@ final class DefaultDynamo implements Dynamo {
                 } else {
                     bucket = item.get(DefaultDynamo.NAME).getS();
                 }
-
                 final URN user = URN.create(item.get(DefaultDynamo.USER).getS());
                 domains.putIfAbsent(user, new Domains());
                 domains.get(user).add(
@@ -189,14 +185,10 @@ final class DefaultDynamo implements Dynamo {
                         syslog
                     )
                 );
-
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            shutdownAws(region);
         }
-
         return domains;
     }
 
@@ -207,7 +199,6 @@ final class DefaultDynamo implements Dynamo {
         final Region region = this.regionFactory.createRegion();
         final Table curTable = region.table(this.table);
         boolean success = false;
-
         try {
             curTable.put(new Attributes().with(DefaultDynamo.USER, new AttributeValue(user.toString())).
                 with(DefaultDynamo.NAME, new AttributeValue(domain.name())).
@@ -219,21 +210,8 @@ final class DefaultDynamo implements Dynamo {
             success = true;
         } catch (final IOException e) {
             Logger.error(this, e.getMessage());
-        } finally {
-            shutdownAws(region);
         }
         return success;
-    }
-
-    protected void shutdownAws(final Region aRegion) {
-        /*
-        final AmazonDynamoDB aws = aRegion.aws();
-
-        if (aws != null)
-        {
-            aws.shutdown();
-        }
-        */
     }
 
     @Override
@@ -249,9 +227,6 @@ final class DefaultDynamo implements Dynamo {
             itemsToRemove.next();
             itemsToRemove.remove();
         }
-
-        shutdownAws(region);
-
         return true;
     }
 }
