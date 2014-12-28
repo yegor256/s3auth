@@ -165,8 +165,8 @@ final class DefaultDynamo implements Dynamo {
             new ConcurrentHashMap<URN, Domains>(0);
         final Region region = this.regionfactory.createRegion();
         try {
-            final Iterator<Item> items = region.table(this.table).frame().
-                iterator();
+            final Iterator<Item> items = region.table(this.table).frame()
+                .iterator();
             while (items.hasNext()) {
                 final Item item = items.next();
                 final String syslog;
@@ -212,8 +212,10 @@ final class DefaultDynamo implements Dynamo {
             curTable.put(new Attributes()
                 .with(
                     DefaultDynamo.USER,
-                    new AttributeValue(user.toString()
-                    ))
+                    new AttributeValue(
+                        user.toString()
+                    )
+                )
                 .with(DefaultDynamo.NAME, new AttributeValue(domain.name()))
                 .with(DefaultDynamo.KEY, new AttributeValue(domain.key()))
                 .with(DefaultDynamo.SECRET, new AttributeValue(domain.secret()))
@@ -234,9 +236,9 @@ final class DefaultDynamo implements Dynamo {
         final Region region = this.regionfactory.createRegion();
         final Table curTable = region.table(this.table);
         final Iterator<Item> itemsToRemove = curTable.frame().where(
-            DefaultDynamo.NME, 
-            new Condition().withComparisonOperator(ComparisonOperator.EQ)).
-            iterator();
+            DefaultDynamo.NAME,
+            new Condition().withComparisonOperator(ComparisonOperator.EQ))
+            .iterator();
         while (itemsToRemove.hasNext()) {
             itemsToRemove.next();
             itemsToRemove.remove();
