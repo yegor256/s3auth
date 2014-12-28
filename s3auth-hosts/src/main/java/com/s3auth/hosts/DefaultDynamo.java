@@ -106,6 +106,12 @@ final class DefaultDynamo implements Dynamo {
     public static final String SYSLOG = "domain_syslog";
 
     /**
+     * Name of the entry point setting.
+     */
+    public static final String S3_AUTH_AWS_DYNAMO_ENTRY_POINT =
+        "S3Auth-AwsDynamoEntryPoint";
+
+    /**
      * Table name.
      */
     private final transient String table;
@@ -116,18 +122,14 @@ final class DefaultDynamo implements Dynamo {
     private final RegionFactory regionfactory;
 
     /**
-     * Name of the entry point setting.
-     */
-    public static final String S3_AUTH_AWS_DYNAMO_ENTRY_POINT =
-        "S3Auth-AwsDynamoEntryPoint";
-
-    /**
      * Public ctor.
      */
     DefaultDynamo() {
         this.regionfactory = new ReRegionFactory(
-            new Credentials.Simple(Manifests.read("S3Auth-AwsDynamoKey"),
-                Manifests.read("S3Auth-AwsDynamoSecret"))
+            new Credentials.Simple(
+                Manifests.read("S3Auth-AwsDynamoKey"),
+                Manifests.read("S3Auth-AwsDynamoSecret")
+            )
         );
         final AmazonDynamoDB aws = this.regionfactory.aws();
         if (Manifests.exists(S3_AUTH_AWS_DYNAMO_ENTRY_POINT)) {
@@ -140,12 +142,12 @@ final class DefaultDynamo implements Dynamo {
 
     /**
      * Ctor for unit tests.
-     * @param regionfactory Region factory
+     * @param regfactory Region factory
      * @param tbl Table name
      */
-    DefaultDynamo(@NotNull final RegionFactory regionfactory,
+    DefaultDynamo(@NotNull final RegionFactory regfactory,
         @NotNull final String tbl) {
-        this.regionfactory = regionfactory;
+        this.regionfactory = regfactory;
         this.table = tbl;
     }
 
@@ -207,18 +209,21 @@ final class DefaultDynamo implements Dynamo {
         final Table curTable = region.table(this.table);
         boolean success = false;
         try {
-            curTable.put(new Attributes().with(DefaultDynamo.USER,
-                new AttributeValue(user.toString())).
-                with(DefaultDynamo.NAME, new AttributeValue(domain.name())).
-                with(DefaultDynamo.KEY, new AttributeValue(domain.key())).
-                with(DefaultDynamo.SECRET, new AttributeValue(domain.secret())).
-                with(DefaultDynamo.REGION, new AttributeValue(domain.region())).
-                with(DefaultDynamo.SYSLOG, new AttributeValue(domain.syslog())).
-                with(DefaultDynamo.BUCKET, new AttributeValue(domain.bucket()))
+            curTable.put(new Attributes()
+                .with(
+                    DefaultDynamo.USER,
+                    new AttributeValue(user.toString()
+                    ))
+                .with(DefaultDynamo.NAME, new AttributeValue(domain.name()))
+                .with(DefaultDynamo.KEY, new AttributeValue(domain.key()))
+                .with(DefaultDynamo.SECRET, new AttributeValue(domain.secret()))
+                .with(DefaultDynamo.REGION, new AttributeValue(domain.region()))
+                .with(DefaultDynamo.SYSLOG, new AttributeValue(domain.syslog()))
+                .with(DefaultDynamo.BUCKET, new AttributeValue(domain.bucket()))
             );
             success = true;
-        } catch (final IOException e) {
-            Logger.error(this, e.getMessage());
+        } catch (final IOException exception) {
+            Logger.error(this, exception.getMessage());
         }
         return success;
     }
@@ -229,14 +234,13 @@ final class DefaultDynamo implements Dynamo {
         final Region region = this.regionfactory.createRegion();
         final Table curTable = region.table(this.table);
         final Iterator<Item> itemsToRemove = curTable.frame().where(
-            DefaultDynamo.NAME, new Condition().
-            withComparisonOperator(ComparisonOperator.EQ)).iterator();
+            DefaultDynamo.NME, 
+            new Condition().withComparisonOperator(ComparisonOperator.EQ)).
+            iterator();
         while (itemsToRemove.hasNext()) {
             itemsToRemove.next();
             itemsToRemove.remove();
         }
         return true;
     }
-
-
 }
