@@ -45,6 +45,15 @@ public class ReRegionFactory implements RegionFactory {
      */
     private final Credentials credentials;
 
+    /**
+     * Creates an instance of ReRegion factory with the provided AWS DynamoDB
+     * credentials.
+     * @param accessdata AWS DynamoDB credentials
+     */
+    public ReRegionFactory(final Credentials accessdata) {
+        this.credentials = accessdata;
+    }
+
     @Override
     public final Region createRegion() {
         return new ReRegion(new Region.Simple(this.credentials));
@@ -53,14 +62,5 @@ public class ReRegionFactory implements RegionFactory {
     @Override
     public final AmazonDynamoDB aws() {
         return this.credentials.aws();
-    }
-
-    /**
-     * Creates an instance of ReRegion factory with the provided AWS DynamoDB
-     * credentials.
-     * @param credentials AWS DynamoDB credentials
-     */
-    public ReRegionFactory(final Credentials credentials) {
-        this.credentials = credentials;
     }
 }

@@ -73,16 +73,29 @@ public final class DefaultDynamoTest {
      */
     @Test
     public void loadsDynamoConfiguration() throws Exception {
-        final H2Data data = new H2Data().with(TABLE, new String[]{
-            DefaultDynamo.USER},
-            new String[]{DefaultDynamo.NAME,
+        final H2Data data = new H2Data().with(
+            TABLE,
+            new String[]
+            {
+                DefaultDynamo.USER,
+            },
+            new String[]
+            {
+                DefaultDynamo.NAME,
                 DefaultDynamo.KEY,
                 DefaultDynamo.SECRET,
                 DefaultDynamo.REGION,
                 DefaultDynamo.BUCKET,
-                DefaultDynamo.SYSLOG});
+                DefaultDynamo.SYSLOG,
+        }
+        );
         for (int num = 0; num < Tv.TWENTY; ++num) {
-            data.put(TABLE, new Attributes(item()));
+            data.put(
+                TABLE,
+                new Attributes(
+                    item()
+                )
+            );
         }
         final Region region = new MkRegion(data);
         final RegionFactory regionFactory = Mockito.mock(RegionFactory.class);
