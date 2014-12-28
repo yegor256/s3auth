@@ -403,7 +403,7 @@ public final class HttpFacadeTest {
             facade.close();
         }
     }
-    
+
     /**
      * HttpFacade can request the list of versions of an object.
      * @throws Exception If there is some problem inside
@@ -549,7 +549,7 @@ public final class HttpFacadeTest {
             new JdkRequest(String.format("https://localhost:%d/", port))
                 .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
                 .header(
-                    HttpHeaders.AUTHORIZATION, 
+                    HttpHeaders.AUTHORIZATION,
                     String.format(
                         "Basic %s",
                         Base64.encodeBase64String("a:b".getBytes())
