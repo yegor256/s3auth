@@ -66,7 +66,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = {"table" })
+@EqualsAndHashCode(of = {"table"})
 @Loggable(Loggable.INFO)
 final class DefaultDynamo implements Dynamo {
 
@@ -215,36 +215,36 @@ final class DefaultDynamo implements Dynamo {
                     new AttributeValue(
                         user.toString()
                     )
-            )
-            .with(
-                DefaultDynamo.NAME,                new AttributeValue(domain.name()
                 )
-            )
-            .with(
-                DefaultDynamo.KEY,
-                new AttributeValue(domain.key()
+                .with(
+                    DefaultDynamo.NAME, new AttributeValue(domain.name()
                 )
-            )
-            .with(
-                DefaultDynamo.SECRET,
-                new AttributeValue(domain.secret()
                 )
-            )
-            .with(
-                DefaultDynamo.REGION,
-                new AttributeValue(domain.region()
+                .with(
+                    DefaultDynamo.KEY,
+                    new AttributeValue(domain.key()
+                    )
                 )
-            )
-            .with(
-                DefaultDynamo.SYSLOG,
-                new AttributeValue(domain.syslog()
+                .with(
+                    DefaultDynamo.SECRET,
+                    new AttributeValue(domain.secret()
+                    )
                 )
-            )
-            .with(
-                DefaultDynamo.BUCKET,
-                new AttributeValue(domain.bucket()
+                .with(
+                    DefaultDynamo.REGION,
+                    new AttributeValue(domain.region()
+                    )
                 )
-            ));
+                .with(
+                    DefaultDynamo.SYSLOG,
+                    new AttributeValue(domain.syslog()
+                    )
+                )
+                .with(
+                    DefaultDynamo.BUCKET,
+                    new AttributeValue(domain.bucket()
+                    )
+                ));
             success = true;
         } catch (final IOException exception) {
             Logger.error(this, exception.getMessage());
