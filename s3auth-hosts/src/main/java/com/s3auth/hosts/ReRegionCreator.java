@@ -43,7 +43,7 @@ public class ReRegionCreator implements RegionCreator {
     /**
      * JCabi-Dynamo access credentials.
      */
-    private final Credentials credentials;
+    private final transient Credentials credentials;
 
     /**
      * Creates an instance of ReRegion factory with the provided AWS DynamoDB

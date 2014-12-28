@@ -108,7 +108,7 @@ final class DefaultDynamo implements Dynamo {
     /**
      * Name of the entry point setting.
      */
-    public static final String S3_AUTH_AWS_DYNAMO_ENTRY_POINT =
+    public static final String ENTRY_POINT =
         "S3Auth-AwsDynamoEntryPoint";
 
     /**
@@ -119,7 +119,7 @@ final class DefaultDynamo implements Dynamo {
     /**
      * Region factory.
      */
-    private final RegionCreator regionfactory;
+    private final transient RegionCreator regionfactory;
 
     /**
      * Public ctor.
@@ -132,9 +132,9 @@ final class DefaultDynamo implements Dynamo {
             )
         );
         final AmazonDynamoDB aws = this.regionfactory.aws();
-        if (Manifests.exists(S3_AUTH_AWS_DYNAMO_ENTRY_POINT)) {
+        if (Manifests.exists(ENTRY_POINT)) {
             aws.setEndpoint(
-                Manifests.read(S3_AUTH_AWS_DYNAMO_ENTRY_POINT)
+                Manifests.read(ENTRY_POINT)
             );
         }
         this.table = Manifests.read("S3Auth-AwsDynamoTable");
@@ -196,7 +196,7 @@ final class DefaultDynamo implements Dynamo {
                 );
             }
         } catch (final IOException exception) {
-            exception.printStackTrace();
+            Logger.error(this, exception.getMessage());
         }
         return domains;
     }

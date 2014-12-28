@@ -29,12 +29,7 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
-import com.amazonaws.services.dynamodbv2.model.PutItemResult;
-import com.amazonaws.services.dynamodbv2.model.ScanRequest;
-import com.amazonaws.services.dynamodbv2.model.ScanResult;
 import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Attributes;
 import com.jcabi.dynamo.Region;
@@ -42,8 +37,6 @@ import com.jcabi.dynamo.mock.H2Data;
 import com.jcabi.dynamo.mock.MkRegion;
 import com.jcabi.urn.URN;
 import com.jcabi.urn.URNMocker;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -52,8 +45,6 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 /**
  * Test case for {@link DefaultDynamo}.
@@ -72,6 +63,7 @@ public final class DefaultDynamoTest {
      * @throws Exception If there is some problem inside
      */
     @Test
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void loadsDynamoConfiguration() throws Exception {
         final H2Data data = new H2Data().with(
             TABLE,
@@ -114,41 +106,6 @@ public final class DefaultDynamoTest {
             Matchers.is(size + 1)
         );
         dynamo.close();
-    }
-
-    /**
-     * Create and return an amazon client with 20 random items.
-     * @return The client
-     */
-    private AmazonDynamoDB amazon() {
-        final List<Map<String, AttributeValue>> items =
-            new LinkedList<Map<String, AttributeValue>>();
-        for (int num = 0; num < Tv.TWENTY; ++num) {
-            items.add(this.item());
-        }
-        final AmazonDynamoDB aws =
-            Mockito.mock(AmazonDynamoDB.class);
-        Mockito.doAnswer(
-            new Answer<ScanResult>() {
-                @Override
-                public ScanResult answer(final InvocationOnMock invocation) {
-                    return new ScanResult().withItems(items);
-                }
-            }
-        ).when(aws).scan(Mockito.any(ScanRequest.class));
-        Mockito.doAnswer(
-            new Answer<PutItemResult>() {
-                @Override
-                public PutItemResult answer(final InvocationOnMock invocation) {
-                    items.add(
-                        ((PutItemRequest) invocation.getArguments()[0])
-                            .getItem()
-                    );
-                    return Mockito.mock(PutItemResult.class);
-                }
-            }
-        ).when(aws).putItem(Mockito.any(PutItemRequest.class));
-        return aws;
     }
 
     /**
