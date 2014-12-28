@@ -41,7 +41,6 @@ import com.s3auth.hosts.Range;
 import com.s3auth.hosts.Resource;
 import com.s3auth.hosts.ResourceMocker;
 import com.s3auth.hosts.Version;
-
 import java.io.ByteArrayInputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -49,11 +48,9 @@ import java.net.URI;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
-
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
@@ -526,11 +523,14 @@ public final class HttpFacadeTest {
      */
     @Test
     public void getsContentOverSSL() throws Exception {
-    	Assert.assertNotNull(System.getProperty("javax.net.ssl.keyStore"));
-    	Assert.assertNotNull(System.getProperty("javax.net.ssl.keyStorePassword"));
-    	Assert.assertNotNull(System.getProperty("javax.net.ssl.trustStore"));
-    	Assert.assertNotNull(System.getProperty("javax.net.ssl.trustStorePassword"));
-    			
+        Assert.assertNotNull(System.getProperty("javax.net.ssl.keyStore"));
+        Assert.assertNotNull(System
+                .getProperty("javax.net.ssl.keyStorePassword")
+        );
+        Assert.assertNotNull(System.getProperty("javax.net.ssl.trustStore"));
+        Assert.assertNotNull(System
+                .getProperty("javax.net.ssl.trustStorePassword")
+        );
         final Host host = Mockito.mock(Host.class);
         final String body = "secured";
         final Resource answer = new ResourceMocker().withContent(body).mock();
