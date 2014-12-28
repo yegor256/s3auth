@@ -27,8 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
- package com.s3auth.hosts;
+package com.s3auth.hosts;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.jcabi.dynamo.Credentials;
