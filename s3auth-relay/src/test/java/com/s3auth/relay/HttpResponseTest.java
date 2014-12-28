@@ -169,5 +169,24 @@ public final class HttpResponseTest {
             )
         );
     }
+    /**
+     * This test verifies that no NullPointerException is thrown in withBody (issue #198).
+     */
+    @Test
+    public void testNpeInWithBody1()
+    {
+        final HttpResponse objectUnderTest = new HttpResponse();
+        objectUnderTest.withBody((Resource) null);
+    }
+
+    /**
+     * This test verifies that no NullPointerException is thrown in withBody (issue #198).
+     */
+    @Test
+    public void testNpeInWithBody2()
+    {
+        final HttpResponse objectUnderTest = new HttpResponse();
+        objectUnderTest.withBody((String) null);
+    }
 
 }
