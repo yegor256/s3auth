@@ -182,7 +182,7 @@
                     <artifactId>maven-jar-plugin</artifactId>
                     <configuration>
                         <archive>
-                            <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+                            <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
                             <manifestEntries>
                                 <Main-Class>com.s3auth.relay.Main</Main-Class>
                             </manifestEntries>
