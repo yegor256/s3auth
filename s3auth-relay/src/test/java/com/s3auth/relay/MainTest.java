@@ -64,11 +64,14 @@ public final class MainTest {
                     @Override
                     public Void call() throws Exception {
                         try {
-                            Main.main(new String[] { String.format("-p%d", port), String.format("-s%d", ssl) });
+                            Main.main(new String[] {
+                                String.format("-p%d", port),
+                                String.format("-s%d", ssl) });
                         } catch (final InterruptedException ex) {
-                            done.countDown();
                             Thread.currentThread().interrupt();
                             throw new IllegalStateException(ex);
+                        } finally {
+                            done.countDown();
                         }
                         return null;
                     }
