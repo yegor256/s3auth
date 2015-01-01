@@ -86,7 +86,8 @@ public final class DynamoHosts implements Hosts {
     @Loggable(value = Loggable.DEBUG, ignore = Hosts.NotFoundException.class)
     public Host find(
         @NotNull(message = "host name can't be NULL")
-        @Pattern(regexp = "[a-zA-Z0-9\\-\\.\\:]+", message = "invalid host name")
+        @Pattern(
+            regexp = "[a-zA-Z0-9\\-\\.\\:]+", message = "invalid host name")
         final String name) throws IOException {
         final Domain domain = this.byName(name);
         if (domain == null) {
