@@ -29,7 +29,7 @@
  */
 package com.s3auth.hosts;
 
-import org.mockito.Mockito;
+import lombok.experimental.Builder;
 
 /**
  * Mocker of {@link Domain}.
@@ -38,12 +38,14 @@ import org.mockito.Mockito;
  * @version $Id$
  * @since 0.0.1
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public final class DomainMocker {
 
     /**
      * The mock.
      */
-    private final transient Domain domain = Mockito.mock(Domain.class);
+    private final transient MkDomain.MkDomainBuilder domain = MkDomain
+        .builder();
 
     /**
      * Public ctor.
@@ -63,7 +65,7 @@ public final class DomainMocker {
      * @return This object
      */
     public DomainMocker withName(final String name) {
-        Mockito.doReturn(name).when(this.domain).name();
+        this.domain.name(name);
         return this;
     }
 
@@ -73,7 +75,7 @@ public final class DomainMocker {
      * @return This object
      */
     public DomainMocker withKey(final String key) {
-        Mockito.doReturn(key).when(this.domain).key();
+        this.domain.key(key);
         return this;
     }
 
@@ -83,7 +85,7 @@ public final class DomainMocker {
      * @return This object
      */
     public DomainMocker withSecret(final String secret) {
-        Mockito.doReturn(secret).when(this.domain).secret();
+        this.domain.secret(secret);
         return this;
     }
 
@@ -93,7 +95,7 @@ public final class DomainMocker {
      * @return This object
      */
     public DomainMocker withBucket(final String bckt) {
-        Mockito.doReturn(bckt).when(this.domain).bucket();
+        this.domain.bucket(bckt);
         return this;
     }
 
@@ -103,7 +105,7 @@ public final class DomainMocker {
      * @return This object
      */
     public DomainMocker withRegion(final String region) {
-        Mockito.doReturn(region).when(this.domain).region();
+        this.domain.region(region);
         return this;
     }
 
@@ -113,7 +115,7 @@ public final class DomainMocker {
      * @return This object
      */
     public DomainMocker withSyslog(final String syslog) {
-        Mockito.doReturn(syslog).when(this.domain).syslog();
+        this.domain.syslog(syslog);
         return this;
     }
 
@@ -122,7 +124,66 @@ public final class DomainMocker {
      * @return The domain
      */
     public Domain mock() {
-        return this.domain;
+        return this.domain.build();
     }
 
+    @Builder
+    @SuppressWarnings({ "PMD.TooManyMethods",
+        "PMD.AvoidFieldNameMatchingMethodName" })
+    private static class MkDomain implements Domain {
+        /**
+         * The Domain Name.
+         */
+        private final transient String name;
+        /**
+         * The Domain key.
+         */
+        private final transient String key;
+        /**
+         * The Domain secret.
+         */
+        private final transient String secret;
+        /**
+         * The Domain bucket.
+         */
+        private final transient String bucket;
+        /**
+         * The Domain region.
+         */
+        private final transient String region;
+        /**
+         * The Domain syslog.
+         */
+        private final transient String syslog;
+
+        @Override
+        public String name() {
+            return this.name;
+        }
+
+        @Override
+        public String key() {
+            return this.key;
+        }
+
+        @Override
+        public String secret() {
+            return this.secret;
+        }
+
+        @Override
+        public String bucket() {
+            return this.bucket;
+        }
+
+        @Override
+        public String region() {
+            return this.region;
+        }
+
+        @Override
+        public String syslog() {
+            return this.syslog;
+        }
+    }
 }

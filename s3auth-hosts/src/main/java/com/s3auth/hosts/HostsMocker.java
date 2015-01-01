@@ -30,7 +30,7 @@
 package com.s3auth.hosts;
 
 import java.io.IOException;
-import org.mockito.Mockito;
+import java.util.Set;
 
 /**
  * Mocker of {@link Hosts}.
@@ -44,19 +44,7 @@ public final class HostsMocker {
     /**
      * The mock.
      */
-    private final transient Hosts hosts = Mockito.mock(Hosts.class);
-
-    /**
-     * Public ctor.
-     */
-    public HostsMocker() {
-        try {
-            Mockito.doReturn(new HostMocker().mock()).when(this.hosts)
-                .find(Mockito.anyString());
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-    }
+    private final transient Hosts hosts = new MkHosts();
 
     /**
      * Mock it.
@@ -66,4 +54,20 @@ public final class HostsMocker {
         return this.hosts;
     }
 
+    private static class MkHosts implements Hosts {
+        @Override
+        public void close() throws IOException {
+            // do nothing.
+        }
+
+        @Override
+        public Host find(final String domain) throws IOException {
+            return new HostMocker().mock();
+        }
+
+        @Override
+        public Set<Domain> domains(final User user) throws IOException {
+            return null;
+        }
+    }
 }

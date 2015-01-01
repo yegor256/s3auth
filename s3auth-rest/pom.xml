@@ -110,13 +110,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.s3auth</groupId>
-            <artifactId>s3auth-hosts</artifactId>
-            <version>${project.version}</version>
-            <classifier>mock</classifier>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-core</artifactId>
             <version>1.18.1</version>

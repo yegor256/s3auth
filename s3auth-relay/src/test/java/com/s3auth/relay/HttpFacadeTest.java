@@ -463,8 +463,12 @@ public final class HttpFacadeTest {
             new Answer<Resource>() {
                 @Override
                 public Resource answer(final InvocationOnMock inv) {
-                    final Resource answer = new ResourceMocker()
-                        .withContent(body).mock();
+                    final Resource answer = Mockito.spy(
+                        new ResourceMocker()
+                            .withContent(body)
+                            .withHeaders("gzip")
+                            .mock()
+                    );
                     Mockito.doReturn("text/plain")
                         .when(answer).contentType();
                     return answer;
@@ -562,7 +566,7 @@ public final class HttpFacadeTest {
     @Test
     public void closesUnderlyingResource() throws Exception {
         final Host host = Mockito.mock(Host.class);
-        final Resource resource = new ResourceMocker().mock();
+        final Resource resource = Mockito.spy(new ResourceMocker().mock());
         Mockito.doReturn(resource).when(host).fetch(
             Mockito.any(URI.class),
             Mockito.any(Range.class),
@@ -601,9 +605,11 @@ public final class HttpFacadeTest {
     @Test
     public void servicesHeadMethod() throws Exception {
         final Host host = Mockito.mock(Host.class);
-        final Resource resource = new ResourceMocker()
-            .withContent("should not appear in body")
-            .mock();
+        final Resource resource = Mockito.spy(
+            new ResourceMocker()
+                .withContent("should not appear in body")
+                .mock()
+        );
         Mockito.doReturn(resource).when(host).fetch(
             Mockito.any(URI.class),
             Mockito.any(Range.class),
