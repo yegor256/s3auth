@@ -129,8 +129,7 @@ final class HttpResponse {
      */
     public HttpResponse withBody(@NotNull final Resource res) {
         this.body = res;
-        if (res != null)
-        {
+        if (res != null) {
             this.withStatus(res.status());
         }
         return this;
