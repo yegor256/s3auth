@@ -44,6 +44,7 @@ import org.mockito.Mockito;
  * @version $Id$
  */
 public final class ReRegionsTest {
+
     /**
      * This test verifies that the reRegions.create method returns a non-null
      *  ReRegion.
