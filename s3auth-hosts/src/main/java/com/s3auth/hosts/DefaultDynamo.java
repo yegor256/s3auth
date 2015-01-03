@@ -215,7 +215,7 @@ final class DefaultDynamo implements Dynamo {
                     new AttributeValue(
                         user.toString()
                     )
-                )
+            )
                 .with(
                     DefaultDynamo.NAME,
                     new AttributeValue(
