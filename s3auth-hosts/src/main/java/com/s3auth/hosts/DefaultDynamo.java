@@ -264,14 +264,14 @@ final class DefaultDynamo implements Dynamo {
     @Cacheable.FlushBefore
     public boolean remove(@NotNull final Domain domain) {
         final Region region = this.regionfactory.createRegion();
-        final Table curTable = region.table(this.table);
-        final Iterator<Item> itemsToRemove = curTable.frame().where(
+        final Table table = region.table(this.table);
+        final Iterator<Item> items = table.frame().where(
             DefaultDynamo.NAME,
             new Condition().withComparisonOperator(ComparisonOperator.EQ)
         ).iterator();
-        while (itemsToRemove.hasNext()) {
-            itemsToRemove.next();
-            itemsToRemove.remove();
+        while (items.hasNext()) {
+            items.next();
+            items.remove();
         }
         return true;
     }
