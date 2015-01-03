@@ -40,7 +40,6 @@
     <artifactId>s3auth-hosts</artifactId>
     <packaging>jar</packaging>
     <name>s3auth-hosts</name>
-
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
