@@ -55,7 +55,7 @@ public class ReRegions implements Regions {
     }
 
     @Override
-    public final Region createRegion() {
+    public final Region create() {
         return new ReRegion(new Region.Simple(this.credentials));
     }
 

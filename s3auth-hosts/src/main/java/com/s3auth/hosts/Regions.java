@@ -44,7 +44,7 @@ public interface Regions {
      * Creates a region.
      * @return Created region.
      */
-    Region createRegion();
+    Region create();
 
     /**
      * Provides access to the underlying Amazon DynamoDB client.

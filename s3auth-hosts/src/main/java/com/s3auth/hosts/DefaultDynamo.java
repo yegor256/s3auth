@@ -163,7 +163,7 @@ final class DefaultDynamo implements Dynamo {
     public ConcurrentMap<URN, Domains> load() {
         final ConcurrentMap<URN, Domains> domains =
             new ConcurrentHashMap<URN, Domains>(0);
-        final Region region = this.regionfactory.createRegion();
+        final Region region = this.regionfactory.create();
         try {
             final Iterator<Item> items = region.table(this.table).frame()
                 .iterator();
@@ -205,7 +205,7 @@ final class DefaultDynamo implements Dynamo {
     @Cacheable.FlushBefore
     public boolean add(@NotNull final URN user,
         @NotNull final Domain domain) {
-        final Region region = this.regionfactory.createRegion();
+        final Region region = this.regionfactory.create();
         final Table table = region.table(this.table);
         boolean success = false;
         try {
@@ -263,7 +263,7 @@ final class DefaultDynamo implements Dynamo {
     @Override
     @Cacheable.FlushBefore
     public boolean remove(@NotNull final Domain domain) {
-        final Region region = this.regionfactory.createRegion();
+        final Region region = this.regionfactory.create();
         final Table table = region.table(this.table);
         final Iterator<Item> items = table.frame().where(
             DefaultDynamo.NAME,
