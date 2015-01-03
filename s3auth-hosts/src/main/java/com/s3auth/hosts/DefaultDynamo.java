@@ -206,10 +206,10 @@ final class DefaultDynamo implements Dynamo {
     public boolean add(@NotNull final URN user,
         @NotNull final Domain domain) {
         final Region region = this.regionfactory.create();
-        final Table table = region.table(this.table);
+        final Table tbl = region.table(this.table);
         boolean success = false;
         try {
-            table.put(new Attributes()
+            tbl.put(new Attributes()
                 .with(
                     DefaultDynamo.USER,
                     new AttributeValue(
