@@ -38,13 +38,18 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+/**
+ * Test class for ReRegions.
+ * @author Dmitri Pisarenko (dp@altruix.co)
+ * @version $Id$
+ */
 public final class ReRegionsTest {
     /**
      * This test verifies that the reRegions.create method returns a non-null
      *  ReRegion.
      */
     @Test
-    public final void createCreatesReRegion() {
+    public void createCreatesReRegion() {
         final Credentials credentials = Mockito.mock(Credentials.class);
         final ReRegions reRegions = new ReRegions(credentials);
         final Region region = reRegions.create();
@@ -57,7 +62,7 @@ public final class ReRegionsTest {
      *  credentials.aws call.
      */
     @Test
-    public final void awsReturnsCredentialsAws() {
+    public void awsReturnsCredentialsAws() {
         final AmazonDynamoDB aws = Mockito.mock(AmazonDynamoDB.class);
         final Credentials credentials = Mockito.mock(Credentials.class);
         Mockito.when(credentials.aws()).thenReturn(aws);
