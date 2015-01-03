@@ -73,37 +73,37 @@ final class DefaultDynamo implements Dynamo {
     /**
      * Dynamo DB key, URN of a user.
      */
-    public static final String USER = "user_urn";
+    public static final String USER = "user.urn";
 
     /**
      * Dynamo DB key, name of domain.
      */
-    public static final String NAME = "domain_name";
+    public static final String NAME = "domain.name";
 
     /**
      * Dynamo DB key, AWS key of bucket.
      */
-    public static final String KEY = "domain_key";
+    public static final String KEY = "domain.key";
 
     /**
      * Dynamo DB key, AWS secret of bucket.
      */
-    public static final String SECRET = "domain_secret";
+    public static final String SECRET = "domain.secret";
 
     /**
      * Dynamo DB key, Name of bucket.
      */
-    public static final String BUCKET = "domain_bucket";
+    public static final String BUCKET = "domain.bucket";
 
     /**
      * Dynamo DB key, AWS S3 region of bucket.
      */
-    public static final String REGION = "domain_region";
+    public static final String REGION = "domain.region";
 
     /**
      * Dynamo DB key, Syslog host and port of domain.
      */
-    public static final String SYSLOG = "domain_syslog";
+    public static final String SYSLOG = "domain.syslog";
 
     /**
      * Name of the entry point setting.
@@ -206,16 +206,16 @@ final class DefaultDynamo implements Dynamo {
     public boolean add(@NotNull final URN user,
         @NotNull final Domain domain) {
         final Region region = this.regionfactory.createRegion();
-        final Table curTable = region.table(this.table);
+        final Table table = region.table(this.table);
         boolean success = false;
         try {
-            curTable.put(new Attributes()
+            table.put(new Attributes()
                 .with(
                     DefaultDynamo.USER,
                     new AttributeValue(
                         user.toString()
                     )
-            )
+                )
                 .with(
                     DefaultDynamo.NAME,
                     new AttributeValue(
