@@ -30,37 +30,25 @@
 package com.s3auth.hosts;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.jcabi.dynamo.Credentials;
+import com.jcabi.aspects.Immutable;
 import com.jcabi.dynamo.Region;
-import com.jcabi.dynamo.retry.ReRegion;
 
 /**
- * Region factory, which creates ReRegions.
+ * This interface represents objecs, which create JCabi-Dynamo regions.
  * @author Dmitri Pisarenko (dp@altruix.co)
  * @version $Id$
  */
-public class ReRegionCreator implements RegionCreator {
+@Immutable
+public interface Regions {
     /**
-     * JCabi-Dynamo access credentials.
+     * Creates a region.
+     * @return Created region.
      */
-    private final transient Credentials credentials;
+    Region createRegion();
 
     /**
-     * Creates an instance of ReRegion factory with the provided AWS DynamoDB
-     * credentials.
-     * @param accessdata AWS DynamoDB credentials
+     * Provides access to the underlying Amazon DynamoDB client.
+     * @return Reference to Amazon DynamoDB.
      */
-    public ReRegionCreator(final Credentials accessdata) {
-        this.credentials = accessdata;
-    }
-
-    @Override
-    public final Region createRegion() {
-        return new ReRegion(new Region.Simple(this.credentials));
-    }
-
-    @Override
-    public final AmazonDynamoDB aws() {
-        return this.credentials.aws();
-    }
+    AmazonDynamoDB aws();
 }
