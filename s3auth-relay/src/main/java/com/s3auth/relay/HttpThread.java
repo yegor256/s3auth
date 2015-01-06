@@ -141,6 +141,7 @@ final class HttpThread {
      * @return Amount of bytes sent to socket
      * @throws InterruptedException If interrupted while waiting for the queue
      * @checkstyle ExecutableStatementCount (100 lines)
+     * @checkstyle MultipleStringLiterals (100 lines)*
      */
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public long dispatch() throws InterruptedException {
@@ -330,7 +331,7 @@ final class HttpThread {
     private long failure(final HttpException cause,
         final Socket socket) {
         try {
-            long bytes = cause.response().send(socket);
+            final long bytes = cause.response().send(socket);
             Logger.info(this, "#run(): failure sent to %s", socket);
             return bytes;
         } catch (final IOException ex) {

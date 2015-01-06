@@ -250,6 +250,8 @@ final class HttpFacade implements Closeable {
         HttpThreadRunnable(final HttpThread thrd) {
             this.thread = thrd;
         }
+        // @checkstyle MultipleStringLiterals (15 lines)
+        @SuppressWarnings("PMD.AvoidCatchingThrowable")
         @Override
         public void run() {
             try {
@@ -257,6 +259,7 @@ final class HttpFacade implements Closeable {
             } catch (final InterruptedException ex) {
                 Thread.currentThread().interrupt();
                 Logger.warn(this, "%s", ex);
+            // @checkstyle IllegalCatch (1 line)
             } catch (final Throwable ex) {
                 Logger.error(this, "%s", ExceptionUtils.getStackTrace(ex));
             }
