@@ -83,6 +83,8 @@ final class HttpException extends IOException {
      * Public ctor.
      * @param status The status
      * @param cause The cause of it
+     * @todo #198. 1) Don't lose cause stacktrace 2) cause.getMessage can be null,
+     * so it can produce ConstraintViolationException instead of HttpException
      */
     HttpException(final int status, @NotNull final Throwable cause) {
         this(status, cause.getMessage());

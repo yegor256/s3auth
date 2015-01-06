@@ -51,6 +51,7 @@ import javax.ws.rs.core.HttpHeaders;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.client.utils.DateUtils;
 
 /**
@@ -193,23 +194,24 @@ final class HttpThread {
                     }
                 }
             } else {
-                bytes = HttpThread.failure(
+                bytes = this.failure(
                     new HttpException(
                         HttpURLConnection.HTTP_BAD_METHOD,
                         "only GET and HEAD methods are supported at the moment"
                     ),
                     socket
                 );
-                Logger.info(this, "#run(): failure sent to %s", socket);
             }
         } catch (final HttpException ex) {
-            bytes = HttpThread.failure(ex, socket);
+            Logger.warn(this, "#run(): %s", ExceptionUtils.getStackTrace(ex));
+            bytes = this.failure(ex, socket);
         } catch (final SocketException ex) {
-            Logger.warn(this, "#run(): %s", ex);
+            Logger.warn(this, "#run(): %s", ExceptionUtils.getStackTrace(ex));
             bytes = 0L;
         // @checkstyle IllegalCatch (1 line)
         } catch (final Throwable ex) {
-            bytes = HttpThread.failure(
+            Logger.error(this, "#run(): %s", ExceptionUtils.getStackTrace(ex));
+            bytes = this.failure(
                 new HttpException(
                     HttpURLConnection.HTTP_INTERNAL_ERROR,
                     ex
@@ -325,10 +327,12 @@ final class HttpThread {
      * @param socket The socket to talk to
      * @return Number of bytes sent
      */
-    private static long failure(final HttpException cause,
+    private long failure(final HttpException cause,
         final Socket socket) {
         try {
-            return cause.response().send(socket);
+            long bytes = cause.response().send(socket);
+            Logger.info(this, "#run(): failure sent to %s", socket);
+            return bytes;
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
         }

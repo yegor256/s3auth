@@ -50,6 +50,7 @@ import javax.net.ssl.SSLServerSocketFactory;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * HTTP facade (port listener).
@@ -256,6 +257,8 @@ final class HttpFacade implements Closeable {
             } catch (final InterruptedException ex) {
                 Thread.currentThread().interrupt();
                 Logger.warn(this, "%s", ex);
+            } catch (final Throwable ex) {
+                Logger.error(this, "%s", ExceptionUtils.getStackTrace(ex));
             }
         }
     }
