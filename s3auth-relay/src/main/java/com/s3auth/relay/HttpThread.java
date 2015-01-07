@@ -51,7 +51,6 @@ import javax.ws.rs.core.HttpHeaders;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.client.utils.DateUtils;
 
 /**
@@ -204,14 +203,14 @@ final class HttpThread {
                 );
             }
         } catch (final HttpException ex) {
-            Logger.warn(this, "#run(): %s", ExceptionUtils.getStackTrace(ex));
+            Logger.warn(this, "#run(): %[exception]s", ex);
             bytes = this.failure(ex, socket);
         } catch (final SocketException ex) {
-            Logger.warn(this, "#run(): %s", ExceptionUtils.getStackTrace(ex));
+            Logger.warn(this, "#run(): %[exception]s", ex);
             bytes = 0L;
         // @checkstyle IllegalCatch (1 line)
         } catch (final Throwable ex) {
-            Logger.error(this, "#run(): %s", ExceptionUtils.getStackTrace(ex));
+            Logger.error(this, "#run(): %[exception]s", ex);
             bytes = this.failure(
                 new HttpException(
                     HttpURLConnection.HTTP_INTERNAL_ERROR,

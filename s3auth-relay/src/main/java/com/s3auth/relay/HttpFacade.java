@@ -50,7 +50,6 @@ import javax.net.ssl.SSLServerSocketFactory;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * HTTP facade (port listener).
@@ -121,7 +120,7 @@ final class HttpFacade implements Closeable {
             .createServerSocket(sslport);
         final HttpThread thread = new HttpThread(this.sockets, hosts);
         final Runnable runnable = new VerboseRunnable(
-            new HttpFacade.HttpThreadRunnable(thread), true, false
+            new HttpFacade.HttpThreadRunnable(thread), true, true
         );
         for (int idx = 0; idx < HttpFacade.THREADS; ++idx) {
             this.backend.scheduleWithFixedDelay(
@@ -250,8 +249,6 @@ final class HttpFacade implements Closeable {
         HttpThreadRunnable(final HttpThread thrd) {
             this.thread = thrd;
         }
-        // @checkstyle MultipleStringLiterals (15 lines)
-        @SuppressWarnings("PMD.AvoidCatchingThrowable")
         @Override
         public void run() {
             try {
@@ -259,9 +256,6 @@ final class HttpFacade implements Closeable {
             } catch (final InterruptedException ex) {
                 Thread.currentThread().interrupt();
                 Logger.warn(this, "%s", ex);
-            // @checkstyle IllegalCatch (1 line)
-            } catch (final Throwable ex) {
-                Logger.error(this, "%s", ExceptionUtils.getStackTrace(ex));
             }
         }
     }
