@@ -269,7 +269,7 @@
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.0</version>
+                <version>2.2</version>
                 <configuration>
                     <path>/</path>
                 </configuration>
@@ -298,7 +298,7 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <executable>${project.build.directory}/casperjs/bin/casperjs</executable>
+                            <executable>${project.build.directory}/casperjs/bin/${casperjs.exec.name}</executable>
                             <workingDirectory>${basedir}</workingDirectory>
                             <arguments>
                                 <argument>test</argument>
@@ -393,6 +393,28 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>Windows</id>
+            <activation>
+                <os>
+                    <family>Windows</family>
+                </os>
+            </activation>
+            <properties>
+                <casperjs.exec.name>casperjs.exe</casperjs.exec.name>
+            </properties>
+        </profile>
+        <profile>
+            <id>unix</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                </os>
+            </activation>
+            <properties>
+                <casperjs.exec.name>casperjs</casperjs.exec.name>
+            </properties>
         </profile>
     </profiles>
 </project>
