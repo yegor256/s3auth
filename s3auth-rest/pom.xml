@@ -40,6 +40,9 @@
     <artifactId>s3auth-rest</artifactId>
     <packaging>war</packaging>
     <name>s3auth-rest</name>
+    <properties>
+        <casperjs.home.dir>${project.build.directory}/casperjs</casperjs.home.dir>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -155,6 +158,25 @@
         </pluginManagement>
         <plugins>
             <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>clean-casperjs-directory</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                        <configuration>
+                            <filesets>
+                                <fileset>
+                                    <directory>${casperjs.home.dir}</directory>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <version>1.8</version>
@@ -243,7 +265,7 @@
                                 <argument>clone</argument>
                                 <argument>--depth=1</argument>
                                 <argument>https://github.com/n1k0/casperjs.git</argument>
-                                <argument>${project.build.directory}/casperjs</argument>
+                                <argument>${casperjs.home.dir}</argument>
                             </arguments>
                         </configuration>
                     </execution>
@@ -298,7 +320,7 @@
                             <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <executable>${project.build.directory}/casperjs/bin/${casperjs.exec.name}</executable>
+                            <executable>${casperjs.home.dir}/bin/${casperjs.exec.name}</executable>
                             <workingDirectory>${basedir}</workingDirectory>
                             <arguments>
                                 <argument>test</argument>
