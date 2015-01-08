@@ -195,6 +195,24 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+            	<groupId>org.apache.maven.plugins</groupId>
+            	<artifactId>maven-invoker-plugin</artifactId>
+            	<configuration>
+                        <mergeUserSettings>true</mergeUserSettings>
+                        <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
+                        <debug>false</debug>
+                        <localRepositoryPath>${project.basedir}/local-repo</localRepositoryPath>
+                        <noLog>false</noLog>
+                        <postBuildHookScript>verify</postBuildHookScript>
+                        <preBuildHookScript>setup</preBuildHookScript>
+                        <projectsDirectory>src/it</projectsDirectory>
+                        <settingsFile>${basedir}/src/it/settings.xml</settingsFile>
+                        <showErrors>true</showErrors>
+                        <showVersion>false</showVersion>
+                        <streamLogs>true</streamLogs>
+                    </configuration>
+            </plugin>
         </plugins>
     </build>
     <profiles>
