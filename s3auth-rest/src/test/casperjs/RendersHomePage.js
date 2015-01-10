@@ -27,53 +27,29 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.s3auth.rest;
 
-import com.jcabi.aspects.Loggable;
-import com.jcabi.manifests.Manifests;
-import java.io.IOException;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import org.apache.commons.io.IOUtils;
-
-/**
- * Miscellaneous resources.
- *
- * <p>The class is mutable and NOT thread-safe.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 0.0.1
+/*
+ * This is a simple test of home page rendering
+ * @todo #200 Migrate old tests from rexsl/scripts to casperjs
  */
-@Path("/misc")
-@Loggable(Loggable.DEBUG)
-public final class MiscRs extends BaseRs {
 
-    /**
-     * Show entrance page.
-     * @return The JAX-RS response
-     */
-    @GET
-    @Path("/version")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String version() {
-        return Manifests.read("S3Auth-Revision");
-    }
-
-    /**
-     * Show license.
-     * @return The JAX-RS response
-     * @throws IOException If fails with I/O
-     */
-    @GET
-    @Path("/LICENSE.txt")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String license() throws IOException {
-        return IOUtils.toString(
-            this.getClass().getResourceAsStream("/LICENSE.txt")
-        );
-    }
-
-}
+casper.test.begin("Hello, Test!", 1, function(test) {
+    test.assert(true);
+    test.done();
+});
+//casper.test.begin(
+//    'Home page can be rendered',
+//    function (test) {
+//        casper.start(
+//            casper.cli.get('home'),
+//            function () {
+//                test.assertHttpStatus(200);
+//            }
+//        );
+//        casper.run(
+//            function () {
+//                test.done();
+//            }
+//        );
+//    }
+//);
