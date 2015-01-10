@@ -29,6 +29,7 @@
  */
 package com.s3auth.relay;
 
+import com.amazonaws.AmazonClientException;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseRunnable;
 import com.s3auth.hosts.Resource;
@@ -51,6 +52,7 @@ import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * Test case for {@link HttpResponse}.
@@ -58,7 +60,7 @@ import org.junit.Test;
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-@SuppressWarnings("PMD.CyclomaticComplexity")
+@SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.TooManyMethods" })
 public final class HttpResponseTest {
 
     /**
@@ -170,4 +172,33 @@ public final class HttpResponseTest {
         );
     }
 
+    /**
+     * Test exception handling when an {@link AmazonClientException} is thrown
+     * because a timeout happened during writing to stream.
+     * @throws Exception If an unexpected error occurs during test
+     */
+    @Test
+    public void testAmazonClientTimeoutExceptionHandlingInSend()
+        throws Exception {
+        final HttpResponse response = new HttpResponse();
+        final OutputStream stream = Mockito.mock(OutputStream.class);
+        Mockito.doThrow(
+            new AmazonClientException(
+                String.format(
+                    "%s %s",
+                    "Unable to execute HTTP request:",
+                    "Timeout waiting for connection from pool"
+                )
+            )
+        )
+            .when(stream)
+            .write(
+                Mockito.any(byte[].class)
+            );
+        final Socket socket = Mockito.mock(Socket.class);
+        Mockito.when(
+            socket.getOutputStream()
+        ).thenReturn(stream);
+        response.send(socket);
+    }
 }
