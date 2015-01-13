@@ -186,7 +186,14 @@
             <plugin>
                 <groupId>com.jcabi</groupId>
                 <artifactId>jcabi-ssl-maven-plugin</artifactId>
-                <version>0.7.22</version>
+                <!--
+                    @todo #90:30min I'm using 1.0-SNAPSHOT only in order to be
+                     able to build s3auth. Once the issue 
+                     https://github.com/jcabi/jcabi-ssl-maven-plugin/issues/4
+                     is fixed (and the corresponding pull request merged), 
+                     a non-snapshot version can be used.    
+                -->
+                <version>1.0-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <goals>
@@ -229,6 +236,7 @@
                                 <!-- there is a bug in qulice, that's why the file is excluded, try to remove this line -->
                                 <exclude>checkstyle:/src/main/java/com/s3auth/hosts/Htpasswd.java</exclude>
                             </excludes>
+                            <license>file:${basedir}/LICENSE.txt</license>
                         </configuration>
                     </plugin>
                 </plugins>

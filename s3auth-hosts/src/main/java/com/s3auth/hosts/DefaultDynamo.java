@@ -29,22 +29,24 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.DeleteItemRequest;
-import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
-import com.amazonaws.services.dynamodbv2.model.ScanRequest;
-import com.amazonaws.services.dynamodbv2.model.ScanResult;
-import com.google.common.collect.ImmutableMap;
+import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
+import com.amazonaws.services.dynamodbv2.model.Condition;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.jcabi.dynamo.Attributes;
+import com.jcabi.dynamo.Credentials;
+import com.jcabi.dynamo.Item;
+import com.jcabi.dynamo.Region;
+import com.jcabi.dynamo.Table;
+import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
-import java.util.Map;
+import java.io.IOException;
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
@@ -56,16 +58,15 @@ import lombok.ToString;
  * Abstraction on top of DynamoDB SDK.
  *
  * <p>The class is mutable and thread-safe.
- *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 0.0.1
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  * @todo #1 Would be nice to migrate to jcabi-dynamo
+ * @since 0.0.1
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "client", "table" })
+@EqualsAndHashCode(of = {"table" })
 @Loggable(Loggable.INFO)
 final class DefaultDynamo implements Dynamo {
 
@@ -105,9 +106,10 @@ final class DefaultDynamo implements Dynamo {
     public static final String SYSLOG = "domain.syslog";
 
     /**
-     * Client.
+     * Name of the entry point setting.
      */
-    private final transient Dynamo.Client client;
+    public static final String ENTRY_POINT =
+        "S3Auth-AwsDynamoEntryPoint";
 
     /**
      * Table name.
@@ -115,40 +117,37 @@ final class DefaultDynamo implements Dynamo {
     private final transient String table;
 
     /**
+     * Region factory.
+     */
+    private final transient Regions regionfactory;
+
+    /**
      * Public ctor.
      */
     DefaultDynamo() {
-        this(
-            new Dynamo.Client() {
-                @Override
-                public AmazonDynamoDB get() {
-                    final AmazonDynamoDB aws = new AmazonDynamoDBClient(
-                        new BasicAWSCredentials(
-                            Manifests.read("S3Auth-AwsDynamoKey"),
-                            Manifests.read("S3Auth-AwsDynamoSecret")
-                        )
-                    );
-                    // @checkstyle MultipleStringLiterals (1 line)
-                    if (Manifests.exists("S3Auth-AwsDynamoEntryPoint")) {
-                        aws.setEndpoint(
-                            Manifests.read("S3Auth-AwsDynamoEntryPoint")
-                        );
-                    }
-                    return aws;
-                }
-            },
-            Manifests.read("S3Auth-AwsDynamoTable")
+        this.regionfactory = new ReRegions(
+            new Credentials.Simple(
+                Manifests.read("S3Auth-AwsDynamoKey"),
+                Manifests.read("S3Auth-AwsDynamoSecret")
+            )
         );
+        final AmazonDynamoDB aws = this.regionfactory.aws();
+        if (Manifests.exists(ENTRY_POINT)) {
+            aws.setEndpoint(
+                Manifests.read(ENTRY_POINT)
+            );
+        }
+        this.table = Manifests.read("S3Auth-AwsDynamoTable");
     }
 
     /**
      * Ctor for unit tests.
-     * @param clnt The client to Dynamo DB
+     * @param regfactory Region factory
      * @param tbl Table name
      */
-    DefaultDynamo(@NotNull final Dynamo.Client clnt,
+    DefaultDynamo(@NotNull final Regions regfactory,
         @NotNull final String tbl) {
-        this.client = clnt;
+        this.regionfactory = regfactory;
         this.table = tbl;
     }
 
@@ -164,35 +163,41 @@ final class DefaultDynamo implements Dynamo {
     public ConcurrentMap<URN, Domains> load() {
         final ConcurrentMap<URN, Domains> domains =
             new ConcurrentHashMap<URN, Domains>(0);
-        final AmazonDynamoDB amazon = this.client.get();
-        final ScanResult result = amazon.scan(new ScanRequest(this.table));
-        for (final Map<String, AttributeValue> item : result.getItems()) {
-            final String syslog;
-            if (item.containsKey(DefaultDynamo.SYSLOG)) {
-                syslog = item.get(DefaultDynamo.SYSLOG).getS();
-            } else {
-                syslog = "syslog.s3auth.com:514";
+        final Region region = this.regionfactory.create();
+        try {
+            final Iterator<Item> items = region.table(this.table).frame()
+                .iterator();
+            while (items.hasNext()) {
+                final Item item = items.next();
+                final String syslog;
+                if (item.has(DefaultDynamo.SYSLOG)) {
+                    syslog = item.get(DefaultDynamo.SYSLOG).getS();
+                } else {
+                    syslog = "syslog.s3auth.com:514";
+                }
+                final String bucket;
+                if (item.has(DefaultDynamo.BUCKET)) {
+                    bucket = item.get(DefaultDynamo.BUCKET).getS();
+                } else {
+                    bucket = item.get(DefaultDynamo.NAME).getS();
+                }
+                final URN user =
+                    URN.create(item.get(DefaultDynamo.USER).getS());
+                domains.putIfAbsent(user, new Domains());
+                domains.get(user).add(
+                    new DefaultDomain(
+                        item.get(DefaultDynamo.NAME).getS(),
+                        item.get(DefaultDynamo.KEY).getS(),
+                        item.get(DefaultDynamo.SECRET).getS(),
+                        bucket,
+                        item.get(DefaultDynamo.REGION).getS(),
+                        syslog
+                    )
+                );
             }
-            final String bucket;
-            if (item.containsKey(DefaultDynamo.BUCKET)) {
-                bucket = item.get(DefaultDynamo.BUCKET).getS();
-            } else {
-                bucket = item.get(DefaultDynamo.NAME).getS();
-            }
-            final URN user = URN.create(item.get(DefaultDynamo.USER).getS());
-            domains.putIfAbsent(user, new Domains());
-            domains.get(user).add(
-                new DefaultDomain(
-                    item.get(DefaultDynamo.NAME).getS(),
-                    item.get(DefaultDynamo.KEY).getS(),
-                    item.get(DefaultDynamo.SECRET).getS(),
-                    bucket,
-                    item.get(DefaultDynamo.REGION).getS(),
-                    syslog
-                )
-            );
+        } catch (final IOException exception) {
+            Logger.error(this, exception.getMessage());
         }
-        amazon.shutdown();
         return domains;
     }
 
@@ -200,35 +205,74 @@ final class DefaultDynamo implements Dynamo {
     @Cacheable.FlushBefore
     public boolean add(@NotNull final URN user,
         @NotNull final Domain domain) {
-        final ConcurrentMap<String, AttributeValue> attrs =
-            new ConcurrentHashMap<String, AttributeValue>(0);
-        attrs.put(DefaultDynamo.USER, new AttributeValue(user.toString()));
-        attrs.put(DefaultDynamo.NAME, new AttributeValue(domain.name()));
-        attrs.put(DefaultDynamo.KEY, new AttributeValue(domain.key()));
-        attrs.put(DefaultDynamo.SECRET, new AttributeValue(domain.secret()));
-        attrs.put(DefaultDynamo.REGION, new AttributeValue(domain.region()));
-        attrs.put(DefaultDynamo.SYSLOG, new AttributeValue(domain.syslog()));
-        attrs.put(DefaultDynamo.BUCKET, new AttributeValue(domain.bucket()));
-        final AmazonDynamoDB amazon = this.client.get();
-        amazon.putItem(new PutItemRequest(this.table, attrs));
-        amazon.shutdown();
-        return true;
+        final Region region = this.regionfactory.create();
+        final Table tbl = region.table(this.table);
+        boolean success = false;
+        try {
+            tbl.put(new Attributes()
+                .with(
+                    DefaultDynamo.USER,
+                    new AttributeValue(
+                        user.toString()
+                    )
+            )
+                .with(
+                    DefaultDynamo.NAME,
+                    new AttributeValue(
+                        domain.name()
+                    )
+                )
+                .with(
+                    DefaultDynamo.KEY,
+                    new AttributeValue(
+                        domain.key()
+                    )
+                )
+                .with(
+                    DefaultDynamo.SECRET,
+                    new AttributeValue(
+                        domain.secret()
+                    )
+                )
+                .with(
+                    DefaultDynamo.REGION,
+                    new AttributeValue(
+                        domain.region()
+                    )
+                )
+                .with(
+                    DefaultDynamo.SYSLOG,
+                    new AttributeValue(
+                        domain.syslog()
+                    )
+                )
+                .with(
+                    DefaultDynamo.BUCKET,
+                    new AttributeValue(
+                        domain.bucket()
+                    )
+                )
+            );
+            success = true;
+        } catch (final IOException exception) {
+            Logger.error(this, exception.getMessage());
+        }
+        return success;
     }
 
     @Override
     @Cacheable.FlushBefore
     public boolean remove(@NotNull final Domain domain) {
-        final AmazonDynamoDB amazon = this.client.get();
-        amazon.deleteItem(
-            new DeleteItemRequest(
-                this.table,
-                new ImmutableMap.Builder<String, AttributeValue>()
-                    .put(DefaultDynamo.NAME, new AttributeValue(domain.name()))
-                    .build()
-            )
-        );
-        amazon.shutdown();
+        final Region region = this.regionfactory.create();
+        final Table tbl = region.table(this.table);
+        final Iterator<Item> items = tbl.frame().where(
+            DefaultDynamo.NAME,
+            new Condition().withComparisonOperator(ComparisonOperator.EQ)
+        ).iterator();
+        while (items.hasNext()) {
+            items.next();
+            items.remove();
+        }
         return true;
     }
-
 }
