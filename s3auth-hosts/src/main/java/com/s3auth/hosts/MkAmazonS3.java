@@ -126,7 +126,7 @@ import org.apache.http.client.methods.HttpGet;
  * @checkstyle BracketsStructure (1000 lines)
  * @checkstyle LineLength (1000 lines)
  * @checkstyle ClassFanOutComplexity (1000 lines)
- * @checkstyle MethodCountCheck
+ * @checkstyle MethodCountCheck (1000 lines)
  */
 @SuppressWarnings("PMD")
 public class MkAmazonS3 implements AmazonS3 {
