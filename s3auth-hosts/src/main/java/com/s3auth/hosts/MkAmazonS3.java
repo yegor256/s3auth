@@ -545,6 +545,22 @@ public class MkAmazonS3 implements AmazonS3 {
     }
 
     @Override
+    public void enableRequesterPays(final String bucket)
+        throws AmazonServiceException, AmazonClientException {
+    }
+
+    @Override
+    public void disableRequesterPays(final String bucket)
+        throws AmazonServiceException, AmazonClientException {
+    }
+
+    @Override
+    public boolean isRequesterPaysEnabled(final String bucket)
+        throws AmazonServiceException, AmazonClientException {
+        return false;
+    }
+
+    @Override
     public void setBucketAcl(SetBucketAclRequest arg0)
         throws AmazonClientException, AmazonServiceException {
     }
