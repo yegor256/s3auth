@@ -126,7 +126,7 @@ import org.apache.http.client.methods.HttpGet;
  * @checkstyle BracketsStructure (1000 lines)
  * @checkstyle LineLength (1000 lines)
  * @checkstyle ClassFanOutComplexity (1000 lines)
- * @checkstyle MethodCountCheck (103 methods)
+ * @checkstyle MethodCountCheck
  */
 @SuppressWarnings("PMD")
 public class MkAmazonS3 implements AmazonS3 {
@@ -548,16 +548,34 @@ public class MkAmazonS3 implements AmazonS3 {
     @Override
     public void enableRequesterPays(final String bucket)
         throws AmazonServiceException, AmazonClientException {
+        /**
+         * We currently don't support Requester Pays feature, but
+         * need to implement this method in order to be able to
+         * use AWS SDK 1.9.14 or later. We need this in order to
+         * be able to work with European (EU central) regions.
+         */
     }
 
     @Override
     public void disableRequesterPays(final String bucket)
         throws AmazonServiceException, AmazonClientException {
+        /**
+         * We currently don't support Requester Pays feature, but
+         * need to implement this method in order to be able to
+         * use AWS SDK 1.9.14 or later. We need this in order to
+         * be able to work with European (EU central) regions.
+         */
     }
 
     @Override
     public boolean isRequesterPaysEnabled(final String bucket)
         throws AmazonServiceException, AmazonClientException {
+        /**
+         * We currently don't support Requester Pays feature, but
+         * need to implement this method in order to be able to
+         * use AWS SDK 1.9.14 or later. We need this in order to
+         * be able to work with European (EU central) regions.
+         */
         return false;
     }
 
