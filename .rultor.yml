@@ -13,6 +13,11 @@ install: |
   sudo gem install pdd
 
 merge:
+  commanders:
+    - yegor256
+    - krzyk
+    - carlosmiranda
+    - longtimeago
   script: |
     mvn help:system clean install site --errors -Psite -Pqulice --settings ../settings.xml
     mvn clean
