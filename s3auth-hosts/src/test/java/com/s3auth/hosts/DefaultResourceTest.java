@@ -29,6 +29,7 @@
  */
 package com.s3auth.hosts;
 
+import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -367,4 +368,37 @@ public final class DefaultResourceTest {
         );
     }
 
+    /**
+     * Reproduces the scenario when an Amazon S3 bucket connection throws
+     * an {@link AmazonClientException} and tests how the exception is handled.
+     * @throws Exception If an unexpected error occurs during the test
+     */
+    @Test
+    public void testAmazonClientExceptionHandlingInHeaders() throws Exception {
+        final S3Object object = Mockito.mock(S3Object.class);
+        Mockito.doThrow(
+            new AmazonClientException(
+                String.format(
+                    "%s %s",
+                    "Unable to execute HTTP request:",
+                    "Timeout waiting for connection from pool"
+                )
+            )
+        ).when(object).getObjectMetadata();
+        final AmazonS3 client = Mockito.mock(AmazonS3.class);
+        Mockito.when(client.getObject(Mockito.any(GetObjectRequest.class)))
+            .thenReturn(object);
+        final DefaultResource res = new DefaultResource(
+            client,
+            "fedcba",
+            "",
+            Range.ENTIRE,
+            Version.LATEST,
+            Mockito.mock(DomainStatsData.class)
+        );
+        final Collection<String> headers = res.headers();
+        MatcherAssert.assertThat(headers, Matchers.notNullValue());
+        MatcherAssert.assertThat(headers, Matchers.empty());
+        res.close();
+    }
 }
