@@ -181,9 +181,7 @@ final class HttpResponse {
             }
             writer.write(HttpResponse.EOL);
             writer.flush();
-            long bytes = 0L;
-            bytes += this.body.writeTo(stream);
-            return bytes;
+            return this.body.writeTo(stream);
         } finally {
             writer.close();
         }
