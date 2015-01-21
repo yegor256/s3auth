@@ -137,7 +137,8 @@ final class DefaultDynamo implements Dynamo {
                     return aws;
                 }
             },
-            Manifests.read("S3Auth-AwsDynamoTable")
+            Manifests.exists("S3Auth-AwsDynamoTable") ?
+                Manifests.read("S3Auth-AwsDynamoTable") : "defaultTable"
         );
     }
 

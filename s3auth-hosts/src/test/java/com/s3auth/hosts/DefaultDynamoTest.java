@@ -151,5 +151,15 @@ public final class DefaultDynamoTest {
         item.put(DefaultDynamo.REGION, new AttributeValue("s3"));
         return item;
     }
-
+    /**
+     * DefaultDynamo can instantiate from default constructor.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void instantiatesDefault() throws Exception {
+        MatcherAssert.assertThat(
+            new DefaultDynamo(),
+            Matchers.not(Matchers.nullValue())
+        );
+    }
 }
