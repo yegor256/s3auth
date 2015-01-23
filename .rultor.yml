@@ -12,6 +12,10 @@ env:
 install: |
   sudo gem install pdd
 
+architect:
+  - yegor256
+  - davvd
+
 merge:
   commanders:
     - yegor256
