@@ -52,9 +52,9 @@ import lombok.ToString;
  * @todo #213:30min Implement authentication based on the USER and PASS
  *  commands.
  * @todo #213:30min Implement relay functionality to fetch resource upon
- * receival of the RETR command with valid authorization. Return an error
- * in case of other commands (unsupported for now). Remove PMD suppressions from
- * fields 'sockets' and 'hosts'.
+ *  receival of the RETR command with valid authorization. Return an error
+ *  in case of other commands (unsupported for now). Remove PMD suppressions
+ *  from fields 'sockets' and 'hosts'.
  */
 @ToString
 @EqualsAndHashCode(of = { "hosts", "sockets" })
