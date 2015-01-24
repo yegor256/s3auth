@@ -62,7 +62,7 @@ import org.apache.commons.net.ftp.FTPReply;
  * @since 0.0.1
  * @see Main
  * @checkstyle ClassDataAbstractionCoupling (10 lines)
- * @todo 213:30min Implement TLS secure port listening in a manner analogous to
+ * @todo #213:30min Implement TLS secure port listening in a manner analogous to
  *  HttpFacade.
  */
 @ToString
@@ -177,7 +177,6 @@ final class FtpFacade implements Closeable {
     /**
      * Report overflow problem to the socket and close it.
      * @param socket The socket to report to
-     * @todo 213 implement
      */
     private static void overflow(final Socket socket) {
         try {

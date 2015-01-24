@@ -52,7 +52,7 @@ import javax.validation.constraints.NotNull;
  * @version $Id$
  * @since 0.0.1
  * @see FtpThread
- * @todo 213:30min Implement methods 'withCode', 'withText', 'send' as above.
+ * @todo #213:30min Implement methods 'withCode', 'withText', 'send' as above.
  *  Also, implement 'asString' and unignore test 'constructsCorrectly' in
  *  FtpResponseTest.
  */

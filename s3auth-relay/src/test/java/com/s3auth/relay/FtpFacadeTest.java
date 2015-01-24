@@ -67,9 +67,8 @@ public final class FtpFacadeTest {
         try {
             facade.listen();
             ftp.connect("localhost");
-            final int reply = ftp.getReplyCode();
             MatcherAssert.assertThat(
-                FTPReply.isPositiveCompletion(reply),
+                FTPReply.isPositiveCompletion(ftp.getReplyCode()),
                 Matchers.equalTo(true)
             );
             MatcherAssert.assertThat(
@@ -110,8 +109,7 @@ public final class FtpFacadeTest {
             );
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
-        final int port = PortMocker.reserve();
-        return new FtpFacade(hosts, port);
+        return new FtpFacade(hosts, PortMocker.reserve());
     }
 
 }
