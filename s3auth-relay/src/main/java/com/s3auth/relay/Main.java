@@ -64,8 +64,8 @@ public final class Main {
      * Entrance.
      * @param args Optional arguments
      * @throws Exception If something is wrong
-     * @todo 213 Create a FtpFacade in order to provide a FTP gateway. Also
-     *  unignore test 'connectDisconnect' in FtpFacadeTest.
+     * @todo 213:30min Create a FtpFacade in order to provide a FTP gateway.
+     *  Also unignore test 'connectDisconnect' in FtpFacadeTest.
      */
     public static void main(final String[] args) throws Exception {
         final OptionParser parser = new OptionParser("p:s:d");

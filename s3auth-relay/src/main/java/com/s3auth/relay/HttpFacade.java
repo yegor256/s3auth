@@ -63,6 +63,10 @@ import lombok.ToString;
  * @since 0.0.1
  * @see Main
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @todo #213:1hr Create new a class Facade with all protocol-neutral code
+ *  (such as socket handling, socket queue, etc). Then convert {@link com
+ *  .s3auth.relay.HttpFacade} and {@link com.s3auth.relay.FtpFacade} so they use
+ *  the new Facade class in order to avoid code duplication.
  */
 @ToString
 @EqualsAndHashCode(of = { "sockets", "server" })

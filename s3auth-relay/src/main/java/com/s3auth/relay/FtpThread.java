@@ -49,9 +49,12 @@ import lombok.ToString;
  * @version $Id$
  * @since 0.0.1
  * @see FtpFacade
- * @todo 213 Implement authentication based on the USER and PASS commands.
- * @todo 213 Implement relay functionality to fetch resource upon receival
- *  of the RETR command with valid authorization.
+ * @todo 213:30min Implement authentication based on the USER and PASS
+ *  commands.
+ * @todo 213:30min Implement relay functionality to fetch resource upon receival
+ *  of the RETR command with valid authorization. Return an error in case of
+ *  other commands (unsupported for now). Remove PMD suppressions from fields
+ *  'sockets' and 'hosts'.
  */
 @ToString
 @EqualsAndHashCode(of = { "hosts", "sockets" })
@@ -91,7 +94,7 @@ final class FtpThread {
      * @return Amount of bytes sent to socket
      * @throws InterruptedException If interrupted while waiting for the queue
      * @checkstyle ExecutableStatementCount (100 lines)
-     * @checkstyle MultipleStringLiterals (100 lines)*
+     * @checkstyle MultipleStringLiterals (100 lines)
      */
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public long dispatch() throws InterruptedException {
