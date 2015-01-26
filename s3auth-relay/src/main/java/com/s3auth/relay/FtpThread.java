@@ -53,8 +53,8 @@ import lombok.ToString;
  *  commands.
  * @todo #213:30min Implement relay functionality to fetch resource upon
  *  receival of the RETR command with valid authorization. Return an error
- *  in case of other commands (unsupported for now). Remove PMD suppressions
- *  from fields 'sockets' and 'hosts'.
+ *  in case of other commands (unsupported for now). Remove unnecessary asserts
+ *  ffor fields 'sockets' and 'hosts' in method 'dispatch'.
  */
 @ToString
 @EqualsAndHashCode(of = { "hosts", "sockets" })
@@ -63,19 +63,13 @@ final class FtpThread {
     /**
      * Queue of sockets to get from.
      */
-    @SuppressWarnings({
-        "PMD.SingularField",
-        "PMD.UnusedPrivateField"
-    })
+    @NotNull
     private final transient BlockingQueue<Socket> sockets;
 
     /**
      * Hosts to work with.
      */
-    @SuppressWarnings({
-        "PMD.SingularField",
-        "PMD.UnusedPrivateField"
-    })
+    @NotNull
     private final transient Hosts hosts;
 
     /**
@@ -95,6 +89,8 @@ final class FtpThread {
      * @throws InterruptedException If interrupted while waiting for the queue
      */
     public long dispatch() throws InterruptedException {
+        assert this.hosts != null;
+        assert this.sockets != null;
         return 0L;
     }
 
