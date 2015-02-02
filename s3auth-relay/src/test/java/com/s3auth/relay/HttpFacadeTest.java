@@ -58,7 +58,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.client.utils.DateUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -519,13 +518,21 @@ public final class HttpFacadeTest {
      */
     @Test
     public void getsContentOverSSL() throws Exception {
-        Assert.assertNotNull(System.getProperty("javax.net.ssl.keyStore"));
-        Assert.assertNotNull(System
-                .getProperty("javax.net.ssl.keyStorePassword")
+        MatcherAssert.assertThat(
+            System.getProperty("javax.net.ssl.keyStore"),
+            Matchers.notNullValue()
         );
-        Assert.assertNotNull(System.getProperty("javax.net.ssl.trustStore"));
-        Assert.assertNotNull(System
-                .getProperty("javax.net.ssl.trustStorePassword")
+        MatcherAssert.assertThat(
+            System.getProperty("javax.net.ssl.keyStorePassword"),
+            Matchers.notNullValue()
+        );
+        MatcherAssert.assertThat(
+            System.getProperty("javax.net.ssl.trustStore"),
+            Matchers.notNullValue()
+        );
+        MatcherAssert.assertThat(
+            System.getProperty("javax.net.ssl.trustStorePassword"),
+            Matchers.notNullValue()
         );
         final Host host = Mockito.mock(Host.class);
         final String body = "secured";
