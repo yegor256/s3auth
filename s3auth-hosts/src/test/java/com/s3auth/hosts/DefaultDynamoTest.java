@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2014, s3auth.com
+ * Copyright (c) 2012-2015, s3auth.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -89,6 +89,18 @@ public final class DefaultDynamoTest {
     }
 
     /**
+     * DefaultDynamo can instantiate from default constructor.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void instantiatesDefault() throws Exception {
+        MatcherAssert.assertThat(
+            new DefaultDynamo(),
+            Matchers.not(Matchers.nullValue())
+        );
+    }
+
+    /**
      * Create and return an amazon client with 20 random items.
      * @return The client
      */
@@ -151,5 +163,4 @@ public final class DefaultDynamoTest {
         item.put(DefaultDynamo.REGION, new AttributeValue("s3"));
         return item;
     }
-
 }

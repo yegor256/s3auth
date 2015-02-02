@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2014, s3auth.com
+ * Copyright (c) 2012-2015, s3auth.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,11 +27,35 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.s3auth.relay;
+
+import org.apache.commons.net.ftp.FTPReply;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
- * Configuration of hosts, mocker.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @since 0.0.1
+ * Test case for {@link com.s3auth.relay.FtpResponse}.
+ * @author Felipe Pina (felipe.pina@gmail.com)
+ * @version $Id$
  */
-package com.s3auth.hosts;
+public final class FtpResponseTest {
+
+    /**
+     * FtpResponse can construct correct FTP response.
+     */
+    @Test
+    @Ignore
+    public void constructsCorrectly() {
+        MatcherAssert.assertThat(
+            new FtpResponse()
+                .withCode(FTPReply.COMMAND_OK)
+                .withText("hi!")
+                .asString()
+            ,
+            Matchers.equalTo("200 hi!")
+        );
+    }
+
+}

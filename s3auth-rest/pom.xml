@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
- * Copyright (c) 2012-2014, s3auth.com
+ * Copyright (c) 2012-2015, s3auth.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,6 +40,9 @@
     <artifactId>s3auth-rest</artifactId>
     <packaging>war</packaging>
     <name>s3auth-rest</name>
+    <properties>
+        <casperjs.home.dir>${project.build.directory}/casperjs</casperjs.home.dir>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -110,13 +113,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.s3auth</groupId>
-            <artifactId>s3auth-hosts</artifactId>
-            <version>${project.version}</version>
-            <classifier>mock</classifier>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-core</artifactId>
             <version>1.18.1</version>
@@ -161,6 +157,25 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>clean-casperjs-directory</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                        <configuration>
+                            <filesets>
+                                <fileset>
+                                    <directory>${casperjs.home.dir}</directory>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
@@ -215,6 +230,122 @@
                         <goals>
                             <goal>start</goal>
                             <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.klieber</groupId>
+                <artifactId>phantomjs-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>install</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <version>1.9.2</version>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.3.2</version>
+                <executions>
+                    <execution>
+                        <id>casperjs-install</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>git</executable>
+                            <arguments>
+                                <argument>clone</argument>
+                                <argument>--depth=1</argument>
+                                <argument>https://github.com/n1k0/casperjs.git</argument>
+                                <argument>${casperjs.home.dir}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>tomcat-port</id>
+                        <goals>
+                            <goal>reserve-network-port</goal>
+                        </goals>
+                        <configuration>
+                            <portNames>
+                                <portName>tomcat.port</portName>
+                            </portNames>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <path>/</path>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>start-tomcat</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>run-war-only</goal>
+                        </goals>
+                        <configuration>
+                            <port>${tomcat.port}</port>
+                            <fork>true</fork>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>casperjs-test</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>${casperjs.home.dir}/bin/${casperjs.exec.name}</executable>
+                            <workingDirectory>${basedir}</workingDirectory>
+                            <arguments>
+                                <argument>test</argument>
+                                <argument>--verbose</argument>
+                                <argument>--no-colors</argument>
+                                <argument>--concise</argument>
+                                <argument>--home=http://localhost:${tomcat.port}</argument>
+                                <argument>${basedir}/src/test/casperjs</argument>
+                            </arguments>
+                            <environmentVariables>
+                                <PHANTOMJS_EXECUTABLE>${phantomjs.binary}</PHANTOMJS_EXECUTABLE>
+                            </environmentVariables>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>stop-tomcat</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>shutdown</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -284,6 +415,28 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>Windows</id>
+            <activation>
+                <os>
+                    <family>Windows</family>
+                </os>
+            </activation>
+            <properties>
+                <casperjs.exec.name>casperjs.exe</casperjs.exec.name>
+            </properties>
+        </profile>
+        <profile>
+            <id>unix</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                </os>
+            </activation>
+            <properties>
+                <casperjs.exec.name>casperjs</casperjs.exec.name>
+            </properties>
         </profile>
     </profiles>
 </project>

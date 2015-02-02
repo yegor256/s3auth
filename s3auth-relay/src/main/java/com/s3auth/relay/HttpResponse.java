@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2014, s3auth.com
+ * Copyright (c) 2012-2015, s3auth.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -181,9 +181,7 @@ final class HttpResponse {
             }
             writer.write(HttpResponse.EOL);
             writer.flush();
-            long bytes = 0L;
-            bytes += this.body.writeTo(stream);
-            return bytes;
+            return this.body.writeTo(stream);
         } finally {
             writer.close();
         }

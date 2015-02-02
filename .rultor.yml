@@ -12,7 +12,16 @@ env:
 install: |
   sudo gem install pdd
 
+architect:
+  - yegor256
+  - davvd
+
 merge:
+  commanders:
+    - yegor256
+    - krzyk
+    - carlosmiranda
+    - longtimeago
   script: |
     mvn help:system clean install site --errors -Psite -Pqulice --settings ../settings.xml
     mvn clean

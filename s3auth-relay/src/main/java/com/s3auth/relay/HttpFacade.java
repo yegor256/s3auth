@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2014, s3auth.com
+ * Copyright (c) 2012-2015, s3auth.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -63,6 +63,10 @@ import lombok.ToString;
  * @since 0.0.1
  * @see Main
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @todo #213:1hr Create new a class Facade with all protocol-neutral code
+ *  (such as socket handling, socket queue, etc). Then convert {@link com
+ *  .s3auth.relay.HttpFacade} and {@link com.s3auth.relay.FtpFacade} so they use
+ *  the new Facade class in order to avoid code duplication.
  */
 @ToString
 @EqualsAndHashCode(of = { "sockets", "server" })
@@ -120,7 +124,7 @@ final class HttpFacade implements Closeable {
             .createServerSocket(sslport);
         final HttpThread thread = new HttpThread(this.sockets, hosts);
         final Runnable runnable = new VerboseRunnable(
-            new HttpFacade.HttpThreadRunnable(thread), true, false
+            new HttpFacade.HttpThreadRunnable(thread), true, true
         );
         for (int idx = 0; idx < HttpFacade.THREADS; ++idx) {
             this.backend.scheduleWithFixedDelay(

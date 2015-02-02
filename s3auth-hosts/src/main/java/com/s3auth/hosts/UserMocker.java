@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2014, s3auth.com
+ * Copyright (c) 2012-2015, s3auth.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,10 +30,9 @@
 package com.s3auth.hosts;
 
 import com.jcabi.urn.URN;
-import com.jcabi.urn.URNMocker;
 import java.net.URI;
 import java.util.Random;
-import org.mockito.Mockito;
+import lombok.experimental.Builder;
 
 /**
  * Mocker of {@link User}.
@@ -47,20 +46,24 @@ public final class UserMocker {
     /**
      * The mock.
      */
-    private final transient User user = Mockito.mock(User.class);
+    private final transient MkUser.MkUserBuilder user = MkUser.builder();
+    /**
+     * Random generator.
+     */
+    private final transient Random rand = new Random();
 
     /**
      * Public ctor.
      */
     public UserMocker() {
         this.withIdentity(
-            new URNMocker()
-                .withNid("facebook")
-                .withNss(Long.toString(Math.abs(new Random().nextLong())))
-                .mock()
+            new URN(
+                "facebook",
+                Integer.toString(Math.abs(this.rand.nextInt(Integer.MAX_VALUE)))
+            )
         );
-        Mockito.doReturn("John Doe").when(this.user).name();
-        Mockito.doReturn(URI.create("#")).when(this.user).photo();
+        this.user.name("John Doe");
+        this.user.photo(URI.create("#"));
     }
 
     /**
@@ -69,7 +72,7 @@ public final class UserMocker {
      * @return This object
      */
     public UserMocker withIdentity(final URN identity) {
-        Mockito.doReturn(identity).when(this.user).identity();
+        this.user.identity(identity);
         return this;
     }
 
@@ -87,7 +90,39 @@ public final class UserMocker {
      * @return The user
      */
     public User mock() {
-        return this.user;
+        return this.user.build();
     }
 
+    @Builder
+    @SuppressWarnings({ "PMD.TooManyMethods",
+        "PMD.AvoidFieldNameMatchingMethodName" })
+    private static class MkUser implements User {
+        /**
+         * The User identity.
+         */
+        private final transient URN identity;
+        /**
+         * The User name.
+         */
+        private final transient String name;
+        /**
+         * The User photo.
+         */
+        private final transient URI photo;
+
+        @Override
+        public URN identity() {
+            return this.identity;
+        }
+
+        @Override
+        public String name() {
+            return this.name;
+        }
+
+        @Override
+        public URI photo() {
+            return this.photo;
+        }
+    }
 }

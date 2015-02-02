@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2014, s3auth.com
+ * Copyright (c) 2012-2015, s3auth.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,8 +29,9 @@
  */
 package com.s3auth.hosts;
 
+import java.io.IOException;
 import java.net.URI;
-import org.mockito.Mockito;
+import lombok.experimental.Builder;
 
 /**
  * Mocker of {@link Host}.
@@ -44,29 +45,16 @@ public final class HostMocker {
     /**
      * The mock.
      */
-    private final transient Host host = Mockito.mock(Host.class);
+    private final transient MkHost.MkHostBuilder host = MkHost.builder();
 
     /**
      * Public ctor.
      */
     public HostMocker() {
-        try {
-            Mockito.doReturn(new ResourceMocker().withContent("hello").mock())
-                .when(this.host)
-                .fetch(
-                    Mockito.any(URI.class),
-                    Mockito.any(Range.class),
-                    Mockito.any(Version.class)
-                );
-            Mockito.doReturn(true).when(this.host).authorized(
-                Mockito.anyString(),
-                Mockito.anyString()
-            );
-            Mockito.doReturn(true).when(this.host)
-                .isHidden(Mockito.any(URI.class));
-        } catch (final java.io.IOException ex) {
-            throw new IllegalStateException(ex);
-        }
+        this.host
+            .resource(new ResourceMocker().withContent("hello").mock())
+            .authorized(true)
+            .hidden(true);
     }
 
     /**
@@ -76,17 +64,7 @@ public final class HostMocker {
      * @return This object
      */
     public HostMocker withContent(final URI uri, final String content) {
-        try {
-            Mockito.doReturn(new ResourceMocker().withContent(content).mock())
-                .when(this.host)
-                .fetch(
-                    Mockito.eq(uri),
-                    Mockito.any(Range.class),
-                    Mockito.any(Version.class)
-                );
-        } catch (final java.io.IOException ex) {
-            throw new IllegalStateException(ex);
-        }
+        this.host.resource(new ResourceMocker().withContent(content).mock());
         return this;
     }
 
@@ -96,7 +74,7 @@ public final class HostMocker {
      * @return This object
      */
     public HostMocker withSyslog(final String syslog) {
-        Mockito.doReturn(syslog).when(this.host).syslog();
+        this.host.syslog(syslog);
         return this;
     }
 
@@ -105,7 +83,65 @@ public final class HostMocker {
      * @return The host
      */
     public Host mock() {
-        return this.host;
+        return this.host.build();
     }
 
+    @Builder
+    @SuppressWarnings({ "PMD.TooManyMethods",
+        "PMD.AvoidFieldNameMatchingMethodName" })
+    private static class MkHost implements Host {
+        /**
+         * The host resource.
+         */
+        private final transient Resource resource;
+        /**
+         * Whether the host authorized.
+         */
+        private final transient boolean authorized;
+        /**
+         * Whether the host is hidden.
+         */
+        private final transient boolean hidden;
+        /**
+         * The host syslog.
+         */
+        private final transient String syslog;
+        /**
+         * The host stats.
+         */
+        private final transient Stats stats;
+
+        @Override
+        public void close() throws IOException {
+            // do nothing.
+        }
+
+        @Override
+        public Resource fetch(final URI uri, final Range range,
+            final Version version)
+            throws IOException {
+            return this.resource;
+        }
+
+        @Override
+        public boolean isHidden(final URI uri) throws IOException {
+            return this.hidden;
+        }
+
+        @Override
+        public boolean authorized(final String user, final String password)
+            throws IOException {
+            return this.authorized;
+        }
+
+        @Override
+        public String syslog() {
+            return this.syslog;
+        }
+
+        @Override
+        public Stats stats() {
+            return this.stats;
+        }
+    }
 }
