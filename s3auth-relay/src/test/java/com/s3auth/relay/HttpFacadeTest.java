@@ -520,8 +520,10 @@ public final class HttpFacadeTest {
      * HttpFacade can return content thought a secured content-encoding and
      * response content-type.
      * @throws Exception If there is some problem inside
-     * @todo #191:30mins The test fails on line 570 with java.lang.AssertionError: HTTP
-     *  response body content is not valid: Expected: is "secured" but: was""
+     * @todo #191:30mins The test fails to retrieve the expected content over
+     *  SSL. The response body is empty while it should be "secured".
+     *  Test fails on line 570.
+     *  Let's fix it and unignore the test.
      */
     @Test
     @Ignore
