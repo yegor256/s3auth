@@ -126,6 +126,7 @@ import org.apache.http.client.methods.HttpGet;
  * @checkstyle BracketsStructure (1000 lines)
  * @checkstyle LineLength (1000 lines)
  * @checkstyle ClassFanOutComplexity (1000 lines)
+ * @checkstyle MethodCountCheck (1000 lines)
  */
 @SuppressWarnings("PMD")
 public class MkAmazonS3 implements AmazonS3 {
@@ -542,6 +543,22 @@ public class MkAmazonS3 implements AmazonS3 {
     @Override
     public void restoreObject(String arg0, String arg1, int arg2)
         throws AmazonServiceException {
+    }
+
+    @Override
+    public void enableRequesterPays(final String bucket)
+        throws AmazonServiceException, AmazonClientException {
+    }
+
+    @Override
+    public void disableRequesterPays(final String bucket)
+        throws AmazonServiceException, AmazonClientException {
+    }
+
+    @Override
+    public boolean isRequesterPaysEnabled(final String bucket)
+        throws AmazonServiceException, AmazonClientException {
+        return false;
     }
 
     @Override

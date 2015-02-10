@@ -58,6 +58,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.client.utils.DateUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -516,17 +517,33 @@ public final class HttpFacadeTest {
     }
 
     /**
-     * HttpFacade can return content thought a secured
-     * content-encoding and response content-type.
+     * HttpFacade can return content thought a secured content-encoding and
+     * response content-type.
      * @throws Exception If there is some problem inside
-     * @todo #8 For some reason this test is not passing in Travis and Rultor,
-     *  even with the jcabi-ssl-maven-plugin. It does work on my local machine.
-     *  It fails with javax.net.ssl.SSLHandshakeException with message:
-     *  Received fatal alert: handshake_failure. Let's investigate and fix.
+     * @todo #191:30mins The test fails to retrieve the expected content over
+     *  SSL. The response body is empty while it should be "secured".
+     *  Test fails on line 570.
+     *  Let's fix it and unignore the test.
      */
-    @org.junit.Ignore
     @Test
+    @Ignore
     public void getsContentOverSSL() throws Exception {
+        MatcherAssert.assertThat(
+            System.getProperty("javax.net.ssl.keyStore"),
+            Matchers.notNullValue()
+        );
+        MatcherAssert.assertThat(
+            System.getProperty("javax.net.ssl.keyStorePassword"),
+            Matchers.notNullValue()
+        );
+        MatcherAssert.assertThat(
+            System.getProperty("javax.net.ssl.trustStore"),
+            Matchers.notNullValue()
+        );
+        MatcherAssert.assertThat(
+            System.getProperty("javax.net.ssl.trustStorePassword"),
+            Matchers.notNullValue()
+        );
         final Host host = Mockito.mock(Host.class);
         final String body = "secured";
         final Resource answer = new ResourceMocker().withContent(body).mock();
