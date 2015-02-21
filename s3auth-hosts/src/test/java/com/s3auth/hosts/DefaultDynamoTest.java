@@ -85,6 +85,18 @@ public final class DefaultDynamoTest {
     }
 
     /**
+     * DefaultDynamo can instantiate from default constructor.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void instantiatesDefault() throws Exception {
+        MatcherAssert.assertThat(
+            new DefaultDynamo(),
+            Matchers.not(Matchers.nullValue())
+        );
+    }
+
+    /**
      * Create and return a MkRegion with 20 random items in the given table.
      * @param table Table
      * @return The MkRegion
@@ -144,5 +156,4 @@ public final class DefaultDynamoTest {
         item.put(DefaultDynamo.SYSLOG, new AttributeValue("syslog"));
         return item;
     }
-
 }
