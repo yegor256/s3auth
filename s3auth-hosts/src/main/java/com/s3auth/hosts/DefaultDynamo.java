@@ -37,6 +37,7 @@ import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
+import com.jcabi.dynamo.ScanValve;
 import com.jcabi.dynamo.retry.ReRegion;
 import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
@@ -157,7 +158,20 @@ final class DefaultDynamo implements Dynamo {
     public ConcurrentMap<URN, Domains> load() throws IOException {
         final ConcurrentMap<URN, Domains> domains =
             new ConcurrentHashMap<URN, Domains>(0);
-        for (final Item item : this.region.table(this.table).frame()) {
+        final Iterable<Item> items = this.region
+            .table(this.table)
+            .frame()
+            .through(
+                new ScanValve().withAttributeToGet(
+                    DefaultDynamo.USER,
+                    DefaultDynamo.NAME,
+                    DefaultDynamo.KEY,
+                    DefaultDynamo.BUCKET,
+                    DefaultDynamo.REGION,
+                    DefaultDynamo.SYSLOG
+                )
+            );
+        for (final Item item : items) {
             final String syslog;
             if (item.has(DefaultDynamo.SYSLOG)) {
                 syslog = item.get(DefaultDynamo.SYSLOG).getS();
