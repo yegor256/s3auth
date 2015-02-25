@@ -1,7 +1,7 @@
-architect: 
-- davvd
-- yegor256
 install: sudo gem install pdd
+architect: 
+- yegor256
+- davvd
 assets: 
    secring.gpg: yegor256/home#assets/secring.gpg
    id_rsa: yegor256/home#assets/heroku-key
