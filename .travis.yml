@@ -6,5 +6,8 @@ env:
   global:
     - MAVEN_OPTS="-XX:MaxPermSize=2g -Xmx4g"
     - JAVA_OPTS="-XX:MaxPermSize=2g -Xmx4g"
+install:
+  - gem install pdd
 script:
+  - pdd --file=/dev/null
   - mvn clean install -Pqulice --batch-mode --errors --quiet
