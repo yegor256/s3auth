@@ -1,10 +1,20 @@
 install: sudo gem install pdd
-architect: [yegor256, davvd]
-assets: {secring.gpg: yegor256/home#assets/secring.gpg, id_rsa: yegor256/home#assets/heroku-key,
-  settings.xml: yegor256/home#assets/s3auth/settings.xml, pubring.gpg: yegor256/home#assets/pubring.gpg,
-  id_rsa.pub: yegor256/home#assets/heroku-key.pub, s3cfg: yegor256/home#assets/s3cfg}
+architect:
+- yegor256
+- davvd
+assets:
+  secring.gpg: yegor256/home#assets/secring.gpg
+  id_rsa: yegor256/home#assets/heroku-key
+  settings.xml: yegor256/home#assets/s3auth/settings.xml
+  pubring.gpg: yegor256/home#assets/pubring.gpg
+  id_rsa.pub: yegor256/home#assets/heroku-key.pub
+  s3cfg: yegor256/home#assets/s3cfg
 merge:
-  commanders: [yegor256, krzyk, carlosmiranda, longtimeago]
+  commanders:
+  - yegor256
+  - krzyk
+  - carlosmiranda
+  - longtimeago
   script: |-
     mvn help:system clean install site --errors -Psite -Pqulice --settings ../settings.xml
     mvn clean
@@ -36,4 +46,5 @@ deploy:
     mvn clean
     pdd --source=$(pwd) --verbose --file=s3auth.xml
     s3cmd --no-progress put s3auth.xml --config=../s3cfg s3://pdd.teamed.io/s3auth.xml
-env: {MAVEN_OPTS: '-XX:MaxPermSize=256m -Xmx1g'}
+env:
+  MAVEN_OPTS: -XX:MaxPermSize=256m -Xmx1g
