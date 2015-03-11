@@ -11,10 +11,12 @@ assets:
   s3cfg: yegor256/home#assets/s3cfg
 merge:
   commanders:
-  - yegor256
-  - krzyk
   - carlosmiranda
+  - ggajos
+  - krzyk
   - longtimeago
+  - pinaf
+  - yegor256
   script: |-
     mvn help:system clean install site --errors -Psite -Pqulice --settings ../settings.xml
     mvn clean
