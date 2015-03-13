@@ -172,10 +172,7 @@ final class HttpRequest {
         final Collection<String> headers = new LinkedList<String>();
         while (true) {
             final String line = reader.readLine();
-            if (line == null) {
-                break;
-            }
-            if (line.isEmpty()) {
+            if (line == null || line.isEmpty()) {
                 break;
             }
             headers.add(line);
