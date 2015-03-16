@@ -229,7 +229,7 @@ public final class HttpRequestTest {
      * HttpRequest handles invalid URI correctly.
      * @throws Exception If something goes wrong
      */
-    @Test
+    @Test(expected = HttpException.class)
     public void handlesInvalidUriCorrectly() throws Exception {
         HttpRequestMocker.toRequest(
             "HEAD /%7B%7B%20item[' HTTP/1.1\nHost:local\nAccept:text/plain\n"

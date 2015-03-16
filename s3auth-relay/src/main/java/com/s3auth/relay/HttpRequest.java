@@ -39,6 +39,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -140,6 +141,7 @@ final class HttpRequest {
      * @param socket Socket to read from
      * @throws IOException If some socket problem
      * @see <a href="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>
+     * @checkstyle ExecutableStatementCountCheck (100 lines)
      */
     HttpRequest(@NotNull final Socket socket) throws IOException {
         final BufferedReader reader = new BufferedReader(
@@ -168,7 +170,17 @@ final class HttpRequest {
             );
         }
         this.mtd = matcher.group(1);
-        this.uri = URI.create(matcher.group(2));
+        try {
+            this.uri = new URI(matcher.group(2));
+        } catch (final URISyntaxException ex) {
+            throw new HttpException(
+                HttpURLConnection.HTTP_BAD_REQUEST,
+                String.format(
+                    "request URI is not encoded correctly: %s",
+                    ex
+                )
+            );
+        }
         final Collection<String> headers = new LinkedList<String>();
         while (true) {
             final String line = reader.readLine();
