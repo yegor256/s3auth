@@ -94,7 +94,7 @@ final class HttpException extends IOException {
      * @param response The response
      */
     HttpException(@NotNull final HttpResponse response) {
-        super();
+        super(response.toString());
         this.resp = response;
     }
 
