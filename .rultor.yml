@@ -32,9 +32,9 @@ deploy:
     mv ../id_rsa ../id_rsa.pub ~/.ssh
     chmod -R 600 ~/.ssh/*
     echo -e "Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile=/dev/null" > ~/.ssh/config
+    build=$(git rev-parse --short HEAD)
     git add settings.xml
     git commit -m 'settings.xml'
-    build=$(git rev-parse --short HEAD)
     sed -i "s/BUILD/${build}/g" s3auth-rest/src/main/resources/log4j.properties
     git add s3auth-rest/src/main/resources/log4j.properties
     sed -i "s/BUILD/${build}/g" s3auth-rest/src/main/resources/META-INF/MANIFEST.MF
