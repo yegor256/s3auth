@@ -122,9 +122,11 @@ final class HttpFacade implements Closeable {
         this.server = new ServerSocket(port);
         this.secured = SSLServerSocketFactory.getDefault()
             .createServerSocket(sslport);
-        final HttpThread thread = new HttpThread(this.sockets, hosts);
         final Runnable runnable = new VerboseRunnable(
-            new HttpFacade.HttpThreadRunnable(thread), true, true
+            new HttpFacade.HttpThreadRunnable(
+                new HttpThread(this.sockets, hosts)
+            ),
+            true, true
         );
         for (int idx = 0; idx < HttpFacade.THREADS; ++idx) {
             this.backend.scheduleWithFixedDelay(

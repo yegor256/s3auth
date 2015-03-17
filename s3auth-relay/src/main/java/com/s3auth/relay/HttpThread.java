@@ -210,7 +210,7 @@ final class HttpThread {
             bytes = 0L;
         // @checkstyle IllegalCatch (1 line)
         } catch (final Throwable ex) {
-            Logger.warn(this, "#dispatch(): %[exception]s", ex);
+            Logger.info(this, "#dispatch(): %[exception]s", ex);
             bytes = this.failure(
                 new HttpException(
                     HttpURLConnection.HTTP_INTERNAL_ERROR,
