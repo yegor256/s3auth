@@ -192,6 +192,17 @@
                             </portNames>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>tomcat-port</id>
+                        <goals>
+                            <goal>reserve-network-port</goal>
+                        </goals>
+                        <configuration>
+                            <portNames>
+                                <portName>tomcat.port</portName>
+                            </portNames>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -293,24 +304,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>tomcat-port</id>
-                        <goals>
-                            <goal>reserve-network-port</goal>
-                        </goals>
-                        <configuration>
-                            <portNames>
-                                <portName>tomcat.port</portName>
-                            </portNames>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+            </plugin>            
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
