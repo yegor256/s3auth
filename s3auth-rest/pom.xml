@@ -237,6 +237,7 @@
             <plugin>
                 <groupId>com.github.klieber</groupId>
                 <artifactId>phantomjs-maven-plugin</artifactId>
+				<version>0.5</version>
                 <executions>
                     <execution>
                         <goals>
