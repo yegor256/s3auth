@@ -270,7 +270,7 @@
                             </arguments>
                         </configuration>
                     </execution>
-					<execution>
+                    <execution>
                         <id>casperjs-test</id>
                         <phase>integration-test</phase>
                         <goals>
