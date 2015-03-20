@@ -304,7 +304,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>            
+            </plugin>
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
@@ -324,12 +324,6 @@
                             <fork>true</fork>
                         </configuration>
                     </execution>
-                </executions>
-            </plugin>            
-            <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <executions>
                     <execution>
                         <id>stop-tomcat</id>
                         <phase>post-integration-test</phase>
