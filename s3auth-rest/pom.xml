@@ -270,6 +270,28 @@
                             </arguments>
                         </configuration>
                     </execution>
+					<execution>
+                        <id>casperjs-test</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>${casperjs.home.dir}/bin/${casperjs.exec.name}</executable>
+                            <workingDirectory>${basedir}</workingDirectory>
+                            <arguments>
+                                <argument>test</argument>
+                                <argument>--verbose</argument>
+                                <argument>--no-colors</argument>
+                                <argument>--concise</argument>
+                                <argument>--home=http://localhost:${tomcat.port}</argument>
+                                <argument>${basedir}/src/test/casperjs</argument>
+                            </arguments>
+                            <environmentVariables>
+                                <PHANTOMJS_EXECUTABLE>${phantomjs.binary}</PHANTOMJS_EXECUTABLE>
+                            </environmentVariables>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -309,35 +331,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>casperjs-test</id>
-                        <phase>integration-test</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>${casperjs.home.dir}/bin/${casperjs.exec.name}</executable>
-                            <workingDirectory>${basedir}</workingDirectory>
-                            <arguments>
-                                <argument>test</argument>
-                                <argument>--verbose</argument>
-                                <argument>--no-colors</argument>
-                                <argument>--concise</argument>
-                                <argument>--home=http://localhost:${tomcat.port}</argument>
-                                <argument>${basedir}/src/test/casperjs</argument>
-                            </arguments>
-                            <environmentVariables>
-                                <PHANTOMJS_EXECUTABLE>${phantomjs.binary}</PHANTOMJS_EXECUTABLE>
-                            </environmentVariables>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+            </plugin>            
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
