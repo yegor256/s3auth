@@ -36,7 +36,6 @@ import com.jcabi.aspects.Tv;
 import java.io.IOException;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
-import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -62,7 +61,7 @@ final class FastHost implements Host {
      * Public ctor.
      * @param hst Original host
      */
-    FastHost(@NotNull final Host hst) {
+    FastHost(final Host hst) {
         this.origin = hst;
     }
 
@@ -88,19 +87,19 @@ final class FastHost implements Host {
 
     @Override
     @Timeable(limit = Tv.THIRTY, unit = TimeUnit.SECONDS)
-    public Resource fetch(@NotNull final URI uri, @NotNull final Range range,
-        @NotNull final Version version) throws IOException {
+    public Resource fetch(final URI uri, final Range range,
+        final Version version) throws IOException {
         return this.origin.fetch(uri, range, version);
     }
 
     @Override
-    public boolean isHidden(@NotNull final URI uri) throws IOException {
+    public boolean isHidden(final URI uri) throws IOException {
         return this.origin.isHidden(uri);
     }
 
     @Override
-    public boolean authorized(@NotNull final String user,
-        @NotNull final String password) throws IOException {
+    public boolean authorized(final String user,
+        final String password) throws IOException {
         return this.origin.authorized(user, password);
     }
 

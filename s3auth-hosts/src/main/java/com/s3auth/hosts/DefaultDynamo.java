@@ -224,6 +224,7 @@ final class DefaultDynamo implements Dynamo {
             .where(DefaultDynamo.NAME, domain.name())
             .iterator();
         while (items.hasNext()) {
+            items.next();
             items.remove();
         }
         return true;
