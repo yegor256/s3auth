@@ -29,12 +29,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
-    <xsl:template match="/">
-        <!-- see http://stackoverflow.com/questions/3387127 -->
-        <xsl:text disable-output-escaping="yes">&lt;!DOCTYPE html&gt;</xsl:text>
-        <xsl:apply-templates select="page"/>
-    </xsl:template>
-    <xsl:template match="page">
+    <xsl:template match="/page">
         <html lang="en">
             <head>
                 <meta charset="UTF-8"/>
@@ -160,7 +155,7 @@
             <xsl:text> </xsl:text>
             <a>
                 <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='rexsl:logout']/@href"/>
+                    <xsl:value-of select="/page/links/link[@rel='takes:logout']/@href"/>
                 </xsl:attribute>
                 <xsl:text>logout</xsl:text>
             </a>

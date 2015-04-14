@@ -8,7 +8,6 @@ S3Auth-GoogleSecret: 0Nq-fl2TAmmXapFFm90M9qad
 S3Auth-GithubId: 1234567
 S3Auth-GithubSecret: 1234567
 S3Auth-SecurityKey: key
-S3Auth-SecuritySalt: salt
 S3Auth-AwsDynamoEntryPoint: http://localhost:${dynamodb.port}
 S3Auth-AwsDynamoPort: ${dynamodb.port}
 S3Auth-AwsDynamoKey: AAAAAAAAAAAAAAAAAAAA

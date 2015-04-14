@@ -29,50 +29,69 @@
  */
 package com.s3auth.rest;
 
-import com.jcabi.aspects.Loggable;
-import com.jcabi.manifests.Manifests;
+import com.s3auth.hosts.Hosts;
+import com.s3auth.hosts.User;
 import java.io.IOException;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import org.apache.commons.io.IOUtils;
+import java.util.logging.Level;
+import org.takes.Request;
+import org.takes.Response;
+import org.takes.Take;
+import org.takes.facets.flash.RsFlash;
+import org.takes.facets.forward.RsForward;
+import org.takes.rq.RqForm;
 
 /**
- * Miscellaneous resources.
- *
- * <p>The class is mutable and NOT thread-safe.
+ * Add a domain.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 0.0.1
+ * @since 0.1
  */
-@Path("/misc")
-@Loggable(Loggable.DEBUG)
-public final class MiscRs extends BaseRs {
+final class TkAdd implements Take {
 
     /**
-     * Show entrance page.
-     * @return The JAX-RS response
+     * Hosts.
      */
-    @GET
-    @Path("/version")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String version() {
-        return Manifests.read("S3Auth-Revision");
+    private final transient Hosts hosts;
+
+    /**
+     * Ctor.
+     * @param hsts Hosts
+     */
+    TkAdd(final Hosts hsts) {
+        this.hosts = hsts;
     }
 
-    /**
-     * Show license.
-     * @return The JAX-RS response
-     * @throws IOException If fails with I/O
-     */
-    @GET
-    @Path("/LICENSE.txt")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String license() throws IOException {
-        return IOUtils.toString(
-            this.getClass().getResourceAsStream("/LICENSE.txt")
+    @Override
+    public Response act(final Request request) throws IOException {
+        final User user = new RqUser(request).user();
+        final RqForm form = new RqForm(request);
+        final String host = form.param("host").iterator().next();
+        final boolean added = this.hosts.domains(user).add(
+            new SimpleDomain(
+                host,
+                form.param("key").iterator().next(),
+                form.param("secret").iterator().next(),
+                form.param("bucket").iterator().next(),
+                form.param("region").iterator().next(),
+                form.param("syslog").iterator().next()
+            )
+        );
+        if (!added) {
+            throw new RsForward(
+                new RsFlash(
+                    String.format(
+                        "host '%s' is already registered in the system",
+                        host
+                    ),
+                    Level.WARNING
+                )
+            );
+        }
+        return new RsForward(
+            new RsFlash(
+                String.format("added '%s' host to collection", host)
+            )
         );
     }
 

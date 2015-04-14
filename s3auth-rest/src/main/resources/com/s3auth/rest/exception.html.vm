@@ -2,16 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Internal application error</title>
-        <link href="/css/layout.css?${build.number}"
+        <link href="/css/layout.css?${rev}"
             rel="stylesheet" type="text/css"></link>
         <link rel="icon" type="image/gif"
-            href="http://img.s3auth.com/favicon.ico?${build.number}"/>
+            href="http://img.s3auth.com/favicon.ico?${rev}"/>
     </head>
     <body>
         <div id="content">
             <p>
                 <a href="http://www.s3auth.com/">
-                    <img src="http://img.s3auth.com/logo.png?${build.number}"
+                    <img src="http://img.s3auth.com/logo.png?${rev}"
                         style="width: 180px; height: 31px;"/>
                 </a>
             </p>
@@ -25,9 +25,9 @@
                 problem and will work with it as soon as possible. In the
                 mean time click "Back" button in your browser and try
                 to do something else.
-                Release <span class="tt">${buildNumber}</span>.
+                Release <span class="tt">${rev}</span>.
             </p>
-            <pre style="display:none;">${text}</pre>
+            <pre style="display:none;">${err}</pre>
         </div>
     </body>
 </html>

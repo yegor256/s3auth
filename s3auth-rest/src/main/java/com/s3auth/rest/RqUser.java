@@ -29,95 +29,73 @@
  */
 package com.s3auth.rest;
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
 import com.jcabi.urn.URN;
-import com.rexsl.page.auth.Identity;
 import com.s3auth.hosts.User;
+import java.io.IOException;
 import java.net.URI;
-import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import org.takes.Request;
+import org.takes.facets.auth.Identity;
+import org.takes.facets.auth.RqAuth;
+import org.takes.rq.RqWrap;
 
 /**
- * REST User.
+ * User retriever from request.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
- * @since 0.0.1
+ * @since 0.1
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-@Immutable
-@Loggable(Loggable.DEBUG)
-public final class RestUser implements User {
+@EqualsAndHashCode(callSuper = true)
+final class RqUser extends RqWrap {
 
     /**
-     * Original user.
+     * Ctor.
+     * @param req Request
      */
-    private final transient User origin;
+    RqUser(final Request req) {
+        super(req);
+    }
 
     /**
-     * Public ctor.
-     * @param identity The identity
+     * Has alias?
+     * @return TRUE if alias is there
+     * @throws IOException If fails
      */
-    public RestUser(@NotNull final Identity identity) {
-        this(
-            new User() {
+    public boolean has() throws IOException {
+        return !new RqAuth(this).identity().equals(Identity.ANONYMOUS);
+    }
+
+    /**
+     * Get user.
+     * @return User
+     * @throws IOException If fails
+     */
+    public User user() throws IOException {
+        final Identity identity = new RqAuth(this).identity();
+        final User user;
+        if (identity.equals(Identity.ANONYMOUS)) {
+            user = User.ANONYMOUS;
+        } else {
+            user = new User() {
                 @Override
                 public URN identity() {
-                    return identity.urn();
+                    return URN.create(identity.urn());
                 }
                 @Override
                 public String name() {
-                    return identity.name();
+                    return identity.properties().get("name");
                 }
                 @Override
                 public URI photo() {
-                    return identity.photo();
+                    return URI.create(
+                        identity.properties().get("avatar")
+                    );
                 }
-            }
-        );
-    }
-
-    /**
-     * Public ctor.
-     * @param user The user original
-     */
-    public RestUser(@NotNull final User user) {
-        this.origin = user;
-    }
-
-    /**
-     * As identity.
-     * @return The identity
-     */
-    public Identity asIdentity() {
-        return new Identity() {
-            @Override
-            public URN urn() {
-                return RestUser.this.origin.identity();
-            }
-            @Override
-            public String name() {
-                return RestUser.this.origin.name();
-            }
-            @Override
-            public URI photo() {
-                return RestUser.this.origin.photo();
-            }
-        };
-    }
-
-    @Override
-    public URN identity() {
-        return this.origin.identity();
-    }
-
-    @Override
-    public String name() {
-        return this.origin.name();
-    }
-
-    @Override
-    public URI photo() {
-        return this.origin.photo();
+            };
+        }
+        return user;
     }
 
 }
