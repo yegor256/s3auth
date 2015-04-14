@@ -37,6 +37,7 @@ import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.regex.Pattern;
+import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.takes.Response;
 import org.takes.Take;
@@ -55,9 +56,13 @@ import org.takes.facets.auth.social.PsFacebook;
 import org.takes.facets.auth.social.PsGithub;
 import org.takes.facets.auth.social.PsGoogle;
 import org.takes.facets.fallback.Fallback;
+import org.takes.facets.fallback.FbChain;
+import org.takes.facets.fallback.FbStatus;
 import org.takes.facets.fallback.RqFallback;
 import org.takes.facets.fallback.TkFallback;
 import org.takes.facets.flash.TkFlash;
+import org.takes.facets.fork.FkAnonymous;
+import org.takes.facets.fork.FkAuthenticated;
 import org.takes.facets.fork.FkParams;
 import org.takes.facets.fork.FkRegex;
 import org.takes.facets.fork.TkFork;
@@ -81,7 +86,10 @@ import org.takes.tk.TkWrap;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
+ * @checkstyle ClassFanOutComplexityCheck (500 lines)
  */
+@SuppressWarnings("PMD.ExcessiveImports")
 public class TkApp extends TkWrap {
 
     /**
@@ -93,13 +101,14 @@ public class TkApp extends TkWrap {
      * Ctor.
      * @param hosts Hosts
      */
-    public TkApp(final Hosts hosts) {
+    public TkApp(@NotNull final Hosts hosts) {
         super(TkApp.make(hosts));
     }
 
     /**
      * Make it.
      * @param hosts Hosts
+     * @return Take
      */
     private static Take make(final Hosts hosts) {
         if (!"UTF-8".equals(Charset.defaultCharset().name())) {
@@ -123,7 +132,6 @@ public class TkApp extends TkWrap {
             String.format("X-S3Auth-Revision: %s", TkApp.REV),
             "Vary: Cookie"
         );
-
     }
 
     /**
@@ -134,31 +142,37 @@ public class TkApp extends TkWrap {
     private static Take fallback(final Take takes) {
         return new TkFallback(
             takes,
-            // @checkstyle AnonInnerLengthCheck (50 lines)
-            new Fallback() {
-                @Override
-                public Iterator<Response> route(final RqFallback req)
-                    throws IOException {
-                    final String err = ExceptionUtils.getStackTrace(
-                        req.throwable()
-                    );
-                    return Collections.<Response>singleton(
-                        new RsWithStatus(
-                            new RsWithType(
-                                new RsVelocity(
-                                    this.getClass().getResource(
-                                        "exception.html.vm"
+            new FbChain(
+                new FbStatus(
+                    HttpURLConnection.HTTP_NOT_FOUND,
+                    new TkText("page not found")
+                ),
+                // @checkstyle AnonInnerLengthCheck (50 lines)
+                new Fallback() {
+                    @Override
+                    public Iterator<Response> route(final RqFallback req)
+                        throws IOException {
+                        final String err = ExceptionUtils.getStackTrace(
+                            req.throwable()
+                        );
+                        return Collections.<Response>singleton(
+                            new RsWithStatus(
+                                new RsWithType(
+                                    new RsVelocity(
+                                        this.getClass().getResource(
+                                            "exception.html.vm"
+                                        ),
+                                        new RsVelocity.Pair("err", err),
+                                        new RsVelocity.Pair("rev", TkApp.REV)
                                     ),
-                                    new RsVelocity.Pair("err", err),
-                                    new RsVelocity.Pair("rev", TkApp.REV)
+                                    "text/html"
                                 ),
-                                "text/html"
-                            ),
-                            HttpURLConnection.HTTP_INTERNAL_ERROR
-                        )
-                    ).iterator();
+                                HttpURLConnection.HTTP_INTERNAL_ERROR
+                            )
+                        ).iterator();
+                    }
                 }
-            }
+            )
         );
     }
 
@@ -236,7 +250,13 @@ public class TkApp extends TkWrap {
                 "/css/[a-z]+\\.css",
                 new TkWithType(new TkClasspath(), "text/css")
             ),
-            new FkRegex("/", new TkIndex(hosts)),
+            new FkRegex(
+                "/",
+                new TkFork(
+                    new FkAuthenticated(new TkIndex(hosts)),
+                    new FkAnonymous(new TkLogin())
+                )
+            ),
             new FkRegex("/add", new TkAdd(hosts)),
             new FkRegex("/remove", new TkRemove(hosts)),
             new FkRegex("/version", new TkText(TkApp.REV)),

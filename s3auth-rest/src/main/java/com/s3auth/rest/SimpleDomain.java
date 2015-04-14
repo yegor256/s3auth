@@ -39,30 +39,45 @@ import com.s3auth.hosts.Domain;
  * @since 0.1
  */
 final class SimpleDomain implements Domain {
+
     /**
      * Host.
      */
     private final transient String host;
+
     /**
      * Key.
      */
     private final transient String acc;
+
     /**
      * Secret.
      */
     private final transient String sec;
+
     /**
      * Bucket name.
      */
     private final transient String buckt;
+
     /**
      * Region.
      */
     private final transient String regn;
+
     /**
      * Syslog host.
      */
     private final transient String slog;
+
+    /**
+     * Ctor.
+     * @param hst The host name
+     */
+    SimpleDomain(final String hst) {
+        this(hst, "", "", "", "", "");
+    }
+
     /**
      * Constructor.
      * @param hst The host name
@@ -95,24 +110,30 @@ final class SimpleDomain implements Domain {
     public String name() {
         return this.host;
     }
+
     @Override
     public String key() {
         return this.acc;
     }
+
     @Override
     public String secret() {
         return this.sec;
     }
+
     @Override
     public String bucket() {
         return this.buckt;
     }
+
     @Override
     public String region() {
         return this.regn;
     }
+
     @Override
     public String syslog() {
         return this.slog;
     }
+
 }

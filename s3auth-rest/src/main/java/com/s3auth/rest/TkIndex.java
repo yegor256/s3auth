@@ -50,6 +50,7 @@ import org.xembly.Directives;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 final class TkIndex implements Take {
 
@@ -104,6 +105,7 @@ final class TkIndex implements Take {
                     .add("syslog").set(domain.syslog())
             ),
             new XeLink(
+                // @checkstyle MultipleStringLiteralsCheck (1 line)
                 "remove",
                 new Href().path("remove").with("host", domain.name())
             )

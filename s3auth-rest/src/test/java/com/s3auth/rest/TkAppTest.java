@@ -44,6 +44,7 @@ import org.junit.Test;
 import org.takes.Take;
 import org.takes.http.FtRemote;
 import org.takes.rq.RqFake;
+import org.takes.rq.RqMethod;
 import org.takes.rs.RsPrint;
 
 /**
@@ -67,7 +68,7 @@ public final class TkAppTest {
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(
                 new RsPrint(
-                    take.act(new RqFake("GET", "/"))
+                    take.act(new RqFake(RqMethod.GET, "/"))
                 ).printBody()
             ),
             XhtmlMatchers.hasXPaths(
@@ -83,18 +84,19 @@ public final class TkAppTest {
      * @throws Exception If some problem inside
      */
     @Test
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void rendersManyUrls() throws Exception {
         final Take take = new TkApp(
             new HostsMocker().mock()
         );
         final String[] paths = {
             "/robots.txt", "/xsl/index.xsl", "/css/layout.css",
-            "/version", "/license"
+            "/version", "/license",
         };
         for (final String path : paths) {
             MatcherAssert.assertThat(
                 new RsPrint(
-                    take.act(new RqFake("GET", path))
+                    take.act(new RqFake(RqMethod.GET, path))
                 ).print(),
                 Matchers.startsWith("HTTP/1.1 200 ")
             );
