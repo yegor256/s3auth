@@ -94,20 +94,23 @@ final class TkIndex implements Take {
      * @return Source
      */
     private static XeSource source(final Domain domain) {
-        return new XeChain(
-            new XeDirectives(
-                new Directives().add("domain")
-                    .add("name").set(domain.name()).up()
-                    .add("key").set(domain.key()).up()
-                    .add("secret").set(domain.secret()).up()
-                    .add("bucket").set(domain.bucket()).up()
-                    .add("region").set(domain.region()).up()
-                    .add("syslog").set(domain.syslog())
-            ),
-            new XeLink(
-                // @checkstyle MultipleStringLiteralsCheck (1 line)
-                "remove",
-                new Href().path("remove").with("host", domain.name())
+        return new XeAppend(
+            "domain",
+            new XeChain(
+                new XeDirectives(
+                    new Directives()
+                        .add("name").set(domain.name()).up()
+                        .add("key").set(domain.key()).up()
+                        .add("secret").set(domain.secret()).up()
+                        .add("bucket").set(domain.bucket()).up()
+                        .add("region").set(domain.region()).up()
+                        .add("syslog").set(domain.syslog())
+                ),
+                new XeLink(
+                    // @checkstyle MultipleStringLiteralsCheck (1 line)
+                    "remove",
+                    new Href().path("remove").with("host", domain.name())
+                )
             )
         );
     }
