@@ -219,11 +219,13 @@ final class DefaultDynamo implements Dynamo {
         final Iterator<Item> items = this.region.table(this.table).frame()
             .where(DefaultDynamo.NAME, domain.name())
             .iterator();
+        boolean removed = false;
         while (items.hasNext()) {
             items.next();
             items.remove();
+            removed = true;
         }
-        return true;
+        return removed;
     }
 
 }
