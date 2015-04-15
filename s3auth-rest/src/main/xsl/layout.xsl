@@ -95,10 +95,10 @@
                         </a>
                         <xsl:text>.</xsl:text>
                         <xsl:text> This website is using </xsl:text>
-                        <a href="http://www.rexsl.com/">
-                            <xsl:text>ReXSL</xsl:text>
+                        <a href="http://www.takes.org/">
+                            <xsl:text>Takes</xsl:text>
                         </a>
-                        <xsl:text>, Java RESTful development framework.</xsl:text>
+                        <xsl:text> framework.</xsl:text>
                     </p>
                     <p>
                         <a href="http://www.teamed.io">
