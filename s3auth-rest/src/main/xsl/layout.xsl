@@ -129,7 +129,7 @@
                     <xsl:value-of select="photo|picture|avatar"/>
                 </xsl:attribute>
                 <xsl:attribute name="alt">
-                    <xsl:value-of select="name"/>
+                    <xsl:value-of select="name|login"/>
                 </xsl:attribute>
             </img>
             <xsl:text> </xsl:text>
