@@ -51,6 +51,7 @@ import org.takes.facets.auth.codecs.CcCompact;
 import org.takes.facets.auth.codecs.CcHex;
 import org.takes.facets.auth.codecs.CcSafe;
 import org.takes.facets.auth.codecs.CcSalted;
+import org.takes.facets.auth.codecs.CcStrict;
 import org.takes.facets.auth.codecs.CcXOR;
 import org.takes.facets.auth.social.PsFacebook;
 import org.takes.facets.auth.social.PsGithub;
@@ -204,23 +205,28 @@ public class TkApp extends TkWrap {
                         )
                     ),
                     new PsByFlag.Pair(
-                        PsGoogle.class.getSimpleName(),
-                        new PsGoogle(
-                            Manifests.read("S3Auth-GoogleId"),
-                            Manifests.read("S3Auth-GoogleSecret")
-                        )
-                    ),
-                    new PsByFlag.Pair(
                         PsLogout.class.getSimpleName(),
                         new PsLogout()
                     )
                 ),
+                new PsByFlag(
+                    "state",
+                    new PsByFlag.Pair(
+                        Pattern.compile(".*"),
+                        new PsGoogle(
+                            Manifests.read("S3Auth-GoogleId"),
+                            Manifests.read("S3Auth-GoogleSecret")
+                        )
+                    )
+                ),
                 new PsCookie(
-                    new CcSafe(
-                        new CcHex(
-                            new CcXOR(
-                                new CcSalted(new CcCompact()),
-                                Manifests.read("S3Auth-SecurityKey")
+                    new CcStrict(
+                        new CcSafe(
+                            new CcHex(
+                                new CcXOR(
+                                    new CcSalted(new CcCompact()),
+                                    Manifests.read("S3Auth-SecurityKey")
+                                )
                             )
                         )
                     )
