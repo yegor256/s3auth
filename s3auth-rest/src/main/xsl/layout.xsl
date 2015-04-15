@@ -126,7 +126,7 @@
         <p>
             <img style="width: 2.5em; height: 2.5em;">
                 <xsl:attribute name="src">
-                    <xsl:value-of select="photo"/>
+                    <xsl:value-of select="photo|picture|avatar"/>
                 </xsl:attribute>
                 <xsl:attribute name="alt">
                     <xsl:value-of select="name"/>

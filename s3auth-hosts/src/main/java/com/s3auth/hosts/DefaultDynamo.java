@@ -161,6 +161,7 @@ final class DefaultDynamo implements Dynamo {
                     DefaultDynamo.USER,
                     DefaultDynamo.NAME,
                     DefaultDynamo.KEY,
+                    DefaultDynamo.SECRET,
                     DefaultDynamo.BUCKET,
                     DefaultDynamo.REGION,
                     DefaultDynamo.SYSLOG
