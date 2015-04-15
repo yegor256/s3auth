@@ -93,8 +93,8 @@ public final class TkAppITCase {
         final String[] pages = {
             "/robots.txt",
             "/xsl/layout.xsl",
-            "/xsl/home.xsl",
-            "/css/style.css",
+            "/xsl/login.xsl",
+            "/css/layout.css",
         };
         final Request request = new JdkRequest(TkAppITCase.HOME);
         for (final String page : pages) {

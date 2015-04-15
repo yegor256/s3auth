@@ -27,21 +27,33 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.s3auth.rest.rexsl.scripts
+package com.s3auth.rest;
 
-import com.jcabi.http.request.JdkRequest
-import com.jcabi.http.response.RestResponse
-import com.jcabi.manifests.Manifests
-import javax.ws.rs.core.HttpHeaders
-import javax.ws.rs.core.MediaType
-import org.hamcrest.Matchers
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import org.takes.Request;
+import org.takes.Response;
+import org.takes.Take;
+import org.takes.rs.RsWithStatus;
 
-Manifests.append(new File(rexsl.basedir, 'target/test-classes/META-INF/MANIFEST.MF'))
+/**
+ * Not found page.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 0.1
+ */
+final class TkNotFound implements Take {
 
-new JdkRequest(rexsl.home)
-    .uri().path('/misc/version').back()
-    .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
-    .fetch()
-    .as(RestResponse)
-    .assertStatus(HttpURLConnection.HTTP_OK)
-    .assertBody(Matchers.equalTo(Manifests.read('S3Auth-Revision')))
+    @Override
+    public Response act(final Request request) throws IOException {
+        return new RsWithStatus(
+            new RsPage(
+                "/xsl/404.xsl",
+                request
+            ),
+            HttpURLConnection.HTTP_NOT_FOUND
+        );
+    }
+
+}

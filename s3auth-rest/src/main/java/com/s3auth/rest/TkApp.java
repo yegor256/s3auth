@@ -145,7 +145,7 @@ public class TkApp extends TkWrap {
             new FbChain(
                 new FbStatus(
                     HttpURLConnection.HTTP_NOT_FOUND,
-                    new TkText("page not found")
+                    new TkNotFound()
                 ),
                 // @checkstyle AnonInnerLengthCheck (50 lines)
                 new Fallback() {
@@ -243,7 +243,7 @@ public class TkApp extends TkWrap {
             ),
             new FkRegex("/robots.txt", ""),
             new FkRegex(
-                "/xsl/[a-z]+\\.xsl",
+                "/xsl/[a-z0-9]+\\.xsl",
                 new TkWithType(new TkClasspath(), "text/xsl")
             ),
             new FkRegex(

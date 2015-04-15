@@ -115,23 +115,18 @@ final class DefaultDynamo implements Dynamo {
      * Public ctor.
      */
     DefaultDynamo() {
-        final Credentials creds = new Credentials.Simple(
+        Credentials creds = new Credentials.Simple(
             Manifests.read("S3Auth-AwsDynamoKey"),
             Manifests.read("S3Auth-AwsDynamoSecret")
         );
         // @checkstyle MultipleStringLiterals (1 line)
         if (Manifests.exists("S3Auth-AwsDynamoEntryPoint")) {
-            this.region = new ReRegion(
-                new Region.Simple(
-                    new Credentials.Direct(
-                        creds,
-                        Manifests.read("S3Auth-AwsDynamoEntryPoint")
-                    )
-                )
+            creds = new Credentials.Direct(
+                creds,
+                Manifests.read("S3Auth-AwsDynamoEntryPoint")
             );
-        } else {
-            this.region = new ReRegion(new Region.Simple(creds));
         }
+        this.region = new ReRegion(new Region.Simple(creds));
         this.table = Manifests.read("S3Auth-AwsDynamoTable");
     }
 
