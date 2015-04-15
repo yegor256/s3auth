@@ -164,7 +164,7 @@ final class DefaultDynamo implements Dynamo {
                     DefaultDynamo.BUCKET,
                     DefaultDynamo.REGION,
                     DefaultDynamo.SYSLOG
-                )
+                ).withLimit(Tv.THOUSAND)
             );
         for (final Item item : items) {
             final String syslog;
