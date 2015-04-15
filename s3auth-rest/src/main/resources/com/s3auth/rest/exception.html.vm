@@ -27,7 +27,7 @@
                 to do something else.
                 Release <span class="tt">${rev}</span>.
             </p>
-            <pre style="display:none;">${err}</pre>
+            <pre>${err}</pre>
         </div>
     </body>
 </html>
