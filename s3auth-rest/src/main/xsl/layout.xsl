@@ -133,7 +133,7 @@
                 </xsl:attribute>
             </img>
             <xsl:text> </xsl:text>
-            <xsl:value-of select="name"/>
+            <xsl:value-of select="name|login"/>
             <xsl:text> </xsl:text>
             <i style="font-size: 1.5em;">
                 <xsl:attribute name="class">
