@@ -5,8 +5,8 @@ cache:
     - $HOME/.m2
 env:
   global:
-    - MAVEN_OPTS="-XX:MaxPermSize=2g -Xmx4g"
-    - JAVA_OPTS="-XX:MaxPermSize=2g -Xmx4g"
+    - MAVEN_OPTS="-XX:MaxPermSize=2g -Xmx4g -Dfile.encoding=UTF-8"
+    - JAVA_OPTS="-XX:MaxPermSize=2g -Xmx4g -Dfile.encoding=UTF-8"
 install:
   - travis_retry apt-get install -y --fix-missing libmagic1 libmagic-dev
   - gem install pdd
