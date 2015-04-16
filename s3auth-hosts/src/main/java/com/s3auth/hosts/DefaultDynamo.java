@@ -29,11 +29,14 @@
  */
 package com.s3auth.hosts;
 
+import com.amazonaws.services.dynamodbv2.model.AttributeAction;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Tv;
+import com.jcabi.dynamo.AttributeUpdates;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Item;
 import com.jcabi.dynamo.Region;
@@ -168,30 +171,9 @@ final class DefaultDynamo implements Dynamo {
                 ).withLimit(Tv.THOUSAND)
             );
         for (final Item item : items) {
-            final String syslog;
-            if (item.has(DefaultDynamo.SYSLOG)) {
-                syslog = item.get(DefaultDynamo.SYSLOG).getS();
-            } else {
-                syslog = "syslog.s3auth.com:514";
-            }
-            final String bucket;
-            if (item.has(DefaultDynamo.BUCKET)) {
-                bucket = item.get(DefaultDynamo.BUCKET).getS();
-            } else {
-                bucket = item.get(DefaultDynamo.NAME).getS();
-            }
             final URN user = URN.create(item.get(DefaultDynamo.USER).getS());
             domains.putIfAbsent(user, new Domains());
-            domains.get(user).add(
-                new DefaultDomain(
-                    item.get(DefaultDynamo.NAME).getS(),
-                    item.get(DefaultDynamo.KEY).getS(),
-                    item.get(DefaultDynamo.SECRET).getS(),
-                    bucket,
-                    item.get(DefaultDynamo.REGION).getS(),
-                    syslog
-                )
-            );
+            domains.get(user).add(DefaultDynamo.domain(item));
         }
         return domains;
     }
@@ -226,6 +208,50 @@ final class DefaultDynamo implements Dynamo {
             removed = true;
         }
         return removed;
+    }
+
+    /**
+     * Turn item into domain.
+     * @param item Item
+     * @return Domain
+     */
+    private static Domain domain(final Item item) throws IOException {
+        if (!item.has(DefaultDynamo.SYSLOG)) {
+            item.put(
+                new AttributeUpdates().with(
+                    DefaultDynamo.SYSLOG,
+                    new AttributeValueUpdate()
+                        .withAction(AttributeAction.PUT)
+                        .withValue(
+                            new AttributeValue().withS(
+                                "syslog.s3auth.com:514"
+                            )
+                        )
+                )
+            );
+        }
+        if (!item.has(DefaultDynamo.BUCKET)) {
+            item.put(
+                new AttributeUpdates().with(
+                    DefaultDynamo.BUCKET,
+                    new AttributeValueUpdate()
+                        .withAction(AttributeAction.PUT)
+                        .withValue(
+                            new AttributeValue().withS(
+                                item.get(DefaultDynamo.NAME).getS()
+                            )
+                        )
+                )
+            );
+        }
+        return new DefaultDomain(
+            item.get(DefaultDynamo.NAME).getS(),
+            item.get(DefaultDynamo.KEY).getS(),
+            item.get(DefaultDynamo.SECRET).getS(),
+            item.get(DefaultDynamo.BUCKET).getS(),
+            item.get(DefaultDynamo.REGION).getS(),
+            item.get(DefaultDynamo.SYSLOG).getS()
+        );
     }
 
 }

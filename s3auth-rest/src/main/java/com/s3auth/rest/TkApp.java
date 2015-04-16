@@ -41,17 +41,18 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.takes.Response;
 import org.takes.Take;
+import org.takes.facets.auth.Identity;
 import org.takes.facets.auth.PsByFlag;
 import org.takes.facets.auth.PsChain;
 import org.takes.facets.auth.PsCookie;
 import org.takes.facets.auth.PsFake;
+import org.takes.facets.auth.PsFixed;
 import org.takes.facets.auth.PsLogout;
 import org.takes.facets.auth.TkAuth;
 import org.takes.facets.auth.codecs.CcCompact;
 import org.takes.facets.auth.codecs.CcHex;
 import org.takes.facets.auth.codecs.CcSafe;
 import org.takes.facets.auth.codecs.CcSalted;
-import org.takes.facets.auth.codecs.CcStrict;
 import org.takes.facets.auth.codecs.CcXOR;
 import org.takes.facets.auth.social.PsFacebook;
 import org.takes.facets.auth.social.PsGithub;
@@ -186,6 +187,9 @@ public class TkApp extends TkWrap {
         return new TkAuth(
             takes,
             new PsChain(
+                new PsFixed(
+                    new Identity.Simple("urn:facebook:1531296526")
+                ),
                 new PsFake(
                     Manifests.read("S3Auth-AwsDynamoKey").startsWith("AAAA")
                 ),
@@ -218,13 +222,11 @@ public class TkApp extends TkWrap {
                     )
                 ),
                 new PsCookie(
-                    new CcStrict(
-                        new CcSafe(
-                            new CcHex(
-                                new CcXOR(
-                                    new CcSalted(new CcCompact()),
-                                    Manifests.read("S3Auth-SecurityKey")
-                                )
+                    new CcSafe(
+                        new CcHex(
+                            new CcXOR(
+                                new CcSalted(new CcCompact()),
+                                Manifests.read("S3Auth-SecurityKey")
                             )
                         )
                     )
