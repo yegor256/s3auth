@@ -41,12 +41,10 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.takes.Response;
 import org.takes.Take;
-import org.takes.facets.auth.Identity;
 import org.takes.facets.auth.PsByFlag;
 import org.takes.facets.auth.PsChain;
 import org.takes.facets.auth.PsCookie;
 import org.takes.facets.auth.PsFake;
-import org.takes.facets.auth.PsFixed;
 import org.takes.facets.auth.PsLogout;
 import org.takes.facets.auth.TkAuth;
 import org.takes.facets.auth.codecs.CcCompact;
@@ -187,9 +185,6 @@ public class TkApp extends TkWrap {
         return new TkAuth(
             takes,
             new PsChain(
-                new PsFixed(
-                    new Identity.Simple("urn:facebook:1531296526")
-                ),
                 new PsFake(
                     Manifests.read("S3Auth-AwsDynamoKey").startsWith("AAAA")
                 ),
