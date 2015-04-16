@@ -205,18 +205,16 @@ public class TkApp extends TkWrap {
                         )
                     ),
                     new PsByFlag.Pair(
-                        PsLogout.class.getSimpleName(),
-                        new PsLogout()
-                    )
-                ),
-                new PsByFlag(
-                    "state",
-                    new PsByFlag.Pair(
-                        Pattern.compile(".*"),
+                        PsGoogle.class.getSimpleName(),
                         new PsGoogle(
                             Manifests.read("S3Auth-GoogleId"),
-                            Manifests.read("S3Auth-GoogleSecret")
+                            Manifests.read("S3Auth-GoogleSecret"),
+                            "http://www.s3auth.com/?PsByFlag=PsGoogle"
                         )
+                    ),
+                    new PsByFlag.Pair(
+                        PsLogout.class.getSimpleName(),
+                        new PsLogout()
                     )
                 ),
                 new PsCookie(
