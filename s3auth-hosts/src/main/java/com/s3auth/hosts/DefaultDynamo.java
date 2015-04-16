@@ -168,7 +168,7 @@ final class DefaultDynamo implements Dynamo {
                     DefaultDynamo.BUCKET,
                     DefaultDynamo.REGION,
                     DefaultDynamo.SYSLOG
-                ).withLimit(Tv.THOUSAND)
+                ).withLimit(Tv.MILLION)
             );
         for (final Item item : items) {
             final URN user = URN.create(item.get(DefaultDynamo.USER).getS());
@@ -200,6 +200,7 @@ final class DefaultDynamo implements Dynamo {
     public boolean remove(@NotNull final Domain domain) {
         final Iterator<Item> items = this.region.table(this.table).frame()
             .where(DefaultDynamo.NAME, domain.name())
+            .through(new ScanValve().withLimit(Tv.MILLION))
             .iterator();
         boolean removed = false;
         while (items.hasNext()) {
