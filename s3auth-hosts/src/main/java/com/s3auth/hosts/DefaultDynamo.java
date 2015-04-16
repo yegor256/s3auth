@@ -215,6 +215,7 @@ final class DefaultDynamo implements Dynamo {
      * Turn item into domain.
      * @param item Item
      * @return Domain
+     * @throws IOException If fails
      */
     private static Domain domain(final Item item) throws IOException {
         if (!item.has(DefaultDynamo.SYSLOG)) {
