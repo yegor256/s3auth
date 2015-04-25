@@ -310,7 +310,7 @@ final class DefaultHost implements Host {
             } catch (final AmazonClientException ex) {
                 suffix = "";
             }
-            if (suffix == null || suffix.isEmpty()) {
+            if (StringUtils.isEmpty(suffix)) {
                 suffix = DefaultHost.SUFFIX;
             }
             final StringBuilder text = new StringBuilder(this.origin);

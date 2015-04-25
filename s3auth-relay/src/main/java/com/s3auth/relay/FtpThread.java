@@ -58,18 +58,16 @@ import lombok.ToString;
  */
 @ToString
 @EqualsAndHashCode(of = { "hosts", "sockets" })
-final class FtpThread {
+final class FtpThread implements RequestDispatcher {
 
     /**
      * Queue of sockets to get from.
      */
-    @NotNull
     private final transient BlockingQueue<Socket> sockets;
 
     /**
      * Hosts to work with.
      */
-    @NotNull
     private final transient Hosts hosts;
 
     /**
@@ -84,10 +82,9 @@ final class FtpThread {
     }
 
     /**
-     * Dispatch one request from the encapsulated queue.
-     * @return Amount of bytes sent to socket
-     * @throws InterruptedException If interrupted while waiting for the queue
+     * {@inheritDoc}
      */
+    @Override
     public long dispatch() throws InterruptedException {
         assert this.hosts != null;
         assert this.sockets != null;

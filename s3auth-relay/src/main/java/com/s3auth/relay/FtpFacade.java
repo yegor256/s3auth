@@ -30,23 +30,11 @@
 package com.s3auth.relay;
 
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
-import com.jcabi.log.Logger;
-import com.jcabi.log.VerboseRunnable;
-import com.jcabi.log.VerboseThreads;
 import com.s3auth.hosts.Hosts;
-import java.io.Closeable;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.net.ftp.FTPReply;
 
@@ -58,6 +46,7 @@ import org.apache.commons.net.ftp.FTPReply;
  * <p>The class is immutable and thread-safe.
  *
  * @author Felipe Pina (felipe.pina@gmail.com)
+ * @author Simon Njenga (simtuje@gmail.com)
  * @version $Id$
  * @since 0.0.1
  * @see Main
@@ -66,41 +55,9 @@ import org.apache.commons.net.ftp.FTPReply;
  *  HttpFacade.
  */
 @ToString
-@EqualsAndHashCode(of = { "sockets", "server" })
 @SuppressWarnings("PMD.DoNotUseThreads")
 @Loggable(Loggable.DEBUG)
-final class FtpFacade implements Closeable {
-
-    /**
-     * How many threads to use.
-     */
-    private static final int THREADS = Tv.HUNDRED;
-
-    /**
-     * Executor service, with socket openers.
-     */
-    private final transient ScheduledExecutorService frontend =
-        Executors.newScheduledThreadPool(2, new VerboseThreads("FTP-front"));
-
-    /**
-     * Executor service, with consuming threads.
-     */
-    private final transient ScheduledExecutorService backend =
-        Executors.newScheduledThreadPool(
-            FtpFacade.THREADS,
-            new VerboseThreads("FTP-back")
-        );
-
-    /**
-     * Blocking queue of ready-to-be-processed sockets.
-     */
-    private final transient BlockingQueue<Socket> sockets =
-        new SynchronousQueue<Socket>();
-
-    /**
-     * Server socket.
-     */
-    private final transient ServerSocket server;
+final class FtpFacade extends AbstractFacade {
 
     /**
      * Public ctor.
@@ -110,75 +67,25 @@ final class FtpFacade implements Closeable {
      */
     FtpFacade(@NotNull final Hosts hosts, final int port)
         throws IOException {
-        this.server = new ServerSocket(port);
-        final FtpThread thread = new FtpThread(this.sockets, hosts);
-        final Runnable runnable = new VerboseRunnable(
-            new FtpFacade.FTPThreadRunnable(thread), true, true
-        );
-        for (int idx = 0; idx < FtpFacade.THREADS; ++idx) {
-            this.backend.scheduleWithFixedDelay(
-                runnable,
-                0L, 1L, TimeUnit.NANOSECONDS
-            );
-        }
+        this.setFrontend(this.createThreadPool(THREADS, "FTP-front"));
+        this.setBackend(this.createThreadPool(THREADS, "FTP-back"));
+        this.setServer(new ServerSocket(port));
+        final FtpThread ftpThread = new FtpThread(this.getSockets(), hosts);
+        this.threadRunnableDispatcher(ftpThread, this.getBackend());
     }
 
     /**
      * Start listening to the ports.
      */
     public void listen() {
-        this.frontend.scheduleWithFixedDelay(
-            new VerboseRunnable(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        FtpFacade.this.process(FtpFacade.this.server);
-                    }
-                }
-            ),
-            0L, 1L, TimeUnit.NANOSECONDS
-        );
+        this.listen(this.getFrontend(), this.getServer());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void close() throws IOException {
-        try {
-            this.shutdown(this.frontend);
-            this.shutdown(this.backend);
-        } catch (final InterruptedException ex) {
-            Thread.currentThread().interrupt();
-            throw new IOException(ex);
-        }
-        this.server.close();
-    }
-
-    /**
-     * Process one server socket.
-     * @param svr The server socket
-     */
-    private void process(final ServerSocket svr) {
-        final Socket socket;
-        try {
-            socket = svr.accept();
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-        try {
-            if (!this.sockets.offer(socket, Tv.TEN, TimeUnit.SECONDS)) {
-                FtpFacade.overflow(socket);
-                Logger.warn(this, "too many open connections");
-            }
-        } catch (final InterruptedException ex) {
-            Thread.currentThread().interrupt();
-            throw new IllegalStateException(ex);
-        }
-    }
-
-    /**
-     * Report overflow problem to the socket and close it.
-     * @param socket The socket to report to
-     */
-    private static void overflow(final Socket socket) {
+    void overflow(final Socket socket) {
         try {
             new FtpResponse()
                 .withCode(FTPReply.SERVICE_NOT_AVAILABLE)
@@ -194,54 +101,4 @@ final class FtpFacade implements Closeable {
             throw new IllegalStateException(ex);
         }
     }
-
-    /**
-     * Shutdown a service.
-     * @param service The service to shut down
-     * @throws InterruptedException If fails to shutdown
-     */
-    private void shutdown(final ExecutorService service)
-        throws InterruptedException {
-        service.shutdown();
-        if (service.awaitTermination(Tv.TEN, TimeUnit.SECONDS)) {
-            Logger.info(this, "#shutdown(): succeeded");
-        } else {
-            Logger.warn(this, "#shutdown(): failed");
-            service.shutdownNow();
-            if (service.awaitTermination(Tv.TEN, TimeUnit.SECONDS)) {
-                Logger.info(this, "#shutdown(): shutdownNow() succeeded");
-            } else {
-                Logger.error(this, "#shutdown(): failed to stop threads");
-            }
-        }
-    }
-
-    /**
-     * Dispatcher of FTPThread.
-     */
-    private static final class FTPThreadRunnable implements Runnable {
-        /**
-         * The thread to run.
-         */
-        private final transient FtpThread thread;
-
-        /**
-         * Constructor.
-         * @param thrd The FTPThread
-         */
-        FTPThreadRunnable(final FtpThread thrd) {
-            this.thread = thrd;
-        }
-
-        @Override
-        public void run() {
-            try {
-                this.thread.dispatch();
-            } catch (final InterruptedException ex) {
-                Thread.currentThread().interrupt();
-                Logger.warn(this, "%s", ex);
-            }
-        }
-    }
-
 }

@@ -30,25 +30,13 @@
 package com.s3auth.relay;
 
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
-import com.jcabi.log.Logger;
-import com.jcabi.log.VerboseRunnable;
-import com.jcabi.log.VerboseThreads;
 import com.s3auth.hosts.Hosts;
-import java.io.Closeable;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
@@ -59,56 +47,16 @@ import lombok.ToString;
  * <p>The class is mutable and thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Simon Njenga (simtuje@gmail.com)
  * @version $Id$
  * @since 0.0.1
  * @see Main
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
- * @todo #213:1hr Create new a class Facade with all protocol-neutral code
- *  (such as socket handling, socket queue, etc). Then convert {@link com
- *  .s3auth.relay.HttpFacade} and {@link com.s3auth.relay.FtpFacade} so they use
- *  the new Facade class in order to avoid code duplication.
+ * @checkstyle ClassDataAbstractionCoupling (10 lines)
  */
 @ToString
-@EqualsAndHashCode(of = { "sockets", "server" })
 @SuppressWarnings("PMD.DoNotUseThreads")
 @Loggable(Loggable.DEBUG)
-final class HttpFacade implements Closeable {
-
-    /**
-     * How many threads to use.
-     */
-    private static final int THREADS = Tv.HUNDRED;
-
-    /**
-     * Executor service, with socket openers.
-     */
-    private final transient ScheduledExecutorService frontend =
-        Executors.newScheduledThreadPool(2, new VerboseThreads("front"));
-
-    /**
-     * Executor service, with consuming threads.
-     */
-    private final transient ScheduledExecutorService backend =
-        Executors.newScheduledThreadPool(
-            HttpFacade.THREADS,
-            new VerboseThreads("back")
-        );
-
-    /**
-     * Blocking queue of ready-to-be-processed sockets.
-     */
-    private final transient BlockingQueue<Socket> sockets =
-        new SynchronousQueue<Socket>();
-
-    /**
-     * Server socket.
-     */
-    private final transient ServerSocket server;
-
-    /**
-     * Secured Server socket.
-     */
-    private final transient ServerSocket secured;
+final class HttpFacade extends AbstractFacade {
 
     /**
      * Public ctor.
@@ -119,90 +67,29 @@ final class HttpFacade implements Closeable {
      */
     HttpFacade(@NotNull final Hosts hosts, final int port, final int sslport)
         throws IOException {
-        this.server = new ServerSocket(port);
-        this.secured = SSLServerSocketFactory.getDefault()
-            .createServerSocket(sslport);
-        final Runnable runnable = new VerboseRunnable(
-            new HttpFacade.HttpThreadRunnable(
-                new HttpThread(this.sockets, hosts)
-            ),
-            true, true
+        this.setFrontend(this.createThreadPool(THREADS, "front"));
+        this.setBackend(this.createThreadPool(THREADS, "back"));
+        this.setServer(new ServerSocket(port));
+        this.setSecured(SSLServerSocketFactory.getDefault()
+            .createServerSocket(sslport)
         );
-        for (int idx = 0; idx < HttpFacade.THREADS; ++idx) {
-            this.backend.scheduleWithFixedDelay(
-                runnable,
-                0L, 1L, TimeUnit.NANOSECONDS
-            );
-        }
+        final HttpThread httpThread = new HttpThread(this.getSockets(), hosts);
+        this.threadRunnableDispatcher(httpThread, this.getBackend());
     }
 
     /**
      * Start listening to the ports.
      */
     public void listen() {
-        this.frontend.scheduleWithFixedDelay(
-            new VerboseRunnable(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        HttpFacade.this.process(HttpFacade.this.server);
-                    }
-                }
-            ),
-            0L, 1L, TimeUnit.NANOSECONDS
-        );
-        this.frontend.scheduleWithFixedDelay(
-            new VerboseRunnable(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        HttpFacade.this.process(HttpFacade.this.secured);
-                    }
-                }
-            ),
-            0L, 1L, TimeUnit.NANOSECONDS
-        );
+        this.listen(this.getFrontend(), this.getServer());
+        this.listen(this.getFrontend(), this.getSecured());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void close() throws IOException {
-        try {
-            this.shutdown(this.frontend);
-            this.shutdown(this.backend);
-        } catch (final InterruptedException ex) {
-            Thread.currentThread().interrupt();
-            throw new IOException(ex);
-        }
-        this.server.close();
-    }
-
-    /**
-     * Process one server socket.
-     * @param svr The server socket
-     */
-    private void process(final ServerSocket svr) {
-        final Socket socket;
-        try {
-            socket = svr.accept();
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-        try {
-            if (!this.sockets.offer(socket, Tv.TEN, TimeUnit.SECONDS)) {
-                HttpFacade.overflow(socket);
-                Logger.warn(this, "too many open connections");
-            }
-        } catch (final InterruptedException ex) {
-            Thread.currentThread().interrupt();
-            throw new IllegalStateException(ex);
-        }
-    }
-
-    /**
-     * Report overflow problem to the socket and close it.
-     * @param socket The socket to report to
-     */
-    private static void overflow(final Socket socket) {
+    void overflow(final Socket socket) {
         try {
             new HttpResponse()
                 .withStatus(HttpURLConnection.HTTP_GATEWAY_TIMEOUT)
@@ -216,53 +103,6 @@ final class HttpFacade implements Closeable {
                 .send(socket);
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
-        }
-    }
-
-    /**
-     * Shutdown a service.
-     * @param service The service to shut down
-     * @throws InterruptedException If fails to shutdown
-     */
-    private void shutdown(final ExecutorService service)
-        throws InterruptedException {
-        service.shutdown();
-        if (service.awaitTermination(Tv.TEN, TimeUnit.SECONDS)) {
-            Logger.info(this, "#shutdown(): succeeded");
-        } else {
-            Logger.warn(this, "#shutdown(): failed");
-            service.shutdownNow();
-            if (service.awaitTermination(Tv.TEN, TimeUnit.SECONDS)) {
-                Logger.info(this, "#shutdown(): shutdownNow() succeeded");
-            } else {
-                Logger.error(this, "#shutdown(): failed to stop threads");
-            }
-        }
-    }
-
-    /**
-     * Dispatcher of HttpThread.
-     */
-    private static final class HttpThreadRunnable implements Runnable {
-        /**
-         * The thread to run.
-         */
-        private final transient HttpThread thread;
-        /**
-         * Constructor.
-         * @param thrd The HttpThread
-         */
-        HttpThreadRunnable(final HttpThread thrd) {
-            this.thread = thrd;
-        }
-        @Override
-        public void run() {
-            try {
-                this.thread.dispatch();
-            } catch (final InterruptedException ex) {
-                Thread.currentThread().interrupt();
-                Logger.warn(this, "%s", ex);
-            }
         }
     }
 }
