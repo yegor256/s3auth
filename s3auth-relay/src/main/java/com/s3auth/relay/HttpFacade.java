@@ -67,7 +67,7 @@ final class HttpFacade extends AbstractFacade {
      */
     HttpFacade(@NotNull final Hosts hosts, final int port, final int sslport)
         throws IOException {
-        this.setFrontend(this.createThreadPool(THREADS, "front"));
+        this.setFrontend(this.createThreadPool(2, "front"));
         this.setBackend(this.createThreadPool(THREADS, "back"));
         this.setServer(new ServerSocket(port));
         this.setSecured(SSLServerSocketFactory.getDefault()

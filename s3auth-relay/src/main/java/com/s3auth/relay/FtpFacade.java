@@ -67,7 +67,7 @@ final class FtpFacade extends AbstractFacade {
      */
     FtpFacade(@NotNull final Hosts hosts, final int port)
         throws IOException {
-        this.setFrontend(this.createThreadPool(THREADS, "FTP-front"));
+        this.setFrontend(this.createThreadPool(2, "FTP-front"));
         this.setBackend(this.createThreadPool(THREADS, "FTP-back"));
         this.setServer(new ServerSocket(port));
         final FtpThread ftpThread = new FtpThread(this.getSockets(), hosts);
