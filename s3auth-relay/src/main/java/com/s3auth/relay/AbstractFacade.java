@@ -50,6 +50,7 @@ import lombok.ToString;
 /**
  * Abstract facade (port listener).
  *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
  * @author Simon Njenga (simtuje@gmail.com)
  * @version $Id$
  * @since 0.0.1
