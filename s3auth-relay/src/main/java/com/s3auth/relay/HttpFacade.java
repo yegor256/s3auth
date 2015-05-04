@@ -32,9 +32,7 @@ package com.s3auth.relay;
 import com.jcabi.aspects.Loggable;
 import com.s3auth.hosts.Hosts;
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.ServerSocket;
-import java.net.Socket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.validation.constraints.NotNull;
 import lombok.ToString;
@@ -44,14 +42,13 @@ import lombok.ToString;
  *
  * <p>The class is instantiated in {@link Main}, once per application run.
  *
- * <p>The class is mutable and thread-safe.
+ * <p>The class is immutable and thread-safe.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
  * @author Simon Njenga (simtuje@gmail.com)
+ * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.0.1
  * @see Main
- * @checkstyle ClassDataAbstractionCoupling (10 lines)
  */
 @ToString
 @SuppressWarnings("PMD.DoNotUseThreads")
@@ -59,7 +56,7 @@ import lombok.ToString;
 final class HttpFacade extends AbstractFacade {
 
     /**
-     * Public ctor.
+     * Constructor.
      * @param hosts Hosts
      * @param port Port number
      * @param sslport SSL port number.
@@ -67,42 +64,16 @@ final class HttpFacade extends AbstractFacade {
      */
     HttpFacade(@NotNull final Hosts hosts, final int port, final int sslport)
         throws IOException {
-        this.setFrontend(this.createThreadPool(2, "front"));
-        this.setBackend(this.createThreadPool(THREADS, "back"));
-        this.setServer(new ServerSocket(port));
-        this.setSecured(SSLServerSocketFactory.getDefault()
-            .createServerSocket(sslport)
-        );
-        final HttpThread httpThread = new HttpThread(this.getSockets(), hosts);
-        this.threadRunnableDispatcher(httpThread, this.getBackend());
-    }
-
-    /**
-     * Start listening to the ports.
-     */
-    public void listen() {
-        this.listen(this.getFrontend(), this.getServer());
-        this.listen(this.getFrontend(), this.getSecured());
+        super(2, "front", THREADS, "back", new ServerSocket(port),
+            SSLServerSocketFactory.getDefault().createServerSocket(sslport));
+        super.executeDispatch(true, hosts);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    void overflow(final Socket socket) {
-        try {
-            new HttpResponse()
-                .withStatus(HttpURLConnection.HTTP_GATEWAY_TIMEOUT)
-                .withBody(
-                    String.format(
-                        // @checkstyle LineLength (1 line)
-                        "We're sorry, the site is under high load at the moment (%d open connections), please try again in a few minutes",
-                        HttpFacade.THREADS
-                    )
-                )
-                .send(socket);
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
-        }
+    public void listen() {
+        super.listen(true);
     }
 }

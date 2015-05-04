@@ -33,10 +33,8 @@ import com.jcabi.aspects.Loggable;
 import com.s3auth.hosts.Hosts;
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
 import javax.validation.constraints.NotNull;
 import lombok.ToString;
-import org.apache.commons.net.ftp.FTPReply;
 
 /**
  * FTP facade (port listener).
@@ -45,12 +43,11 @@ import org.apache.commons.net.ftp.FTPReply;
  *
  * <p>The class is immutable and thread-safe.
  *
- * @author Felipe Pina (felipe.pina@gmail.com)
  * @author Simon Njenga (simtuje@gmail.com)
+ * @author Felipe Pina (felipe.pina@gmail.com)
  * @version $Id$
  * @since 0.0.1
  * @see Main
- * @checkstyle ClassDataAbstractionCoupling (10 lines)
  * @todo #213:30min Implement TLS secure port listening in a manner analogous to
  *  HttpFacade.
  */
@@ -60,45 +57,23 @@ import org.apache.commons.net.ftp.FTPReply;
 final class FtpFacade extends AbstractFacade {
 
     /**
-     * Public ctor.
+     * Constructor.
      * @param hosts Hosts
      * @param port Port number
      * @throws IOException If can't initialize
      */
     FtpFacade(@NotNull final Hosts hosts, final int port)
         throws IOException {
-        this.setFrontend(this.createThreadPool(2, "FTP-front"));
-        this.setBackend(this.createThreadPool(THREADS, "FTP-back"));
-        this.setServer(new ServerSocket(port));
-        final FtpThread ftpThread = new FtpThread(this.getSockets(), hosts);
-        this.threadRunnableDispatcher(ftpThread, this.getBackend());
-    }
-
-    /**
-     * Start listening to the ports.
-     */
-    public void listen() {
-        this.listen(this.getFrontend(), this.getServer());
+        super(2, "FTP-front", THREADS, "FTP-back", new ServerSocket(port),
+            null);
+        super.executeDispatch(false, hosts);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    void overflow(final Socket socket) {
-        try {
-            new FtpResponse()
-                .withCode(FTPReply.SERVICE_NOT_AVAILABLE)
-                .withText(
-                    String.format(
-                        // @checkstyle LineLength (1 line)
-                        "We're sorry, the service is under high load at the moment (%d open connections), please try again in a few minutes",
-                        FtpFacade.THREADS
-                    )
-                )
-                .send(socket);
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
-        }
+    public void listen() {
+        super.listen(false);
     }
 }

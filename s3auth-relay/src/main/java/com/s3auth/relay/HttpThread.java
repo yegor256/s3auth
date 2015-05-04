@@ -125,7 +125,7 @@ final class HttpThread implements RequestDispatcher {
     private final transient Hosts hosts;
 
     /**
-     * Public ctor.
+     * Constructor.
      * @param sckts Sockets to read from
      * @param hsts Hosts
      */
