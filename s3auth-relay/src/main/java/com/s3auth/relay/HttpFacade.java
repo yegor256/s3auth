@@ -53,7 +53,7 @@ import lombok.ToString;
 @ToString
 @SuppressWarnings("PMD.DoNotUseThreads")
 @Loggable(Loggable.DEBUG)
-final class HttpFacade extends AbstractFacade {
+final class HttpFacade extends BaseFacade {
 
     /**
      * Constructor.

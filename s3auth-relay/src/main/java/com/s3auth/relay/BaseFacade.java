@@ -52,7 +52,23 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.ftp.FTPReply;
 
 /**
- * Abstract facade (port listener).
+ * Base superclass that creates a request dispatcher object for port listener
+ * implementations such as {@link HttpFacade} or {@link FtpFacade}.
+ *
+ * <p>Passing in {@code true} for the "ishttp" flag in the method
+ * {@link #executeDispatch(boolean, Hosts)} allows this class to create
+ * {@link HttpThread} request dispatcher object. Else, it creates
+ * {@link FtpThread} request dispatcher object. This request dispatcher
+ * object created is later used by the respective facade subclass.
+ *
+ * <p>Subsequent method invocations where the "ishttp" flag is used, e.g
+ *
+ * {@link #listen(boolean)},
+ * {@link #listen(ScheduledExecutorService, ServerSocket, boolean)},
+ * {@link #process(ServerSocket, boolean)} and
+ * {@link #overflow(Socket, boolean)}.
+ *
+ * allows control flow to happen in favour of the respective facade subclass.
  *
  * @author Simon Njenga (simtuje@gmail.com)
  * @author Yegor Bugayenko (yegor@tpc2.com)
@@ -64,7 +80,7 @@ import org.apache.commons.net.ftp.FTPReply;
 @EqualsAndHashCode(of = { "sockets", "server", "secured" })
 @SuppressWarnings({ "PMD.DoNotUseThreads", "PMD.TooManyMethods" })
 @Loggable(Loggable.DEBUG)
-abstract class AbstractFacade implements Closeable {
+class BaseFacade implements Closeable {
 
     /**
      * How many threads to use.
@@ -107,7 +123,7 @@ abstract class AbstractFacade implements Closeable {
      * @param secure The secure server socket
      * @checkstyle ParameterNumber (5 lines)
      */
-    protected AbstractFacade(final int frontthreads, final String frontprefix,
+    protected BaseFacade(final int frontthreads, final String frontprefix,
         final int backthreads, final String backprefix, final ServerSocket svr,
         final ServerSocket secure) {
         this.frontend = this.createThreadPool(frontthreads, frontprefix);
@@ -162,8 +178,13 @@ abstract class AbstractFacade implements Closeable {
 
     /**
      * Start listening to the ports.
+     *
+     * The default implementation is <em>empty</em>. This can be overridden
+     * by subclasses as necessary.
      */
-    protected abstract void listen();
+    protected void listen() {
+        // no-op, intentionally empty
+    }
 
     /**
      * Dispatcher for either HttpThread or FTPThread.
@@ -173,7 +194,7 @@ abstract class AbstractFacade implements Closeable {
     private void threadRunnableDispatcher(final RequestDispatcher thread,
         final ScheduledExecutorService bckend) {
         final Runnable runnable = new VerboseRunnable(
-            new AbstractFacade.ThreadRunnableDispatcher(thread), true, true
+            new BaseFacade.ThreadRunnableDispatcher(thread), true, true
         );
         for (int idx = 0; idx < THREADS; ++idx) {
             bckend.scheduleWithFixedDelay(
@@ -196,7 +217,7 @@ abstract class AbstractFacade implements Closeable {
                 new Runnable() {
                     @Override
                     public void run() {
-                        AbstractFacade.this.process(svr, ishttp);
+                        BaseFacade.this.process(svr, ishttp);
                     }
                 }
             ),

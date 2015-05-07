@@ -54,7 +54,7 @@ import lombok.ToString;
 @ToString
 @SuppressWarnings("PMD.DoNotUseThreads")
 @Loggable(Loggable.DEBUG)
-final class FtpFacade extends AbstractFacade {
+final class FtpFacade extends BaseFacade {
 
     /**
      * Constructor.
