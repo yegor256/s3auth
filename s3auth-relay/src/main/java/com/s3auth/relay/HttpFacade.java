@@ -56,7 +56,7 @@ import lombok.ToString;
 final class HttpFacade extends BaseFacade {
 
     /**
-     * Constructor.
+     * Package-private constructor.
      * @param hosts Hosts
      * @param port Port number
      * @param sslport SSL port number.

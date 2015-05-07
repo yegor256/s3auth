@@ -57,7 +57,7 @@ import lombok.ToString;
 final class FtpFacade extends BaseFacade {
 
     /**
-     * Constructor.
+     * Package-private constructor.
      * @param hosts Hosts
      * @param port Port number
      * @throws IOException If can't initialize

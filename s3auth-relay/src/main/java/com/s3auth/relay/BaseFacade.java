@@ -48,6 +48,7 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.ftp.FTPReply;
 
@@ -143,9 +144,10 @@ class BaseFacade implements Closeable {
         } catch (final InterruptedException ex) {
             Thread.currentThread().interrupt();
             throw new IOException(ex);
+        } finally {
+            IOUtils.closeQuietly(this.server);
+            IOUtils.closeQuietly(this.secured);
         }
-        this.server.close();
-        this.secured.close();
     }
 
     /**
