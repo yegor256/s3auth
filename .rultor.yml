@@ -17,13 +17,6 @@ assets:
   s3cfg: yegor256/home#assets/s3cfg
 merge:
   commanders:
-  - caarlos0
-  - carlosmiranda
-  - darkled
-  - ggajos
-  - krzyk
-  - longtimeago
-  - pinaf
   - yegor256
   script: |-
     mvn help:system clean install site --errors -Psite -Pqulice --settings ../settings.xml
