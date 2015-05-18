@@ -6,7 +6,6 @@ install: |
   export LANGUAGE=en_US.UTF-8
   sudo gem install pdd
 architect:
-- yegor256
 - davvd
 assets:
   secring.gpg: yegor256/home#assets/secring.gpg
