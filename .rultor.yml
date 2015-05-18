@@ -51,5 +51,4 @@ deploy:
 env:
   MAVEN_OPTS: -XX:MaxPermSize=256m -Xmx1g
 release:
-  commanders:
-  - yegor256
+  commanders: []
