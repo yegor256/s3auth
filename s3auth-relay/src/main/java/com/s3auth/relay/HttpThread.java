@@ -75,7 +75,7 @@ import org.apache.http.client.utils.DateUtils;
     "PMD.UseConcurrentHashMap",
     "PMD.CyclomaticComplexity"
 })
-final class HttpThread {
+final class HttpThread implements RequestDispatcher {
 
     /**
      * S3 version query string.
@@ -125,7 +125,7 @@ final class HttpThread {
     private final transient Hosts hosts;
 
     /**
-     * Public ctor.
+     * Package-private constructor.
      * @param sckts Sockets to read from
      * @param hsts Hosts
      */
@@ -136,13 +136,12 @@ final class HttpThread {
     }
 
     /**
-     * Dispatch one request from the encapsulated queue.
-     * @return Amount of bytes sent to socket
-     * @throws InterruptedException If interrupted while waiting for the queue
+     * {@inheritDoc}
      * @checkstyle ExecutableStatementCount (100 lines)
      * @checkstyle MultipleStringLiterals (100 lines)*
      */
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
+    @Override
     public long dispatch() throws InterruptedException {
         final Socket socket = this.sockets.take();
         final long start = System.currentTimeMillis();
@@ -189,9 +188,7 @@ final class HttpThread {
                         this, "#dispath(): %d bytes of %s", bytes, resource
                     );
                 } finally {
-                    if (resource != null) {
-                        resource.close();
-                    }
+                    IOUtils.closeQuietly(resource);
                 }
             } else {
                 bytes = this.failure(

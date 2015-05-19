@@ -29,51 +29,18 @@
  */
 package com.s3auth.relay;
 
-import com.jcabi.aspects.Loggable;
-import com.s3auth.hosts.Hosts;
-import java.io.IOException;
-import java.net.ServerSocket;
-import javax.validation.constraints.NotNull;
-import lombok.ToString;
-
 /**
- * FTP facade (port listener).
- *
- * <p>The class is instantiated in {@link Main}, once per application run.
- *
- * <p>The class is immutable and thread-safe.
+ * Dispatcher for a single {@link HttpThread} or {@link FtpThread}.
  *
  * @author Simon Njenga (simtuje@gmail.com)
- * @author Felipe Pina (felipe.pina@gmail.com)
  * @version $Id$
  * @since 0.0.1
- * @see Main
- * @todo #213:30min Implement TLS secure port listening in a manner analogous to
- *  HttpFacade.
  */
-@ToString
-@SuppressWarnings("PMD.DoNotUseThreads")
-@Loggable(Loggable.DEBUG)
-final class FtpFacade extends BaseFacade {
-
+interface RequestDispatcher {
     /**
-     * Package-private constructor.
-     * @param hosts Hosts
-     * @param port Port number
-     * @throws IOException If can't initialize
+     * Dispatch one request from the encapsulated queue.
+     * @return Amount of bytes sent to socket
+     * @throws InterruptedException If interrupted while waiting for the queue
      */
-    FtpFacade(@NotNull final Hosts hosts, final int port)
-        throws IOException {
-        super(2, "FTP-front", THREADS, "FTP-back", new ServerSocket(port),
-            null);
-        super.executeDispatch(false, hosts);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void listen() {
-        super.listen(false);
-    }
+    long dispatch() throws InterruptedException;
 }
