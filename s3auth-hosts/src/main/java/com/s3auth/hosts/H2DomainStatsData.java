@@ -111,7 +111,7 @@ final class H2DomainStatsData implements DomainStatsData {
     private final transient String jdbc;
 
     /**
-     * Public ctor.
+     * Package-private constructor.
      * @throws IOException If an IO Exception occurs.
      */
     H2DomainStatsData() throws IOException {
@@ -119,7 +119,7 @@ final class H2DomainStatsData implements DomainStatsData {
     }
 
     /**
-     * Public ctor.
+     * Package-private constructor.
      * @param file The file pointing to the database to use.
      * @throws IOException If an IO Exception occurs.
      */

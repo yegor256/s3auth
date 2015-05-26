@@ -119,7 +119,7 @@ final class DefaultHost implements Host {
     private final transient Host.CloudWatch cloudwatch;
 
     /**
-     * Public ctor.
+     * Package-private constructor.
      * @param bckt The S3 bucket to use
      */
     DefaultHost(@NotNull final Bucket bckt) {
@@ -130,7 +130,7 @@ final class DefaultHost implements Host {
     }
 
     /**
-     * Ctor for unit tests.
+     * Package-private constructor.
      * @param bckt The S3 bucket to use
      * @param cwatch The Amazon Cloudwatch client
      */
@@ -289,7 +289,7 @@ final class DefaultHost implements Host {
          */
         private final transient String origin;
         /**
-         * Public ctor.
+         * Package-private constructor.
          * @param name The original name
          */
         NameWithSuffix(final String name) {
@@ -310,7 +310,7 @@ final class DefaultHost implements Host {
             } catch (final AmazonClientException ex) {
                 suffix = "";
             }
-            if (suffix == null || suffix.isEmpty()) {
+            if (StringUtils.isEmpty(suffix)) {
                 suffix = DefaultHost.SUFFIX;
             }
             final StringBuilder text = new StringBuilder(this.origin);
@@ -336,7 +336,7 @@ final class DefaultHost implements Host {
          */
         private final transient String name;
         /**
-         * Public ctor.
+         * Package-private constructor.
          * @param nme The name
          */
         Simple(final String nme) {

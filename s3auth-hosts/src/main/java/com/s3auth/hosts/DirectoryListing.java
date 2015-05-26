@@ -81,7 +81,7 @@ final class DirectoryListing implements Resource {
     private final transient byte[] content;
 
     /**
-     * Public constructor.
+     * Package-private constructor.
      * @param client Amazon S3 client
      * @param bucket Bucket name
      * @param key The S3 object key

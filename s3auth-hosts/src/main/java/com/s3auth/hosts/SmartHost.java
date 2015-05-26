@@ -65,7 +65,7 @@ final class SmartHost implements Host {
     private final transient Host host;
 
     /**
-     * Public ctor.
+     * Package-private constructor.
      * @param hst Original host
      */
     SmartHost(@NotNull final Host hst) {
