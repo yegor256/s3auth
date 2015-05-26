@@ -41,6 +41,7 @@ import com.s3auth.hosts.Range;
 import com.s3auth.hosts.Resource;
 import com.s3auth.hosts.ResourceMocker;
 import com.s3auth.hosts.Version;
+import com.s3auth.relay.BaseFacade.HttpFacade;
 import java.io.ByteArrayInputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
