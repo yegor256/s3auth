@@ -48,7 +48,7 @@ public final class HostMocker {
     private final transient MkHost.MkHostBuilder host = MkHost.builder();
 
     /**
-     * Public ctor.
+     * Default public ctor.
      */
     public HostMocker() {
         this.host

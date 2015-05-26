@@ -53,7 +53,7 @@ final class DefaultDomain implements Domain {
     private final transient Domain origin;
 
     /**
-     * Public ctor.
+     * Package-private constructor.
      * @param name Name of it
      * @param key Key of it
      * @param secret Secret of it
@@ -101,7 +101,7 @@ final class DefaultDomain implements Domain {
     }
 
     /**
-     * Public ctor.
+     * Package-private constructor.
      * @param domain The domain
      */
     DefaultDomain(@NotNull final Domain domain) {

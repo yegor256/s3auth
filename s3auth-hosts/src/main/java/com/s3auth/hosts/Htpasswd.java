@@ -86,7 +86,7 @@ final class Htpasswd {
     private final transient Host host;
 
     /**
-     * Public ctor.
+     * Package-private constructor.
      * @param hst The host to work with
      */
     Htpasswd(@NotNull final Host hst) {

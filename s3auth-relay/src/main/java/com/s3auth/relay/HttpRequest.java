@@ -133,9 +133,9 @@ final class HttpRequest {
     private final transient Map<String, Collection<String>> parms;
 
     /**
-     * Public ctor.
+     * Package-private constructor.
      *
-     * <p>It's important NOT to close reader in this mtd. If it's closed
+     * <p>It's important NOT to close reader in this method. If it's closed
      * here the entire socket gets closed.
      *
      * @param socket Socket to read from

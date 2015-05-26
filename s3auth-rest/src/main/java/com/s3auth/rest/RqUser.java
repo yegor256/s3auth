@@ -51,7 +51,7 @@ import org.takes.rq.RqWrap;
 final class RqUser extends RqWrap {
 
     /**
-     * Ctor.
+     * Package-private constructor.
      * @param req Request
      */
     RqUser(final Request req) {

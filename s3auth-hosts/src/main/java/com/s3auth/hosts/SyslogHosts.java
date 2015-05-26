@@ -105,7 +105,7 @@ public final class SyslogHosts implements Hosts {
          */
         private final transient Host host;
         /**
-         * Constructor.
+         * Package-private constructor.
          * @param hst Host
          */
         SyslogHost(final Host hst) {
@@ -173,7 +173,7 @@ public final class SyslogHosts implements Hosts {
          */
         private final transient SyslogIF syslog;
         /**
-         * Constructor.
+         * Package-private constructor.
          * @param res The underlying resource
          * @param uri The URI to fetch
          * @param syslg The syslog host

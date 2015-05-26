@@ -41,7 +41,7 @@ import org.mockito.Mockito;
 public final class HttpRequestMocker {
 
     /**
-     * It's a unility class at the moment.
+     * It's a utility class at the moment.
      */
     private HttpRequestMocker() {
         // intentionally empty

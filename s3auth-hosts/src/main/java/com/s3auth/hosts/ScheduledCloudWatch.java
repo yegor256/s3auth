@@ -84,7 +84,7 @@ public final class ScheduledCloudWatch implements Runnable, Closeable {
     }
 
     /**
-     * Public ctor.
+     * Default public ctor.
      * @throws IOException If an IO Exception occurs
      */
     public ScheduledCloudWatch() throws IOException {

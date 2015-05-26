@@ -67,14 +67,14 @@ public final class DynamoHosts implements Hosts {
     private final transient Dynamo dynamo;
 
     /**
-     * Default ctor.
+     * Default public ctor.
      */
     public DynamoHosts() {
         this(new DefaultDynamo());
     }
 
     /**
-     * Default ctor.
+     * Default public ctor.
      * @param dnm The dynamo abstract
      */
     public DynamoHosts(@NotNull final Dynamo dnm) {

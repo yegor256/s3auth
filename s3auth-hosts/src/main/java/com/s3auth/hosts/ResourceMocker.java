@@ -57,7 +57,7 @@ public final class ResourceMocker {
         .builder();
 
     /**
-     * Public ctor.
+     * Default public ctor.
      */
     public ResourceMocker() {
         this.withContent("no content");

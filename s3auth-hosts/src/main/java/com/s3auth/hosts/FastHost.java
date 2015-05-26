@@ -58,7 +58,7 @@ final class FastHost implements Host {
     private final transient Host origin;
 
     /**
-     * Public ctor.
+     * Package-private constructor.
      * @param hst Original host
      */
     FastHost(final Host hst) {

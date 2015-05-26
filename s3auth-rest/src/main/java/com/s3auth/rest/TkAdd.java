@@ -55,7 +55,7 @@ final class TkAdd implements Take {
     private final transient Hosts hosts;
 
     /**
-     * Ctor.
+     * Package-private constructor.
      * @param hsts Hosts
      */
     TkAdd(final Hosts hsts) {

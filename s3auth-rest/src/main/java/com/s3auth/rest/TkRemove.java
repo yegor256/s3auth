@@ -55,7 +55,7 @@ final class TkRemove implements Take {
     private final transient Hosts hosts;
 
     /**
-     * Ctor.
+     * Package-private constructor.
      * @param hsts Hosts
      */
     TkRemove(final Hosts hsts) {

@@ -81,7 +81,7 @@ final class RsPage extends RsWrap {
     );
 
     /**
-     * Ctor.
+     * Package-private constructor.
      * @param xsl XSL
      * @param req Request
      * @param src Source
