@@ -33,3 +33,11 @@ $ mvn clean install -Pqulice
 ```
 
 To avoid build errors use JDK >= 1.7 and Maven >= 3.1.1
+
+To run it locally:
+
+```
+$ mvn clean install -Phit-refresh -Dport=8080
+```
+
+You will be able to open it at `http://localhost:8080`
