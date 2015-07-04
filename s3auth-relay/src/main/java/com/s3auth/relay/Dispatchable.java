@@ -30,7 +30,7 @@
 package com.s3auth.relay;
 
 /**
- * Dispatcher for a single {@link HttpThread} or {@link FtpThread}.
+ * Dispatcher for a single processing thread.
  *
  * <p>All implementations of this interface must be thread-safe.
  *
@@ -38,7 +38,7 @@ package com.s3auth.relay;
  * @version $Id$
  * @since 0.1
  */
-interface RequestDispatcher {
+interface Dispatchable {
     /**
      * Dispatch one request from the encapsulated queue.
      * @return Amount of bytes sent to socket

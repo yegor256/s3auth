@@ -64,7 +64,9 @@ import org.apache.commons.net.ftp.FTPReply;
  * @since 0.1
  */
 @ToString
-@EqualsAndHashCode(of = { "sockets", "server", "secured" })
+@EqualsAndHashCode(
+    of = { "frontend", "backend", "sockets", "server", "secured" }
+)
 @SuppressWarnings({ "PMD.DoNotUseThreads", "PMD.TooManyMethods" })
 @Loggable(Loggable.DEBUG)
 class BaseFacade implements Closeable {
@@ -119,9 +121,6 @@ class BaseFacade implements Closeable {
         this.secured = secure;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void close() throws IOException {
         try {
@@ -164,12 +163,12 @@ class BaseFacade implements Closeable {
      * @param thread The dispatcher for processing a thread
      * @param bckend The executor service
      */
-    private void threadRunnableDispatcher(final RequestDispatcher thread,
+    private void threadRunnableDispatcher(final Dispatchable thread,
         final ScheduledExecutorService bckend) {
         final Runnable runnable = new VerboseRunnable(
             new BaseFacade.ThreadRunnableDispatcher(thread), true, true
         );
-        for (int idx = 0; idx < THREADS; ++idx) {
+        for (int idx = 0; idx < BaseFacade.THREADS; ++idx) {
             bckend.scheduleWithFixedDelay(
                 runnable,
                 0L, 1L, TimeUnit.NANOSECONDS
@@ -206,7 +205,7 @@ class BaseFacade implements Closeable {
         return String.format(
             // @checkstyle LineLength (1 line)
             StringUtils.join("We're sorry, the ", str, " is under high load at the moment (%d open connections), please try again in a few minutes"),
-            THREADS
+            BaseFacade.THREADS
         );
     }
 
@@ -280,19 +279,16 @@ class BaseFacade implements Closeable {
        /**
         * The thread to run.
         */
-        private final transient RequestDispatcher thread;
+        private final transient Dispatchable thread;
 
        /**
         * Package-private constructor.
         * @param thrd The RequestDispatcher
         */
-        ThreadRunnableDispatcher(final RequestDispatcher thrd) {
+        ThreadRunnableDispatcher(final Dispatchable thrd) {
             this.thread = thrd;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void run() {
             try {
@@ -337,10 +333,10 @@ class BaseFacade implements Closeable {
         HttpFacade(@NotNull final Hosts hosts, final int port,
             final int sslport) throws IOException {
             super(
-                2, "front", THREADS, "back",
-                        new ServerSocket(port),
-                            SSLServerSocketFactory.getDefault()
-                                .createServerSocket(sslport)
+                2, "front", BaseFacade.THREADS, "back",
+                    new ServerSocket(port),
+                        SSLServerSocketFactory.getDefault()
+                            .createServerSocket(sslport)
             );
             this.facade = this;
             final HttpThread thread = new HttpThread(
@@ -349,9 +345,6 @@ class BaseFacade implements Closeable {
             this.facade.threadRunnableDispatcher(thread, this.facade.backend);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void listen() {
             this.facade.listen(this.facade.frontend, this.facade.server);
@@ -361,6 +354,7 @@ class BaseFacade implements Closeable {
         /**
          * {@inheritDoc}
          * @param socket The socket to report to
+         * @throws IOException If something wrong happens inside
          */
         @Override
         public void overflow(final Socket socket)
@@ -405,7 +399,7 @@ class BaseFacade implements Closeable {
         FtpFacade(@NotNull final Hosts hosts, final int port)
             throws IOException {
             super(
-                2, "FTP-front", THREADS, "FTP-back",
+                2, "FTP-front", BaseFacade.THREADS, "FTP-back",
                     new ServerSocket(port), null
             );
             this.facade = this;
@@ -413,9 +407,6 @@ class BaseFacade implements Closeable {
             this.facade.threadRunnableDispatcher(thread, this.facade.backend);
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
         public void listen() {
             this.facade.listen(this.facade.frontend, this.facade.server);
@@ -424,6 +415,7 @@ class BaseFacade implements Closeable {
         /**
          * {@inheritDoc}
          * @param socket The socket to report to
+         * @throws IOException If something wrong happens inside
          */
         @Override
         public void overflow(final Socket socket) throws IOException {

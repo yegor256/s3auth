@@ -75,7 +75,7 @@ import org.apache.http.client.utils.DateUtils;
     "PMD.UseConcurrentHashMap",
     "PMD.CyclomaticComplexity"
 })
-final class HttpThread implements RequestDispatcher {
+final class HttpThread implements Dispatchable {
 
     /**
      * S3 version query string.
@@ -138,7 +138,9 @@ final class HttpThread implements RequestDispatcher {
     /**
      * {@inheritDoc}
      * @checkstyle ExecutableStatementCount (100 lines)
-     * @checkstyle MultipleStringLiterals (100 lines)*
+     * @checkstyle MultipleStringLiterals (100 lines)
+     * @return Amount of bytes sent to socket
+     * @throws InterruptedException If interrupted before or during activity
      */
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
     @Override
