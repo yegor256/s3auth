@@ -17,7 +17,12 @@ assets:
   s3cfg: yegor256/home#assets/s3cfg
 merge:
   commanders:
-  - yegor256
+  - caarlos0
+  - carlosmiranda
+  - dmzaytsev
+  - krzyk
+  - longtimeago
+  - pinaf
   script: |-
     mvn help:system clean install site --errors -Psite -Pqulice --settings ../settings.xml
     mvn clean
@@ -49,10 +54,8 @@ deploy:
     mvn clean
     pdd --source=$(pwd) --verbose --file=s3auth.xml
     s3cmd --no-progress put s3auth.xml --config=../s3cfg s3://pdd.teamed.io/s3auth.xml
-  commanders:
-  - yegor256
+  commanders: []
 env:
   MAVEN_OPTS: -XX:MaxPermSize=256m -Xmx1g
 release:
-  commanders:
-  - yegor256
+  commanders: []
