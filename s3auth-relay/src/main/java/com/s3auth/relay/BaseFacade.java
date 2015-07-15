@@ -247,6 +247,8 @@ class BaseFacade implements Closeable {
         } catch (final InterruptedException ex) {
             Thread.currentThread().interrupt();
             throw new IllegalStateException(ex);
+        } finally {
+            IOUtils.closeQuietly(svr);
         }
     }
 
@@ -351,11 +353,6 @@ class BaseFacade implements Closeable {
             this.facade.listen(this.facade.frontend, this.facade.secured);
         }
 
-        /**
-         * {@inheritDoc}
-         * @param socket The socket to report to
-         * @throws IOException If something wrong happens inside
-         */
         @Override
         public void overflow(final Socket socket)
             throws IOException {
@@ -412,11 +409,6 @@ class BaseFacade implements Closeable {
             this.facade.listen(this.facade.frontend, this.facade.server);
         }
 
-        /**
-         * {@inheritDoc}
-         * @param socket The socket to report to
-         * @throws IOException If something wrong happens inside
-         */
         @Override
         public void overflow(final Socket socket) throws IOException {
             new FtpResponse()

@@ -81,11 +81,6 @@ final class FtpThread implements Dispatchable {
         this.hosts = hsts;
     }
 
-    /**
-     * {@inheritDoc}
-     * @return Amount of bytes sent to socket
-     * @throws InterruptedException If interrupted before or during activity
-     */
     @Override
     public long dispatch() throws InterruptedException {
         assert this.hosts != null;
