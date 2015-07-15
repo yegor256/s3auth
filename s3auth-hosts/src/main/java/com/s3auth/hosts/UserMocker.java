@@ -53,7 +53,7 @@ public final class UserMocker {
     private final transient Random rand = new Random();
 
     /**
-     * Public ctor.
+     * Default public ctor.
      */
     public UserMocker() {
         this.withIdentity(

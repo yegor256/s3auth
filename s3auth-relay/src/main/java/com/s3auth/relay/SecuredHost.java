@@ -84,7 +84,7 @@ final class SecuredHost implements Host {
     private final transient HttpRequest request;
 
     /**
-     * Public ctor.
+     * Package-private constructor.
      * @param hst Original host
      * @param rqst The request
      */

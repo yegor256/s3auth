@@ -60,7 +60,7 @@ final class DefaultBucket implements Bucket {
     private final transient Domain domain;
 
     /**
-     * Public ctor.
+     * Package-private constructor.
      * @param dmn The domain
      */
     DefaultBucket(@NotNull final Domain dmn) {

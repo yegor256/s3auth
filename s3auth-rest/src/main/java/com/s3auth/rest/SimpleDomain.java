@@ -71,7 +71,7 @@ final class SimpleDomain implements Domain {
     private final transient String slog;
 
     /**
-     * Ctor.
+     * Package-private constructor.
      * @param hst The host name
      */
     SimpleDomain(final String hst) {
@@ -79,7 +79,7 @@ final class SimpleDomain implements Domain {
     }
 
     /**
-     * Constructor.
+     * Package-private constructor.
      * @param hst The host name
      * @param access AWS access key
      * @param scrt AWS secret

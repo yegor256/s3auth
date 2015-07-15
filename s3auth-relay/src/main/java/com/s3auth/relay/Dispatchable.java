@@ -27,64 +27,22 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.s3auth.rest;
-
-import com.s3auth.hosts.Hosts;
-import com.s3auth.hosts.User;
-import java.io.IOException;
-import java.util.logging.Level;
-import org.takes.Request;
-import org.takes.Response;
-import org.takes.Take;
-import org.takes.facets.flash.RsFlash;
-import org.takes.facets.forward.RsForward;
-import org.takes.rq.RqHref;
+package com.s3auth.relay;
 
 /**
- * Remove a domain.
+ * Dispatcher for a single processing thread.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * <p>All implementations of this interface must be thread-safe.
+ *
+ * @author Simon Njenga (simtuje@gmail.com)
  * @version $Id$
  * @since 0.1
  */
-final class TkRemove implements Take {
-
+interface Dispatchable {
     /**
-     * Hosts.
+     * Dispatch one request from the encapsulated queue.
+     * @return Amount of bytes sent to socket
+     * @throws InterruptedException If interrupted while waiting for the queue
      */
-    private final transient Hosts hosts;
-
-    /**
-     * Package-private constructor.
-     * @param hsts Hosts
-     */
-    TkRemove(final Hosts hsts) {
-        this.hosts = hsts;
-    }
-
-    @Override
-    public Response act(final Request request) throws IOException {
-        final User user = new RqUser(request).user();
-        final String host = new RqHref.Base(request).href()
-            .param("host").iterator().next();
-        final boolean removed = this.hosts.domains(user).remove(
-            new SimpleDomain(host)
-        );
-        if (!removed) {
-            throw new RsForward(
-                new RsFlash(
-                    String.format(
-                        "failed to remove '%s' host", host
-                    ),
-                    Level.WARNING
-                )
-            );
-        }
-        return new RsForward(
-            new RsFlash(
-                String.format("removed '%s' host from collection", host)
-            )
-        );
-    }
-
+    long dispatch() throws InterruptedException;
 }

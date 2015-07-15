@@ -59,7 +59,7 @@ public interface Stats {
         private final transient long bytes;
 
         /**
-         * Ctor.
+         * Constructor.
          * @param transferred Number of bytes transferred.
          */
         public Simple(final long transferred) {

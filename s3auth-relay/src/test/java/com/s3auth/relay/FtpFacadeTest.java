@@ -34,6 +34,7 @@ import com.s3auth.hosts.Hosts;
 import com.s3auth.hosts.Range;
 import com.s3auth.hosts.Resource;
 import com.s3auth.hosts.Version;
+import com.s3auth.relay.BaseFacade.FtpFacade;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;

@@ -96,7 +96,7 @@ final class DefaultResource implements Resource {
     private final transient DomainStatsData stats;
 
     /**
-     * Public ctor.
+     * Package-private constructor.
      * @param clnt Amazon S3 client
      * @param bckt Bucket name
      * @param name Key name
@@ -337,7 +337,7 @@ final class DefaultResource implements Resource {
          */
         private static final long serialVersionUID = 0x7529FA781E111179L;
         /**
-         * Public ctor.
+         * Package-private constructor.
          * @param cause The cause of it
          * @param thr The cause of it
          */

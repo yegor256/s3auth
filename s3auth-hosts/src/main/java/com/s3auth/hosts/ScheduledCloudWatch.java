@@ -73,7 +73,7 @@ public final class ScheduledCloudWatch implements Runnable, Closeable {
     private final transient AmazonCloudWatch cloudwatch;
 
     /**
-     * Ctor.
+     * Package-private constructor.
      * @param stats The stats data to obtain.
      * @param cwatch The Cloudwatch client.
      */
@@ -84,7 +84,7 @@ public final class ScheduledCloudWatch implements Runnable, Closeable {
     }
 
     /**
-     * Public ctor.
+     * Default public ctor.
      * @throws IOException If an IO Exception occurs
      */
     public ScheduledCloudWatch() throws IOException {

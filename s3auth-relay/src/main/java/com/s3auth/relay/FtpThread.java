@@ -54,26 +54,24 @@ import lombok.ToString;
  * @todo #213:30min Implement relay functionality to fetch resource upon
  *  receival of the RETR command with valid authorization. Return an error
  *  in case of other commands (unsupported for now). Remove unnecessary asserts
- *  ffor fields 'sockets' and 'hosts' in method 'dispatch'.
+ *  for fields 'sockets' and 'hosts' in method 'dispatch'.
  */
 @ToString
 @EqualsAndHashCode(of = { "hosts", "sockets" })
-final class FtpThread {
+final class FtpThread implements Dispatchable {
 
     /**
      * Queue of sockets to get from.
      */
-    @NotNull
     private final transient BlockingQueue<Socket> sockets;
 
     /**
      * Hosts to work with.
      */
-    @NotNull
     private final transient Hosts hosts;
 
     /**
-     * Public ctor.
+     * Package-private constructor.
      * @param sckts Sockets to read from
      * @param hsts Hosts
      */
@@ -83,11 +81,7 @@ final class FtpThread {
         this.hosts = hsts;
     }
 
-    /**
-     * Dispatch one request from the encapsulated queue.
-     * @return Amount of bytes sent to socket
-     * @throws InterruptedException If interrupted while waiting for the queue
-     */
+    @Override
     public long dispatch() throws InterruptedException {
         assert this.hosts != null;
         assert this.sockets != null;

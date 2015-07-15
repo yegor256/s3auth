@@ -60,7 +60,7 @@ final class TkIndex implements Take {
     private final transient Hosts hosts;
 
     /**
-     * Ctor.
+     * Package-private constructor.
      * @param hsts Hosts
      */
     TkIndex(final Hosts hsts) {

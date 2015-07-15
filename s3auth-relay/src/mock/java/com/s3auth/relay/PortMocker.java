@@ -39,7 +39,7 @@ import java.net.ServerSocket;
 public final class PortMocker {
 
     /**
-     * It's a unility class at the moment.
+     * It's a utility class at the moment.
      */
     private PortMocker() {
         // intentionally empty

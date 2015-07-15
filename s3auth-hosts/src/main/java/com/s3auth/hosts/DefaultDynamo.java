@@ -115,7 +115,7 @@ final class DefaultDynamo implements Dynamo {
     private final transient String table;
 
     /**
-     * Public ctor.
+     * Package-private constructor.
      */
     DefaultDynamo() {
         Credentials creds = new Credentials.Simple(
@@ -134,7 +134,7 @@ final class DefaultDynamo implements Dynamo {
     }
 
     /**
-     * Ctor for unit tests.
+     * Package-private constructor for unit tests.
      * @param rgn The jcabi-dynamo Region
      * @param tbl Table name
      */
