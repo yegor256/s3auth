@@ -29,8 +29,11 @@
  */
 package com.s3auth;
 
-import java.io.File;
-import org.apache.catalina.startup.Tomcat;
+import com.s3auth.hosts.DynamoHosts;
+import com.s3auth.hosts.SyslogHosts;
+import com.s3auth.rest.TkApp;
+import org.takes.http.Exit;
+import org.takes.http.FtCLI;
 
 /**
  * Launch (used only for heroku).
@@ -53,12 +56,10 @@ public final class Launch {
      * @throws Exception If fails
      */
     public static void main(final String[] args) throws Exception {
-        final Tomcat tomcat = new Tomcat();
-        final String port = System.getenv("PORT");
-        tomcat.setPort(Integer.valueOf(port));
-        tomcat.addWebapp("/", new File("target/s3auth-rest").getAbsolutePath());
-        tomcat.start();
-        tomcat.getServer().await();
+        new FtCLI(
+            new TkApp(new SyslogHosts(new DynamoHosts())),
+            args
+        ).start(Exit.NEVER);
     }
 
 }

@@ -99,7 +99,11 @@ public final class DynamoHosts implements Hosts {
                 )
             );
         }
-        return new SmartHost(new DefaultHost(new DefaultBucket(domain)));
+        return new FastHost(
+            new SmartHost(
+                new DefaultHost(new DefaultBucket(domain))
+            )
+        );
     }
 
     @Override

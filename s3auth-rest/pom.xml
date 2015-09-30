@@ -38,7 +38,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <artifactId>s3auth-rest</artifactId>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>s3auth-rest</name>
     <properties>
         <casperjs.home.dir>${project.build.directory}/casperjs</casperjs.home.dir>
@@ -54,9 +54,39 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
+            <groupId>org.takes</groupId>
+            <artifactId>takes</artifactId>
+            <version>0.13.7</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jcabi.incubator</groupId>
+            <artifactId>xembly</artifactId>
+            <version>0.21</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.json</groupId>
+            <artifactId>javax.json-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.json</artifactId>
+        </dependency>
+        <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-            <scope>compile</scope>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>1.7</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.restfb</groupId>
+            <artifactId>restfb</artifactId>
+            <version>1.6.14</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
@@ -92,10 +122,6 @@
         </dependency>
         <dependency>
             <groupId>com.jcabi</groupId>
-            <artifactId>jcabi-log</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.jcabi</groupId>
             <artifactId>jcabi-manifests</artifactId>
         </dependency>
         <dependency>
@@ -113,36 +139,33 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-core</artifactId>
-            <version>1.18.1</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.rexsl</groupId>
-            <artifactId>rexsl</artifactId>
-            <version>1.5.2</version>
-        </dependency>
-        <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-http</artifactId>
+            <version>1.10.3</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>1.18.1</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
+            <groupId>net.sourceforge.saxon</groupId>
+            <artifactId>saxon</artifactId>
+            <version>9.1.0.8</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
+            <groupId>net.sourceforge.saxon</groupId>
+            <artifactId>saxon</artifactId>
+            <version>9.1.0.8</version>
+            <classifier>dom</classifier>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
     <build>
@@ -158,195 +181,24 @@
         </pluginManagement>
         <plugins>
             <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
+                <groupId>com.tunyk.mvn.plugins.htmlcompressor</groupId>
+                <artifactId>htmlcompressor-maven-plugin</artifactId>
+                <version>1.3</version>
                 <executions>
                     <execution>
-                        <id>clean-casperjs-directory</id>
-                        <phase>initialize</phase>
+                        <id>compress-xsl</id>
+                        <phase>generate-resources</phase>
                         <goals>
-                            <goal>clean</goal>
+                            <goal>xml</goal>
                         </goals>
                         <configuration>
-                            <filesets>
-                                <fileset>
-                                    <directory>${casperjs.home.dir}</directory>
-                                </fileset>
-                            </filesets>
+                            <srcFolder>${basedir}/src/main/xsl</srcFolder>
+                            <targetFolder>${project.build.outputDirectory}/xsl</targetFolder>
+                            <fileExt>
+                                <ext>xsl</ext>
+                            </fileExt>
+                            <removeIntertagSpaces>false</removeIntertagSpaces>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.8</version>
-                <executions>
-                    <execution>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>reserve-network-port</goal>
-                        </goals>
-                        <configuration>
-                            <portNames>
-                                <portName>dynamodb.port</portName>
-                            </portNames>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>unpack-dynamodb-local</id>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>com.jcabi</groupId>
-                                    <artifactId>DynamoDBLocal</artifactId>
-                                    <version>2013-09-12</version>
-                                    <type>zip</type>
-                                    <outputDirectory>${project.build.directory}/dynamodb-dist</outputDirectory>
-                                    <overWrite>false</overWrite>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.jcabi</groupId>
-                <artifactId>jcabi-dynamodb-maven-plugin</artifactId>
-                <version>0.4.1</version>
-                <configuration>
-                    <port>${dynamodb.port}</port>
-                    <dist>${project.build.directory}/dynamodb-dist</dist>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>start</goal>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.github.klieber</groupId>
-                <artifactId>phantomjs-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>install</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <version>1.9.2</version>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.3.2</version>
-                <executions>
-                    <execution>
-                        <id>casperjs-install</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>git</executable>
-                            <arguments>
-                                <argument>clone</argument>
-                                <argument>--depth=1</argument>
-                                <argument>https://github.com/n1k0/casperjs.git</argument>
-                                <argument>${casperjs.home.dir}</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>tomcat-port</id>
-                        <goals>
-                            <goal>reserve-network-port</goal>
-                        </goals>
-                        <configuration>
-                            <portNames>
-                                <portName>tomcat.port</portName>
-                            </portNames>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.2</version>
-                <configuration>
-                    <path>/</path>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>start-tomcat</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>run-war-only</goal>
-                        </goals>
-                        <configuration>
-                            <port>${tomcat.port}</port>
-                            <fork>true</fork>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>casperjs-test</id>
-                        <phase>integration-test</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>${casperjs.home.dir}/bin/${casperjs.exec.name}</executable>
-                            <workingDirectory>${basedir}</workingDirectory>
-                            <arguments>
-                                <argument>test</argument>
-                                <argument>--verbose</argument>
-                                <argument>--no-colors</argument>
-                                <argument>--concise</argument>
-                                <argument>--home=http://localhost:${tomcat.port}</argument>
-                                <argument>${basedir}/src/test/casperjs</argument>
-                            </arguments>
-                            <environmentVariables>
-                                <PHANTOMJS_EXECUTABLE>${phantomjs.binary}</PHANTOMJS_EXECUTABLE>
-                            </environmentVariables>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>stop-tomcat</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>shutdown</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -354,43 +206,239 @@
     </build>
     <profiles>
         <profile>
+            <id>takes-test</id>
+            <activation>
+                <property><name>!skipTests</name></property>
+            </activation>
+            <properties>
+                <failsafe.sttc.urn>urn:test:1</failsafe.sttc.urn>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <version>1.8</version>
+                        <executions>
+                            <execution>
+                                <id>takes-port</id>
+                                <goals>
+                                    <goal>reserve-network-port</goal>
+                                </goals>
+                                <configuration>
+                                    <portNames>
+                                        <portName>takes.port</portName>
+                                    </portNames>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <configuration>
+                            <systemPropertyVariables combine.children="append">
+                                <takes.home>http://localhost:${takes.port}</takes.home>
+                            </systemPropertyVariables>
+                            <reuseForks>false</reuseForks>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.github.klieber</groupId>
+                        <artifactId>phantomjs-maven-plugin</artifactId>
+                        <version>0.5</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>install</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <version>1.9.2</version>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.3.2</version>
+                        <executions>
+                            <execution>
+                                <id>start-takes-server</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>java</goal>
+                                </goals>
+                                <configuration>
+                                    <mainClass>com.s3auth.Launch</mainClass>
+                                    <classpathScope>test</classpathScope>
+                                    <cleanupDaemonThreads>false</cleanupDaemonThreads>
+                                    <arguments>
+                                        <argument>--port=${takes.port}</argument>
+                                        <argument>--daemon=yes</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>casperjs-install</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>git</executable>
+                                    <arguments>
+                                        <argument>clone</argument>
+                                        <argument>--depth=1</argument>
+                                        <argument>https://github.com/n1k0/casperjs.git</argument>
+                                        <argument>${casperjs.home.dir}</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>casperjs-test</id>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>${casperjs.home.dir}/bin/${casperjs.exec.name}</executable>
+                                    <workingDirectory>${basedir}</workingDirectory>
+                                    <arguments>
+                                        <argument>test</argument>
+                                        <argument>--verbose</argument>
+                                        <argument>--no-colors</argument>
+                                        <argument>--concise</argument>
+                                        <argument>--home=http://localhost:${takes.port}</argument>
+                                        <argument>${basedir}/src/test/casperjs</argument>
+                                    </arguments>
+                                    <environmentVariables>
+                                        <PHANTOMJS_EXECUTABLE>${phantomjs.binary}</PHANTOMJS_EXECUTABLE>
+                                    </environmentVariables>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>dynamodb</id>
+            <activation>
+                <property><name>!skipTests</name></property>
+            </activation>
+            <properties>
+                <failsafe.dynamo.key>AAAAABBBBBAAAAABBBBB</failsafe.dynamo.key>
+                <failsafe.dynamo.secret>ABCDABCDABCDABCDABCDABCDABCDABCDABCDABCD</failsafe.dynamo.secret>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>unpack-dynamodb-local</id>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>com.jcabi</groupId>
+                                            <artifactId>DynamoDBLocal</artifactId>
+                                            <version>2014-01-08</version>
+                                            <type>zip</type>
+                                            <outputDirectory>${project.build.directory}/dynamodb-dist</outputDirectory>
+                                            <overWrite>false</overWrite>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>reserver-dynamodb-port</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>reserve-network-port</goal>
+                                </goals>
+                                <configuration>
+                                    <portNames>
+                                        <portName>dynamodb.port</portName>
+                                    </portNames>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.jcabi</groupId>
+                        <artifactId>jcabi-dynamodb-maven-plugin</artifactId>
+                        <version>0.7.1</version>
+                        <executions>
+                            <execution>
+                                <id>dynamodb-integration-test</id>
+                                <goals>
+                                    <goal>start</goal>
+                                    <goal>create-tables</goal>
+                                    <goal>stop</goal>
+                                </goals>
+                                <configuration>
+                                    <port>${dynamodb.port}</port>
+                                    <dist>${project.build.directory}/dynamodb-dist</dist>
+                                    <key>${failsafe.dynamo.key}</key>
+                                    <secret>${failsafe.dynamo.secret}</secret>
+                                    <tables>
+                                        <table>${basedir}/src/test/dynamodb/s3auth.json</table>
+                                    </tables>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
             <id>heroku</id>
             <activation>
                 <file><exists>pom.xml</exists></file>
             </activation>
-            <properties>
-                <tomcat.version>7.0.34</tomcat.version>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.tomcat.embed</groupId>
-                    <artifactId>tomcat-embed-core</artifactId>
-                    <version>${tomcat.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.tomcat.embed</groupId>
-                    <artifactId>tomcat-embed-logging-juli</artifactId>
-                    <version>${tomcat.version}</version>
-                    <scope>runtime</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.tomcat.embed</groupId>
-                    <artifactId>tomcat-embed-jasper</artifactId>
-                    <version>${tomcat.version}</version>
-                    <scope>runtime</scope>
-                </dependency>
-            </dependencies>
             <build>
                 <finalName>s3auth-rest</finalName>
                 <plugins>
                     <plugin>
                         <artifactId>maven-jar-plugin</artifactId>
+                        <configuration>
+                            <archive>
+                                <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                            </archive>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-dependency-plugin</artifactId>
                         <executions>
                             <execution>
+                                <id>copy-dependencies-for-heroku</id>
                                 <phase>package</phase>
                                 <goals>
-                                    <goal>jar</goal>
+                                    <goal>copy-dependencies</goal>
                                 </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.directory}/deps</outputDirectory>
+                                    <overWriteReleases>true</overWriteReleases>
+                                    <overWriteSnapshots>true</overWriteSnapshots>
+                                    <overWriteIfNewer>true</overWriteIfNewer>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>

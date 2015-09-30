@@ -27,18 +27,28 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.s3auth.rest.rexsl.scripts
+package com.s3auth.rest;
 
-import com.jcabi.http.request.JdkRequest
-import com.jcabi.http.response.RestResponse
-import javax.ws.rs.core.HttpHeaders
-import javax.ws.rs.core.MediaType
-import org.hamcrest.Matchers
+import java.io.IOException;
+import org.takes.Request;
+import org.takes.Response;
+import org.takes.Take;
 
-new JdkRequest(rexsl.home)
-    .uri().path('/misc/LICENSE.txt').back()
-    .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
-    .fetch()
-    .as(RestResponse)
-    .assertStatus(HttpURLConnection.HTTP_OK)
-    .assertBody(Matchers.containsString('Copyright (c) 2012'))
+/**
+ * Index page of an anonymous user.
+ *
+ * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @version $Id$
+ * @since 0.1
+ */
+final class TkLogin implements Take {
+
+    @Override
+    public Response act(final Request request) throws IOException {
+        return new RsPage(
+            "/xsl/login.xsl",
+            request
+        );
+    }
+
+}

@@ -130,7 +130,7 @@ public interface User {
             if (!"facebook".equals(nid)
                 && !"google".equals(nid)
                 && !"github".equals(nid)
-                && !"anonymous".equals(nid)) {
+                && !"test".equals(nid)) {
                 ctx.buildConstraintViolationWithTemplate(
                     String.format("invalid NID of URN: %s", user.identity())
                 ).addPropertyNode("identity").addConstraintViolation();

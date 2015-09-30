@@ -30,6 +30,7 @@
 package com.s3auth.hosts;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -67,7 +68,7 @@ public final class HostsMocker {
 
         @Override
         public Set<Domain> domains(final User user) throws IOException {
-            return null;
+            return Collections.emptySet();
         }
     }
 }

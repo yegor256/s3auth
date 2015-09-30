@@ -29,36 +29,70 @@
  */
 package com.s3auth.rest;
 
-import com.jcabi.aspects.Loggable;
-import com.rexsl.page.BaseResource;
-import com.rexsl.page.inset.FlashInset;
+import com.s3auth.hosts.Hosts;
+import com.s3auth.hosts.User;
+import java.io.IOException;
 import java.util.logging.Level;
-import javax.validation.ConstraintViolationException;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
+import org.takes.Request;
+import org.takes.Response;
+import org.takes.Take;
+import org.takes.facets.flash.RsFlash;
+import org.takes.facets.forward.RsForward;
+import org.takes.rq.RqForm;
 
 /**
- * Maps constraint violations to JAX-RS responses.
- *
- * <p>The class is mutable and NOT thread-safe.
+ * Add a domain.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 0.0.1
+ * @since 0.1
  */
-@Provider
-@Loggable(Loggable.DEBUG)
-public final class ConstraintsMapper extends BaseResource
-    implements ExceptionMapper<ConstraintViolationException> {
+final class TkAdd implements Take {
+
+    /**
+     * Hosts.
+     */
+    private final transient Hosts hosts;
+
+    /**
+     * Ctor.
+     * @param hsts Hosts
+     */
+    TkAdd(final Hosts hsts) {
+        this.hosts = hsts;
+    }
 
     @Override
-    public Response toResponse(final ConstraintViolationException violation) {
-        return FlashInset.forward(
-            this.uriInfo().getBaseUri(),
-            violation.getMessage(),
-            Level.WARNING
-        ).getResponse();
+    public Response act(final Request request) throws IOException {
+        final User user = new RqUser(request).user();
+        final RqForm form = new RqForm(request);
+        final String host = form.param("host").iterator().next();
+        final boolean added = this.hosts.domains(user).add(
+            new SimpleDomain(
+                host,
+                form.param("key").iterator().next(),
+                form.param("secret").iterator().next(),
+                form.param("bucket").iterator().next(),
+                form.param("region").iterator().next(),
+                form.param("syslog").iterator().next()
+            )
+        );
+        if (!added) {
+            throw new RsForward(
+                new RsFlash(
+                    String.format(
+                        "host '%s' is already registered in the system",
+                        host
+                    ),
+                    Level.WARNING
+                )
+            );
+        }
+        return new RsForward(
+            new RsFlash(
+                String.format("added '%s' host to collection", host)
+            )
+        );
     }
 
 }

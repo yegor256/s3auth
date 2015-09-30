@@ -1,34 +1,34 @@
-assets:
-  settings.xml: "yegor256/home#assets/s3auth/settings.xml"
-  pubring.gpg: "yegor256/home#assets/pubring.gpg"
-  secring.gpg: "yegor256/home#assets/secring.gpg"
-  id_rsa: "yegor256/home#assets/heroku-key"
-  id_rsa.pub: "yegor256/home#assets/heroku-key.pub"
-  s3cfg: "yegor256/home#assets/s3cfg"
-
-env:
-  MAVEN_OPTS: "-XX:MaxPermSize=256m -Xmx1g"
-
 install: |
+  sudo locale-gen en_US en_US.UTF-8
+  sudo dpkg-reconfigure locales
+  export LC_ALL=en_US.UTF-8
+  export LANG=en_US.UTF-8
+  export LANGUAGE=en_US.UTF-8
   sudo gem install pdd
-
 architect:
-  - yegor256
-  - davvd
-
+- yegor256
+- davvd
+assets:
+  secring.gpg: yegor256/home#assets/secring.gpg
+  id_rsa: yegor256/home#assets/heroku-key
+  settings.xml: yegor256/home#assets/s3auth/settings.xml
+  pubring.gpg: yegor256/home#assets/pubring.gpg
+  id_rsa.pub: yegor256/home#assets/heroku-key.pub
+  s3cfg: yegor256/home#assets/s3cfg
 merge:
   commanders:
-    - yegor256
-    - krzyk
-    - carlosmiranda
-    - longtimeago
-  script: |
+  - caarlos0
+  - carlosmiranda
+  - dmzaytsev
+  - krzyk
+  - longtimeago
+  - pinaf
+  script: |-
     mvn help:system clean install site --errors -Psite -Pqulice --settings ../settings.xml
     mvn clean
     pdd --source=$(pwd) --verbose --file=/dev/null
-
 deploy:
-  script: |
+  script: |-
     chmod 600 ../*.gpg
     cp ../settings.xml settings.xml
     mvn clean install --errors -Ps3auth -Pqulice --settings settings.xml
@@ -37,9 +37,9 @@ deploy:
     mv ../id_rsa ../id_rsa.pub ~/.ssh
     chmod -R 600 ~/.ssh/*
     echo -e "Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile=/dev/null" > ~/.ssh/config
+    build=$(git rev-parse --short HEAD)
     git add settings.xml
     git commit -m 'settings.xml'
-    build=$(git rev-parse --short HEAD)
     sed -i "s/BUILD/${build}/g" s3auth-rest/src/main/resources/log4j.properties
     git add s3auth-rest/src/main/resources/log4j.properties
     sed -i "s/BUILD/${build}/g" s3auth-rest/src/main/resources/META-INF/MANIFEST.MF
@@ -54,3 +54,8 @@ deploy:
     mvn clean
     pdd --source=$(pwd) --verbose --file=s3auth.xml
     s3cmd --no-progress put s3auth.xml --config=../s3cfg s3://pdd.teamed.io/s3auth.xml
+  commanders: []
+env:
+  MAVEN_OPTS: -XX:MaxPermSize=256m -Xmx1g
+release:
+  commanders: []

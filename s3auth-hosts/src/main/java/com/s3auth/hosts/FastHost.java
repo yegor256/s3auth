@@ -27,22 +27,80 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.s3auth.rest;
+package com.s3auth.hosts;
 
-import com.rexsl.page.BasePage;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
+import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
+import com.jcabi.aspects.Timeable;
+import com.jcabi.aspects.Tv;
+import java.io.IOException;
+import java.net.URI;
+import java.util.concurrent.TimeUnit;
+import lombok.EqualsAndHashCode;
 
 /**
- * Base RESTful page.
+ * A {@link Host} that does everything fast.
+ *
+ * <p>The class is immutable and thread-safe.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 0.0.1
+ * @since 0.2
  */
-@XmlRootElement(name = "page")
-@XmlAccessorType(XmlAccessType.NONE)
-public class CommonPage extends BasePage<CommonPage, BaseRs> {
+@Immutable
+@EqualsAndHashCode(of = "origin")
+@Loggable(Loggable.DEBUG)
+final class FastHost implements Host {
+
+    /**
+     * The original host.
+     */
+    private final transient Host origin;
+
+    /**
+     * Public ctor.
+     * @param hst Original host
+     */
+    FastHost(final Host hst) {
+        this.origin = hst;
+    }
+
+    @Override
+    public String toString() {
+        return this.origin.toString();
+    }
+
+    @Override
+    public void close() throws IOException {
+        this.origin.close();
+    }
+
+    @Override
+    public String syslog() {
+        return this.origin.syslog();
+    }
+
+    @Override
+    public Stats stats() {
+        return this.origin.stats();
+    }
+
+    @Override
+    @Timeable(limit = Tv.THIRTY, unit = TimeUnit.SECONDS)
+    public Resource fetch(final URI uri, final Range range,
+        final Version version) throws IOException {
+        return this.origin.fetch(uri, range, version);
+    }
+
+    @Override
+    public boolean isHidden(final URI uri) throws IOException {
+        return this.origin.isHidden(uri);
+    }
+
+    @Override
+    public boolean authorized(final String user,
+        final String password) throws IOException {
+        return this.origin.authorized(user, password);
+    }
 
 }

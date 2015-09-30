@@ -34,6 +34,7 @@ import java.io.IOException;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * Exception during HTTP request processing.
@@ -83,11 +84,9 @@ final class HttpException extends IOException {
      * Public ctor.
      * @param status The status
      * @param cause The cause of it
-     * @todo #198. 1) Don't lose cause stacktrace 2) cause.getMessage can be null,
-     *  so it can produce ConstraintViolationException instead of HttpException
      */
     HttpException(final int status, @NotNull final Throwable cause) {
-        this(status, cause.getMessage());
+        this(status, ExceptionUtils.getStackTrace(cause));
     }
 
     /**
@@ -95,7 +94,7 @@ final class HttpException extends IOException {
      * @param response The response
      */
     HttpException(@NotNull final HttpResponse response) {
-        super();
+        super(response.toString());
         this.resp = response;
     }
 

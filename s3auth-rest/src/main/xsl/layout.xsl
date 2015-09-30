@@ -29,12 +29,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="2.0" exclude-result-prefixes="xs">
-    <xsl:template match="/">
-        <!-- see http://stackoverflow.com/questions/3387127 -->
-        <xsl:text disable-output-escaping="yes">&lt;!DOCTYPE html&gt;</xsl:text>
-        <xsl:apply-templates select="page"/>
-    </xsl:template>
-    <xsl:template match="page">
+    <xsl:template match="/page">
         <html lang="en">
             <head>
                 <meta charset="UTF-8"/>
@@ -100,10 +95,10 @@
                         </a>
                         <xsl:text>.</xsl:text>
                         <xsl:text> This website is using </xsl:text>
-                        <a href="http://www.rexsl.com/">
-                            <xsl:text>ReXSL</xsl:text>
+                        <a href="http://www.takes.org/">
+                            <xsl:text>Takes</xsl:text>
                         </a>
-                        <xsl:text>, Java RESTful development framework.</xsl:text>
+                        <xsl:text> framework.</xsl:text>
                     </p>
                     <p>
                         <a href="http://www.teamed.io">
@@ -131,14 +126,14 @@
         <p>
             <img style="width: 2.5em; height: 2.5em;">
                 <xsl:attribute name="src">
-                    <xsl:value-of select="photo"/>
+                    <xsl:value-of select="photo|picture|avatar"/>
                 </xsl:attribute>
                 <xsl:attribute name="alt">
-                    <xsl:value-of select="name"/>
+                    <xsl:value-of select="name|login"/>
                 </xsl:attribute>
             </img>
             <xsl:text> </xsl:text>
-            <xsl:value-of select="name"/>
+            <xsl:value-of select="name|login"/>
             <xsl:text> </xsl:text>
             <i style="font-size: 1.5em;">
                 <xsl:attribute name="class">
@@ -160,7 +155,7 @@
             <xsl:text> </xsl:text>
             <a>
                 <xsl:attribute name="href">
-                    <xsl:value-of select="/page/links/link[@rel='rexsl:logout']/@href"/>
+                    <xsl:value-of select="/page/links/link[@rel='takes:logout']/@href"/>
                 </xsl:attribute>
                 <xsl:text>logout</xsl:text>
             </a>

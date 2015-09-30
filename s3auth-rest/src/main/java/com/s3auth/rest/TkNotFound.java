@@ -29,53 +29,31 @@
  */
 package com.s3auth.rest;
 
-import com.jcabi.aspects.Loggable;
-import com.rexsl.page.PageBuilder;
+import java.io.IOException;
 import java.net.HttpURLConnection;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
+import org.takes.Request;
+import org.takes.Response;
+import org.takes.Take;
+import org.takes.rs.RsWithStatus;
 
 /**
- * Error-catching resource.
- *
- * <p>The class is mutable and NOT thread-safe.
+ * Not found page.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 0.0.1
+ * @since 0.1
  */
-@Path("/error")
-@Loggable(Loggable.DEBUG)
-public final class ErrorRs extends BaseRs {
+final class TkNotFound implements Take {
 
-    /**
-     * Show errror, on GET.
-     * @return The JAX-RS response
-     */
-    @GET
-    @Path("/")
-    public Response get() {
-        return new PageBuilder()
-            .stylesheet("/xsl/error.xsl")
-            .build(CommonPage.class)
-            .init(this)
-            .render()
-            .status(HttpURLConnection.HTTP_NOT_FOUND)
-            .build();
-    }
-
-    /**
-     * Show errror, on POST.
-     * @return The JAX-RS response
-     */
-    @POST
-    @Path("/")
-    public Response post() {
-        return Response.status(Response.Status.SEE_OTHER).location(
-            this.uriInfo().getBaseUriBuilder().clone().path("/error").build()
-        ).build();
+    @Override
+    public Response act(final Request request) throws IOException {
+        return new RsWithStatus(
+            new RsPage(
+                "/xsl/404.xsl",
+                request
+            ),
+            HttpURLConnection.HTTP_NOT_FOUND
+        );
     }
 
 }

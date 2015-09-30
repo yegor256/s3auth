@@ -186,7 +186,7 @@ final class HttpThread {
                     }
                     bytes = response.send(socket);
                     Logger.info(
-                        this, "#run(): %d bytes of %s", bytes, resource
+                        this, "#dispath(): %d bytes of %s", bytes, resource
                     );
                 } finally {
                     if (resource != null) {
@@ -203,14 +203,14 @@ final class HttpThread {
                 );
             }
         } catch (final HttpException ex) {
-            Logger.warn(this, "#run(): %[exception]s", ex);
+            Logger.info(this, "#dispatch(): %[exception]s", ex);
             bytes = this.failure(ex, socket);
         } catch (final SocketException ex) {
-            Logger.warn(this, "#run(): %[exception]s", ex);
+            Logger.info(this, "#dispatch(): %[exception]s", ex);
             bytes = 0L;
         // @checkstyle IllegalCatch (1 line)
         } catch (final Throwable ex) {
-            Logger.error(this, "#run(): %[exception]s", ex);
+            Logger.info(this, "#dispatch(): %[exception]s", ex);
             bytes = this.failure(
                 new HttpException(
                     HttpURLConnection.HTTP_INTERNAL_ERROR,

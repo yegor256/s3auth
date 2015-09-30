@@ -43,7 +43,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.Charsets;
 
@@ -68,7 +67,6 @@ import org.apache.commons.io.Charsets;
  * @since 0.0.1
  * @see HttpThread
  */
-@ToString
 @EqualsAndHashCode(of = { "status", "hdrs", "body" })
 @Loggable(Loggable.DEBUG)
 final class HttpResponse {
@@ -93,6 +91,11 @@ final class HttpResponse {
      * Resource to deliver.
      */
     private transient Resource body = new Resource.PlainText("");
+
+    @Override
+    public String toString() {
+        return String.format("%03d", this.status);
+    }
 
     /**
      * Set HTTP status.

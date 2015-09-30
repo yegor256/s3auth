@@ -95,7 +95,7 @@ public interface Domain {
     @Retention(RetentionPolicy.RUNTIME)
     @Constraint(validatedBy = Domain.Validator.class)
     @Documented
-    public @interface Valid {
+    @interface Valid {
         /**
          * Message of the validation error.
          */

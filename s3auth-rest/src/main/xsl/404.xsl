@@ -1,4 +1,5 @@
-/**
+<?xml version="1.0"?>
+<!--
  * Copyright (c) 2012-2015, s3auth.com
  * All rights reserved.
  *
@@ -26,54 +27,20 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package com.s3auth.rest;
-
-import com.jcabi.aspects.Loggable;
-import com.jcabi.manifests.Manifests;
-import java.io.IOException;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import org.apache.commons.io.IOUtils;
-
-/**
- * Miscellaneous resources.
- *
- * <p>The class is mutable and NOT thread-safe.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @version $Id$
- * @since 0.0.1
- */
-@Path("/misc")
-@Loggable(Loggable.DEBUG)
-public final class MiscRs extends BaseRs {
-
-    /**
-     * Show entrance page.
-     * @return The JAX-RS response
-     */
-    @GET
-    @Path("/version")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String version() {
-        return Manifests.read("S3Auth-Revision");
-    }
-
-    /**
-     * Show license.
-     * @return The JAX-RS response
-     * @throws IOException If fails with I/O
-     */
-    @GET
-    @Path("/LICENSE.txt")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String license() throws IOException {
-        return IOUtils.toString(
-            this.getClass().getResourceAsStream("/LICENSE.txt")
-        );
-    }
-
-}
+ -->
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://www.w3.org/1999/xhtml" version="1.0" exclude-result-prefixes="xs">
+    <xsl:output method="html" doctype-system="about:legacy-compat" encoding="UTF-8" indent="yes" />
+    <xsl:include href="/xsl/layout.xsl"/>
+    <xsl:template name="head">
+        <title>
+            <xsl:text>page not found</xsl:text>
+        </title>
+    </xsl:template>
+    <xsl:template name="content">
+        <p>
+            <xsl:text>Sorry, this page is absent.</xsl:text>
+        </p>
+    </xsl:template>
+</xsl:stylesheet>
