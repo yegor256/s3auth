@@ -48,11 +48,8 @@ public final class MainTest {
     /**
      * Main can start and listen on port.
      * @throws Exception If there is some problem inside
-     * @todo #33 Test doesn't work since AWS Dynamo config is not available
-     *  in runtime. We should find a way to mock it properly.
      */
     @Test
-//    @org.junit.Ignore
     @SuppressWarnings("PMD.DoNotUseThreads")
     public void startsAndListensOnPort() throws Exception {
         final int port = PortMocker.reserve();
@@ -64,9 +61,12 @@ public final class MainTest {
                     @Override
                     public Void call() throws Exception {
                         try {
-                            Main.main(new String[] {
-                                String.format("-p%d", port),
-                                String.format("-s%d", ssl) });
+                            Main.main(
+                                new String[] {
+                                    String.format("-p%d", port),
+                                    String.format("-s%d", ssl),
+                                }
+                            );
                         } catch (final InterruptedException ex) {
                             Thread.currentThread().interrupt();
                             throw new IllegalStateException(ex);
