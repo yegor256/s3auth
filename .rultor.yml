@@ -23,6 +23,7 @@ merge:
   - krzyk
   - longtimeago
   - pinaf
+  - yegor256
   script: |-
     mvn help:system clean install site --errors -Psite -Pqulice --settings ../settings.xml
     mvn clean

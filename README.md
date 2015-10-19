@@ -4,6 +4,7 @@
 [![DevOps By Rultor.com](http://www.rultor.com/b/yegor256/s3auth)](http://www.rultor.com/p/yegor256/s3auth)
 
 [![Build Status](https://travis-ci.org/yegor256/s3auth.svg?branch=master)](https://travis-ci.org/yegor256/s3auth)
+[![Dependencies](https://www.versioneye.com/user/projects/561ac557a193340f2f0011e5/badge.svg?style=flat)](https://www.versioneye.com/user/projects/561ac557a193340f2f0011e5)
 
 [s3auth.com](http://www.s3auth.com) is a Basic HTTP Auth gateway
 in front of your private Amazon S3 bucket. Read this blog post
