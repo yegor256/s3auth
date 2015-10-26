@@ -218,13 +218,7 @@ public final class DynamoHosts implements Hosts {
         }
         @Override
         public int size() {
-            final Iterator<?> iterator = this.iterator();
-            int size = 0;
-            while (iterator.hasNext()) {
-                iterator.next();
-                ++size;
-            }
-            return size;
+            return this.domains.size();
         }
         @Override
         public Iterator<Domain> iterator() {
