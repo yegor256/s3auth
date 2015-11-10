@@ -85,7 +85,7 @@
                             <xsl:text>TechnoPark Corp.</xsl:text>
                         </a>
                         <xsl:text> (a </xsl:text>
-                        <a href="https://aws.amazon.com/solution-providers/isv/technopark-corp">
+                        <a href="http://www.aws-partner-directory.com/PartnerDirectory/PartnerDetail?Name=TechnoPark+Corp.">
                             <xsl:text>Standard Technology Partner</xsl:text>
                         </a>
                         <xsl:text> of AWS). </xsl:text>
