@@ -1,6 +1,6 @@
 ## Puzzles
 
-There are 10 active puzzles (31 total), updated on 2015-12-09T10:45:47Z:
+There are 10 active puzzles (31 total), updated on 2015-12-09T12:19:22Z:
 
 unknown ?
 &nbsp;[34](https://github.com/yegor256/s3auth/issues/34) ?
