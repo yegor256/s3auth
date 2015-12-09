@@ -1,6 +1,6 @@
 ## Puzzles
 
-There are 10 active puzzles (31 total), updated on 2015-12-09T14:25:42Z:
+There are 10 active puzzles (31 total), updated on 2015-12-09T16:17:18Z:
 
 
 unknown [`?`](../blob/master/?)<br/>
