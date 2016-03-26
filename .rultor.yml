@@ -5,7 +5,7 @@ install: |
   export LANG=en_US.UTF-8
   export LANGUAGE=en_US.UTF-8
   sudo gem install pdd
-  sudo apt-get install -y net-tools
+  sudo apt-get install -y netpbm
 architect:
 - yegor256
 - davvd
