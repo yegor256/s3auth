@@ -49,7 +49,6 @@ deploy:
     sed -i "s/BUILD/${build}/g" s3auth-rest/src/main/resources/META-INF/MANIFEST.MF
     git add s3auth-rest/src/main/resources/META-INF/MANIFEST.MF
     git commit -m 'build number set'
-    git fetch --unshallow
     git push -f heroku $(git symbolic-ref --short HEAD):master
     git reset HEAD~1
     curl -f --connect-timeout 15 --retry 5 --retry-delay 30 http://www.s3auth.com
