@@ -166,7 +166,7 @@ final class DirectoryListing implements Resource {
 
     @Override
     public String contentType() {
-        return "application/xhtml+xml";
+        return "text/html";
     }
 
     @Override
