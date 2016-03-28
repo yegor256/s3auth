@@ -5,7 +5,7 @@ install: |
   export LANG=en_US.UTF-8
   export LANGUAGE=en_US.UTF-8
   sudo gem install pdd
-  sudo apt-get install -y netpbm
+  sudo apt-get install -y netpbm texlive-fonts-recommended
 architect:
 - yegor256
 - davvd
