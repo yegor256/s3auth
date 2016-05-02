@@ -18,7 +18,6 @@ assets:
   s3cfg: yegor256/home#assets/s3cfg
 merge:
   commanders:
-  - caarlos0
   - carlosmiranda
   - dmzaytsev
   - hdouss
