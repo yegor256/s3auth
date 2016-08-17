@@ -190,7 +190,10 @@ final class HttpFacade implements Closeable {
         try {
             if (!this.sockets.offer(socket, Tv.TEN, TimeUnit.SECONDS)) {
                 HttpFacade.overflow(socket);
-                Logger.warn(this, "too many open connections");
+                Logger.warn(
+                    this, "too many open connections (%d), can't open one more",
+                    HttpFacade.THREADS
+                );
             }
         } catch (final InterruptedException ex) {
             Thread.currentThread().interrupt();
