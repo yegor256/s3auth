@@ -101,6 +101,7 @@ final class SmartHost implements Host {
     public Resource fetch(@NotNull final URI uri, @NotNull final Range range,
         @NotNull final Version version) throws IOException {
         final Resource resource;
+        Logger.warn(this, "URI: %s", uri);
         if (SmartHost.HTPASSWD.matcher(uri.toString()).matches()) {
             String text;
             try {
@@ -116,11 +117,7 @@ final class SmartHost implements Host {
             }
             resource = new Resource.PlainText(text);
         } else {
-            if (uri.toString().matches(".*")) {
-                resource = new Resource.PlainText("temporary off");
-            } else {
-                resource = this.host.fetch(uri, range, version);
-            }
+            resource = this.host.fetch(uri, range, version);
         }
         return resource;
     }

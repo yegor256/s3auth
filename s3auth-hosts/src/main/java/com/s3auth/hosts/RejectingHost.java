@@ -94,8 +94,9 @@ final class RejectingHost implements Host {
     @Override
     public Resource fetch(final URI uri, final Range range,
         final Version version) throws IOException {
-        boolean reject = false;
         final String path = uri.toString();
+        Logger.warn(this, "URI: \"%s\"", path);
+        boolean reject = false;
         for (final String ptn : this.patterns) {
             if (path.matches(ptn)) {
                 reject = true;
@@ -107,9 +108,7 @@ final class RejectingHost implements Host {
             resource = new Resource.PlainText(
                 "your resource it temporary disabled, sorry"
             );
-            Logger.warn(this, "URI \"%s\" rejected", path);
         } else {
-            Logger.warn(this, "URI \"%s\" accepted", path);
             resource = this.host.fetch(uri, range, version);
         }
         return resource;
