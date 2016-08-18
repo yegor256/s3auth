@@ -32,7 +32,6 @@ package com.s3auth.hosts;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
-import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.net.URI;
 import lombok.EqualsAndHashCode;
@@ -95,7 +94,6 @@ final class RejectingHost implements Host {
     public Resource fetch(final URI uri, final Range range,
         final Version version) throws IOException {
         final String path = uri.toString();
-        Logger.warn(this, "URI: \"%s\"", path);
         boolean reject = false;
         for (final String ptn : this.patterns) {
             if (path.matches(ptn)) {
