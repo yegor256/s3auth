@@ -159,7 +159,6 @@ public class MkAmazonS3 implements AmazonS3 {
     }
 
     @Override
-    @Deprecated
     public void changeObjectStorageClass(String arg0, String arg1,
         StorageClass arg2) throws AmazonClientException, AmazonServiceException {
     }
@@ -859,7 +858,6 @@ public class MkAmazonS3 implements AmazonS3 {
     }
 
     @Override
-    @Deprecated
     public void setObjectRedirectLocation(String arg0, String arg1, String arg2)
         throws AmazonClientException, AmazonServiceException {
     }
