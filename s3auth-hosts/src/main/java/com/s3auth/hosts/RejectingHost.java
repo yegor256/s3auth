@@ -66,7 +66,7 @@ final class RejectingHost implements Host {
      * @param hst Original host
      * @param ptns Patterns
      */
-    RejectingHost(final Host hst, final Iterable<String> ptns) {
+    RejectingHost(final Host hst, final String... ptns) {
         this.host = hst;
         this.patterns = new Array<String>(ptns);
     }

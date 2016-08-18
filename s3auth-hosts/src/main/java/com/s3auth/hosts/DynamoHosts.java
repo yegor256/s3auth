@@ -35,7 +35,6 @@ import com.jcabi.urn.URN;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.AbstractSet;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -105,7 +104,7 @@ public final class DynamoHosts implements Hosts {
                     new DefaultHost(new DefaultBucket(domain))
                 )
             ),
-            Arrays.asList("/wp-content/uploads/images/.*")
+            "/wp-content/uploads/images/.*"
         );
     }
 
