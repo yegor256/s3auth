@@ -880,6 +880,7 @@ public class MkAmazonS3 implements AmazonS3 {
     }
 
     public static class MkS3Object extends S3Object {
+        private static final long serialVersionUID = 7049708086297888434L;
         @Override
         public S3ObjectInputStream getObjectContent() {
             return new S3ObjectInputStream(
