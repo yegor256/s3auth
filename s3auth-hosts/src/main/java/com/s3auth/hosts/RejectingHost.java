@@ -110,6 +110,7 @@ final class RejectingHost implements Host {
             Logger.warn(this, "URI \"%s\" rejected", path);
         } else {
             resource = this.host.fetch(uri, range, version);
+            Logger.warn(this, "URI \"%s\" accepted", path);
         }
         return resource;
     }
