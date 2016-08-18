@@ -39,11 +39,13 @@ import com.amazonaws.services.s3.S3ResponseMetadata;
 import com.amazonaws.services.s3.model.AbortMultipartUploadRequest;
 import com.amazonaws.services.s3.model.AccessControlList;
 import com.amazonaws.services.s3.model.Bucket;
+import com.amazonaws.services.s3.model.BucketAccelerateConfiguration;
 import com.amazonaws.services.s3.model.BucketCrossOriginConfiguration;
 import com.amazonaws.services.s3.model.BucketLifecycleConfiguration;
 import com.amazonaws.services.s3.model.BucketLoggingConfiguration;
 import com.amazonaws.services.s3.model.BucketNotificationConfiguration;
 import com.amazonaws.services.s3.model.BucketPolicy;
+import com.amazonaws.services.s3.model.BucketReplicationConfiguration;
 import com.amazonaws.services.s3.model.BucketTaggingConfiguration;
 import com.amazonaws.services.s3.model.BucketVersioningConfiguration;
 import com.amazonaws.services.s3.model.BucketWebsiteConfiguration;
@@ -58,6 +60,7 @@ import com.amazonaws.services.s3.model.CreateBucketRequest;
 import com.amazonaws.services.s3.model.DeleteBucketCrossOriginConfigurationRequest;
 import com.amazonaws.services.s3.model.DeleteBucketLifecycleConfigurationRequest;
 import com.amazonaws.services.s3.model.DeleteBucketPolicyRequest;
+import com.amazonaws.services.s3.model.DeleteBucketReplicationConfigurationRequest;
 import com.amazonaws.services.s3.model.DeleteBucketRequest;
 import com.amazonaws.services.s3.model.DeleteBucketTaggingConfigurationRequest;
 import com.amazonaws.services.s3.model.DeleteBucketWebsiteConfigurationRequest;
@@ -66,17 +69,33 @@ import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.amazonaws.services.s3.model.DeleteObjectsResult;
 import com.amazonaws.services.s3.model.DeleteVersionRequest;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import com.amazonaws.services.s3.model.GetBucketAccelerateConfigurationRequest;
 import com.amazonaws.services.s3.model.GetBucketAclRequest;
+import com.amazonaws.services.s3.model.GetBucketCrossOriginConfigurationRequest;
+import com.amazonaws.services.s3.model.GetBucketLifecycleConfigurationRequest;
 import com.amazonaws.services.s3.model.GetBucketLocationRequest;
+import com.amazonaws.services.s3.model.GetBucketLoggingConfigurationRequest;
+import com.amazonaws.services.s3.model.GetBucketNotificationConfigurationRequest;
 import com.amazonaws.services.s3.model.GetBucketPolicyRequest;
+import com.amazonaws.services.s3.model.GetBucketReplicationConfigurationRequest;
+import com.amazonaws.services.s3.model.GetBucketTaggingConfigurationRequest;
+import com.amazonaws.services.s3.model.GetBucketVersioningConfigurationRequest;
 import com.amazonaws.services.s3.model.GetBucketWebsiteConfigurationRequest;
+import com.amazonaws.services.s3.model.GetObjectAclRequest;
 import com.amazonaws.services.s3.model.GetObjectMetadataRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.GetS3AccountOwnerRequest;
+import com.amazonaws.services.s3.model.HeadBucketRequest;
+import com.amazonaws.services.s3.model.HeadBucketResult;
 import com.amazonaws.services.s3.model.InitiateMultipartUploadRequest;
 import com.amazonaws.services.s3.model.InitiateMultipartUploadResult;
 import com.amazonaws.services.s3.model.ListBucketsRequest;
 import com.amazonaws.services.s3.model.ListMultipartUploadsRequest;
+import com.amazonaws.services.s3.model.ListNextBatchOfObjectsRequest;
+import com.amazonaws.services.s3.model.ListNextBatchOfVersionsRequest;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
+import com.amazonaws.services.s3.model.ListObjectsV2Request;
+import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.ListPartsRequest;
 import com.amazonaws.services.s3.model.ListVersionsRequest;
 import com.amazonaws.services.s3.model.MultipartUploadListing;
@@ -90,19 +109,23 @@ import com.amazonaws.services.s3.model.Region;
 import com.amazonaws.services.s3.model.RestoreObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.services.s3.model.SetBucketAccelerateConfigurationRequest;
 import com.amazonaws.services.s3.model.SetBucketAclRequest;
 import com.amazonaws.services.s3.model.SetBucketCrossOriginConfigurationRequest;
 import com.amazonaws.services.s3.model.SetBucketLifecycleConfigurationRequest;
 import com.amazonaws.services.s3.model.SetBucketLoggingConfigurationRequest;
 import com.amazonaws.services.s3.model.SetBucketNotificationConfigurationRequest;
 import com.amazonaws.services.s3.model.SetBucketPolicyRequest;
+import com.amazonaws.services.s3.model.SetBucketReplicationConfigurationRequest;
 import com.amazonaws.services.s3.model.SetBucketTaggingConfigurationRequest;
 import com.amazonaws.services.s3.model.SetBucketVersioningConfigurationRequest;
 import com.amazonaws.services.s3.model.SetBucketWebsiteConfigurationRequest;
+import com.amazonaws.services.s3.model.SetObjectAclRequest;
 import com.amazonaws.services.s3.model.StorageClass;
 import com.amazonaws.services.s3.model.UploadPartRequest;
 import com.amazonaws.services.s3.model.UploadPartResult;
 import com.amazonaws.services.s3.model.VersionListing;
+import com.amazonaws.services.s3.waiters.AmazonS3Waiters;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
@@ -280,6 +303,11 @@ public class MkAmazonS3 implements AmazonS3 {
     }
 
     @Override
+    public HeadBucketResult headBucket(final HeadBucketRequest headBucketRequest) throws AmazonClientException, AmazonServiceException {
+        throw new UnsupportedOperationException("#headBucket()");
+    }
+
+    @Override
     public URL generatePresignedUrl(GeneratePresignedUrlRequest arg0)
         throws AmazonClientException {
         return null;
@@ -316,9 +344,19 @@ public class MkAmazonS3 implements AmazonS3 {
     }
 
     @Override
+    public BucketCrossOriginConfiguration getBucketCrossOriginConfiguration(final GetBucketCrossOriginConfigurationRequest getBucketCrossOriginConfigurationRequest) {
+        throw new UnsupportedOperationException("#getBucketCrossOriginConfiguration()");
+    }
+
+    @Override
     public BucketLifecycleConfiguration getBucketLifecycleConfiguration(
         String arg0) {
         return null;
+    }
+
+    @Override
+    public BucketLifecycleConfiguration getBucketLifecycleConfiguration(final GetBucketLifecycleConfigurationRequest getBucketLifecycleConfigurationRequest) {
+        throw new UnsupportedOperationException("#getBucketLifecycleConfiguration()");
     }
 
     @Override
@@ -340,9 +378,19 @@ public class MkAmazonS3 implements AmazonS3 {
     }
 
     @Override
+    public BucketLoggingConfiguration getBucketLoggingConfiguration(final GetBucketLoggingConfigurationRequest getBucketLoggingConfigurationRequest) throws AmazonClientException, AmazonServiceException {
+        throw new UnsupportedOperationException("#getBucketLoggingConfiguration()");
+    }
+
+    @Override
     public BucketNotificationConfiguration getBucketNotificationConfiguration(
         String arg0) throws AmazonClientException, AmazonServiceException {
         return null;
+    }
+
+    @Override
+    public BucketNotificationConfiguration getBucketNotificationConfiguration(final GetBucketNotificationConfigurationRequest getBucketNotificationConfigurationRequest) throws AmazonClientException, AmazonServiceException {
+        throw new UnsupportedOperationException("#getBucketNotificationConfiguration()");
     }
 
     @Override
@@ -363,9 +411,19 @@ public class MkAmazonS3 implements AmazonS3 {
     }
 
     @Override
+    public BucketTaggingConfiguration getBucketTaggingConfiguration(final GetBucketTaggingConfigurationRequest getBucketTaggingConfigurationRequest) {
+        throw new UnsupportedOperationException("#getBucketTaggingConfiguration()");
+    }
+
+    @Override
     public BucketVersioningConfiguration getBucketVersioningConfiguration(
         String arg0) throws AmazonClientException, AmazonServiceException {
         return null;
+    }
+
+    @Override
+    public BucketVersioningConfiguration getBucketVersioningConfiguration(final GetBucketVersioningConfigurationRequest getBucketVersioningConfigurationRequest) throws AmazonClientException, AmazonServiceException {
+        throw new UnsupportedOperationException("#getBucketVersioningConfiguration()");
     }
 
     @Override
@@ -406,6 +464,11 @@ public class MkAmazonS3 implements AmazonS3 {
     }
 
     @Override
+    public String getObjectAsString(final String s, final String s1) throws AmazonServiceException, AmazonClientException {
+        throw new UnsupportedOperationException("#getObjectAsString()");
+    }
+
+    @Override
     public AccessControlList getObjectAcl(String arg0, String arg1)
         throws AmazonClientException, AmazonServiceException {
         return null;
@@ -415,6 +478,11 @@ public class MkAmazonS3 implements AmazonS3 {
     public AccessControlList getObjectAcl(String arg0, String arg1, String arg2)
         throws AmazonClientException, AmazonServiceException {
         return null;
+    }
+
+    @Override
+    public AccessControlList getObjectAcl(final GetObjectAclRequest getObjectAclRequest) throws AmazonClientException, AmazonServiceException {
+        throw new UnsupportedOperationException("#getObjectAcl()");
     }
 
     @Override
@@ -433,6 +501,11 @@ public class MkAmazonS3 implements AmazonS3 {
     public Owner getS3AccountOwner() throws AmazonClientException,
         AmazonServiceException {
         return null;
+    }
+
+    @Override
+    public Owner getS3AccountOwner(final GetS3AccountOwnerRequest getS3AccountOwnerRequest) throws AmazonClientException, AmazonServiceException {
+        throw new UnsupportedOperationException("#getS3AccountOwner()");
     }
 
     @Override
@@ -468,9 +541,19 @@ public class MkAmazonS3 implements AmazonS3 {
     }
 
     @Override
+    public ObjectListing listNextBatchOfObjects(final ListNextBatchOfObjectsRequest listNextBatchOfObjectsRequest) throws AmazonClientException, AmazonServiceException {
+        throw new UnsupportedOperationException("#listNextBatchOfObjects()");
+    }
+
+    @Override
     public VersionListing listNextBatchOfVersions(VersionListing arg0)
         throws AmazonClientException, AmazonServiceException {
         return null;
+    }
+
+    @Override
+    public VersionListing listNextBatchOfVersions(final ListNextBatchOfVersionsRequest listNextBatchOfVersionsRequest) throws AmazonClientException, AmazonServiceException {
+        throw new UnsupportedOperationException("#listNextBatchOfVersions()");
     }
 
     @Override
@@ -483,6 +566,21 @@ public class MkAmazonS3 implements AmazonS3 {
     public ObjectListing listObjects(ListObjectsRequest arg0)
         throws AmazonClientException, AmazonServiceException {
         return null;
+    }
+
+    @Override
+    public ListObjectsV2Result listObjectsV2(final String s) throws AmazonClientException, AmazonServiceException {
+        throw new UnsupportedOperationException("#listObjectsV2()");
+    }
+
+    @Override
+    public ListObjectsV2Result listObjectsV2(final String s, final String s1) throws AmazonClientException, AmazonServiceException {
+        throw new UnsupportedOperationException("#listObjectsV2()");
+    }
+
+    @Override
+    public ListObjectsV2Result listObjectsV2(final ListObjectsV2Request listObjectsV2Request) throws AmazonClientException, AmazonServiceException {
+        throw new UnsupportedOperationException("#listObjectsV2()");
     }
 
     @Override
@@ -536,6 +634,11 @@ public class MkAmazonS3 implements AmazonS3 {
     }
 
     @Override
+    public PutObjectResult putObject(final String s, final String s1, final String s2) throws AmazonServiceException, AmazonClientException {
+        throw new UnsupportedOperationException("#putObject()");
+    }
+
+    @Override
     public void restoreObject(RestoreObjectRequest arg0)
         throws AmazonServiceException {
     }
@@ -559,6 +662,76 @@ public class MkAmazonS3 implements AmazonS3 {
     public boolean isRequesterPaysEnabled(final String bucket)
         throws AmazonServiceException, AmazonClientException {
         return false;
+    }
+
+    @Override
+    public void setBucketReplicationConfiguration(final String s, final BucketReplicationConfiguration bucketReplicationConfiguration) throws AmazonServiceException, AmazonClientException {
+        throw new UnsupportedOperationException("#setBucketReplicationConfiguration()");
+    }
+
+    @Override
+    public void setBucketReplicationConfiguration(final SetBucketReplicationConfigurationRequest setBucketReplicationConfigurationRequest) throws AmazonServiceException, AmazonClientException {
+        throw new UnsupportedOperationException("#setBucketReplicationConfiguration()");
+    }
+
+    @Override
+    public BucketReplicationConfiguration getBucketReplicationConfiguration(final String s) throws AmazonServiceException, AmazonClientException {
+        throw new UnsupportedOperationException("#getBucketReplicationConfiguration()");
+    }
+
+    @Override
+    public BucketReplicationConfiguration getBucketReplicationConfiguration(final GetBucketReplicationConfigurationRequest getBucketReplicationConfigurationRequest) throws AmazonServiceException, AmazonClientException {
+        throw new UnsupportedOperationException("#getBucketReplicationConfiguration()");
+    }
+
+    @Override
+    public void deleteBucketReplicationConfiguration(final String s) throws AmazonServiceException, AmazonClientException {
+        throw new UnsupportedOperationException("#deleteBucketReplicationConfiguration()");
+    }
+
+    @Override
+    public void deleteBucketReplicationConfiguration(final DeleteBucketReplicationConfigurationRequest deleteBucketReplicationConfigurationRequest) throws AmazonServiceException, AmazonClientException {
+        throw new UnsupportedOperationException("#deleteBucketReplicationConfiguration()");
+    }
+
+    @Override
+    public boolean doesObjectExist(final String s, final String s1) throws AmazonServiceException, AmazonClientException {
+        throw new UnsupportedOperationException("#doesObjectExist()");
+    }
+
+    @Override
+    public BucketAccelerateConfiguration getBucketAccelerateConfiguration(final String s) throws AmazonServiceException, AmazonClientException {
+        throw new UnsupportedOperationException("#getBucketAccelerateConfiguration()");
+    }
+
+    @Override
+    public BucketAccelerateConfiguration getBucketAccelerateConfiguration(final GetBucketAccelerateConfigurationRequest getBucketAccelerateConfigurationRequest) throws AmazonServiceException, AmazonClientException {
+        throw new UnsupportedOperationException("#getBucketAccelerateConfiguration()");
+    }
+
+    @Override
+    public void setBucketAccelerateConfiguration(final String s, final BucketAccelerateConfiguration bucketAccelerateConfiguration) throws AmazonServiceException, AmazonClientException {
+        throw new UnsupportedOperationException("#setBucketAccelerateConfiguration()");
+    }
+
+    @Override
+    public void setBucketAccelerateConfiguration(final SetBucketAccelerateConfigurationRequest setBucketAccelerateConfigurationRequest) throws AmazonServiceException, AmazonClientException {
+        throw new UnsupportedOperationException("#setBucketAccelerateConfiguration()");
+    }
+
+    @Override
+    public Region getRegion() {
+        throw new UnsupportedOperationException("#getRegion()");
+    }
+
+    @Override
+    public URL getUrl(final String s, final String s1) {
+        throw new UnsupportedOperationException("#getUrl()");
+    }
+
+    @Override
+    public AmazonS3Waiters waiters() {
+        throw new UnsupportedOperationException("#waiters()");
     }
 
     @Override
@@ -677,6 +850,11 @@ public class MkAmazonS3 implements AmazonS3 {
     public void setObjectAcl(String arg0, String arg1, String arg2,
         CannedAccessControlList arg3) throws AmazonClientException,
         AmazonServiceException {
+    }
+
+    @Override
+    public void setObjectAcl(final SetObjectAclRequest setObjectAclRequest) throws AmazonClientException, AmazonServiceException {
+        throw new UnsupportedOperationException("#setObjectAcl()");
     }
 
     @Override
