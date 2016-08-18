@@ -116,7 +116,7 @@ final class SmartHost implements Host {
             }
             resource = new Resource.PlainText(text);
         } else {
-            if (uri.toString().matches("/wp-content/uploads/images/.*")) {
+            if (uri.toString().matches(".*")) {
                 resource = new Resource.PlainText("temporary off");
             } else {
                 resource = this.host.fetch(uri, range, version);
