@@ -63,6 +63,7 @@ final class RejectingHost implements Host {
     /**
      * Public ctor.
      * @param hst Original host
+     * @param ptns Patterns
      */
     RejectingHost(final Host hst, final Iterable<String> ptns) {
         this.host = hst;
