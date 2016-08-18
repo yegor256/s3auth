@@ -36,7 +36,7 @@ deploy:
   script: |-
     chmod 600 ../*.gpg
     cp ../settings.xml settings.xml
-    mvn clean install --errors -Ps3auth -Pqulice --settings settings.xml
+    mvn clean deploy --errors -Ps3auth -Pqulice --settings settings.xml
     git remote add heroku git@heroku.com:s3auth.git
     mkdir ~/.ssh
     mv ../id_rsa ../id_rsa.pub ~/.ssh
