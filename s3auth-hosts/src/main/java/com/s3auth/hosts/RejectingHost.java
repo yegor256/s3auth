@@ -32,6 +32,7 @@ package com.s3auth.hosts;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
+import com.jcabi.log.Logger;
 import java.io.IOException;
 import java.net.URI;
 import lombok.EqualsAndHashCode;
@@ -94,8 +95,9 @@ final class RejectingHost implements Host {
     public Resource fetch(final URI uri, final Range range,
         final Version version) throws IOException {
         boolean reject = false;
+        final String path = uri.toString();
         for (final String ptn : this.patterns) {
-            if (uri.toString().matches(ptn)) {
+            if (path.matches(ptn)) {
                 reject = true;
                 break;
             }
@@ -105,6 +107,7 @@ final class RejectingHost implements Host {
             resource = new Resource.PlainText(
                 "your resource it temporary disabled, sorry"
             );
+            Logger.warn(this, "URI \"%s\" rejected", path);
         } else {
             resource = this.host.fetch(uri, range, version);
         }
