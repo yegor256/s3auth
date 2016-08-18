@@ -275,7 +275,7 @@ final class DefaultHost implements Host {
         final Collection<DefaultHost.ObjectName> names =
             new LinkedList<DefaultHost.ObjectName>();
         if (!name.isEmpty()) {
-            names.add(new Simple(name));
+            names.add(new DefaultHost.Simple(name));
         }
         names.add(new DefaultHost.NameWithSuffix(name));
         return names;
