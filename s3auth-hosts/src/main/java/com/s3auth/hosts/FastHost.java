@@ -30,7 +30,6 @@
 package com.s3auth.hosts;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.Timeable;
 import com.jcabi.aspects.Tv;
 import java.io.IOException;
@@ -49,7 +48,6 @@ import lombok.EqualsAndHashCode;
  */
 @Immutable
 @EqualsAndHashCode(of = "origin")
-@Loggable(Loggable.DEBUG)
 final class FastHost implements Host {
 
     /**

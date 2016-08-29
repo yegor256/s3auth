@@ -30,7 +30,6 @@
 package com.s3auth.hosts;
 
 import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
 import java.io.IOException;
 import java.net.URI;
@@ -47,7 +46,6 @@ import lombok.EqualsAndHashCode;
  */
 @Immutable
 @EqualsAndHashCode(of = "host")
-@Loggable(Loggable.DEBUG)
 final class RejectingHost implements Host {
 
     /**
