@@ -105,7 +105,7 @@ public final class DirectoryListingTest {
                 "//xhtml:a[@href=\"/%s\" and .=\"%s\"]",
                 key, key
             ),
-            String.format("//xhtml:p[.=\"%d\"]", size)
+            String.format("//xhtml:td[.=\"%d\"]", size)
         );
     }
 
