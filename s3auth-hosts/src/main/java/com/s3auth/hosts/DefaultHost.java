@@ -44,7 +44,6 @@ import com.amazonaws.services.s3.model.BucketWebsiteConfiguration;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Timeable;
 import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
@@ -161,7 +160,6 @@ final class DefaultHost implements Host {
     @NotNull
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     @Loggable(value = Loggable.DEBUG, ignore = IOException.class)
-    @Timeable(limit = Tv.FIVE, unit = TimeUnit.SECONDS)
     public Resource fetch(@NotNull final URI uri,
         @NotNull final Range range, @NotNull final Version version)
         throws IOException {
