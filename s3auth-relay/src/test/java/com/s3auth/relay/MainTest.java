@@ -52,10 +52,11 @@ public final class MainTest {
      *  in runtime. We should find a way to mock it properly.
      */
     @Test
-    @org.junit.Ignore
+//    @org.junit.Ignore
     @SuppressWarnings("PMD.DoNotUseThreads")
     public void startsAndListensOnPort() throws Exception {
         final int port = PortMocker.reserve();
+        final int ssl = PortMocker.reserve();
         final CountDownLatch done = new CountDownLatch(1);
         final Thread thread = new Thread(
             new VerboseRunnable(
@@ -63,11 +64,14 @@ public final class MainTest {
                     @Override
                     public Void call() throws Exception {
                         try {
-                            Main.main(new String[]{Integer.toString(port)});
+                            Main.main(new String[] {
+                                String.format("-p%d", port),
+                                String.format("-s%d", ssl) });
                         } catch (final InterruptedException ex) {
-                            done.countDown();
                             Thread.currentThread().interrupt();
                             throw new IllegalStateException(ex);
+                        } finally {
+                            done.countDown();
                         }
                         return null;
                     }
