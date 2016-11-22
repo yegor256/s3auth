@@ -39,7 +39,12 @@
                 <meta charset="UTF-8"/>
                 <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1"/>
                 <link rel="stylesheet" type="text/css" media="all" href="http://www.s3auth.com/css/layout.css"/>
-                <title><xsl:value-of select="@prefix"/></title>
+                <title>
+                    <xsl:if test="@prefix = ''">
+                        <xsl:text>/</xsl:text>
+                    </xsl:if>
+                    <xsl:value-of select="@prefix"/>
+                </title>
             </head>
             <body>
                 <div id="content">
