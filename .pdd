@@ -1,7 +1,9 @@
 --source=.
 --verbose
 --exclude target/**/*
+--exclude **/*/target/**/*
+--exclude **/*/local-repo/**/*
 --exclude src/main/resources/images/**/*
---rule min-words:20
---rule min-estimate:15
+--rule min-words:7
+--rule min-estimate:0
 --rule max-estimate:90
