@@ -3,6 +3,7 @@
 [![Made By Teamed.io](http://img.teamed.io/btn.svg)](http://www.teamed.io)
 [![DevOps By Rultor.com](http://www.rultor.com/b/yegor256/s3auth)](http://www.rultor.com/p/yegor256/s3auth)
 
+[![Availability at SixNines](http://www.sixnines.io/b/9dcb)](http://www.sixnines.io/h/9dcb)
 [![Build Status](https://travis-ci.org/yegor256/s3auth.svg?branch=master)](https://travis-ci.org/yegor256/s3auth)
 [![PDD status](http://www.0pdd.com/svg?name=yegor256/s3auth)](http://www.0pdd.com/p?name=yegor256/s3auth)
 [![Dependencies](https://www.versioneye.com/user/projects/561ac557a193340f2f0011e5/badge.svg?style=flat)](https://www.versioneye.com/user/projects/561ac557a193340f2f0011e5)
