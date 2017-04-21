@@ -101,8 +101,8 @@
                         <xsl:text> framework.</xsl:text>
                     </p>
                     <p>
-                        <a href="http://www.teamed.io">
-                            <img src="http://img.teamed.io/btn.svg" alt="teamed.io logo"/>
+                        <a href="http://www.sixnines.io/h/9dcb">
+                            <img src="http://www.sixnines.io/b/9dcb?style=flat" alt="sixnines badge"/>
                         </a>
                     </p>
                 </div>
