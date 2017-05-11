@@ -31,7 +31,6 @@ package com.s3auth.hosts;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Timeable;
-import com.jcabi.aspects.Tv;
 import java.io.IOException;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
