@@ -214,7 +214,7 @@
                     <plugin>
                         <groupId>com.jcabi</groupId>
                         <artifactId>jcabi-ssl-maven-plugin</artifactId>
-                        <version>0.11</version>
+                        <version>0.12</version>
                         <executions>
                             <execution>
                                 <goals>
