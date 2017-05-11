@@ -84,7 +84,7 @@ final class FastHost implements Host {
     }
 
     @Override
-    @Timeable(limit = Tv.THIRTY, unit = TimeUnit.SECONDS)
+    @Timeable(limit = 2, unit = TimeUnit.MINUTES)
     public Resource fetch(final URI uri, final Range range,
         final Version version) throws IOException {
         return this.origin.fetch(uri, range, version);
