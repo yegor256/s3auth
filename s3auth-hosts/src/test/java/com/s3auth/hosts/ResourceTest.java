@@ -104,5 +104,4 @@ public final class ResourceTest {
     public void rejectsNullContent() throws Exception {
         new Resource.PlainText(null);
     }
-
 }
