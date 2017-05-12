@@ -90,7 +90,7 @@
                         </a>
                         <xsl:text> of AWS). </xsl:text>
                         <xsl:text>See also terms of use, privacy policy and license agreement at </xsl:text>
-                        <a href="/misc/LICENSE.txt">
+                        <a href="https://github.com/yegor256/s3auth/blob/master/LICENSE.txt">
                             <xsl:text>LICENSE.txt</xsl:text>
                         </a>
                         <xsl:text>.</xsl:text>
