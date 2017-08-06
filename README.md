@@ -1,6 +1,6 @@
 <img src="http://img.s3auth.com/logo.png" width="200px" height="35px"/>
 
-[![Made By Teamed.io](http://img.teamed.io/btn.svg)](http://www.teamed.io)
+[![Managed by Zerocracy](http://www.zerocracy.com/badge.svg)](http://www.zerocracy.com)
 [![DevOps By Rultor.com](http://www.rultor.com/b/yegor256/s3auth)](http://www.rultor.com/p/yegor256/s3auth)
 
 [![Availability at SixNines](http://www.sixnines.io/b/9dcb)](http://www.sixnines.io/h/9dcb)
