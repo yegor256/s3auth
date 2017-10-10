@@ -34,6 +34,11 @@ merge:
 deploy:
   script: |-
     chmod 600 ../*.gpg
+    sed -i "s/BUILD/${build}/g" s3auth-rest/src/main/resources/log4j.properties
+    git add s3auth-rest/src/main/resources/log4j.properties
+    sed -i "s/BUILD/${build}/g" s3auth-rest/src/main/resources/META-INF/MANIFEST.MF
+    git add s3auth-rest/src/main/resources/META-INF/MANIFEST.MF
+    git commit -m 'build number set'
     cp ../settings.xml settings.xml
     mvn clean deploy --errors -Ps3auth -Pqulice --settings settings.xml
     git remote add heroku git@heroku.com:s3auth.git
@@ -43,14 +48,7 @@ deploy:
     echo -e "Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile=/dev/null" > ~/.ssh/config
     build=$(git rev-parse --short HEAD)
     git add settings.xml
-    git commit -m 'settings.xml'
-    sed -i "s/BUILD/${build}/g" s3auth-rest/src/main/resources/log4j.properties
-    git add s3auth-rest/src/main/resources/log4j.properties
-    sed -i "s/BUILD/${build}/g" s3auth-rest/src/main/resources/META-INF/MANIFEST.MF
-    git add s3auth-rest/src/main/resources/META-INF/MANIFEST.MF
-    git commit -m 'build number set'
-    git push -f heroku $(git symbolic-ref --short HEAD):master
-    git reset HEAD~1
+    git commit -m 'settings.xml' && git push -f heroku $(git symbolic-ref --short HEAD):master && git reset HEAD~1
     curl -f --connect-timeout 15 --retry 5 --retry-delay 30 http://www.s3auth.com
     mvn clean deploy --errors -Ps3auth -Pqulice --settings settings.xml -pl :s3auth-relay
     mvn clean install site-deploy --errors -Psite -Prempl --settings settings.xml
