@@ -1,6 +1,6 @@
 <img src="http://img.s3auth.com/logo.png" width="200px" height="35px"/>
 
-[![Managed by Zerocracy](http://www.0crat.com/badge/C3RP1J1CH.svg)](http://www.0crat.com/p/C3RP1J1CH)
+[![Managed by Zerocracy](https://www.0crat.com/badge/C3RP1J1CH.svg)](http://www.0crat.com/p/C3RP1J1CH)
 [![DevOps By Rultor.com](http://www.rultor.com/b/yegor256/s3auth)](http://www.rultor.com/p/yegor256/s3auth)
 
 [![Availability at SixNines](http://www.sixnines.io/b/9dcb)](http://www.sixnines.io/h/9dcb)
