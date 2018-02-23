@@ -1,6 +1,6 @@
 <img src="http://img.s3auth.com/logo.png" width="200px" height="35px"/>
 
-[![EO principles respected here](https://cdn.rawgit.com/yegor256/elegantobjects.github.io/master/badge.svg)](http://www.elegantobjects.org)
+[![EO principles respected here](http://www.elegantobjects.org/badge.svg)](http://www.elegantobjects.org)
 [![Managed by Zerocracy](https://www.0crat.com/badge/C3RP1J1CH.svg)](https://www.0crat.com/p/C3RP1J1CH)
 [![DevOps By Rultor.com](http://www.rultor.com/b/yegor256/s3auth)](http://www.rultor.com/p/yegor256/s3auth)
 
