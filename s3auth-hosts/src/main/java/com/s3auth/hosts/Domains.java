@@ -71,10 +71,8 @@ final class Domains extends AbstractSet<Domain> {
      * @return Found domain
      */
     public Domain get(@NotNull final String name) {
-        Domain found = null;
-        if (this.has(name)) {
-            found = this.all.get(name);
-        } else {
+        final Domain found = this.all.get(name);
+        if (found == null) {
             throw new IllegalArgumentException(
                 String.format("domain %s not found", name)
             );
