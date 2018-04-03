@@ -1,249 +1,235 @@
 <?xml version="1.0"?>
 <!--
- * Copyright (c) 2012-2017, s3auth.com
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met: 1) Redistributions of source code must retain the above
- * copyright notice, this list of conditions and the following
- * disclaimer. 2) Redistributions in binary form must reproduce the above
- * copyright notice, this list of conditions and the following
- * disclaimer in the documentation and/or other materials provided
- * with the distribution. 3) Neither the name of the s3auth.com nor
- * the names of its contributors may be used to endorse or promote
- * products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
- * NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
- * THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
- * OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * This file is an Apache Maven 3.0 build automation script. Maven is used
- * in the project since it's one of the most powerful and stable
- * tools in the market. Other tools were reviewed, including: Apache Ant,
- * Phing, and GNU Make (all I personally know). None of them are suitable
- * better than Apache Maven to this project. Maven is widely supported
- * by open source community and is extended by many plugins. The only
- * critical defect that I know is that Maven doesn't support incremental
- * build and re-builds everything from scratch. I already reported this
- * problem: http://jira.codehaus.org/browse/MNG-4885.
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
- * @link http://maven.apache.org/
- * @link http://en.wikipedia.org/wiki/List_of_build_automation_software
- -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>com.jcabi</groupId>
-        <artifactId>parent</artifactId>
-        <version>0.31</version>
-    </parent>
-    <groupId>com.s3auth</groupId>
-    <artifactId>s3auth</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <name>s3auth</name>
-    <modules>
-        <module>s3auth-hosts</module>
-        <module>s3auth-relay</module>
-        <module>s3auth-rest</module>
-    </modules>
-    <description>Amazon S3 HTTP Auth Relay</description>
+Copyright (c) 2012-2017, s3auth.com
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met: 1) Redistributions of source code must retain the above
+copyright notice, this list of conditions and the following
+disclaimer. 2) Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following
+disclaimer in the documentation and/or other materials provided
+with the distribution. 3) Neither the name of the s3auth.com nor
+the names of its contributors may be used to endorse or promote
+products derived from this software without specific prior written
+permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.jcabi</groupId>
+    <artifactId>parent</artifactId>
+    <version>0.31</version>
+  </parent>
+  <groupId>com.s3auth</groupId>
+  <artifactId>s3auth</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>s3auth</name>
+  <modules>
+    <module>s3auth-hosts</module>
+    <module>s3auth-relay</module>
+    <module>s3auth-rest</module>
+  </modules>
+  <description>Amazon S3 HTTP Auth Relay</description>
+  <url>http://www.s3auth.com</url>
+  <inceptionYear>2012</inceptionYear>
+  <organization>
+    <name>s3auth.com</name>
     <url>http://www.s3auth.com</url>
-    <inceptionYear>2012</inceptionYear>
-    <organization>
-        <name>s3auth.com</name>
-        <url>http://www.s3auth.com</url>
-    </organization>
-    <licenses>
-        <license>
-            <name>BSD</name>
-            <url>http://www.s3auth.com/misc/LICENSE.txt</url>
-            <distribution>site</distribution>
-        </license>
-    </licenses>
-    <developers>
-        <developer>
-            <id>1</id>
-            <name>Yegor Bugayenko</name>
-            <email>yegor@tpc2.com</email>
-            <organization>tpc2.com</organization>
-            <organizationUrl>http://www.teamed.io</organizationUrl>
-            <roles>
-                <role>Architect</role>
-                <role>Developer</role>
-            </roles>
-            <timezone>+1</timezone>
-        </developer>
-    </developers>
-    <ciManagement>
-        <system>rultor</system>
-        <url>http://www.rultor.com/s/s3auth</url>
-    </ciManagement>
-    <issueManagement>
-        <system>github</system>
-        <url>https://github.com/yegor256/s3auth/issues</url>
-    </issueManagement>
-    <scm>
-        <connection>scm:git:git@github.com:yegor256/s3auth.git</connection>
-        <developerConnection>scm:git:git@github.com:yegor256/s3auth.git</developerConnection>
-        <url>https://github.com/yegor256/s3auth</url>
-    </scm>
-    <distributionManagement>
-        <snapshotRepository>
-            <id>repo.s3auth.com</id>
-            <url>s3://repo.s3auth.com/snapshot</url>
-        </snapshotRepository>
-        <repository>
-            <id>repo.s3auth.com</id>
-            <url>s3://repo.s3auth.com/release</url>
-        </repository>
-        <site>
-            <id>maven.s3auth.com</id>
-            <url>s3://maven.s3auth.com</url>
-        </site>
-    </distributionManagement>
-    <repositories>
-        <repository>
-            <id>repo.s3auth.com</id>
-            <url>s3://repo.s3auth.com/snapshot</url>
-        </repository>
-    </repositories>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.amazonaws</groupId>
-                <artifactId>aws-java-sdk</artifactId>
-                <version>1.7.5</version>
-            </dependency>
-            <dependency>
-                <groupId>com.jcabi</groupId>
-                <artifactId>jcabi-urn</artifactId>
-                <version>0.8</version>
-                <classifier>mock</classifier>
-                <scope>test</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-failsafe-plugin</artifactId>
-                    <configuration>
-                        <systemPropertyVariables>
-                            <failsafe.aws.key>${aws.key}</failsafe.aws.key>
-                            <failsafe.aws.secret>${aws.secret}</failsafe.aws.secret>
-                        </systemPropertyVariables>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>com.jcabi</groupId>
-                    <artifactId>jcabi-latex-maven-plugin</artifactId>
-                    <version>1.0</version>
-                    <configuration>
-                        <closures>
-                            <file>header.tex</file>
-                            <file>uml2.tex</file>
-                        </closures>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+  </organization>
+  <licenses>
+    <license>
+      <name>BSD</name>
+      <url>http://www.s3auth.com/misc/LICENSE.txt</url>
+      <distribution>site</distribution>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>1</id>
+      <name>Yegor Bugayenko</name>
+      <email>yegor@tpc2.com</email>
+      <organization>tpc2.com</organization>
+      <organizationUrl>http://www.teamed.io</organizationUrl>
+      <roles>
+        <role>Architect</role>
+        <role>Developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
+  </developers>
+  <ciManagement>
+    <system>rultor</system>
+    <url>http://www.rultor.com/s/s3auth</url>
+  </ciManagement>
+  <issueManagement>
+    <system>github</system>
+    <url>https://github.com/yegor256/s3auth/issues</url>
+  </issueManagement>
+  <scm>
+    <connection>scm:git:git@github.com:yegor256/s3auth.git</connection>
+    <developerConnection>scm:git:git@github.com:yegor256/s3auth.git</developerConnection>
+    <url>https://github.com/yegor256/s3auth</url>
+  </scm>
+  <distributionManagement>
+    <snapshotRepository>
+      <id>repo.s3auth.com</id>
+      <url>s3://repo.s3auth.com/snapshot</url>
+    </snapshotRepository>
+    <repository>
+      <id>repo.s3auth.com</id>
+      <url>s3://repo.s3auth.com/release</url>
+    </repository>
+    <site>
+      <id>maven.s3auth.com</id>
+      <url>s3://maven.s3auth.com</url>
+    </site>
+  </distributionManagement>
+  <repositories>
+    <repository>
+      <id>repo.s3auth.com</id>
+      <url>s3://repo.s3auth.com/snapshot</url>
+    </repository>
+  </repositories>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.amazonaws</groupId>
+        <artifactId>aws-java-sdk</artifactId>
+        <version>1.7.5</version>
+      </dependency>
+      <dependency>
+        <groupId>com.jcabi</groupId>
+        <artifactId>jcabi-urn</artifactId>
+        <version>0.8</version>
+        <classifier>mock</classifier>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <configuration>
+            <systemPropertyVariables>
+              <failsafe.aws.key>${aws.key}</failsafe.aws.key>
+              <failsafe.aws.secret>${aws.secret}</failsafe.aws.secret>
+            </systemPropertyVariables>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>com.jcabi</groupId>
+          <artifactId>jcabi-latex-maven-plugin</artifactId>
+          <version>1.0</version>
+          <configuration>
+            <closures>
+              <file>header.tex</file>
+              <file>uml2.tex</file>
+            </closures>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>com.jcabi</groupId>
+        <artifactId>jcabi-latex-maven-plugin</artifactId>
+        <inherited>false</inherited>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <file>packages.tex</file>
+                <file>classes-relay.tex</file>
+                <file>classes-hosts.tex</file>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-invoker-plugin</artifactId>
+        <configuration>
+          <mergeUserSettings>true</mergeUserSettings>
+          <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
+          <debug>false</debug>
+          <localRepositoryPath>${project.basedir}/local-repo</localRepositoryPath>
+          <noLog>false</noLog>
+          <postBuildHookScript>verify</postBuildHookScript>
+          <preBuildHookScript>setup</preBuildHookScript>
+          <projectsDirectory>src/it</projectsDirectory>
+          <settingsFile>${basedir}/src/it/settings.xml</settingsFile>
+          <showErrors>true</showErrors>
+          <showVersion>false</showVersion>
+          <streamLogs>true</streamLogs>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <profiles>
+    <profile>
+      <id>ssl</id>
+      <activation>
+        <property>
+          <name>!skipTests</name>
+        </property>
+      </activation>
+      <build>
         <plugins>
-            <plugin>
-                <groupId>com.jcabi</groupId>
-                <artifactId>jcabi-latex-maven-plugin</artifactId>
-                <inherited>false</inherited>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <file>packages.tex</file>
-                                <file>classes-relay.tex</file>
-                                <file>classes-hosts.tex</file>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-invoker-plugin</artifactId>
-                <configuration>
-                    <mergeUserSettings>true</mergeUserSettings>
-                    <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
-                    <debug>false</debug>
-                    <localRepositoryPath>${project.basedir}/local-repo</localRepositoryPath>
-                    <noLog>false</noLog>
-                    <postBuildHookScript>verify</postBuildHookScript>
-                    <preBuildHookScript>setup</preBuildHookScript>
-                    <projectsDirectory>src/it</projectsDirectory>
-                    <settingsFile>${basedir}/src/it/settings.xml</settingsFile>
-                    <showErrors>true</showErrors>
-                    <showVersion>false</showVersion>
-                    <streamLogs>true</streamLogs>
-                </configuration>
-            </plugin>
+          <plugin>
+            <groupId>com.jcabi</groupId>
+            <artifactId>jcabi-ssl-maven-plugin</artifactId>
+            <version>0.12</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>keygen</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
         </plugins>
-    </build>
-    <profiles>
-        <profile>
-            <id>ssl</id>
-            <activation>
-                <property><name>!skipTests</name></property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.jcabi</groupId>
-                        <artifactId>jcabi-ssl-maven-plugin</artifactId>
-                        <version>0.12</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                  <goal>keygen</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>qulice</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.qulice</groupId>
-                        <artifactId>qulice-maven-plugin</artifactId>
-                        <version>0.12</version>
-                        <configuration>
-                            <excludes>
-                                <!-- there is a bug in qulice, that's why the file is excluded, try to remove this line -->
-                                <exclude>checkstyle:/src/main/java/com/s3auth/hosts/Htpasswd.java</exclude>
-                            </excludes>
-                            <license>file:${basedir}/LICENSE.txt</license>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+      </build>
+    </profile>
+    <profile>
+      <id>qulice</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.qulice</groupId>
+            <artifactId>qulice-maven-plugin</artifactId>
+            <version>0.12</version>
+            <configuration>
+              <excludes>
+                <!-- there is a bug in qulice, that's why the file is excluded, try to remove this line -->
+                <exclude>checkstyle:/src/main/java/com/s3auth/hosts/Htpasswd.java</exclude>
+              </excludes>
+              <license>file:${basedir}/LICENSE.txt</license>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

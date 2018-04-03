@@ -1,271 +1,269 @@
 <?xml version="1.0"?>
 <!--
- * Copyright (c) 2012-2017, s3auth.com
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met: 1) Redistributions of source code must retain the above
- * copyright notice, this list of conditions and the following
- * disclaimer. 2) Redistributions in binary form must reproduce the above
- * copyright notice, this list of conditions and the following
- * disclaimer in the documentation and/or other materials provided
- * with the distribution. 3) Neither the name of the s3auth.com nor
- * the names of its contributors may be used to endorse or promote
- * products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
- * NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
- * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
- * THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
- * OF THE POSSIBILITY OF SUCH DAMAGE.
- -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>com.s3auth</groupId>
-        <artifactId>s3auth</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
-    <artifactId>s3auth-relay</artifactId>
-    <packaging>jar</packaging>
-    <name>s3auth-relay</name>
-    <dependencies>
-        <dependency>
-            <groupId>com.s3auth</groupId>
-            <artifactId>s3auth-hosts</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.jcabi</groupId>
-            <artifactId>jcabi-http</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-            <version>3.1</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-            <version>4.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.jopt-simple</groupId>
-            <artifactId>jopt-simple</artifactId>
-            <version>4.6</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jcabi</groupId>
-            <artifactId>jcabi-manifests</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.jcabi</groupId>
-            <artifactId>jcabi-log</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.json</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-core</artifactId>
-            <version>1.18.1</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-client</artifactId>
-            <version>1.18.1</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.jcabi</groupId>
-            <artifactId>jcabi-aspects</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.jcabi</groupId>
-            <artifactId>jcabi-xml</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjrt</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>annotations</artifactId>
-            <version>2.0.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rexsl</groupId>
-            <artifactId>rexsl-test</artifactId>
-            <version>0.13.3</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.el</groupId>
-            <artifactId>javax.el-api</artifactId>
-            <version>3.0.0</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-net</groupId>
-            <artifactId>commons-net</artifactId>
-            <version>3.3</version>
-        </dependency>
-    </dependencies>
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <configuration>
-                        <archive>
-                            <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
-                            <manifestEntries>
-                                <Main-Class>com.s3auth.relay.Main</Main-Class>
-                            </manifestEntries>
-                        </archive>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <configuration>
-                            <systemPropertyVariables>
-                                <javax.net.ssl.keyStore>${javax.net.ssl.keyStore}</javax.net.ssl.keyStore>
-                                <javax.net.ssl.keyStorePassword>${javax.net.ssl.keyStorePassword}</javax.net.ssl.keyStorePassword>
-                                <javax.net.ssl.trustStore>${javax.net.ssl.trustStore}</javax.net.ssl.trustStore>
-                                <javax.net.ssl.trustStorePassword>${javax.net.ssl.trustStorePassword}</javax.net.ssl.trustStorePassword>
-                            </systemPropertyVariables>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+Copyright (c) 2012-2017, s3auth.com
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met: 1) Redistributions of source code must retain the above
+copyright notice, this list of conditions and the following
+disclaimer. 2) Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following
+disclaimer in the documentation and/or other materials provided
+with the distribution. 3) Neither the name of the s3auth.com nor
+the names of its contributors may be used to endorse or promote
+products derived from this software without specific prior written
+permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.s3auth</groupId>
+    <artifactId>s3auth</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>s3auth-relay</artifactId>
+  <packaging>jar</packaging>
+  <name>s3auth-relay</name>
+  <dependencies>
+    <dependency>
+      <groupId>com.s3auth</groupId>
+      <artifactId>s3auth-hosts</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.jcabi</groupId>
+      <artifactId>jcabi-http</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-httpclient</groupId>
+      <artifactId>commons-httpclient</artifactId>
+      <version>3.1</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+      <version>4.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.3.3</version>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.jopt-simple</groupId>
+      <artifactId>jopt-simple</artifactId>
+      <version>4.6</version>
+    </dependency>
+    <dependency>
+      <groupId>com.jcabi</groupId>
+      <artifactId>jcabi-manifests</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.jcabi</groupId>
+      <artifactId>jcabi-log</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>jsr311-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>javax.json</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-core</artifactId>
+      <version>1.18.1</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-client</artifactId>
+      <version>1.18.1</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.jcabi</groupId>
+      <artifactId>jcabi-aspects</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.jcabi</groupId>
+      <artifactId>jcabi-xml</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjrt</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>annotations</artifactId>
+      <version>2.0.3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.rexsl</groupId>
+      <artifactId>rexsl-test</artifactId>
+      <version>0.13.3</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.el</groupId>
+      <artifactId>javax.el-api</artifactId>
+      <version>3.0.0</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-net</groupId>
+      <artifactId>commons-net</artifactId>
+      <version>3.3</version>
+    </dependency>
+  </dependencies>
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-jar-plugin</artifactId>
+          <configuration>
+            <archive>
+              <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+              <manifestEntries>
+                <Main-Class>com.s3auth.relay.Main</Main-Class>
+              </manifestEntries>
+            </archive>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <configuration>
+            <systemPropertyVariables>
+              <javax.net.ssl.keyStore>${javax.net.ssl.keyStore}</javax.net.ssl.keyStore>
+              <javax.net.ssl.keyStorePassword>${javax.net.ssl.keyStorePassword}</javax.net.ssl.keyStorePassword>
+              <javax.net.ssl.trustStore>${javax.net.ssl.trustStore}</javax.net.ssl.trustStore>
+              <javax.net.ssl.trustStorePassword>${javax.net.ssl.trustStorePassword}</javax.net.ssl.trustStorePassword>
+            </systemPropertyVariables>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>deploy-to-production</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <exec executable="curl" failonerror="false">
+                  <arg value="http://relay.s3auth.com/shutdown/${exit.key}"/>
+                </exec>
+                <retry retrycount="10">
+                  <sequential>
+                    <sleep seconds="15"/>
+                    <exec executable="curl" failonerror="true">
+                      <arg value="http://relay.s3auth.com/version"/>
+                    </exec>
+                  </sequential>
+                </retry>
+                <exec executable="curl" outputproperty="rev.deployed" failonerror="true">
+                  <arg value="--silent"/>
+                  <arg value="http://relay.s3auth.com/version"/>
+                </exec>
+                <fail message="Revision '${rev.deployed}' deployed instead of '${buildNumber}'">
+                  <condition>
+                    <not>
+                      <equals arg1="${buildNumber}" arg2="${rev.deployed}"/>
+                    </not>
+                  </condition>
+                </fail>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  <profiles>
+    <profile>
+      <id>qulice</id>
+      <build>
         <plugins>
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>deploy-to-production</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target>
-                                <exec executable="curl" failonerror="false">
-                                    <arg value="http://relay.s3auth.com/shutdown/${exit.key}"/>
-                                </exec>
-                                <retry retrycount="10">
-                                    <sequential>
-                                        <sleep seconds="15"/>
-                                        <exec executable="curl" failonerror="true">
-                                            <arg value="http://relay.s3auth.com/version"/>
-                                        </exec>
-                                    </sequential>
-                                </retry>
-                                <exec executable="curl" outputproperty="rev.deployed" failonerror="true">
-                                    <arg value="--silent"/>
-                                    <arg value="http://relay.s3auth.com/version"/>
-                                </exec>
-                                <fail message="Revision '${rev.deployed}' deployed instead of '${buildNumber}'">
-                                    <condition>
-                                        <not>
-                                            <equals arg1="${buildNumber}" arg2="${rev.deployed}"/>
-                                        </not>
-                                    </condition>
-                                </fail>
-                            </target>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+          <plugin>
+            <groupId>com.qulice</groupId>
+            <artifactId>qulice-maven-plugin</artifactId>
+            <configuration>
+              <excludes>
+                <exclude>xml:/src/it/settings.xml</exclude>
+                <exclude>xml:/src/main/production/pom.xml</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
         </plugins>
-    </build>
-    <profiles>
-        <profile>
-            <id>qulice</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.qulice</groupId>
-                        <artifactId>qulice-maven-plugin</artifactId>
-                        <configuration>
-                            <excludes>
-                                <exclude>xml:/src/it/settings.xml</exclude>
-                                <exclude>xml:/src/main/production/pom.xml</exclude>
-                            </excludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+      </build>
+    </profile>
+  </profiles>
 </project>
