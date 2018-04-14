@@ -38,9 +38,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
   <artifactId>s3auth-rest</artifactId>
   <packaging>jar</packaging>
   <name>s3auth-rest</name>
-  <properties>
-    <casperjs.home.dir>${project.build.directory}/casperjs</casperjs.home.dir>
-  </properties>
   <dependencies>
     <dependency>
       <groupId>org.projectlombok</groupId>
@@ -287,29 +284,13 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 </configuration>
               </execution>
               <execution>
-                <id>casperjs-install</id>
-                <phase>pre-integration-test</phase>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-                <configuration>
-                  <executable>git</executable>
-                  <arguments>
-                    <argument>clone</argument>
-                    <argument>--depth=1</argument>
-                    <argument>https://github.com/n1k0/casperjs.git</argument>
-                    <argument>${casperjs.home.dir}</argument>
-                  </arguments>
-                </configuration>
-              </execution>
-              <execution>
                 <id>casperjs-test</id>
                 <phase>integration-test</phase>
                 <goals>
                   <goal>exec</goal>
                 </goals>
                 <configuration>
-                  <executable>${casperjs.home.dir}/bin/${casperjs.exec.name}</executable>
+                  <executable>casperjs</executable>
                   <workingDirectory>${basedir}</workingDirectory>
                   <arguments>
                     <argument>test</argument>
@@ -467,28 +448,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
           </plugin>
         </plugins>
       </build>
-    </profile>
-    <profile>
-      <id>Windows</id>
-      <activation>
-        <os>
-          <family>Windows</family>
-        </os>
-      </activation>
-      <properties>
-        <casperjs.exec.name>casperjs.exe</casperjs.exec.name>
-      </properties>
-    </profile>
-    <profile>
-      <id>unix</id>
-      <activation>
-        <os>
-          <family>unix</family>
-        </os>
-      </activation>
-      <properties>
-        <casperjs.exec.name>casperjs</casperjs.exec.name>
-      </properties>
     </profile>
   </profiles>
 </project>
