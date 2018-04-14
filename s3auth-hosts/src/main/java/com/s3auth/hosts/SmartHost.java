@@ -31,13 +31,10 @@ package com.s3auth.hosts;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Timeable;
-import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -97,7 +94,6 @@ final class SmartHost implements Host {
 
     @Override
     @Loggable(value = Loggable.DEBUG, ignore = IOException.class)
-    @Timeable(limit = Tv.FIVE, unit = TimeUnit.SECONDS)
     public Resource fetch(@NotNull final URI uri, @NotNull final Range range,
         @NotNull final Version version) throws IOException {
         final Resource resource;
