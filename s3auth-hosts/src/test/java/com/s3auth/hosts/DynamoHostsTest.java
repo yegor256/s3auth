@@ -34,6 +34,7 @@ import org.hamcrest.CustomMatcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -158,6 +159,7 @@ public final class DynamoHostsTest {
      * DynamoHosts can reject invalid user names.
      * @throws Exception If there is some problem inside
      */
+    @Ignore
     @Test(expected = javax.validation.ConstraintViolationException.class)
     public void rejectsInvalidUserNames() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
@@ -175,6 +177,7 @@ public final class DynamoHostsTest {
      * DynamoHosts can reject broken domains.
      * @throws Exception If there is some problem inside
      */
+    @Ignore
     @Test
     public void rejectsBrokenDomains() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());

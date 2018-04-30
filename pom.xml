@@ -38,7 +38,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
   <parent>
     <groupId>com.jcabi</groupId>
     <artifactId>parent</artifactId>
-    <version>0.31</version>
+    <version>0.49.3</version>
   </parent>
   <groupId>com.s3auth</groupId>
   <artifactId>s3auth</artifactId>
@@ -124,6 +124,21 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         <version>0.8</version>
         <classifier>mock</classifier>
         <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>6.0.9.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>4.0.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.glassfish</groupId>
+        <artifactId>javax.el</artifactId>
+        <version>3.0.0</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

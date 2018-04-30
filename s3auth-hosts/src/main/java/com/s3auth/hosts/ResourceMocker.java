@@ -33,11 +33,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import lombok.experimental.Builder;
-import org.apache.commons.io.Charsets;
+import lombok.Builder;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -91,7 +91,7 @@ public final class ResourceMocker {
      * @throws IOException If fails
      */
     public static String toString(final Resource res) throws IOException {
-        return new String(ResourceMocker.toByteArray(res), Charsets.UTF_8);
+        return new String(ResourceMocker.toByteArray(res), StandardCharsets.UTF_8);
     }
 
     /**
@@ -157,7 +157,7 @@ public final class ResourceMocker {
 
         @Override
         public long writeTo(final OutputStream output) throws IOException {
-            IOUtils.write(this.content, output, Charsets.UTF_8);
+            IOUtils.write(this.content, output, StandardCharsets.UTF_8);
             return 0;
         }
 
