@@ -57,7 +57,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>org.hibernate</groupId>
+      <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
       <scope>provided</scope>
     </dependency>
