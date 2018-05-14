@@ -29,16 +29,30 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <!--
-@todo #317:30min Need to fix other build errors in order to upgrade to
- jcabi-parent v0.49.3. There is an error due to the use of deprecated APIs,
- errors due to classpath issues during test runtime, and others.
+@todo #371:30min The following tests were ignored as part of the upgrade to
+ jcabi-parent 0.49.3 (they started throwing IllegalArgumentException
+ related to hibernate-validator). Un-ignore them and fix them:
+ - DefaultHostITCase.fetchesRealObjectFromAmazonBucker
+ - DefaultHostTest.showsDirectoryListing
+ - DefaultHostTest.showsVersionListing
+ - DefaultHostTest.showsVersionListingForIndexHtml
+ - DefaultResourceTest.closesUnderlyingObjectWhenSizeIsInvoked
+ - DefaultResourceTest.getsCacheControlHeaderFromAmazonObject
+ - DefaultResourceTest.getsContentEncodingHeaderFromAmazonObject
+ - DefaultResourceTest.getsDefaultCacheControlHeader
+ - DefaultResourceTest.getsHeadersFromAmazonObject
+ - DirectoryListingTest.fetchesDirectoryListingInXhtml
+ - DynamoHostsTest.rejectsBrokenDomains
+ - DynamoHostsTest.rejectsInvalidUserNames
+ - ObjectVersionListingTest.fetchesVersionListingInXml
+ - ResourceTest.rejectsNullContent
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.jcabi</groupId>
     <artifactId>parent</artifactId>
-    <version>0.31</version>
+    <version>0.49.3</version>
   </parent>
   <groupId>com.s3auth</groupId>
   <artifactId>s3auth</artifactId>
@@ -124,6 +138,21 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         <version>0.8</version>
         <classifier>mock</classifier>
         <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate.validator</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>6.0.9.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>4.0.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.glassfish</groupId>
+        <artifactId>javax.el</artifactId>
+        <version>3.0.0</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

@@ -30,7 +30,7 @@
 package com.s3auth.hosts;
 
 import com.amazonaws.services.s3.AmazonS3;
-import lombok.experimental.Builder;
+import lombok.Builder;
 
 /**
  * Mocker of {@link Bucket}.

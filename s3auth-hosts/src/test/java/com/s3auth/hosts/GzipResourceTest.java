@@ -31,8 +31,8 @@ package com.s3auth.hosts;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.zip.GZIPInputStream;
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -63,7 +63,7 @@ public final class GzipResourceTest {
                 new GZIPInputStream(
                     new ByteArrayInputStream(out.toByteArray())
                 ),
-                Charsets.UTF_8
+                StandardCharsets.UTF_8
             ),
             Matchers.is(text)
         );

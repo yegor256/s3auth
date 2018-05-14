@@ -106,6 +106,7 @@ import com.amazonaws.services.s3.model.VersionListing;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.io.IOUtils;
@@ -703,7 +704,7 @@ public class MkAmazonS3 implements AmazonS3 {
         @Override
         public S3ObjectInputStream getObjectContent() {
             return new S3ObjectInputStream(
-                IOUtils.toInputStream("TXT"),
+                IOUtils.toInputStream("TXT", Charset.defaultCharset()),
                 new HttpGet()
             );
         }

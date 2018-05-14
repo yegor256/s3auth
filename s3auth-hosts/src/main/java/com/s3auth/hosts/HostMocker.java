@@ -31,7 +31,7 @@ package com.s3auth.hosts;
 
 import java.io.IOException;
 import java.net.URI;
-import lombok.experimental.Builder;
+import lombok.Builder;
 
 /**
  * Mocker of {@link Host}.

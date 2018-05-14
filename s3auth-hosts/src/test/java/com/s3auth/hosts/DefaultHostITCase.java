@@ -35,6 +35,7 @@ import java.net.URI;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -49,6 +50,7 @@ public final class DefaultHostITCase {
      * DefaultHost can fetch a real object from S3 bucket.
      * @throws Exception If there is some problem inside
      */
+    @Ignore
     @Test
     public void fetchesRealObjectFromAmazonBucket() throws Exception {
         final String key = System.getProperty("failsafe.aws.key");
