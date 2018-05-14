@@ -101,7 +101,9 @@ public final class DefaultHostTest {
                         );
                     }
                     final S3Object object = new S3Object();
-                    object.setObjectContent(IOUtils.toInputStream(key, Charset.defaultCharset()));
+                    object.setObjectContent(
+                        IOUtils.toInputStream(key, Charset.defaultCharset())
+                    );
                     object.setKey(key);
                     return object;
                 }
@@ -335,6 +337,7 @@ public final class DefaultHostTest {
         final String error = "error.html";
         final String message = "Test output for error page";
         Mockito.doAnswer(
+            // @checkstyle AnonInnerLengthCheck (21 lines)
             new Answer<S3Object>() {
                 @Override
                 public S3Object answer(final InvocationOnMock invocation) {

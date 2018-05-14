@@ -91,7 +91,9 @@ public final class ResourceMocker {
      * @throws IOException If fails
      */
     public static String toString(final Resource res) throws IOException {
-        return new String(ResourceMocker.toByteArray(res), StandardCharsets.UTF_8);
+        return new String(
+            ResourceMocker.toByteArray(res), StandardCharsets.UTF_8
+        );
     }
 
     /**
