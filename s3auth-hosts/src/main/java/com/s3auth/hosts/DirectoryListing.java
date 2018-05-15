@@ -42,6 +42,7 @@ import com.jcabi.xml.XSLDocument;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
@@ -50,7 +51,6 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.io.Charsets;
 import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
 import org.xembly.Xembler;
@@ -116,7 +116,7 @@ final class DirectoryListing implements Resource {
         try {
             this.content = DirectoryListing.STYLESHEET.transform(
                 new XMLDocument(new Xembler(dirs).xml())
-            ).toString().getBytes(Charsets.UTF_8);
+            ).toString().getBytes(StandardCharsets.UTF_8);
         } catch (final ImpossibleModificationException ex) {
             throw new IllegalStateException(
                 "Unable to generate directory listing", ex

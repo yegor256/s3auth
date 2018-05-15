@@ -30,6 +30,7 @@
 package com.s3auth.relay;
 
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.IOUtils;
 import org.mockito.Mockito;
 
@@ -55,8 +56,9 @@ public final class HttpRequestMocker {
      */
     public static HttpRequest toRequest(final String text) throws Exception {
         final Socket socket = Mockito.mock(Socket.class);
-        Mockito.doReturn(IOUtils.toInputStream(text))
-            .when(socket).getInputStream();
+        Mockito.doReturn(
+            IOUtils.toInputStream(text, StandardCharsets.UTF_8)
+        ).when(socket).getInputStream();
         return new HttpRequest(socket);
     }
 

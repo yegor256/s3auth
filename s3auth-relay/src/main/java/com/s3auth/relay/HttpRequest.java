@@ -40,6 +40,7 @@ import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -52,7 +53,6 @@ import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
-import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -145,7 +145,10 @@ final class HttpRequest {
      */
     HttpRequest(@NotNull final Socket socket) throws IOException {
         final BufferedReader reader = new BufferedReader(
-            new InputStreamReader(socket.getInputStream(), Charsets.UTF_8)
+            new InputStreamReader(
+                socket.getInputStream(),
+                StandardCharsets.UTF_8
+            )
         );
         final String top = reader.readLine();
         if (top == null) {
