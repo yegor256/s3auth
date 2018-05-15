@@ -36,9 +36,9 @@ import com.s3auth.hosts.Resource;
 import com.s3auth.hosts.Stats;
 import com.s3auth.hosts.Version;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
@@ -46,7 +46,6 @@ import javax.ws.rs.core.HttpHeaders;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.CharEncoding;
 
 /**
  * Single HTTP processing thread.
@@ -170,15 +169,10 @@ final class SecuredHost implements Host {
                 )
             );
         }
-        final String[] parts;
-        try {
-            parts = new String(
+        final String[] parts = new String(
                 Base64.decodeBase64(matcher.group(1)),
-                CharEncoding.UTF_8
+                StandardCharsets.UTF_8
             ).split(":", 2);
-        } catch (final UnsupportedEncodingException ex) {
-            throw new IllegalStateException(ex);
-        }
         if (parts.length != 2) {
             throw new HttpException(
                 HttpURLConnection.HTTP_BAD_REQUEST,

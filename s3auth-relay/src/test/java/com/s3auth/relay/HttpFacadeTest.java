@@ -45,6 +45,7 @@ import java.io.ByteArrayInputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
@@ -52,9 +53,8 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.text.RandomStringGenerator;
 import org.apache.http.client.utils.DateUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -507,7 +507,7 @@ public final class HttpFacadeTest {
                     new GZIPInputStream(
                         new ByteArrayInputStream(resp.binary())
                     ),
-                    Charsets.UTF_8
+                    StandardCharsets.UTF_8
                 ),
                 Matchers.is(body)
             );
@@ -677,10 +677,14 @@ public final class HttpFacadeTest {
                     "Basic %s",
                     Base64.encodeBase64String("a:b".getBytes())
                 )
-            )
-            .uri()
-            .queryParam("rnd", RandomStringUtils.randomAlphabetic(Tv.FIVE))
-            .back()
+            ).uri()
+            .queryParam(
+                "rnd",
+                new RandomStringGenerator.Builder()
+                    .withinRange('a', 'z')
+                    .build()
+                    .generate(Tv.FIVE)
+            ).back()
             .fetch().as(RestResponse.class)
             .assertStatus(HttpURLConnection.HTTP_INTERNAL_ERROR)
             .assertBody(Matchers.containsString("hello"));

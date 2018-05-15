@@ -37,9 +37,9 @@ import com.s3auth.hosts.Stats;
 import com.s3auth.hosts.Version;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import javax.ws.rs.core.HttpHeaders;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.CharEncoding;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
@@ -203,7 +203,7 @@ public final class SecuredHostTest {
                         "GET / HTTP/1.1\nAuthorization: Basic %s\n\n",
                         Base64.encodeBase64String(
                             String.format("%s:%s", user, password)
-                                .getBytes(CharEncoding.UTF_8)
+                                .getBytes(StandardCharsets.UTF_8)
                         )
                     )
                 )

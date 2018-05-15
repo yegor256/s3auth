@@ -140,7 +140,7 @@ final class DefaultResource implements Resource {
     @Loggable(
         value = Loggable.DEBUG, limit = Integer.MAX_VALUE,
         ignore = DefaultResource.StreamingException.class
-    )
+        )
     public long writeTo(@NotNull final OutputStream output) throws IOException {
         final InputStream input = this.object.getObjectContent();
         assert input != null;

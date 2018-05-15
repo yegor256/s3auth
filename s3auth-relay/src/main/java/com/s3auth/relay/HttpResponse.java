@@ -37,6 +37,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,7 +45,6 @@ import java.util.concurrent.ConcurrentMap;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.io.Charsets;
 
 /**
  * HTTP response, writable to IO socket.
@@ -159,7 +159,9 @@ final class HttpResponse {
     )
     public long send(@NotNull final Socket socket) throws IOException {
         final OutputStream stream = socket.getOutputStream();
-        final Writer writer = new OutputStreamWriter(stream, Charsets.UTF_8);
+        final Writer writer = new OutputStreamWriter(
+            stream, StandardCharsets.UTF_8
+        );
         try {
             writer.write(
                 String.format(
