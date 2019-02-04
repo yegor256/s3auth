@@ -9,6 +9,7 @@ install: |
   sudo apt-get install -y phantomjs
   sudo npm install -g casperjs
 architect:
+- carlosmiranda
 - yegor256
 - davvd
 assets:
