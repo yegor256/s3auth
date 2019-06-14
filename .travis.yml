@@ -8,7 +8,7 @@ env:
     - JAVA_OPTS="-XX:MaxPermSize=2g -Xmx4g -Dfile.encoding=UTF-8"
 install:
   - travis_retry sudo apt-get install -y --fix-missing libmagic1 libmagic-dev
-  - gem install pdd
+  - gem install pdd -v 0.20.5
 script:
   - pdd --file=/dev/null
   - mvn clean install -Pqulice --batch-mode --errors --quiet
