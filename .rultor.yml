@@ -45,13 +45,13 @@ deploy:
     git commit -m 'build number set'
     cp ../settings.xml settings.xml
     mvn clean deploy --errors -Ps3auth -Pqulice --settings settings.xml
-    git remote add heroku git@heroku.com:s3auth.git
+    git remote add dokku dokku@www.s3auth.com:s3auth
     mkdir ~/.ssh
     mv ../id_rsa ../id_rsa.pub ~/.ssh
     chmod -R 600 ~/.ssh/*
     echo -e "Host *\n  StrictHostKeyChecking no\n  UserKnownHostsFile=/dev/null" > ~/.ssh/config
     git add settings.xml
-    git commit -m 'settings.xml' && git push -f heroku $(git symbolic-ref --short HEAD):master && git reset HEAD~1
+    git commit -m 'settings.xml' && git push -f dokku $(git symbolic-ref --short HEAD):master && git reset HEAD~1
     curl -f --connect-timeout 15 --retry 5 --retry-delay 30 http://www.s3auth.com
     mvn clean deploy --errors -Ps3auth -Pqulice --settings settings.xml -pl :s3auth-relay
     # mvn clean install site-deploy --errors -Psite --settings settings.xml
