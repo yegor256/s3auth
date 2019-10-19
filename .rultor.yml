@@ -1,6 +1,5 @@
 install: |
   sudo locale-gen en_US en_US.UTF-8
-  sudo dpkg-reconfigure locales
   export LC_ALL=en_US.UTF-8
   export LANG=en_US.UTF-8
   export LANGUAGE=en_US.UTF-8
@@ -11,7 +10,6 @@ install: |
 architect:
 - carlosmiranda
 - yegor256
-- davvd
 assets:
   secring.gpg: yegor256/home#assets/secring.gpg
   id_rsa: yegor256/home#assets/heroku-key
@@ -60,5 +58,3 @@ deploy:
     s3cmd --no-progress put s3auth.xml --config=../s3cfg s3://pdd.teamed.io/s3auth.xml
 env:
   MAVEN_OPTS: -XX:MaxPermSize=256m -Xmx1g
-release:
-  commanders: []
