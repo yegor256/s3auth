@@ -11,4 +11,4 @@ install:
   - gem install pdd -v 0.20.5
 script:
   - pdd --file=/dev/null
-  - mvn clean install -Pqulice --batch-mode --errors --quiet
+  - mvn -T 1C clean install -Pqulice --batch-mode --errors --quiet
