@@ -1,14 +1,10 @@
 <img src="http://img.s3auth.com/logo.png" width="200px" height="35px"/>
 
-[![Donate via Zerocracy](https://www.0crat.com/contrib-badge/C3RP1J1CH.svg)](https://www.0crat.com/contrib/C3RP1J1CH)
-
 [![EO principles respected here](https://www.elegantobjects.org/badge.svg)](https://www.elegantobjects.org)
-[![Managed by Zerocracy](https://www.0crat.com/badge/C3RP1J1CH.svg)](https://www.0crat.com/p/C3RP1J1CH)
 [![DevOps By Rultor.com](http://www.rultor.com/b/yegor256/s3auth)](http://www.rultor.com/p/yegor256/s3auth)
 [![We recommend IntelliJ IDEA](https://www.elegantobjects.org/intellij-idea.svg)](https://www.jetbrains.com/idea/)
 
 [![Availability at SixNines](https://www.sixnines.io/b/9dcb)](https://www.sixnines.io/h/9dcb)
-[![Build Status](https://travis-ci.org/yegor256/s3auth.svg?branch=master)](https://travis-ci.org/yegor256/s3auth)
 [![PDD status](http://www.0pdd.com/svg?name=yegor256/s3auth)](http://www.0pdd.com/p?name=yegor256/s3auth)
 [![Dependencies](https://www.versioneye.com/user/projects/561ac557a193340f2f0011e5/badge.svg?style=flat)](https://www.versioneye.com/user/projects/561ac557a193340f2f0011e5)
 
