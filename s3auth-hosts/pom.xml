@@ -111,7 +111,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-s3</artifactId>
-      <version>1.9.14</version>
+      <version>1.12.261</version>
       <exclusions>
         <exclusion>
           <groupId>org.apache.httpcomponents</groupId>
