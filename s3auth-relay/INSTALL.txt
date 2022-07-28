@@ -30,7 +30,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 We're using Amazon EC2.
 
-Create a new EC2 instance., with Ubuntu Server 10, 64 bit.
+Create a new EC2 instance., with Ubuntu Server 20.04, 64 bit.
 
 Save hostname to /etc/hostname:
 
@@ -39,14 +39,8 @@ Save hostname to /etc/hostname:
 Install Java & supplementary tools
 
     sudo apt-get update
-    sudo apt-get install openjdk-7-jdk mailutils ntp
-    sudo apt-get upgrade
-
-Install Maven 3
-
-    wget http://apache.mirror.versatel.nl/maven/binaries/apache-maven-3.0.4-bin.tar.gz
-    tar xzf apache-maven-3.0.4-bin.tar.gz
-    rm -rf apache-maven-3.0.4-bin.tar.gz
+    sudo apt-get -y upgrade
+    sudo apt-get -y install openjdk-8-jre-headless maven
 
 Copy src/main/production/pom.xml to /home/ubuntu/pom.xml
 
@@ -54,7 +48,6 @@ Create /home/ubuntu/settings.xml:
 
     <?xml version='1.0'?>
     <settings>
-     <localRepository>/home/ubuntu/m2-repo</localRepository>
      <servers>
       <server>
        <id>repo.s3auth.com</id>
@@ -69,9 +62,8 @@ Create run.sh in /home/ubuntu:
     #!/bin/sh
     while true
     do
-        export MAVEN_HOME=/home/ubuntu/apache-maven-3.0.4
         export MAVEN_OPTS=-Xmx256m
-    	$MAVEN_HOME/bin/mvn --errors --quiet \
+    	mvn --errors --quiet -Dport=80 \
     	    --update-snapshots --settings /home/ubuntu/settings.xml \
     	    test 2>&1 | logger -p local0.info -t run.sh
     done

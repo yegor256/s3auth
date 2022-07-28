@@ -37,6 +37,9 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
   <prerequisites>
     <maven>3.0</maven>
   </prerequisites>
+  <properties>
+    <port>80</port>
+  </properties>
   <repositories>
     <repository>
       <id>repo.s3auth.com</id>
@@ -86,7 +89,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                 <argument>-classpath</argument>
                 <classpath/>
                 <argument>com.s3auth.relay.Main</argument>
-                <argument>-p=80</argument>
+                <argument>-p=${port}</argument>
                 <argument>-d</argument>
               </arguments>
             </configuration>
