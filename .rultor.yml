@@ -1,3 +1,5 @@
+docker:
+  image: yegor256/rultor-image:1.9.1
 install: |
   sudo locale-gen en_US en_US.UTF-8
   export LC_ALL=en_US.UTF-8
@@ -7,9 +9,6 @@ install: |
   sudo apt-get install -y netpbm texlive-fonts-recommended
   sudo apt-get install -y phantomjs
   sudo npm install -g casperjs
-architect:
-- carlosmiranda
-- yegor256
 assets:
   secring.gpg: yegor256/home#assets/secring.gpg
   id_rsa: yegor256/home#assets/heroku-key
@@ -18,16 +17,6 @@ assets:
   id_rsa.pub: yegor256/home#assets/heroku-key.pub
   s3cfg: yegor256/home#assets/s3cfg
 merge:
-  commanders:
-  - carlosmiranda
-  - dmzaytsev
-  - essobedo
-  - hdouss
-  - krzyk
-  - longtimeago
-  - mkordas
-  - pinaf
-  - yegor256
   script: |-
     mvn help:system clean install --errors -Pqulice --settings ../settings.xml
     mvn clean
