@@ -31,7 +31,7 @@
 /**
  * HTTP to S3 relay, mocks.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor256@gmail.com)
  * @since 0.0.1
  */
 package com.s3auth.relay;

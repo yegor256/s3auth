@@ -51,16 +51,16 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <module>s3auth-rest</module>
   </modules>
   <description>Amazon S3 HTTP Auth Relay</description>
-  <url>http://www.s3auth.com</url>
+  <url>https://www.s3auth.com</url>
   <inceptionYear>2012</inceptionYear>
   <organization>
     <name>s3auth.com</name>
-    <url>http://www.s3auth.com</url>
+    <url>https://www.s3auth.com</url>
   </organization>
   <licenses>
     <license>
       <name>BSD</name>
-      <url>http://www.s3auth.com/misc/LICENSE.txt</url>
+      <url>https://www.s3auth.com/misc/LICENSE.txt</url>
       <distribution>site</distribution>
     </license>
   </licenses>
@@ -68,19 +68,19 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <developer>
       <id>1</id>
       <name>Yegor Bugayenko</name>
-      <email>yegor@tpc2.com</email>
-      <organization>tpc2.com</organization>
-      <organizationUrl>http://www.teamed.io</organizationUrl>
+      <email>yegor256@gmail.com</email>
+      <organization>Zerocracy</organization>
+      <organizationUrl>https://www.zerocracy.com</organizationUrl>
       <roles>
         <role>Architect</role>
         <role>Developer</role>
       </roles>
-      <timezone>+1</timezone>
+      <timezone>+3</timezone>
     </developer>
   </developers>
   <ciManagement>
     <system>rultor</system>
-    <url>http://www.rultor.com/s/s3auth</url>
+    <url>https://www.rultor.com/s/s3auth</url>
   </ciManagement>
   <issueManagement>
     <system>github</system>

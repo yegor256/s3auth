@@ -66,7 +66,7 @@ import org.mockito.stubbing.Answer;
 
 /**
  * Test case for {@link HttpFacade}.
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @checkstyle MultipleStringLiteralsCheck (700 lines)
  * @checkstyle MagicNumberCheck (700 lines)

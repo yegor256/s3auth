@@ -33,7 +33,7 @@ import java.net.ServerSocket;
 
 /**
  * Mocker of HTTP port.
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  */
 public final class PortMocker {
