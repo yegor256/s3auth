@@ -154,23 +154,28 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-urn</artifactId>
+      <version>0.9</version>
     </dependency>
     <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-urn</artifactId>
+      <version>0.8</version>
       <classifier>mock</classifier>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
+      <!-- version from parent -->
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
+      <!-- version from parent -->
     </dependency>
     <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
+      <!-- version from parent -->
     </dependency>
     <dependency>
       <groupId>com.jcabi.incubator</groupId>

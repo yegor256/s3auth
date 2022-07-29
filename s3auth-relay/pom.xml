@@ -47,10 +47,12 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
+      <!-- version from parent -->
     </dependency>
     <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-http</artifactId>
+      <version>1.9.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -61,19 +63,22 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
+      <!-- version from parent -->
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
+      <!-- version from parent -->
     </dependency>
     <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
+      <!-- version from parent -->
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-collections4</artifactId>
-      <version>4.1</version>
+      <!-- version from parent -->
     </dependency>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
@@ -88,23 +93,28 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-manifests</artifactId>
+      <!-- version from parent -->
     </dependency>
     <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-log</artifactId>
+      <!-- version from parent -->
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
+      <version>3.0-alpha-1</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>javax.ws.rs</groupId>
       <artifactId>jsr311-api</artifactId>
+      <version>1.1.1</version>
     </dependency>
     <dependency>
       <groupId>org.glassfish</groupId>
       <artifactId>javax.json</artifactId>
+      <version>1.0.4</version>
     </dependency>
     <dependency>
       <groupId>com.sun.jersey</groupId>
@@ -121,34 +131,41 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-aspects</artifactId>
+      <!-- version from parent -->
     </dependency>
     <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-xml</artifactId>
+      <!-- version from parent -->
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.aspectj</groupId>
       <artifactId>aspectjrt</artifactId>
+      <!-- version from parent -->
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
+      <!-- version from parent -->
     </dependency>
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-validator</artifactId>
+      <!-- version from parent -->
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
+      <!-- version from parent -->
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
+      <!-- version from parent -->
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -171,6 +188,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
+      <!-- version from parent -->
     </dependency>
     <dependency>
       <groupId>commons-net</groupId>

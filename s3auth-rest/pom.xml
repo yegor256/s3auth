@@ -42,10 +42,12 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
+      <!-- version from parent -->
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
+      <!-- version from parent -->
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -61,14 +63,17 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>javax.json</groupId>
       <artifactId>javax.json-api</artifactId>
+      <!-- version from parent -->
     </dependency>
     <dependency>
       <groupId>org.glassfish</groupId>
       <artifactId>javax.json</artifactId>
+      <!-- version from parent -->
     </dependency>
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
+      <!-- version from parent -->
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -86,46 +91,56 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest-library</artifactId>
+      <version>1.3</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest-core</artifactId>
+      <version>1.3</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-aspects</artifactId>
+      <!-- version from parent -->
     </dependency>
     <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-matchers</artifactId>
+      <!-- version from parent -->
     </dependency>
     <dependency>
       <groupId>org.aspectj</groupId>
       <artifactId>aspectjrt</artifactId>
+      <!-- version from parent -->
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
+      <!-- version from parent -->
     </dependency>
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-validator</artifactId>
+      <!-- version from parent -->
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-manifests</artifactId>
+      <!-- version from parent -->
     </dependency>
     <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-urn</artifactId>
+      <!-- version from parent -->
     </dependency>
     <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-urn</artifactId>
+      <!-- version from parent -->
       <classifier>mock</classifier>
     </dependency>
     <dependency>
@@ -142,6 +157,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
+      <!-- version from parent -->
     </dependency>
     <dependency>
       <groupId>com.sun.jersey</groupId>
