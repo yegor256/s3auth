@@ -178,6 +178,12 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       <classifier>dom</classifier>
       <scope>runtime</scope>
     </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <!-- version from parent -->
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
     <pluginManagement>
