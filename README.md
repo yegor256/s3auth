@@ -4,9 +4,13 @@
 [![DevOps By Rultor.com](http://www.rultor.com/b/yegor256/s3auth)](http://www.rultor.com/p/yegor256/s3auth)
 [![We recommend IntelliJ IDEA](https://www.elegantobjects.org/intellij-idea.svg)](https://www.jetbrains.com/idea/)
 
+[![mvn](https://github.com/yegor256/s3auth/actions/workflows/mvn.yml/badge.svg)](https://github.com/yegor256/s3auth/actions/workflows/mvn.yml)
 [![Availability at SixNines](https://www.sixnines.io/b/9dcb)](https://www.sixnines.io/h/9dcb)
 [![PDD status](http://www.0pdd.com/svg?name=yegor256/s3auth)](http://www.0pdd.com/p?name=yegor256/s3auth)
-[![Dependencies](https://www.versioneye.com/user/projects/561ac557a193340f2f0011e5/badge.svg?style=flat)](https://www.versioneye.com/user/projects/561ac557a193340f2f0011e5)
+[![codecov](https://codecov.io/gh/yegor256/s3auth/branch/master/graph/badge.svg)](https://codecov.io/gh/yegor256/s3auth)
+[![Hits-of-Code](https://hitsofcode.com/github/yegor256/s3auth)](https://hitsofcode.com/view/github/yegor256/s3auth)
+![Lines of code](https://img.shields.io/tokei/lines/github/yegor256/s3auth)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/yegor256/s3auth/blob/master/LICENSE.txt)
 
 [s3auth.com](http://www.s3auth.com) is a Basic HTTP Auth gateway
 in front of your private Amazon S3 bucket. Read this blog post
