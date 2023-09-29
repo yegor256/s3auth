@@ -32,7 +32,7 @@ package com.s3auth.hosts;
 import com.jcabi.urn.URN;
 import java.net.URI;
 import java.util.Random;
-import lombok.experimental.Builder;
+import lombok.Builder;
 
 /**
  * Mocker of {@link User}.

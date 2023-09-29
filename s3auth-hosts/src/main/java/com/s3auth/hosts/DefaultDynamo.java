@@ -35,7 +35,6 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.AttributeUpdates;
 import com.jcabi.dynamo.Credentials;
 import com.jcabi.dynamo.Item;
@@ -152,7 +151,7 @@ final class DefaultDynamo implements Dynamo {
     @Override
     @NotNull
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    @Cacheable(lifetime = Tv.FIVE, unit = TimeUnit.MINUTES)
+    @Cacheable(lifetime = 5, unit = TimeUnit.MINUTES)
     public ConcurrentMap<URN, Domains> load() throws IOException {
         final ConcurrentMap<URN, Domains> domains =
             new ConcurrentHashMap<URN, Domains>(0);
@@ -168,7 +167,7 @@ final class DefaultDynamo implements Dynamo {
                     DefaultDynamo.BUCKET,
                     DefaultDynamo.REGION,
                     DefaultDynamo.SYSLOG
-                ).withLimit(Tv.MILLION)
+                ).withLimit(1_000_000)
             );
         for (final Item item : items) {
             final URN user = URN.create(item.get(DefaultDynamo.USER).getS());
@@ -200,7 +199,7 @@ final class DefaultDynamo implements Dynamo {
     public boolean remove(@NotNull final Domain domain) {
         final Iterator<Item> items = this.region.table(this.table).frame()
             .where(DefaultDynamo.NAME, domain.name())
-            .through(new ScanValve().withLimit(Tv.MILLION))
+            .through(new ScanValve().withLimit(1_000_000))
             .iterator();
         boolean removed = false;
         while (items.hasNext()) {

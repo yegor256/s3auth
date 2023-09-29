@@ -40,11 +40,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
   <name>s3auth-rest</name>
   <dependencies>
     <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <!-- version from parent -->
-    </dependency>
-    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
       <!-- version from parent -->
@@ -102,28 +97,12 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     </dependency>
     <dependency>
       <groupId>com.jcabi</groupId>
-      <artifactId>jcabi-aspects</artifactId>
-      <!-- version from parent -->
-    </dependency>
-    <dependency>
-      <groupId>com.jcabi</groupId>
       <artifactId>jcabi-matchers</artifactId>
       <!-- version from parent -->
     </dependency>
     <dependency>
       <groupId>org.aspectj</groupId>
       <artifactId>aspectjrt</artifactId>
-      <!-- version from parent -->
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.validation</groupId>
-      <artifactId>validation-api</artifactId>
-      <!-- version from parent -->
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-validator</artifactId>
       <!-- version from parent -->
       <scope>runtime</scope>
     </dependency>
@@ -163,25 +142,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       <groupId>com.sun.jersey</groupId>
       <artifactId>jersey-client</artifactId>
       <version>1.18.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>net.sourceforge.saxon</groupId>
-      <artifactId>saxon</artifactId>
-      <version>9.1.0.8</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>net.sourceforge.saxon</groupId>
-      <artifactId>saxon</artifactId>
-      <version>9.1.0.8</version>
-      <classifier>dom</classifier>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <!-- version from parent -->
       <scope>test</scope>
     </dependency>
   </dependencies>

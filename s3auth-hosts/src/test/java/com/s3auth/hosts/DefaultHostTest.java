@@ -29,6 +29,7 @@
  */
 package com.s3auth.hosts;
 
+import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
 import com.amazonaws.services.cloudwatch.model.Datapoint;
@@ -56,9 +57,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -73,13 +73,6 @@ import org.mockito.stubbing.Answer;
 public final class DefaultHostTest {
 
     /**
-     * Rule for checking thrown exception.
-     * @checkstyle VisibilityModifier (3 lines)
-     */
-    @Rule
-    public transient ExpectedException thrown = ExpectedException.none();
-
-    /**
      * DefaultHost can load resource from S3.
      * @throws Exception If there is some problem inside
      */
@@ -87,22 +80,19 @@ public final class DefaultHostTest {
     public void loadsAmazonResourcesFrom() throws Exception {
         final AmazonS3 aws = Mockito.mock(AmazonS3.class);
         Mockito.doAnswer(
-            new Answer<S3Object>() {
-                @Override
-                public S3Object answer(final InvocationOnMock invocation) {
-                    final String key = GetObjectRequest.class.cast(
-                        invocation.getArguments()[0]
-                    ).getKey();
-                    if (key.matches(".*dir/?$")) {
-                        throw new com.amazonaws.AmazonClientException(
-                            String.format("%s not found", key)
-                        );
-                    }
-                    final S3Object object = new S3Object();
-                    object.setObjectContent(IOUtils.toInputStream(key));
-                    object.setKey(key);
-                    return object;
+            (Answer<S3Object>) invocation -> {
+                final String key = GetObjectRequest.class.cast(
+                    invocation.getArguments()[0]
+                ).getKey();
+                if (key.matches(".*dir/?$")) {
+                    throw new AmazonClientException(
+                        String.format("%s not found", key)
+                    );
                 }
+                final S3Object object = new S3Object();
+                object.setObjectContent(IOUtils.toInputStream(key));
+                object.setKey(key);
+                return object;
             }
         ).when(aws).getObject(Mockito.any(GetObjectRequest.class));
         final String suffix = "index.htm";
@@ -178,8 +168,14 @@ public final class DefaultHostTest {
         Mockito.doReturn(new BucketWebsiteConfiguration())
             .when(aws).getBucketWebsiteConfiguration(Mockito.anyString());
         final String bucket = "nonExistent";
-        this.thrown.expect(IOException.class);
-        this.thrown.expectMessage(
+        MatcherAssert.assertThat(
+            Assertions.assertThrows(
+                IOException.class,
+                () -> new DefaultHost(
+                    new BucketMocker().withBucket(bucket).withClient(aws).mock(),
+                    this.cloudWatch()
+                ).fetch(URI.create("/.htpasswd"), Range.ENTIRE, Version.LATEST)
+            ).getMessage(),
             Matchers.allOf(
                 Matchers.not(Matchers.startsWith("failed to fetch /.htpasswd")),
                 Matchers.is(
@@ -187,10 +183,6 @@ public final class DefaultHostTest {
                 )
             )
         );
-        new DefaultHost(
-            new BucketMocker().withBucket(bucket).withClient(aws).mock(),
-            this.cloudWatch()
-        ).fetch(URI.create("/.htpasswd"), Range.ENTIRE, Version.LATEST);
     }
 
     /**

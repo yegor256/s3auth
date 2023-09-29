@@ -36,7 +36,7 @@ import java.net.HttpURLConnection;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import lombok.experimental.Builder;
+import lombok.Builder;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 

@@ -34,7 +34,6 @@ import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
-import com.jcabi.aspects.Tv;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.SecureRandom;
@@ -330,7 +329,7 @@ public final class DefaultResourceTest {
             .getObject(Mockito.any(GetObjectRequest.class));
         final ObjectMetadata meta = Mockito.mock(ObjectMetadata.class);
         Mockito.doReturn(meta).when(object).getObjectMetadata();
-        Mockito.doReturn((long) Tv.TEN).when(meta).getContentLength();
+        Mockito.doReturn((long) 10).when(meta).getContentLength();
         final Collection<String> headers = new DefaultResource(
             client, "j", "", new Range.Simple(0, 1), Version.LATEST,
             Mockito.mock(DomainStatsData.class)

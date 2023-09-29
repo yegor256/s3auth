@@ -33,7 +33,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
   <parent>
     <groupId>com.jcabi</groupId>
     <artifactId>parent</artifactId>
-    <version>0.31</version>
+    <version>0.66.0</version>
   </parent>
   <groupId>com.s3auth</groupId>
   <artifactId>s3auth</artifactId>
@@ -106,46 +106,53 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       <url>s3://repo.s3auth.com/snapshot</url>
     </repository>
   </repositories>
-  <properties>
-    <aws.version>1.9.14</aws.version>
-  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.30</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.jcabi</groupId>
+      <artifactId>jcabi-aspects</artifactId>
+      <version>0.25.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjrt</artifactId>
+      <version>1.9.20</version>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>javax.el</artifactId>
+      <version>3.0.1-b12</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <version>5.9.3</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>1.10.19</version>
+    </dependency>
+  </dependencies>
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok</artifactId>
-        <version>1.14.8</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>com.jcabi</groupId>
-        <artifactId>jcabi-aspects</artifactId>
-        <version>0.20.1</version>
-      </dependency>
       <dependency>
         <groupId>com.jcabi</groupId>
         <artifactId>jcabi-immutable</artifactId>
         <version>1.3</version>
-      </dependency>
-      <dependency>
-        <groupId>org.aspectj</groupId>
-        <artifactId>aspectjrt</artifactId>
-        <version>1.8.4</version>
-      </dependency>
-      <dependency>
-        <groupId>javax.validation</groupId>
-        <artifactId>validation-api</artifactId>
-        <version>1.1.0.Final</version>
-      </dependency>
-      <dependency>
-        <groupId>org.hibernate</groupId>
-        <artifactId>hibernate-validator</artifactId>
-        <version>5.2.0.Alpha1</version>
-      </dependency>
-      <dependency>
-        <groupId>javax.el</groupId>
-        <artifactId>javax.el-api</artifactId>
-        <version>3.0.0</version>
       </dependency>
       <dependency>
         <groupId>com.google.guava</groupId>
@@ -155,7 +162,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       <dependency>
         <groupId>com.amazonaws</groupId>
         <artifactId>aws-java-sdk</artifactId>
-        <version>${aws.version}</version>
+        <version>1.9.14</version>
       </dependency>
       <dependency>
         <groupId>com.jcabi</groupId>
@@ -210,16 +217,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         <version>0.8</version>
         <classifier>mock</classifier>
         <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-core</artifactId>
-        <version>1.10.8</version>
-      </dependency>
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.12-beta-3</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -327,11 +324,9 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
           <plugin>
             <groupId>com.qulice</groupId>
             <artifactId>qulice-maven-plugin</artifactId>
-            <version>0.12</version>
+            <version>0.22.0</version>
             <configuration>
               <excludes>
-                <!-- there is a bug in qulice, that's why the file is excluded, try to remove this line -->
-                <exclude>checkstyle:/src/main/java/com/s3auth/hosts/Htpasswd.java</exclude>
               </excludes>
               <license>file:${basedir}/LICENSE.txt</license>
             </configuration>

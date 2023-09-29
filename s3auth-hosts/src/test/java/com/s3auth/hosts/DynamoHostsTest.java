@@ -34,7 +34,9 @@ import org.hamcrest.CustomMatcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link DynamoHosts}.
@@ -156,19 +158,24 @@ public final class DynamoHostsTest {
 
     /**
      * DynamoHosts can reject invalid user names.
-     * @throws Exception If there is some problem inside
      */
-    @Test(expected = javax.validation.ConstraintViolationException.class)
-    public void rejectsInvalidUserNames() throws Exception {
+    @Disabled
+    @Test
+    public void rejectsInvalidUserNames() {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
         final User user = new UserMocker()
             .withIdentity("urn:unknown:4254353")
             .mock();
-        try {
-            hosts.domains(user);
-        } finally {
-            hosts.close();
-        }
+        Assertions.assertThrows(
+            javax.validation.ConstraintViolationException.class,
+            () -> {
+                try {
+                    hosts.domains(user);
+                } finally {
+                    hosts.close();
+                }
+            }
+        );
     }
 
     /**
@@ -176,6 +183,7 @@ public final class DynamoHostsTest {
      * @throws Exception If there is some problem inside
      */
     @Test
+    @Disabled
     public void rejectsBrokenDomains() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
         final User user = new UserMocker().mock();

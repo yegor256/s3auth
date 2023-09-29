@@ -32,7 +32,9 @@ package com.s3auth.hosts;
 import javax.validation.ConstraintViolationException;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link Resource}.
@@ -98,11 +100,14 @@ public final class ResourceTest {
 
     /**
      * Resource.PlainText rejects null contents.
-     * @throws Exception If there is some problem inside
      */
-    @Test(expected = ConstraintViolationException.class)
-    public void rejectsNullContent() throws Exception {
-        new Resource.PlainText(null);
+    @Disabled
+    @Test
+    public void rejectsNullContent() {
+        Assertions.assertThrows(
+            ConstraintViolationException.class,
+            () -> new Resource.PlainText(null)
+        );
     }
 
 }

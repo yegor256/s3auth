@@ -29,7 +29,6 @@
  */
 package com.s3auth.hosts;
 
-import com.jcabi.aspects.Tv;
 import java.io.File;
 import java.util.Map;
 import org.hamcrest.MatcherAssert;
@@ -54,7 +53,7 @@ public final class H2DomainStatsDataTest {
             File.createTempFile("test", "temp")
         );
         final String domain = "test-put-domain";
-        final long bytes = Tv.HUNDRED;
+        final long bytes = 100;
         data.put(
             domain,
             new Stats() {
@@ -88,30 +87,15 @@ public final class H2DomainStatsDataTest {
         final String second = "test-put-domain2";
         data.put(
             first,
-            new Stats() {
-                @Override
-                public long bytesTransferred() {
-                    return Tv.HUNDRED;
-                }
-            }
+            () -> 100
         );
         data.put(
             first,
-            new Stats() {
-                @Override
-                public long bytesTransferred() {
-                    return Tv.FIFTY;
-                }
-            }
+            () -> 50
         );
         data.put(
             second,
-            new Stats() {
-                @Override
-                public long bytesTransferred() {
-                    return Tv.THOUSAND;
-                }
-            }
+            () -> 1000
         );
         final Map<String, Stats> stats = data.all();
         MatcherAssert.assertThat(
@@ -119,11 +103,11 @@ public final class H2DomainStatsDataTest {
         );
         MatcherAssert.assertThat(
             stats.get(first).bytesTransferred(),
-            Matchers.is((long) (Tv.HUNDRED + Tv.FIFTY))
+            Matchers.is((long) (150))
         );
         MatcherAssert.assertThat(
             stats.get(second).bytesTransferred(),
-            Matchers.is((long) Tv.THOUSAND)
+            Matchers.is((long) 1000)
         );
         MatcherAssert.assertThat(
             data.all().size(),

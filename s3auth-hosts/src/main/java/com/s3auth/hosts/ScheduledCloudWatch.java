@@ -41,7 +41,6 @@ import com.amazonaws.services.cloudwatch.model.StandardUnit;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
-import com.jcabi.aspects.Tv;
 import com.jcabi.manifests.Manifests;
 import java.io.Closeable;
 import java.io.IOException;
@@ -122,7 +121,7 @@ public final class ScheduledCloudWatch implements Runnable, Closeable {
      * @param stats The stats to put
      * @param bucket The bucket corresponding to these stats
      */
-    @RetryOnFailure(delay = Tv.FIVE, unit = TimeUnit.SECONDS)
+    @RetryOnFailure(delay = 5L, unit = TimeUnit.SECONDS)
     private void putData(final Stats stats, final String bucket) {
         this.cloudwatch.putMetricData(
             new PutMetricDataRequest()

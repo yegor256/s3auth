@@ -30,7 +30,6 @@
 package com.s3auth.hosts;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.jcabi.aspects.Tv;
 import com.jcabi.dynamo.Table;
 import com.jcabi.dynamo.mock.H2Data;
 import com.jcabi.dynamo.mock.MkRegion;
@@ -120,7 +119,7 @@ public final class DefaultDynamoTest {
                 }
             ));
         final Table tbl = region.table(table);
-        for (int num = 0; num < Tv.TWENTY; ++num) {
+        for (int num = 0; num < 20; ++num) {
             tbl.put(this.item());
         }
         return region;

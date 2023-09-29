@@ -44,7 +44,6 @@ import com.amazonaws.services.s3.model.BucketWebsiteConfiguration;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import java.io.IOException;
@@ -93,7 +92,7 @@ final class DefaultHost implements Host {
                     Manifests.read("S3Auth-AwsCloudWatchSecret")
                 ),
                 new ClientConfiguration().withProtocol(Protocol.HTTP),
-                Executors.newFixedThreadPool(Tv.FIFTY)
+                Executors.newFixedThreadPool(50)
             );
         }
     };
@@ -370,7 +369,7 @@ final class DefaultHost implements Host {
             this.bucket = bckt;
         }
         @Override
-        @Cacheable(lifetime = Tv.THIRTY, unit = TimeUnit.MINUTES)
+        @Cacheable(lifetime = 30, unit = TimeUnit.MINUTES)
         public long bytesTransferred() {
             final Date now = new Date();
             final List<Datapoint> datapoints =
@@ -385,7 +384,7 @@ final class DefaultHost implements Host {
                                 .withValue(this.bucket)
                         )
                         .withUnit(StandardUnit.Bytes)
-                        .withPeriod((int) TimeUnit.DAYS.toSeconds(Tv.SEVEN))
+                        .withPeriod((int) TimeUnit.DAYS.toSeconds(7))
                         .withStartTime(DateUtils.addWeeks(now, -1))
                         .withEndTime(now)
                 ).getDatapoints();

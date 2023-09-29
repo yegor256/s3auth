@@ -34,7 +34,6 @@ import com.amazonaws.services.cloudwatch.model.Dimension;
 import com.amazonaws.services.cloudwatch.model.MetricDatum;
 import com.amazonaws.services.cloudwatch.model.PutMetricDataRequest;
 import com.amazonaws.services.cloudwatch.model.StandardUnit;
-import com.jcabi.aspects.Tv;
 import java.util.Collections;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -53,7 +52,7 @@ public final class ScheduledCloudWatchTest {
     @Test
     public void postsDataToCloudWatch() throws Exception {
         final String bucket = "bucket";
-        final long bytes = Tv.MILLION;
+        final long bytes = 1_000_000;
         final DomainStatsData data = Mockito.mock(DomainStatsData.class);
         Mockito.doReturn(
             Collections.singletonMap(bucket, new Stats.Simple(bytes))

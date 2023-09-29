@@ -37,7 +37,6 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -69,7 +68,7 @@ final class DefaultBucket implements Bucket {
 
     @Override
     @NotNull
-    @Cacheable(lifetime = Tv.TEN, unit = TimeUnit.MINUTES)
+    @Cacheable(lifetime = 10, unit = TimeUnit.MINUTES)
     public AmazonS3 client() {
         final AmazonS3 client = new AmazonS3Client(
             new BasicAWSCredentials(this.domain.key(), this.domain.secret()),

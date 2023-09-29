@@ -29,7 +29,7 @@
  */
 package com.s3auth.hosts;
 
-import lombok.experimental.Builder;
+import lombok.Builder;
 
 /**
  * Mocker of {@link Domain}.
