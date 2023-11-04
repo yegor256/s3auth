@@ -42,14 +42,14 @@ import org.junit.jupiter.api.Test;
  * Test case for {@link DynamoHosts}.
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-public final class DynamoHostsTest {
+final class DynamoHostsTest {
 
     /**
      * DynamoHosts can clean cache in runtime.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void updatesCachedData() throws Exception {
+.   void updatesCachedData() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
         final Domain domain = new DomainMocker().mock();
         final User user = new UserMocker().mock();
@@ -70,7 +70,7 @@ public final class DynamoHostsTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void rejectsDuplicatesFromDifferentUsers() throws Exception {
+.   void rejectsDuplicatesFromDifferentUsers() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
         final Domain domain = new DomainMocker().withName("ibm.com").mock();
         final User first = new UserMocker()
@@ -96,7 +96,7 @@ public final class DynamoHostsTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void protectsDomainsAgainstRemoval() throws Exception {
+.   void protectsDomainsAgainstRemoval() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
         final Domain domain = new DomainMocker().withName("yahoo.com").mock();
         final User first = new UserMocker()
@@ -122,7 +122,7 @@ public final class DynamoHostsTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void trimsDomainProperties() throws Exception {
+.   void trimsDomainProperties() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
         final Domain domain = new DomainMocker()
             .withName(" google.com ")
@@ -159,7 +159,7 @@ public final class DynamoHostsTest {
      */
     @Disabled
     @Test
-    public void rejectsInvalidUserNames() {
+.   void rejectsInvalidUserNames() {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
         final User user = new UserMocker()
             .withIdentity("urn:unknown:4254353")
@@ -209,7 +209,7 @@ public final class DynamoHostsTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void fetchesAllDomainsForSuperUser() throws Exception {
+.   void fetchesAllDomainsForSuperUser() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
         final Domain first = new DomainMocker().withName("first.com").mock();
         final Domain second = new DomainMocker().withName("second.com").mock();

@@ -52,14 +52,14 @@ import org.takes.rs.RsPrint;
  * @since 0.2
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
-public final class TkAppTest {
+final class TkAppTest {
 
     /**
      * App can render front page.
      * @throws Exception If some problem inside
      */
     @Test
-    public void rendersHomePage() throws Exception {
+.   void rendersHomePage() throws Exception {
         final Take take = new TkApp(
             new HostsMocker().mock()
         );
@@ -106,7 +106,7 @@ public final class TkAppTest {
      * @throws Exception If some problem inside
      */
     @Test
-    public void rendersHomePageViaHttp() throws Exception {
+.   void rendersHomePageViaHttp() throws Exception {
         final Take take = new TkApp(
             new HostsMocker().mock()
         );

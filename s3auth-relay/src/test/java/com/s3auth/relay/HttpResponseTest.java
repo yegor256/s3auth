@@ -57,14 +57,14 @@ import org.junit.Test;
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @SuppressWarnings("PMD.CyclomaticComplexity")
-public final class HttpResponseTest {
+final class HttpResponseTest {
 
     /**
      * HttpResponse can send correct HTTP response.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void sendsDataToSocket() throws Exception {
+.   void sendsDataToSocket() throws Exception {
         MatcherAssert.assertThat(
             HttpResponseMocker.toString(
                 new HttpResponse()

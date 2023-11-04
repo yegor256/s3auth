@@ -41,7 +41,7 @@ import org.junit.Test;
 /**
  * Test case for {@link Main}.
  */
-public final class MainTest {
+final class MainTest {
 
     /**
      * Main can start and listen on port.

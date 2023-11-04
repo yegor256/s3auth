@@ -54,14 +54,14 @@ import org.productivity.java.syslog4j.server.SyslogServerIF;
  * @checkstyle MultipleStringLiterals (500 lines)
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-public final class SyslogHostsTest {
+final class SyslogHostsTest {
 
     /**
      * SyslogHosts can return the domains of its underlying Hosts.
      * @throws Exception If something goes wrong
      */
     @Test
-    public void returnsUnderlyingDomains() throws Exception {
+.   void returnsUnderlyingDomains() throws Exception {
         final Hosts hosts = Mockito.mock(Hosts.class);
         final Domain first = new DomainMocker().mock();
         final Domain second = new DomainMocker().mock();
@@ -82,7 +82,7 @@ public final class SyslogHostsTest {
      * @throws Exception If something goes wrong
      */
     @Test
-    public void closesUnderlyingHosts() throws Exception {
+.   void closesUnderlyingHosts() throws Exception {
         final Hosts hosts = Mockito.mock(Hosts.class);
         final SyslogHosts syslog = new SyslogHosts(hosts);
         syslog.close();
@@ -94,7 +94,7 @@ public final class SyslogHostsTest {
      * @throws Exception If something goes wrong
      */
     @Test
-    public void sendsMessagesToServer() throws Exception {
+.   void sendsMessagesToServer() throws Exception {
         final SyslogServerIF server = SyslogServer.getInstance("udp");
         final int port = port();
         server.getConfig().setPort(port);

@@ -51,7 +51,7 @@ import org.mockito.stubbing.Answer;
 /**
  * Test case for {@link FtpFacade}.
  */
-public final class FtpFacadeTest {
+final class FtpFacadeTest {
 
     /**
      * Connects and disconnects.

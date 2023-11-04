@@ -40,14 +40,14 @@ import org.junit.Test;
  * @checkstyle MagicNumberCheck (300 lines)
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
-public final class HttpRequestTest {
+final class HttpRequestTest {
 
     /**
      * HttpRequest can parse HTTP response.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void parsesHttpRequest() throws Exception {
+.   void parsesHttpRequest() throws Exception {
         final HttpRequest request = HttpRequestMocker.toRequest(
             "GET /test.html HTTP/1.1\nHost:local\nAccept:text/plain\n\nbody"
         );
@@ -66,7 +66,7 @@ public final class HttpRequestTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void fetchesCaseInsensitiveHeaders() throws Exception {
+.   void fetchesCaseInsensitiveHeaders() throws Exception {
         final HttpRequest request = HttpRequestMocker.toRequest(
             "GET /test.html HTTP/1.1\nHost:local\nAccept:text/plain\n\nbody"
         );
@@ -93,7 +93,7 @@ public final class HttpRequestTest {
      * @throws Exception If a problem occurs
      */
     @Test
-    public void canFetchFullByteRange() throws Exception {
+.   void canFetchFullByteRange() throws Exception {
         final HttpRequest request = HttpRequestMocker.toRequest(
             new StringBuilder("GET /test.html HTTP/1.1\n")
                 .append("Host:local\n")
@@ -118,7 +118,7 @@ public final class HttpRequestTest {
      * @throws Exception If a problem occurs
      */
     @Test
-    public void canFetchRangeFromFirstByte() throws Exception {
+.   void canFetchRangeFromFirstByte() throws Exception {
         final HttpRequest request = HttpRequestMocker.toRequest(
             new StringBuilder("GET /test.html HTTP/1.1\n")
                 .append("Host:local\n")
@@ -142,7 +142,7 @@ public final class HttpRequestTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void fetchesQueryParams() throws Exception {
+.   void fetchesQueryParams() throws Exception {
         final HttpRequest request = HttpRequestMocker.toRequest(
             //@checkstyle LineLength (1 line)
             "GET /test.html?test=param&hello=world HTTP/1.1\nHost:local\nAccept:text/plain\n\nbody"
@@ -162,7 +162,7 @@ public final class HttpRequestTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void fetchesDuplicateQueryParams() throws Exception {
+.   void fetchesDuplicateQueryParams() throws Exception {
         final HttpRequest request = HttpRequestMocker.toRequest(
             //@checkstyle LineLength (1 line)
             "GET /test.html?first=one&second=two&first=three HTTP/1.1\nHost:local\nAccept:text/plain\n\nbody"
@@ -185,7 +185,7 @@ public final class HttpRequestTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void fetchesQueryParamsWithNoValue() throws Exception {
+.   void fetchesQueryParamsWithNoValue() throws Exception {
         final HttpRequest request = HttpRequestMocker.toRequest(
             //@checkstyle LineLength (1 line)
             "GET /test.html?blank&something=yes&nothing HTTP/1.1\nHost:local\nAccept:text/plain\n\nbody"
@@ -209,7 +209,7 @@ public final class HttpRequestTest {
      * @throws Exception If something goes wrong
      */
     @Test
-    public void supportsHeadMethod() throws Exception {
+.   void supportsHeadMethod() throws Exception {
         final HttpRequest request = HttpRequestMocker.toRequest(
             "HEAD /test.html HTTP/1.1\nHost:local\nAccept:text/plain\n"
         );

@@ -42,14 +42,14 @@ import org.junit.Test;
 /**
  * Test case for {@link LocalHost}.
  */
-public final class LocalHostTest {
+final class LocalHostTest {
 
     /**
      * LocalHost can render a simple home page.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void rendersHomePage() throws Exception {
+.   void rendersHomePage() throws Exception {
         final Host host = new LocalHost();
         MatcherAssert.assertThat(
             host.isHidden(new URI("/some-uri")),
@@ -76,7 +76,7 @@ public final class LocalHostTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void reportsCurrentVersion() throws Exception {
+.   void reportsCurrentVersion() throws Exception {
         final Host host = new LocalHost();
         MatcherAssert.assertThat(
             ResourceMocker.toString(

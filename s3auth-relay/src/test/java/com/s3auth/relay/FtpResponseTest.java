@@ -38,7 +38,7 @@ import org.junit.Test;
 /**
  * Test case for {@link com.s3auth.relay.FtpResponse}.
  */
-public final class FtpResponseTest {
+final class FtpResponseTest {
 
     /**
      * FtpResponse can construct correct FTP response.

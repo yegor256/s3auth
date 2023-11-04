@@ -38,14 +38,14 @@ import org.junit.Test;
 /**
  * Test case for {@link HttpException}.
  */
-public final class HttpExceptionTest {
+final class HttpExceptionTest {
 
     /**
      * HttpException can be instantiated with a text.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void parsesHttpException() throws Exception {
+.   void parsesHttpException() throws Exception {
         final HttpException exp = new HttpException(
             HttpURLConnection.HTTP_NOT_FOUND,
             "not found"
@@ -61,7 +61,7 @@ public final class HttpExceptionTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void makesHttpResponseWithNull() throws Exception {
+.   void makesHttpResponseWithNull() throws Exception {
         final HttpException exp = new HttpException(
             HttpURLConnection.HTTP_SEE_OTHER,
             new IOException((String) null)

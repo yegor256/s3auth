@@ -36,14 +36,14 @@ import org.junit.Test;
 /**
  * Test case for {@link DefaultDomain}.
  */
-public final class DefaultDomainTest {
+final class DefaultDomainTest {
 
     /**
      * DefaultDomain can reproduce properties of another domain.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void reproducesProperties() throws Exception {
+.   void reproducesProperties() throws Exception {
         final Domain domain = new DomainMocker().mock();
         MatcherAssert.assertThat(
             new DefaultDomain(domain).name(),

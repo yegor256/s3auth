@@ -36,14 +36,14 @@ import org.junit.Test;
 /**
  * Test case for {@link DefaultBucket}.
  */
-public final class DefaultBucketTest {
+final class DefaultBucketTest {
 
     /**
      * DefaultBucket can reproduce properties.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void reproducesPropertiesOfDomain() throws Exception {
+.   void reproducesPropertiesOfDomain() throws Exception {
         final Domain domain = new DomainMocker().mock();
         MatcherAssert.assertThat(
             new DefaultBucket(domain).name(),

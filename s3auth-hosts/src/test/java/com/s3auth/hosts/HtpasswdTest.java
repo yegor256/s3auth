@@ -43,14 +43,14 @@ import org.mockito.Mockito;
 /**
  * Test case for {@link Htpasswd}.
  */
-public final class HtpasswdTest {
+final class HtpasswdTest {
 
     /**
      * Htpasswd can show some stats in {@code #toString()}.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void showsStatsInToString() throws Exception {
+.   void showsStatsInToString() throws Exception {
         MatcherAssert.assertThat(
             new Htpasswd(this.host("peter-pen:hello")),
             Matchers.hasToString(Matchers.notNullValue())
@@ -62,7 +62,7 @@ public final class HtpasswdTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void showsStatsInToStringWithIOException() throws Exception {
+.   void showsStatsInToStringWithIOException() throws Exception {
         final AmazonS3 aws = Mockito.mock(AmazonS3.class);
         Mockito.doThrow(new AmazonClientException("")).when(aws)
             .getObject(Mockito.any(GetObjectRequest.class));
@@ -83,7 +83,7 @@ public final class HtpasswdTest {
      * @link ftp://ftp.arlut.utexas.edu/pub/java_hashes/MD5Crypt.java
      */
     @Test
-    public void understandsApacheNativeHashValues() throws Exception {
+.   void understandsApacheNativeHashValues() throws Exception {
         MatcherAssert.assertThat(
             new Htpasswd(
                 this.host("foo:$apr1$1/yqU0TM$fx36ZuZIapXW39ivIA5AR.")
@@ -97,7 +97,7 @@ public final class HtpasswdTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void understandsShaHashValues() throws Exception {
+.   void understandsShaHashValues() throws Exception {
         MatcherAssert.assertThat(
             new Htpasswd(
                 this.host("john:{SHA}6qagQQ8seo0bw69C/mNKhYbSf34=")
@@ -123,7 +123,7 @@ public final class HtpasswdTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void understandsPlainTextHashValues() throws Exception {
+.   void understandsPlainTextHashValues() throws Exception {
         MatcherAssert.assertThat(
             new Htpasswd(
                 this.host("erik:super-secret-password-\u0433")
@@ -145,7 +145,7 @@ public final class HtpasswdTest {
      * @link http://www.dynamic.net.au/christos/crypt/
      */
     @Test
-    public void understandsCryptHashValues() throws Exception {
+.   void understandsCryptHashValues() throws Exception {
         MatcherAssert.assertThat(
             new Htpasswd(
                 this.host("alex:QS3Wb6MddltY2")
@@ -159,7 +159,7 @@ public final class HtpasswdTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void ignoresBrokenLines() throws Exception {
+.   void ignoresBrokenLines() throws Exception {
         MatcherAssert.assertThat(
             new Htpasswd(
                 this.host("bobby:")
@@ -173,7 +173,7 @@ public final class HtpasswdTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void worksWithDefaultHost() throws Exception {
+.   void worksWithDefaultHost() throws Exception {
         final Htpasswd htpasswd = new Htpasswd(
             new DefaultHost(
                 new BucketMocker().mock(),

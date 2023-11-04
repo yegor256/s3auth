@@ -41,14 +41,14 @@ import org.mockito.Mockito;
  * Test case for {@link Domain}.
  *
  */
-public final class DomainTest {
+final class DomainTest {
 
     /**
      * Domain.Validator accepts valid syslog entry.
      * @throws Exception If something goes wrong
      */
     @Test
-    public void acceptsValidSyslog() throws Exception {
+.   void acceptsValidSyslog() throws Exception {
         final ConstraintValidatorContext ctx =
             Mockito.mock(ConstraintValidatorContext.class);
         final Domain domain = new DomainMocker()
@@ -65,7 +65,7 @@ public final class DomainTest {
      * @throws Exception If something goes wrong
      */
     @Test
-    public void rejectsInvalidSyslog() throws Exception {
+.   void rejectsInvalidSyslog() throws Exception {
         final ConstraintValidatorContext ctx =
             Mockito.mock(ConstraintValidatorContext.class);
         final ConstraintViolationBuilder builder =

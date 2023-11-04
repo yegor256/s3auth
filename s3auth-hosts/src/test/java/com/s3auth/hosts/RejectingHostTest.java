@@ -37,14 +37,14 @@ import org.junit.Test;
 /**
  * Test case for {@link RejectingHost}.
  */
-public final class RejectingHostTest {
+final class RejectingHostTest {
 
     /**
      * RejectingHost can reject by regex.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void rejectsByRegex() throws Exception {
+.   void rejectsByRegex() throws Exception {
         final URI uri = new URI("/test/me.txt");
         MatcherAssert.assertThat(
             ResourceMocker.toString(

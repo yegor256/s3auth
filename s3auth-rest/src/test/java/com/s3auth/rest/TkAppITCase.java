@@ -64,7 +64,7 @@ public final class TkAppITCase {
      * @throws Exception If some problem inside
      */
     @Test
-    public void renderAbsentPages() throws Exception {
+.   void renderAbsentPages() throws Exception {
         final String[] pages = {
             "/page-doesnt-exist",
             "/xsl/xsl-stylesheet-doesnt-exist.xsl",
@@ -87,7 +87,7 @@ public final class TkAppITCase {
      * @throws Exception If some problem inside
      */
     @Test
-    public void rendersValidPages() throws Exception {
+.   void rendersValidPages() throws Exception {
         final String[] pages = {
             "/robots.txt",
             "/xsl/layout.xsl",
@@ -109,7 +109,7 @@ public final class TkAppITCase {
      * @throws Exception If some problem inside
      */
     @Test
-    public void showsVersion() throws Exception {
+.   void showsVersion() throws Exception {
         new JdkRequest(TkAppITCase.HOME)
             .uri().path("/").back()
             .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML)

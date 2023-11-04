@@ -46,13 +46,13 @@ import org.mockito.Mockito;
  * Test case for {@link DirectoryListing}.
  *
  */
-public final class DirectoryListingTest {
+final class DirectoryListingTest {
     /**
      * Fetches directory listing for bucket, if object does not exist.
      * @throws Exception If something goes wrong
      */
     @Test
-    public void fetchesDirectoryListingInXhtml()
+.   void fetchesDirectoryListingInXhtml()
         throws Exception {
         final AmazonS3 client = Mockito.mock(AmazonS3.class);
         final ObjectListing listing = Mockito.mock(ObjectListing.class);

@@ -46,13 +46,13 @@ import org.mockito.Mockito;
  * Test case for {@link ObjectVersionListing}.
  *
  */
-public final class ObjectVersionListingTest {
+final class ObjectVersionListingTest {
     /**
      * Fetches version listing for bucket.
      * @throws Exception If something goes wrong
      */
     @Test
-    public void fetchesVersionListingInXml() throws Exception {
+.   void fetchesVersionListingInXml() throws Exception {
         final AmazonS3 client = Mockito.mock(AmazonS3.class);
         final VersionListing listing = Mockito.mock(VersionListing.class);
         Mockito.doReturn(listing).when(client)

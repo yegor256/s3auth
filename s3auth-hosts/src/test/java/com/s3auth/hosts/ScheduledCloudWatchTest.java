@@ -41,14 +41,14 @@ import org.mockito.Mockito;
 /**
  * Test case for {@link ScheduledCloudWatch}.
  */
-public final class ScheduledCloudWatchTest {
+final class ScheduledCloudWatchTest {
 
     /**
      * If an exception occurs.
      * @throws Exception If something goes wrong.
      */
     @Test
-    public void postsDataToCloudWatch() throws Exception {
+.   void postsDataToCloudWatch() throws Exception {
         final String bucket = "bucket";
         final long bytes = 1_000_000;
         final DomainStatsData data = Mockito.mock(DomainStatsData.class);

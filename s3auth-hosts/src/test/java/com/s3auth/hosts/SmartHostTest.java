@@ -37,14 +37,14 @@ import org.junit.Test;
 /**
  * Test case for {@link SmartHost}.
  */
-public final class SmartHostTest {
+final class SmartHostTest {
 
     /**
      * SmartHost can show result of .htpasswd fetching.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void showsLogsOfHtpasswdFetching() throws Exception {
+.   void showsLogsOfHtpasswdFetching() throws Exception {
         final URI uri = new URI("/.htpasswd");
         MatcherAssert.assertThat(
             ResourceMocker.toString(
@@ -61,7 +61,7 @@ public final class SmartHostTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void convertsItselfToString() throws Exception {
+.   void convertsItselfToString() throws Exception {
         MatcherAssert.assertThat(
             new SmartHost(new HostMocker().mock()),
             Matchers.hasToString(Matchers.notNullValue())

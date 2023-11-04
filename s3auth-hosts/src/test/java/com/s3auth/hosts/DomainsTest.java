@@ -36,14 +36,14 @@ import org.junit.Test;
 /**
  * Test case for {@link Domains}.
  */
-public final class DomainsTest {
+final class DomainsTest {
 
     /**
      * Domains can add and retrieve domains.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void addsAndRetrievesDomains() throws Exception {
+.   void addsAndRetrievesDomains() throws Exception {
         final Domain domain = new DomainMocker().mock();
         final Domains domains = new Domains();
         domains.add(domain);

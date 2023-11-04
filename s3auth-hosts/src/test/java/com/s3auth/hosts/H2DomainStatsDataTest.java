@@ -39,14 +39,14 @@ import org.junit.Test;
  * Test case for {@link H2DomainStatsData}.
  *
  */
-public final class H2DomainStatsDataTest {
+final class H2DomainStatsDataTest {
 
     /**
      * H2DomainStatsData can put and get data for a single domain.
      * @throws Exception If something goes wrong.
      */
     @Test
-    public void putsAndGetsDataPerDomain() throws Exception {
+.   void putsAndGetsDataPerDomain() throws Exception {
         final H2DomainStatsData data = new H2DomainStatsData(
             File.createTempFile("test", "temp")
         );

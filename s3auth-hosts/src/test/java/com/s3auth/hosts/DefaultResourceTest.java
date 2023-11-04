@@ -52,14 +52,14 @@ import org.mockito.stubbing.Answer;
  * Test case for {@link DefaultResource}.
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-public final class DefaultResourceTest {
+final class DefaultResourceTest {
 
     /**
      * DefaultResource can build headers.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void getsHeadersFromAmazonObject() throws Exception {
+.   void getsHeadersFromAmazonObject() throws Exception {
         final AmazonS3 client = Mockito.mock(AmazonS3.class);
         final S3Object object = Mockito.mock(S3Object.class);
         Mockito.doReturn(object).when(client)
@@ -82,7 +82,7 @@ public final class DefaultResourceTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void writesFromAmazonObjectToOutputStream() throws Exception {
+.   void writesFromAmazonObjectToOutputStream() throws Exception {
         final AmazonS3 client = Mockito.mock(AmazonS3.class);
         final S3Object object = Mockito.mock(S3Object.class);
         Mockito.doReturn(object).when(client)
@@ -107,7 +107,7 @@ public final class DefaultResourceTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void writesInputToOutputStream() throws Exception {
+.   void writesInputToOutputStream() throws Exception {
         final int size = 100 * 1024;
         final byte[] data = new byte[size];
         final Random random = new SecureRandom();
@@ -165,7 +165,7 @@ public final class DefaultResourceTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void getsLastModifiedDate() throws Exception {
+.   void getsLastModifiedDate() throws Exception {
         final Date date = new Date();
         final AmazonS3 client = Mockito.mock(AmazonS3.class);
         final S3Object object = Mockito.mock(S3Object.class);
@@ -189,7 +189,7 @@ public final class DefaultResourceTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void getsCacheControlHeaderFromAmazonObject() throws Exception {
+.   void getsCacheControlHeaderFromAmazonObject() throws Exception {
         final AmazonS3 client = Mockito.mock(AmazonS3.class);
         final S3Object object = Mockito.mock(S3Object.class);
         Mockito.doReturn(object).when(client)
@@ -213,7 +213,7 @@ public final class DefaultResourceTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void getsDefaultCacheControlHeader() throws Exception {
+.   void getsDefaultCacheControlHeader() throws Exception {
         final AmazonS3 client = Mockito.mock(AmazonS3.class);
         final S3Object object = Mockito.mock(S3Object.class);
         Mockito.doReturn(object).when(client)
@@ -236,7 +236,7 @@ public final class DefaultResourceTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void postsMetricData() throws Exception {
+.   void postsMetricData() throws Exception {
         final int size = 100;
         final byte[] data = new byte[size];
         final Random random = new Random();
@@ -272,7 +272,7 @@ public final class DefaultResourceTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void specifiesObjectVersion() throws Exception {
+.   void specifiesObjectVersion() throws Exception {
         final AmazonS3 client = Mockito.mock(AmazonS3.class);
         final String version = "abcd";
         Mockito.doAnswer(
@@ -299,7 +299,7 @@ public final class DefaultResourceTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void closesUnderlyingObject() throws Exception {
+.   void closesUnderlyingObject() throws Exception {
         final AmazonS3 client = Mockito.mock(AmazonS3.class);
         final S3Object object = Mockito.mock(S3Object.class);
         Mockito.doReturn(object).when(client)
@@ -320,7 +320,7 @@ public final class DefaultResourceTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void closesUnderlyingObjectWhenSizeIsInvoked() throws Exception {
+.   void closesUnderlyingObjectWhenSizeIsInvoked() throws Exception {
         final AmazonS3 client = Mockito.mock(AmazonS3.class);
         final S3Object object = Mockito.mock(S3Object.class);
         Mockito.doReturn(object).when(client)
@@ -346,7 +346,7 @@ public final class DefaultResourceTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void getsContentEncodingHeaderFromAmazonObject() throws Exception {
+.   void getsContentEncodingHeaderFromAmazonObject() throws Exception {
         final AmazonS3 client = Mockito.mock(AmazonS3.class);
         final S3Object object = Mockito.mock(S3Object.class);
         Mockito.doReturn(object).when(client)

@@ -39,14 +39,14 @@ import org.junit.jupiter.api.Test;
 /**
  * Test case for {@link Resource}.
  */
-public final class ResourceTest {
+final class ResourceTest {
 
     /**
      * Resource.PlainText can return text content.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void returnsPlainTextContent() throws Exception {
+.   void returnsPlainTextContent() throws Exception {
         final String content = "\u0433 test!";
         final Resource res = new Resource.PlainText(content);
         MatcherAssert.assertThat(
@@ -60,7 +60,7 @@ public final class ResourceTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void getsHeadersForPlainText() throws Exception {
+.   void getsHeadersForPlainText() throws Exception {
         final Resource res = new Resource.PlainText("");
         MatcherAssert.assertThat(
             res.headers(),
@@ -76,7 +76,7 @@ public final class ResourceTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void convertsItselfToString() throws Exception {
+.   void convertsItselfToString() throws Exception {
         final String content = "\u0444\u0433 test!";
         MatcherAssert.assertThat(
             new Resource.PlainText(content),
@@ -89,7 +89,7 @@ public final class ResourceTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void getsLastModifiedTime() throws Exception {
+.   void getsLastModifiedTime() throws Exception {
         MatcherAssert.assertThat(
             new Resource.PlainText("blah").lastModified(),
             Matchers.notNullValue()
@@ -101,7 +101,7 @@ public final class ResourceTest {
      */
     @Disabled
     @Test
-    public void rejectsNullContent() {
+.   void rejectsNullContent() {
         Assertions.assertThrows(
             ConstraintViolationException.class,
             () -> new Resource.PlainText(null)

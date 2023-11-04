@@ -42,14 +42,14 @@ import org.junit.Test;
  * Test case for {@link GzipResource}.
  *
  */
-public final class GzipResourceTest {
+final class GzipResourceTest {
 
     /**
      * GzipResource writes gzip compressed output.
      * @throws Exception If something goes wrong.
      */
     @Test
-    public void compressesOutput() throws Exception {
+.   void compressesOutput() throws Exception {
         final String text = "Hello compressed!\u00ac";
         final Resource res = new GzipResource(
             new Resource.PlainText(text)
@@ -72,7 +72,7 @@ public final class GzipResourceTest {
      * @throws Exception If something goes wrong.
      */
     @Test
-    public void containsContentEncodingHeader() throws Exception {
+.   void containsContentEncodingHeader() throws Exception {
         MatcherAssert.assertThat(
             new GzipResource(new Resource.PlainText("foo")).headers(),
             Matchers.hasItem("Content-Encoding: gzip")

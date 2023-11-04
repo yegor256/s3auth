@@ -50,7 +50,7 @@ import org.junit.Test;
  * Test case for {@link DefaultDynamo}.
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-public final class DefaultDynamoTest {
+final class DefaultDynamoTest {
 
     /**
      * DefaultDynamo can load configuration.
@@ -86,7 +86,7 @@ public final class DefaultDynamoTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void instantiatesDefault() throws Exception {
+.   void instantiatesDefault() throws Exception {
         MatcherAssert.assertThat(
             new DefaultDynamo(),
             Matchers.not(Matchers.nullValue())
