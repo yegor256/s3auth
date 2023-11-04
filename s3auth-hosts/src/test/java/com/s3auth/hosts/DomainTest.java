@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2022, Yegor Bugayenko
  * All rights reserved.
  *
@@ -48,7 +48,7 @@ final class DomainTest {
      * @throws Exception If something goes wrong
      */
     @Test
-.   void acceptsValidSyslog() throws Exception {
+    void acceptsValidSyslog() throws Exception {
         final ConstraintValidatorContext ctx =
             Mockito.mock(ConstraintValidatorContext.class);
         final Domain domain = new DomainMocker()
@@ -65,7 +65,7 @@ final class DomainTest {
      * @throws Exception If something goes wrong
      */
     @Test
-.   void rejectsInvalidSyslog() throws Exception {
+    void rejectsInvalidSyslog() throws Exception {
         final ConstraintValidatorContext ctx =
             Mockito.mock(ConstraintValidatorContext.class);
         final ConstraintViolationBuilder builder =

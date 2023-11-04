@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2022, Yegor Bugayenko
  * All rights reserved.
  *
@@ -48,7 +48,7 @@ public final class DefaultHostITCase {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void fetchesRealObjectFromAmazonBucket() throws Exception {
+    void fetchesRealObjectFromAmazonBucket() throws Exception {
         final String key = System.getProperty("failsafe.aws.key");
         final String secret = System.getProperty("failsafe.aws.secret");
         Assume.assumeThat(key, Matchers.notNullValue());

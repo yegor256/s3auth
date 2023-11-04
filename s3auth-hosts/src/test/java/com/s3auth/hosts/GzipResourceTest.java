@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2022, Yegor Bugayenko
  * All rights reserved.
  *
@@ -49,7 +49,7 @@ final class GzipResourceTest {
      * @throws Exception If something goes wrong.
      */
     @Test
-.   void compressesOutput() throws Exception {
+    void compressesOutput() throws Exception {
         final String text = "Hello compressed!\u00ac";
         final Resource res = new GzipResource(
             new Resource.PlainText(text)
@@ -72,7 +72,7 @@ final class GzipResourceTest {
      * @throws Exception If something goes wrong.
      */
     @Test
-.   void containsContentEncodingHeader() throws Exception {
+    void containsContentEncodingHeader() throws Exception {
         MatcherAssert.assertThat(
             new GzipResource(new Resource.PlainText("foo")).headers(),
             Matchers.hasItem("Content-Encoding: gzip")

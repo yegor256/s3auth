@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2022, Yegor Bugayenko
  * All rights reserved.
  *
@@ -49,7 +49,7 @@ final class LocalHostTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void rendersHomePage() throws Exception {
+    void rendersHomePage() throws Exception {
         final Host host = new LocalHost();
         MatcherAssert.assertThat(
             host.isHidden(new URI("/some-uri")),
@@ -76,7 +76,7 @@ final class LocalHostTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void reportsCurrentVersion() throws Exception {
+    void reportsCurrentVersion() throws Exception {
         final Host host = new LocalHost();
         MatcherAssert.assertThat(
             ResourceMocker.toString(

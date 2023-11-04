@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2022, Yegor Bugayenko
  * All rights reserved.
  *
@@ -43,7 +43,7 @@ final class DefaultBucketTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void reproducesPropertiesOfDomain() throws Exception {
+    void reproducesPropertiesOfDomain() throws Exception {
         final Domain domain = new DomainMocker().mock();
         MatcherAssert.assertThat(
             new DefaultBucket(domain).name(),

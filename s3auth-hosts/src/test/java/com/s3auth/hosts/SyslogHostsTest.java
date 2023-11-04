@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2022, Yegor Bugayenko
  * All rights reserved.
  *
@@ -61,7 +61,7 @@ final class SyslogHostsTest {
      * @throws Exception If something goes wrong
      */
     @Test
-.   void returnsUnderlyingDomains() throws Exception {
+    void returnsUnderlyingDomains() throws Exception {
         final Hosts hosts = Mockito.mock(Hosts.class);
         final Domain first = new DomainMocker().mock();
         final Domain second = new DomainMocker().mock();
@@ -82,7 +82,7 @@ final class SyslogHostsTest {
      * @throws Exception If something goes wrong
      */
     @Test
-.   void closesUnderlyingHosts() throws Exception {
+    void closesUnderlyingHosts() throws Exception {
         final Hosts hosts = Mockito.mock(Hosts.class);
         final SyslogHosts syslog = new SyslogHosts(hosts);
         syslog.close();
@@ -94,7 +94,7 @@ final class SyslogHostsTest {
      * @throws Exception If something goes wrong
      */
     @Test
-.   void sendsMessagesToServer() throws Exception {
+    void sendsMessagesToServer() throws Exception {
         final SyslogServerIF server = SyslogServer.getInstance("udp");
         final int port = port();
         server.getConfig().setPort(port);

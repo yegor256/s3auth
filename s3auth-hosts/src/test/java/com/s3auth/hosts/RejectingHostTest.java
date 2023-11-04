@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2022, Yegor Bugayenko
  * All rights reserved.
  *
@@ -44,7 +44,7 @@ final class RejectingHostTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void rejectsByRegex() throws Exception {
+    void rejectsByRegex() throws Exception {
         final URI uri = new URI("/test/me.txt");
         MatcherAssert.assertThat(
             ResourceMocker.toString(

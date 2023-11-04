@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2022, Yegor Bugayenko
  * All rights reserved.
  *
@@ -75,7 +75,7 @@ final class DefaultHostTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void loadsAmazonResourcesFrom() throws Exception {
+    void loadsAmazonResourcesFrom() throws Exception {
         final AmazonS3 aws = Mockito.mock(AmazonS3.class);
         Mockito.doAnswer(
             (Answer<S3Object>) invocation -> {
@@ -128,7 +128,7 @@ final class DefaultHostTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void showsStatsInToString() throws Exception {
+    void showsStatsInToString() throws Exception {
         MatcherAssert.assertThat(
             new DefaultHost(new BucketMocker().mock()),
             Matchers.hasToString(Matchers.notNullValue())
@@ -140,7 +140,7 @@ final class DefaultHostTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void rejectsAuthorizationWhenInvalidCredentials() throws Exception {
+    void rejectsAuthorizationWhenInvalidCredentials() throws Exception {
         MatcherAssert.assertThat(
             new DefaultHost(
                 new BucketMocker().mock(), this.cloudWatch()
@@ -156,7 +156,7 @@ final class DefaultHostTest {
      * @see <a href="http://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html">S3 Error Responses</a>
      */
     @Test
-.   void throwsExceptionForNonexistentBucket() throws Exception {
+    void throwsExceptionForNonexistentBucket() throws Exception {
         final AmazonS3 aws = Mockito.mock(AmazonS3.class);
         final AmazonServiceException exp =
             new AmazonServiceException("No such bucket");
@@ -189,7 +189,7 @@ final class DefaultHostTest {
      * @throws Exception If a problem occurs.
      */
     @Test
-.   void showsDirectoryListing() throws Exception {
+    void showsDirectoryListing() throws Exception {
         final AmazonS3 client = Mockito.mock(AmazonS3.class);
         final ObjectListing listing = Mockito.mock(ObjectListing.class);
         final S3ObjectSummary summary = new S3ObjectSummary();
@@ -225,7 +225,7 @@ final class DefaultHostTest {
      * @throws Exception If a problem occurs.
      */
     @Test
-.   void showsVersionListing() throws Exception {
+    void showsVersionListing() throws Exception {
         final AmazonS3 client = Mockito.mock(AmazonS3.class);
         final VersionListing listing = Mockito.mock(VersionListing.class);
         final S3VersionSummary summary = new S3VersionSummary();
@@ -254,7 +254,7 @@ final class DefaultHostTest {
      * @throws Exception If a problem occurs.
      */
     @Test
-.   void showsVersionListingForIndexHtml() throws Exception {
+    void showsVersionListingForIndexHtml() throws Exception {
         final AmazonS3 client = Mockito.mock(AmazonS3.class);
         final VersionListing listing = Mockito.mock(VersionListing.class);
         final S3VersionSummary summary = new S3VersionSummary();
@@ -282,7 +282,7 @@ final class DefaultHostTest {
      * DefaultHost can retrieve Cloudwatch stats and cache the results.
      */
     @Test
-.   void retrievesAndCachesCloudWatchStats() {
+    void retrievesAndCachesCloudWatchStats() {
         final long sum = 10;
         final CloudWatch cloudwatch = this.cloudWatch();
         final GetMetricStatisticsResult result = new GetMetricStatisticsResult()
@@ -314,7 +314,7 @@ final class DefaultHostTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void loadsErrorDocument() throws Exception {
+    void loadsErrorDocument() throws Exception {
         final AmazonS3 aws = Mockito.mock(AmazonS3.class);
         final String suffix = "nonExistent.html";
         final String error = "error.html";

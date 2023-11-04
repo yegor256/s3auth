@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2022, Yegor Bugayenko
  * All rights reserved.
  *
@@ -60,7 +60,7 @@ final class SecuredHostTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void requestsAuthorization() throws Exception {
+    void requestsAuthorization() throws Exception {
         final String[] hosts = {
             "example.com",
             "maven.s3auth.com",
@@ -93,7 +93,7 @@ final class SecuredHostTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void requestsAuthorizationWhenBrokenData() throws Exception {
+    void requestsAuthorizationWhenBrokenData() throws Exception {
         final String[] requests = {
             "GET / HTTP/1.1\nAuthorization: xxx\n\n",
             "GET / HTTP/1.1\nAuthorization: Basic a1b2c3==\n\n",
@@ -125,7 +125,7 @@ final class SecuredHostTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void reportsToStringWhenAuthorizationFails() throws Exception {
+    void reportsToStringWhenAuthorizationFails() throws Exception {
         try {
             new SecuredHost(
                 // @checkstyle AnonInnerLength (50 lines)
@@ -181,7 +181,7 @@ final class SecuredHostTest {
      * @throws Exception If something wrong occurs
      */
     @Test
-.   void recognizesCredentialsWithSpecialCharacters() throws Exception {
+    void recognizesCredentialsWithSpecialCharacters() throws Exception {
         final String user = "user";
         final String password = "password%oD\u20ac";
         final Host host = Mockito.mock(Host.class);
@@ -217,7 +217,7 @@ final class SecuredHostTest {
      * @throws Exception If something wrong occurs
      */
     @Test
-.   void acceptsBaseEncoding() throws Exception {
+    void acceptsBaseEncoding() throws Exception {
         final Host host = Mockito.mock(Host.class);
         Mockito.doReturn(true).when(host).authorized(
             Mockito.anyString(), Mockito.anyString()

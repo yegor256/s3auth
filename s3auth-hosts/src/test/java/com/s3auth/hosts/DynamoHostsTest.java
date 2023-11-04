@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2022, Yegor Bugayenko
  * All rights reserved.
  *
@@ -49,7 +49,7 @@ final class DynamoHostsTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void updatesCachedData() throws Exception {
+    void updatesCachedData() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
         final Domain domain = new DomainMocker().mock();
         final User user = new UserMocker().mock();
@@ -70,7 +70,7 @@ final class DynamoHostsTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void rejectsDuplicatesFromDifferentUsers() throws Exception {
+    void rejectsDuplicatesFromDifferentUsers() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
         final Domain domain = new DomainMocker().withName("ibm.com").mock();
         final User first = new UserMocker()
@@ -96,7 +96,7 @@ final class DynamoHostsTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void protectsDomainsAgainstRemoval() throws Exception {
+    void protectsDomainsAgainstRemoval() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
         final Domain domain = new DomainMocker().withName("yahoo.com").mock();
         final User first = new UserMocker()
@@ -122,7 +122,7 @@ final class DynamoHostsTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void trimsDomainProperties() throws Exception {
+    void trimsDomainProperties() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
         final Domain domain = new DomainMocker()
             .withName(" google.com ")
@@ -159,7 +159,7 @@ final class DynamoHostsTest {
      */
     @Disabled
     @Test
-.   void rejectsInvalidUserNames() {
+    void rejectsInvalidUserNames() {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
         final User user = new UserMocker()
             .withIdentity("urn:unknown:4254353")
@@ -209,7 +209,7 @@ final class DynamoHostsTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void fetchesAllDomainsForSuperUser() throws Exception {
+    void fetchesAllDomainsForSuperUser() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
         final Domain first = new DomainMocker().withName("first.com").mock();
         final Domain second = new DomainMocker().withName("second.com").mock();

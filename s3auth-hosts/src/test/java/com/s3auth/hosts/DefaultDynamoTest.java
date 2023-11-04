@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2022, Yegor Bugayenko
  * All rights reserved.
  *
@@ -86,7 +86,7 @@ final class DefaultDynamoTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void instantiatesDefault() throws Exception {
+    void instantiatesDefault() throws Exception {
         MatcherAssert.assertThat(
             new DefaultDynamo(),
             Matchers.not(Matchers.nullValue())

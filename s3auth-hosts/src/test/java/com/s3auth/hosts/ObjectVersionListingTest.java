@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2022, Yegor Bugayenko
  * All rights reserved.
  *
@@ -52,7 +52,7 @@ final class ObjectVersionListingTest {
      * @throws Exception If something goes wrong
      */
     @Test
-.   void fetchesVersionListingInXml() throws Exception {
+    void fetchesVersionListingInXml() throws Exception {
         final AmazonS3 client = Mockito.mock(AmazonS3.class);
         final VersionListing listing = Mockito.mock(VersionListing.class);
         Mockito.doReturn(listing).when(client)

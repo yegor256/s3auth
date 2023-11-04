@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2022, Yegor Bugayenko
  * All rights reserved.
  *
@@ -48,7 +48,7 @@ final class ScheduledCloudWatchTest {
      * @throws Exception If something goes wrong.
      */
     @Test
-.   void postsDataToCloudWatch() throws Exception {
+    void postsDataToCloudWatch() throws Exception {
         final String bucket = "bucket";
         final long bytes = 1_000_000;
         final DomainStatsData data = Mockito.mock(DomainStatsData.class);

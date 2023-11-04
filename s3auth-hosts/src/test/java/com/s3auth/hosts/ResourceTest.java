@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2022, Yegor Bugayenko
  * All rights reserved.
  *
@@ -46,7 +46,7 @@ final class ResourceTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void returnsPlainTextContent() throws Exception {
+    void returnsPlainTextContent() throws Exception {
         final String content = "\u0433 test!";
         final Resource res = new Resource.PlainText(content);
         MatcherAssert.assertThat(
@@ -60,7 +60,7 @@ final class ResourceTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void getsHeadersForPlainText() throws Exception {
+    void getsHeadersForPlainText() throws Exception {
         final Resource res = new Resource.PlainText("");
         MatcherAssert.assertThat(
             res.headers(),
@@ -76,7 +76,7 @@ final class ResourceTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void convertsItselfToString() throws Exception {
+    void convertsItselfToString() throws Exception {
         final String content = "\u0444\u0433 test!";
         MatcherAssert.assertThat(
             new Resource.PlainText(content),
@@ -89,7 +89,7 @@ final class ResourceTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void getsLastModifiedTime() throws Exception {
+    void getsLastModifiedTime() throws Exception {
         MatcherAssert.assertThat(
             new Resource.PlainText("blah").lastModified(),
             Matchers.notNullValue()
@@ -101,7 +101,7 @@ final class ResourceTest {
      */
     @Disabled
     @Test
-.   void rejectsNullContent() {
+    void rejectsNullContent() {
         Assertions.assertThrows(
             ConstraintViolationException.class,
             () -> new Resource.PlainText(null)

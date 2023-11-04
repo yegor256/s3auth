@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2022, Yegor Bugayenko
  * All rights reserved.
  *
@@ -82,7 +82,7 @@ final class HttpFacadeTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void handlesParallelHttpRequests() throws Exception {
+    void handlesParallelHttpRequests() throws Exception {
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
             new Answer<Resource>() {
@@ -120,7 +120,7 @@ final class HttpFacadeTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void handlesIfModifiedSinceHeader() throws Exception {
+    void handlesIfModifiedSinceHeader() throws Exception {
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
             new Answer<Resource>() {
@@ -189,7 +189,7 @@ final class HttpFacadeTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void respondsWithLastModifiedHeader() throws Exception {
+    void respondsWithLastModifiedHeader() throws Exception {
         final Date date = new Date();
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
@@ -245,7 +245,7 @@ final class HttpFacadeTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void respondsWithAgeHeader() throws Exception {
+    void respondsWithAgeHeader() throws Exception {
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
             new Answer<Resource>() {
@@ -299,7 +299,7 @@ final class HttpFacadeTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void canParseVersionQuery() throws Exception {
+    void canParseVersionQuery() throws Exception {
         final String version = "1234";
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
@@ -352,7 +352,7 @@ final class HttpFacadeTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void getsLatestVersion() throws Exception {
+    void getsLatestVersion() throws Exception {
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
             new Answer<Resource>() {
@@ -404,7 +404,7 @@ final class HttpFacadeTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void getsVersionListing() throws Exception {
+    void getsVersionListing() throws Exception {
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
             new Answer<Resource>() {
@@ -455,7 +455,7 @@ final class HttpFacadeTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void getsCompressedContent() throws Exception {
+    void getsCompressedContent() throws Exception {
         final Host host = Mockito.mock(Host.class);
         final String body = "compressed";
         Mockito.doAnswer(
@@ -579,7 +579,7 @@ final class HttpFacadeTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void closesUnderlyingResource() throws Exception {
+    void closesUnderlyingResource() throws Exception {
         final Host host = Mockito.mock(Host.class);
         final Resource resource = Mockito.spy(new ResourceMocker().mock());
         Mockito.doReturn(resource).when(host).fetch(
@@ -618,7 +618,7 @@ final class HttpFacadeTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void servicesHeadMethod() throws Exception {
+    void servicesHeadMethod() throws Exception {
         final Host host = Mockito.mock(Host.class);
         final Resource resource = Mockito.spy(
             new ResourceMocker()

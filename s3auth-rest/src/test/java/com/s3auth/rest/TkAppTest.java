@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2022, Yegor Bugayenko
  * All rights reserved.
  *
@@ -59,7 +59,7 @@ final class TkAppTest {
      * @throws Exception If some problem inside
      */
     @Test
-.   void rendersHomePage() throws Exception {
+    void rendersHomePage() throws Exception {
         final Take take = new TkApp(
             new HostsMocker().mock()
         );
@@ -106,7 +106,7 @@ final class TkAppTest {
      * @throws Exception If some problem inside
      */
     @Test
-.   void rendersHomePageViaHttp() throws Exception {
+    void rendersHomePageViaHttp() throws Exception {
         final Take take = new TkApp(
             new HostsMocker().mock()
         );

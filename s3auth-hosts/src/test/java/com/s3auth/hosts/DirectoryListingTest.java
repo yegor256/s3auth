@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2022, Yegor Bugayenko
  * All rights reserved.
  *
@@ -52,7 +52,7 @@ final class DirectoryListingTest {
      * @throws Exception If something goes wrong
      */
     @Test
-.   void fetchesDirectoryListingInXhtml()
+    void fetchesDirectoryListingInXhtml()
         throws Exception {
         final AmazonS3 client = Mockito.mock(AmazonS3.class);
         final ObjectListing listing = Mockito.mock(ObjectListing.class);

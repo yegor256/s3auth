@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2022, Yegor Bugayenko
  * All rights reserved.
  *
@@ -44,7 +44,7 @@ final class SmartHostTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void showsLogsOfHtpasswdFetching() throws Exception {
+    void showsLogsOfHtpasswdFetching() throws Exception {
         final URI uri = new URI("/.htpasswd");
         MatcherAssert.assertThat(
             ResourceMocker.toString(
@@ -61,7 +61,7 @@ final class SmartHostTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void convertsItselfToString() throws Exception {
+    void convertsItselfToString() throws Exception {
         MatcherAssert.assertThat(
             new SmartHost(new HostMocker().mock()),
             Matchers.hasToString(Matchers.notNullValue())

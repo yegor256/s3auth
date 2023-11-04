@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2022, Yegor Bugayenko
  * All rights reserved.
  *
@@ -45,7 +45,7 @@ final class HttpExceptionTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void parsesHttpException() throws Exception {
+    void parsesHttpException() throws Exception {
         final HttpException exp = new HttpException(
             HttpURLConnection.HTTP_NOT_FOUND,
             "not found"
@@ -61,7 +61,7 @@ final class HttpExceptionTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void makesHttpResponseWithNull() throws Exception {
+    void makesHttpResponseWithNull() throws Exception {
         final HttpException exp = new HttpException(
             HttpURLConnection.HTTP_SEE_OTHER,
             new IOException((String) null)

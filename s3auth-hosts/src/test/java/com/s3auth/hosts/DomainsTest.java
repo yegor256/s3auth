@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2022, Yegor Bugayenko
  * All rights reserved.
  *
@@ -43,7 +43,7 @@ final class DomainsTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void addsAndRetrievesDomains() throws Exception {
+    void addsAndRetrievesDomains() throws Exception {
         final Domain domain = new DomainMocker().mock();
         final Domains domains = new Domains();
         domains.add(domain);

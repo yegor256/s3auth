@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2022, Yegor Bugayenko
  * All rights reserved.
  *
@@ -64,7 +64,7 @@ final class HttpResponseTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-.   void sendsDataToSocket() throws Exception {
+    void sendsDataToSocket() throws Exception {
         MatcherAssert.assertThat(
             HttpResponseMocker.toString(
                 new HttpResponse()

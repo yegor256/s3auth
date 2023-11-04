@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2022, Yegor Bugayenko
  * All rights reserved.
  *
@@ -46,7 +46,7 @@ final class H2DomainStatsDataTest {
      * @throws Exception If something goes wrong.
      */
     @Test
-.   void putsAndGetsDataPerDomain() throws Exception {
+    void putsAndGetsDataPerDomain() throws Exception {
         final H2DomainStatsData data = new H2DomainStatsData(
             File.createTempFile("test", "temp")
         );
