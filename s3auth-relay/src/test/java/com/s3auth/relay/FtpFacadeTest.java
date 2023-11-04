@@ -50,8 +50,6 @@ import org.mockito.stubbing.Answer;
 
 /**
  * Test case for {@link FtpFacade}.
- * @author Felipe Pina (felipe.pina@gmail.com)
- * @version $Id$
  */
 public final class FtpFacadeTest {
 

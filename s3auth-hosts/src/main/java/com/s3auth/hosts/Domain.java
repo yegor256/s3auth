@@ -45,8 +45,6 @@ import javax.validation.Payload;
  *
  * <p>Implementation must be immutable and thread-safe.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 0.0.1
  */
 @Domain.Valid

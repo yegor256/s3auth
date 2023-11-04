@@ -71,8 +71,6 @@ import org.apache.commons.lang3.StringUtils;
  *
  * <p>The class is mutable and thread-safe.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 0.0.1
  * @see HttpThread
  */

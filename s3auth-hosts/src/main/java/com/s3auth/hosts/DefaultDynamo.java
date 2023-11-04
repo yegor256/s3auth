@@ -47,7 +47,6 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -57,8 +56,6 @@ import lombok.ToString;
  *
  * <p>The class is mutable and thread-safe.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 0.0.1
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
@@ -121,10 +118,9 @@ final class DefaultDynamo implements Dynamo {
             Manifests.read("S3Auth-AwsDynamoKey"),
             Manifests.read("S3Auth-AwsDynamoSecret")
         );
-        // @checkstyle MultipleStringLiterals (1 line)
         if (Manifests.exists("S3Auth-AwsDynamoEntryPoint")) {
             creds = new Credentials.Direct(
-                creds,
+                Credentials.Simple.class.cast(creds),
                 Manifests.read("S3Auth-AwsDynamoEntryPoint")
             );
         }
@@ -151,10 +147,10 @@ final class DefaultDynamo implements Dynamo {
     @Override
     @NotNull
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    @Cacheable(lifetime = 5, unit = TimeUnit.MINUTES)
+    @Cacheable(lifetime = 5)
     public ConcurrentMap<URN, Domains> load() throws IOException {
         final ConcurrentMap<URN, Domains> domains =
-            new ConcurrentHashMap<URN, Domains>(0);
+            new ConcurrentHashMap<>(0);
         final Iterable<Item> items = this.region
             .table(this.table)
             .frame()
@@ -182,7 +178,7 @@ final class DefaultDynamo implements Dynamo {
     public boolean add(@NotNull final URN user,
         @NotNull final Domain domain) throws IOException {
         final ConcurrentMap<String, AttributeValue> attrs =
-            new ConcurrentHashMap<String, AttributeValue>(0);
+            new ConcurrentHashMap<>(0);
         attrs.put(DefaultDynamo.USER, new AttributeValue(user.toString()));
         attrs.put(DefaultDynamo.NAME, new AttributeValue(domain.name()));
         attrs.put(DefaultDynamo.KEY, new AttributeValue(domain.key()));

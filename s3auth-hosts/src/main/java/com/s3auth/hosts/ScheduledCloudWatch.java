@@ -31,9 +31,10 @@ package com.s3auth.hosts;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.Protocol;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
-import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatchAsyncClientBuilder;
 import com.amazonaws.services.cloudwatch.model.Dimension;
 import com.amazonaws.services.cloudwatch.model.MetricDatum;
 import com.amazonaws.services.cloudwatch.model.PutMetricDataRequest;
@@ -53,8 +54,6 @@ import java.util.concurrent.TimeUnit;
  *
  * <p>The class is mutable and NOT thread-safe.</p>
  *
- * @author Carlos Miranda (miranda.cma@gmail.com)
- * @version $Id$
  */
 @Loggable(Loggable.DEBUG)
 @ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.HOURS)
@@ -89,13 +88,17 @@ public final class ScheduledCloudWatch implements Runnable, Closeable {
     public ScheduledCloudWatch() throws IOException {
         this(
             new H2DomainStatsData(),
-            new AmazonCloudWatchClient(
-                new BasicAWSCredentials(
-                    Manifests.read("S3Auth-AwsCloudWatchKey"),
-                    Manifests.read("S3Auth-AwsCloudWatchSecret")
-                ),
-                new ClientConfiguration().withProtocol(Protocol.HTTP)
-            )
+            AmazonCloudWatchAsyncClientBuilder.standard()
+                .withClientConfiguration(new ClientConfiguration().withProtocol(Protocol.HTTP))
+                .withCredentials(
+                    new AWSStaticCredentialsProvider(
+                        new BasicAWSCredentials(
+                            Manifests.read("S3Auth-AwsCloudWatchKey"),
+                            Manifests.read("S3Auth-AwsCloudWatchSecret")
+                        )
+                    )
+                )
+                .build()
         );
     }
 

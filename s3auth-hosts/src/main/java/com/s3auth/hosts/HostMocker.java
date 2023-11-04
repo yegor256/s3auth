@@ -36,8 +36,6 @@ import lombok.Builder;
 /**
  * Mocker of {@link Host}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 0.0.1
  */
 public final class HostMocker {

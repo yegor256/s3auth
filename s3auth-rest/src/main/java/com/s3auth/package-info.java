@@ -31,7 +31,5 @@
 /**
  * Main.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  */
 package com.s3auth;

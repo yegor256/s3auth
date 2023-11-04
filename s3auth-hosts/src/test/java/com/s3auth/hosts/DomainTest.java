@@ -40,8 +40,6 @@ import org.mockito.Mockito;
 /**
  * Test case for {@link Domain}.
  *
- * @author Carlos Miranda (miranda.cma@gmail.com)
- * @version $Id$
  */
 public final class DomainTest {
 

@@ -36,8 +36,6 @@ import java.util.Map;
 /**
  * Store of {@link Stats} per domain.
  *
- * @author Carlos Miranda (miranda.cma@gmail.com)
- * @version $Id$
  */
 @Immutable
 interface DomainStatsData {

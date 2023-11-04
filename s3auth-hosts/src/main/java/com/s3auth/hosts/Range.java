@@ -37,8 +37,6 @@ import lombok.ToString;
 /**
  * Range of data.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 0.0.1
  */
 @Immutable

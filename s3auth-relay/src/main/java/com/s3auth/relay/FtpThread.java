@@ -45,8 +45,6 @@ import lombok.ToString;
  *
  * <p>The class is thread-safe.
  *
- * @author Felipe Pina (felipe.pina@gmail.com)
- * @version $Id$
  * @since 0.0.1
  * @see FtpFacade
  * @todo #213:30min Implement authentication based on the USER and PASS

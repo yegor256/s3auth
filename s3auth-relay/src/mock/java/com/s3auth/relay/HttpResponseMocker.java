@@ -35,8 +35,6 @@ import org.mockito.Mockito;
 
 /**
  * Mocker of {@link HttpResponse}.
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  */
 public final class HttpResponseMocker {
 

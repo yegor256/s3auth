@@ -48,8 +48,6 @@ import javax.validation.constraints.NotNull;
  *
  * <p>The class is NOT thread-safe.
  *
- * @author Felipe Pina (felipe.pina@gmail.com)
- * @version $Id$
  * @since 0.0.1
  * @see FtpThread
  * @todo #213:30min Implement methods 'withCode', 'withText', 'send' as above.

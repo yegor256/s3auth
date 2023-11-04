@@ -50,8 +50,6 @@ import org.productivity.java.syslog4j.impl.net.udp.UDPNetSyslogConfig;
  *
  * <p>The class is immutable and thread-safe.</p>
  *
- * @author Carlos Miranda (miranda.cma@gmail.com)
- * @version $Id$
  */
 @Immutable
 @ToString

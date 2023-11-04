@@ -33,23 +33,17 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.jdbc.JdbcSession;
 import com.jcabi.jdbc.Outcome;
+import com.jcabi.jdbc.UrlSource;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 import lombok.EqualsAndHashCode;
-import org.h2.Driver;
 
 /**
  * Storage of {@link Stats} per domain with H2 Database.
  *
- * @author Carlos Miranda (miranda.cma@gmail.com)
- * @version $Id$
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @Immutable
@@ -61,7 +55,7 @@ final class H2DomainStatsData implements DomainStatsData {
      */
     private static final String CREATE = new StringBuilder("CREATE TABLE ")
         .append("IF NOT EXISTS DOMAIN_STATS( ")
-        .append("ID INT IDENTITY,")
+        .append("ID INT PRIMARY KEY auto_increment,")
         .append("DOMAIN VARCHAR(255),")
         .append("BYTES INT,")
         .append("CREATE_TIME TIMESTAMP")
@@ -77,33 +71,23 @@ final class H2DomainStatsData implements DomainStatsData {
     /**
      * Outcome for obtaining a single Stats per domain.
      */
-    private static final Outcome<Stats> STATS = new Outcome<Stats>() {
-        @Override
-        public Stats handle(final ResultSet rset, final Statement stmt)
-            throws SQLException {
-            rset.next();
-            return new Stats.Simple(rset.getLong(1));
-        }
+    private static final Outcome<Stats> STATS = (rset, stmt) -> {
+        rset.next();
+        return new Stats.Simple(rset.getLong(1));
     };
 
     /**
      * Outcome for obtaining a single Stats for all domains.
      */
-    private static final Outcome<Map<String, Stats>> STATS_ALL =
-        new Outcome<Map<String, Stats>>() {
-            @Override
-            @SuppressWarnings("PMD.UseConcurrentHashMap")
-            public Map<String, Stats> handle(final ResultSet rset,
-                final Statement stmt) throws SQLException {
-                final Map<String, Stats> stats = new HashMap<String, Stats>();
-                while (rset.next()) {
-                    stats.put(
-                        rset.getString(1), new Stats.Simple(rset.getLong(2))
-                    );
-                }
-                return stats;
-            }
-        };
+    private static final Outcome<Map<String, Stats>> STATS_ALL = (rset, stmt) -> {
+        final Map<String, Stats> stats = new HashMap<>();
+        while (rset.next()) {
+            stats.put(
+                rset.getString(1), new Stats.Simple(rset.getLong(2))
+            );
+        }
+        return stats;
+    };
 
     /**
      * The JDBC URL.
@@ -126,7 +110,7 @@ final class H2DomainStatsData implements DomainStatsData {
     H2DomainStatsData(final File file) throws IOException {
         this.jdbc = String.format("jdbc:h2:file:%s", file.getAbsolutePath());
         try {
-            new JdbcSession(this.connection()).sql(CREATE).execute();
+            this.session().sql(CREATE).execute().commit();
         } catch (final SQLException ex) {
             throw new IOException(ex);
         }
@@ -135,11 +119,12 @@ final class H2DomainStatsData implements DomainStatsData {
     @Override
     public void put(final String domain, final Stats stats) throws IOException {
         try {
-            new JdbcSession(this.connection())
+            this.session()
                 .sql(INSERT)
                 .set(domain)
                 .set(stats.bytesTransferred())
-                .execute();
+                .execute()
+                .commit();
         } catch (final SQLException ex) {
             throw new IOException(ex);
         }
@@ -148,11 +133,10 @@ final class H2DomainStatsData implements DomainStatsData {
     @Override
     public Stats get(final String domain) throws IOException {
         try {
-            final JdbcSession session = new JdbcSession(this.connection())
-                .autocommit(false);
+            final JdbcSession session = this.session();
             // @checkstyle LineLength (2 lines)
             final Stats result = session
-                .sql("SELECT SUM(BYTES) FROM DOMAIN_STATS WHERE DOMAIN = ? FOR UPDATE")
+                .sql("SELECT SUM(BYTES) FROM DOMAIN_STATS WHERE DOMAIN = ?")
                 .set(domain)
                 .select(STATS);
             session.sql("DELETE FROM DOMAIN_STATS WHERE DOMAIN = ?")
@@ -169,11 +153,10 @@ final class H2DomainStatsData implements DomainStatsData {
     @SuppressWarnings("PMD.UseConcurrentHashMap")
     public Map<String, Stats> all() throws IOException {
         try {
-            final JdbcSession session = new JdbcSession(this.connection())
-                .autocommit(false);
+            final JdbcSession session = this.session();
             // @checkstyle LineLength (2 lines)
             final Map<String, Stats> result = session
-                .sql("SELECT DOMAIN, SUM(BYTES) FROM DOMAIN_STATS GROUP BY DOMAIN FOR UPDATE")
+                .sql("SELECT DOMAIN, SUM(BYTES) FROM DOMAIN_STATS GROUP BY DOMAIN")
                 .select(STATS_ALL);
             session.sql("DELETE FROM DOMAIN_STATS").execute().commit();
             return result;
@@ -183,11 +166,14 @@ final class H2DomainStatsData implements DomainStatsData {
     }
 
     /**
-     * Make data source.
-     * @return Data source for JDBC
+     * Make new session.
+     * @return Session
      * @throws SQLException If it fails
      */
-    private Connection connection() throws SQLException {
-        return new Driver().connect(this.jdbc, new Properties());
+    private JdbcSession session() throws SQLException {
+        return new JdbcSession(
+            new UrlSource(this.jdbc)
+        ).autocommit(false);
     }
+
 }

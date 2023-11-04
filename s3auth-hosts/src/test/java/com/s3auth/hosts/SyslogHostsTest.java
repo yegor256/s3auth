@@ -51,8 +51,6 @@ import org.productivity.java.syslog4j.server.SyslogServerIF;
 /**
  * Test case for {@link SyslogHosts}.
  *
- * @author Carlos Miranda (miranda.cma@gmail.com)
- * @version $Id$
  * @checkstyle MultipleStringLiterals (500 lines)
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */

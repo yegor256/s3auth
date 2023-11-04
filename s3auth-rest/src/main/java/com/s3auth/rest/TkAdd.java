@@ -43,8 +43,6 @@ import org.takes.rq.RqForm;
 /**
  * Add a domain.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 0.1
  */
 final class TkAdd implements Take {

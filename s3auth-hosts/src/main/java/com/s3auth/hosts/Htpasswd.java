@@ -37,9 +37,9 @@ import com.jcabi.log.Logger;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
@@ -48,13 +48,10 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.Crypt;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.codec.digest.Md5Crypt;
-import org.apache.commons.io.Charsets;
 
 /**
  * Htpasswd file abstraction.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 0.0.1
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
@@ -121,10 +118,10 @@ final class Htpasswd {
      * Get map of users and passwords from the host.
      * @return Map of users
      */
-    @Cacheable(lifetime = Htpasswd.LIFETIME, unit = TimeUnit.MINUTES)
+    @Cacheable(lifetime = Htpasswd.LIFETIME)
     private ConcurrentMap<String, String> fetch() {
         final ConcurrentMap<String, String> map =
-            new ConcurrentHashMap<String, String>(0);
+            new ConcurrentHashMap<>(0);
         final String[] lines = this.content().split("\n");
         for (final String line : lines) {
             if (line.isEmpty()) {
@@ -153,7 +150,7 @@ final class Htpasswd {
             );
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             res.writeTo(baos);
-            content = baos.toString(Charsets.UTF_8.name()).trim();
+            content = baos.toString(StandardCharsets.UTF_8.name()).trim();
         } catch (final IOException ex) {
             Logger.warn(
                 this,

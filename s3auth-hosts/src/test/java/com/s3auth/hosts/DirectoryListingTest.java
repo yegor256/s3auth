@@ -35,7 +35,7 @@ import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.common.collect.ImmutableList;
 import com.rexsl.test.XhtmlMatchers;
-import org.apache.commons.io.Charsets;
+import java.nio.charset.StandardCharsets;
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -45,8 +45,6 @@ import org.mockito.Mockito;
 /**
  * Test case for {@link DirectoryListing}.
  *
- * @author Carlos Miranda (miranda.cma@gmail.com)
- * @version $Id$
  */
 public final class DirectoryListingTest {
     /**
@@ -80,7 +78,7 @@ public final class DirectoryListingTest {
                 ResourceMocker.toByteArray(
                     new DirectoryListing(client, "bucket", prefix)
                 ),
-                Charsets.UTF_8
+                StandardCharsets.UTF_8
             ),
             Matchers.allOf(
                 hasCommonPrefix(prefixes[0]),

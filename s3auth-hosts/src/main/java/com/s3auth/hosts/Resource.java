@@ -36,21 +36,19 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Date;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpHeaders;
 
 /**
  * Found resource.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 0.0.1
  */
 @Immutable
@@ -123,7 +121,7 @@ public interface Resource extends Closeable {
          * @param txt The text to show
          */
         public PlainText(@NotNull final String txt) {
-            this.text = txt.getBytes(Charsets.UTF_8);
+            this.text = txt.getBytes(StandardCharsets.UTF_8);
             this.hdrs = new Array<String>(
                 String.format(
                     "%s: %s",

@@ -37,8 +37,6 @@ import org.junit.Test;
 
 /**
  * Test case for {@link com.s3auth.relay.FtpResponse}.
- * @author Felipe Pina (felipe.pina@gmail.com)
- * @version $Id$
  */
 public final class FtpResponseTest {
 

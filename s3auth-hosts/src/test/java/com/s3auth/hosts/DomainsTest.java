@@ -35,8 +35,6 @@ import org.junit.Test;
 
 /**
  * Test case for {@link Domains}.
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  */
 public final class DomainsTest {
 

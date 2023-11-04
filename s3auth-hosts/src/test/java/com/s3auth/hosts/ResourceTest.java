@@ -38,8 +38,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link Resource}.
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  */
 public final class ResourceTest {
 

@@ -36,8 +36,6 @@ import org.junit.Test;
 
 /**
  * Test case for {@link HttpRequest}.
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @checkstyle MultipleStringLiteralsCheck (300 lines)
  * @checkstyle MagicNumberCheck (300 lines)
  */

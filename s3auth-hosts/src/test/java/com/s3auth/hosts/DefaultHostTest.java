@@ -49,6 +49,7 @@ import com.rexsl.test.XhtmlMatchers;
 import com.s3auth.hosts.Host.CloudWatch;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -60,13 +61,10 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 /**
  * Test case for {@link DefaultHost}.
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @SuppressWarnings({ "PMD.ExcessiveImports", "PMD.TooManyMethods" })
@@ -90,7 +88,7 @@ public final class DefaultHostTest {
                     );
                 }
                 final S3Object object = new S3Object();
-                object.setObjectContent(IOUtils.toInputStream(key));
+                object.setObjectContent(IOUtils.toInputStream(key, StandardCharsets.UTF_8));
                 object.setKey(key);
                 return object;
             }
@@ -322,24 +320,21 @@ public final class DefaultHostTest {
         final String error = "error.html";
         final String message = "Test output for error page";
         Mockito.doAnswer(
-            new Answer<S3Object>() {
-                @Override
-                public S3Object answer(final InvocationOnMock invocation) {
-                    final String key = GetObjectRequest.class.cast(
-                        invocation.getArguments()[0]
-                    ).getKey();
-                    if (key.endsWith(suffix)) {
-                        final AmazonServiceException ex =
-                            new AmazonServiceException("Object not found");
-                        ex.setStatusCode(HttpStatus.SC_NOT_FOUND);
-                        throw ex;
-                    }
-                    MatcherAssert.assertThat(key, Matchers.is(error));
-                    final S3Object object = new S3Object();
-                    object.setObjectContent(IOUtils.toInputStream(message));
-                    object.setKey(message);
-                    return object;
+            (Answer<S3Object>) invocation -> {
+                final String key = GetObjectRequest.class.cast(
+                    invocation.getArguments()[0]
+                ).getKey();
+                if (key.endsWith(suffix)) {
+                    final AmazonServiceException ex =
+                        new AmazonServiceException("Object not found");
+                    ex.setStatusCode(HttpStatus.SC_NOT_FOUND);
+                    throw ex;
                 }
+                MatcherAssert.assertThat(key, Matchers.is(error));
+                final S3Object object = new S3Object();
+                object.setObjectContent(IOUtils.toInputStream(message, StandardCharsets.UTF_8));
+                object.setKey(message);
+                return object;
             }
         ).when(aws).getObject(Mockito.any(GetObjectRequest.class));
         Mockito.doReturn(

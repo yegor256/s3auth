@@ -37,8 +37,6 @@ import lombok.ToString;
 /**
  * S3 Object version.
  *
- * @author Carlos Miranda (miranda.cma@gmail.com)
- * @version $Id$
  */
 @Immutable
 @SuppressWarnings("PMD.TooManyMethods")

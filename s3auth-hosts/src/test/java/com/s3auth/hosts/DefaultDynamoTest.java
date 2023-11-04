@@ -48,8 +48,6 @@ import org.junit.Test;
 
 /**
  * Test case for {@link DefaultDynamo}.
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 public final class DefaultDynamoTest {

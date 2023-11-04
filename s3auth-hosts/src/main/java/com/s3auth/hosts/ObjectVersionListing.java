@@ -43,6 +43,7 @@ import com.jcabi.xml.XSLDocument;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Date;
 import java.util.zip.CRC32;
@@ -50,15 +51,12 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.io.Charsets;
 import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
 import org.xembly.Xembler;
 
 /**
  * XML S3 Object Version Listing.
- * @author Carlos Miranda (miranda.cma@gmail.com)
- * @version $Id$
  */
 @Immutable
 @ToString
@@ -108,7 +106,7 @@ final class ObjectVersionListing implements Resource {
         try {
             this.content = ObjectVersionListing.STYLESHEET.transform(
                 new XMLDocument(new Xembler(dirs).xml())
-            ).toString().getBytes(Charsets.UTF_8);
+            ).toString().getBytes(StandardCharsets.UTF_8);
         } catch (final ImpossibleModificationException ex) {
             throw new IllegalStateException(
                 "Unable to generate version listing", ex

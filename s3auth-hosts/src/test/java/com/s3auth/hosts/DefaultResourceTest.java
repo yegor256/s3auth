@@ -50,8 +50,6 @@ import org.mockito.stubbing.Answer;
 
 /**
  * Test case for {@link DefaultResource}.
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 public final class DefaultResourceTest {

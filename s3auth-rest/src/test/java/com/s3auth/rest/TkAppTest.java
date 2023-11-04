@@ -49,8 +49,6 @@ import org.takes.rs.RsPrint;
 
 /**
  * Test case for {@link TkApp}.
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 0.2
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */

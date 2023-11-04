@@ -62,8 +62,6 @@ import org.apache.commons.io.Charsets;
  *
  * <p>The class is NOT thread-safe.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 0.0.1
  * @see HttpThread
  */

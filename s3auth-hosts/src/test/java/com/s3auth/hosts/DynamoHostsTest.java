@@ -40,8 +40,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link DynamoHosts}.
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 public final class DynamoHostsTest {

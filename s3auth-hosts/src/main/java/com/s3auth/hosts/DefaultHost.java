@@ -33,9 +33,11 @@ import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.Protocol;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.cloudwatch.AmazonCloudWatchAsyncClient;
-import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatchAsync;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatchAsyncClientBuilder;
 import com.amazonaws.services.cloudwatch.model.Datapoint;
 import com.amazonaws.services.cloudwatch.model.Dimension;
 import com.amazonaws.services.cloudwatch.model.GetMetricStatisticsRequest;
@@ -63,8 +65,6 @@ import org.apache.http.HttpStatus;
 /**
  * Default implementation of {@link Host}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 0.0.1
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
@@ -85,15 +85,28 @@ final class DefaultHost implements Host {
     private static final Host.CloudWatch CLOUDWATCH = new Host.CloudWatch() {
         @Override
         @Cacheable(lifetime = 1, unit = TimeUnit.HOURS)
-        public AmazonCloudWatchClient get() {
-            return new AmazonCloudWatchAsyncClient(
-                new BasicAWSCredentials(
-                    Manifests.read("S3Auth-AwsCloudWatchKey"),
-                    Manifests.read("S3Auth-AwsCloudWatchSecret")
-                ),
-                new ClientConfiguration().withProtocol(Protocol.HTTP),
-                Executors.newFixedThreadPool(50)
-            );
+        public AmazonCloudWatch get() {
+            AmazonCloudWatchAsync x = AmazonCloudWatchAsyncClientBuilder.standard()
+                .withExecutorFactory(() -> Executors.newFixedThreadPool(50))
+                .withClientConfiguration(new ClientConfiguration().withProtocol(Protocol.HTTP))
+                .withCredentials(
+                    new AWSStaticCredentialsProvider(
+                        new BasicAWSCredentials(
+                            Manifests.read("S3Auth-AwsCloudWatchKey"),
+                            Manifests.read("S3Auth-AwsCloudWatchSecret")
+                        )
+                    )
+                )
+                .build();
+            return x;
+//            return new AmazonCloudWatchAsyncClient(
+//                new BasicAWSCredentials(
+//                    Manifests.read("S3Auth-AwsCloudWatchKey"),
+//                    Manifests.read("S3Auth-AwsCloudWatchSecret")
+//                ),
+//                new ClientConfiguration().withProtocol(Protocol.HTTP),
+//                Executors.newFixedThreadPool(50)
+//            );
         }
     };
 
@@ -163,7 +176,7 @@ final class DefaultHost implements Host {
         @NotNull final Range range, @NotNull final Version version)
         throws IOException {
         Resource resource = null;
-        final Collection<String> errors = new LinkedList<String>();
+        final Collection<String> errors = new LinkedList<>();
         final DomainStatsData data = new H2DomainStatsData();
         for (final DefaultHost.ObjectName name : this.names(uri)) {
             try {
@@ -212,7 +225,6 @@ final class DefaultHost implements Host {
                             );
                         }
                     } catch (final AmazonClientException exc) {
-                        // @checkstyle MultipleStringLiterals (7 lines)
                         errors.add(
                             String.format("'%s': %s", name, exc.getMessage())
                         );
@@ -270,7 +282,7 @@ final class DefaultHost implements Host {
     private Iterable<DefaultHost.ObjectName> names(final URI uri) {
         final String name = StringUtils.strip(uri.getPath(), "/");
         final Collection<DefaultHost.ObjectName> names =
-            new LinkedList<DefaultHost.ObjectName>();
+            new LinkedList<>();
         if (!name.isEmpty()) {
             names.add(new DefaultHost.Simple(name));
         }

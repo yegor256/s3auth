@@ -35,8 +35,6 @@ import com.jcabi.aspects.Immutable;
 /**
  * Single Amazon S3 bucket.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 0.0.2
  */
 @Immutable

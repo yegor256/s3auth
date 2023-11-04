@@ -31,9 +31,10 @@ package com.s3auth.hosts;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.Protocol;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
@@ -44,8 +45,6 @@ import lombok.EqualsAndHashCode;
 /**
  * Default implementation of {@link Bucket}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 0.0.1
  */
 @Immutable
@@ -70,12 +69,21 @@ final class DefaultBucket implements Bucket {
     @NotNull
     @Cacheable(lifetime = 10, unit = TimeUnit.MINUTES)
     public AmazonS3 client() {
-        final AmazonS3 client = new AmazonS3Client(
-            new BasicAWSCredentials(this.domain.key(), this.domain.secret()),
-            new ClientConfiguration()
-                .withSocketTimeout(0)
-                .withProtocol(Protocol.HTTP)
-        );
+        AmazonS3 client = AmazonS3ClientBuilder.standard()
+            .withClientConfiguration(
+                new ClientConfiguration()
+                    .withSocketTimeout(0)
+                    .withProtocol(Protocol.HTTP)
+            )
+            .withCredentials(
+                new AWSStaticCredentialsProvider(
+                    new BasicAWSCredentials(
+                        this.domain.key(),
+                        this.domain.secret()
+                    )
+                )
+            )
+            .build();
         client.setEndpoint(
             String.format("%s.amazonaws.com", this.domain.region())
         );

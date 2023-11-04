@@ -52,8 +52,6 @@ import org.apache.commons.lang3.StringUtils;
  *
  * <p>The class is mutable and thread-safe.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 0.0.1
  */
 @EqualsAndHashCode(of = { "bucket", "key", "range" })
@@ -196,7 +194,7 @@ final class DefaultResource implements Resource {
     @NotNull
     public Collection<String> headers() {
         final ObjectMetadata meta = this.object.getObjectMetadata();
-        final Collection<String> headers = new LinkedList<String>();
+        final Collection<String> headers = new LinkedList<>();
         headers.add(
             DefaultResource.header(
                 HttpHeaders.CONTENT_LENGTH,
@@ -230,7 +228,7 @@ final class DefaultResource implements Resource {
         headers.add(
             DefaultResource.header(
                 HttpHeaders.CACHE_CONTROL,
-                StringUtils.defaultString(
+                StringUtils.defaultIfBlank(
                     meta.getCacheControl(),
                     "must-revalidate"
                 )

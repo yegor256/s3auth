@@ -38,8 +38,6 @@ import org.takes.http.FtCLI;
 /**
  * Launch (used only for heroku).
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  */
 public final class Launch {
 

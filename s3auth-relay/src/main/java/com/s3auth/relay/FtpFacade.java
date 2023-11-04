@@ -57,8 +57,6 @@ import org.apache.commons.net.ftp.FTPReply;
  *
  * <p>The class is immutable and thread-safe.
  *
- * @author Felipe Pina (felipe.pina@gmail.com)
- * @version $Id$
  * @since 0.0.1
  * @see Main
  * @checkstyle ClassDataAbstractionCoupling (10 lines)

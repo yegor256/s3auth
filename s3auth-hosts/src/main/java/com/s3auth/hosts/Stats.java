@@ -35,8 +35,6 @@ import lombok.EqualsAndHashCode;
 /**
  * Statistics for a given domain.
  *
- * @author Carlos Miranda (miranda.cma@gmail.com)
- * @version $Id$
  */
 @Immutable
 public interface Stats {

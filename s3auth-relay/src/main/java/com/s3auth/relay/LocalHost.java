@@ -54,8 +54,6 @@ import lombok.EqualsAndHashCode;
  * {@link HttpThread} according to the information in {@code "Host"}
  * HTTP header.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 0.0.1
  * @see HttpThread
  */

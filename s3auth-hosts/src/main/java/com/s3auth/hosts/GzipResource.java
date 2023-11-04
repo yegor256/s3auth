@@ -43,8 +43,6 @@ import org.apache.http.HttpHeaders;
 /**
  * Wrapper for {@link Resource} that writes GZIP compressed output.
  *
- * @author Carlos Miranda (miranda.cma@gmail.com)
- * @version $Id$
  */
 @Immutable
 @EqualsAndHashCode(of = "resource")

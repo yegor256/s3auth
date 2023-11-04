@@ -35,7 +35,7 @@ import com.amazonaws.services.s3.model.S3VersionSummary;
 import com.amazonaws.services.s3.model.VersionListing;
 import com.google.common.collect.ImmutableList;
 import com.rexsl.test.XhtmlMatchers;
-import org.apache.commons.io.Charsets;
+import java.nio.charset.StandardCharsets;
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -45,8 +45,6 @@ import org.mockito.Mockito;
 /**
  * Test case for {@link ObjectVersionListing}.
  *
- * @author Carlos Miranda (miranda.cma@gmail.com)
- * @version $Id$
  */
 public final class ObjectVersionListingTest {
     /**
@@ -76,7 +74,7 @@ public final class ObjectVersionListingTest {
                 ResourceMocker.toByteArray(
                     new ObjectVersionListing(client, "bucket", key)
                 ),
-                Charsets.UTF_8
+                StandardCharsets.UTF_8
             ),
             Matchers.allOf(
                 ObjectVersionListingTest.hasKeyXpath(key, versions[0]),
