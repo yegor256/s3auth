@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link Domains}.
+ * @since 0.0.1
  */
 final class DomainsTest {
 

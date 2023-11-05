@@ -98,10 +98,12 @@ public final class SyslogHosts implements Hosts {
         private static final Pattern PATTERN = Pattern.compile(
             "(\\w+)(:(\\d+))?"
         );
+
         /**
          * The underlying Host instance.
          */
         private final transient Host host;
+
         /**
          * Constructor.
          * @param hst Host
@@ -109,10 +111,12 @@ public final class SyslogHosts implements Hosts {
         SyslogHost(final Host hst) {
             this.host = hst;
         }
+
         @Override
         public void close() throws IOException {
             this.host.close();
         }
+
         @Override
         public Resource fetch(final URI uri, final Range range,
             final Version version) throws IOException {
@@ -134,19 +138,23 @@ public final class SyslogHosts implements Hosts {
             }
             return res;
         }
+
         @Override
         public boolean isHidden(final URI uri) throws IOException {
             return this.host.isHidden(uri);
         }
+
         @Override
         public boolean authorized(final String user, final String password)
             throws IOException {
             return this.host.authorized(user, password);
         }
+
         @Override
         public String syslog() {
             return this.host.syslog();
         }
+
         @Override
         public Stats stats() {
             return this.host.stats();
@@ -161,14 +169,17 @@ public final class SyslogHosts implements Hosts {
          * The underlying resource.
          */
         private final transient Resource resource;
+
         /**
          * URI of the resource.
          */
         private final transient URI location;
+
         /**
          * The syslog client.
          */
         private final transient SyslogIF syslog;
+
         /**
          * Constructor.
          * @param res The underlying resource
@@ -184,13 +195,15 @@ public final class SyslogHosts implements Hosts {
             this.syslog = new UDPNetSyslog();
             this.syslog.initialize("udp", new UDPNetSyslogConfig(syslg, port));
         }
+
         @Override
         public int status() {
             return this.resource.status();
         }
+
         @Override
         public long writeTo(final OutputStream stream) throws IOException {
-            long bytes = 0L;
+            long bytes;
             try {
                 bytes = this.resource.writeTo(stream);
                 this.syslog.info(
@@ -210,22 +223,27 @@ public final class SyslogHosts implements Hosts {
             }
             return bytes;
         }
+
         @Override
         public Collection<String> headers() throws IOException {
             return this.resource.headers();
         }
+
         @Override
         public String etag() {
             return this.resource.etag();
         }
+
         @Override
         public Date lastModified() {
             return this.resource.lastModified();
         }
+
         @Override
         public String contentType() {
             return this.resource.contentType();
         }
+
         @Override
         public void close() throws IOException {
             this.resource.close();

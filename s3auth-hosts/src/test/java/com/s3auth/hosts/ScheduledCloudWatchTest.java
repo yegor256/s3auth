@@ -40,6 +40,7 @@ import org.mockito.Mockito;
 
 /**
  * Test case for {@link ScheduledCloudWatch}.
+ * @since 0.0.1
  */
 final class ScheduledCloudWatchTest {
 

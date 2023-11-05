@@ -70,26 +70,32 @@ final class DefaultDomain implements Domain {
                 public String toString() {
                     return String.format("%s/%s", name, region);
                 }
+
                 @Override
                 public String name() {
                     return name;
                 }
+
                 @Override
                 public String key() {
                     return key;
                 }
+
                 @Override
                 public String secret() {
                     return secret;
                 }
+
                 @Override
                 public String bucket() {
                     return bucket;
                 }
+
                 @Override
                 public String region() {
                     return region;
                 }
+
                 @Override
                 public String syslog() {
                     return syslog;

@@ -32,7 +32,7 @@ package com.s3auth.relay;
 import org.apache.commons.net.ftp.FTPReply;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -44,7 +44,7 @@ final class FtpResponseTest {
      * FtpResponse can construct correct FTP response.
      */
     @Test
-    @Ignore
+    @Disabled
     public void constructsCorrectly() {
         MatcherAssert.assertThat(
             new FtpResponse()

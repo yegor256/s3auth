@@ -36,6 +36,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link SmartHost}.
+ * @since 0.0.1
  */
 final class SmartHostTest {
 

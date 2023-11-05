@@ -166,10 +166,8 @@ final class Htpasswd {
      * @param hash The hash to match
      * @param password Password
      * @return TRUE if they match
-     * @throws IOException If some error inside
      */
-    private static boolean matches(final String hash, final String password)
-        throws IOException {
+    private static boolean matches(final String hash, final String password) {
         boolean matches = false;
         for (final Htpasswd.Algorithm algo : Htpasswd.ALGORITHMS) {
             if (algo.matches(hash, password)) {

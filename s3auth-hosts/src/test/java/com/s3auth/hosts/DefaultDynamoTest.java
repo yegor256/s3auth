@@ -52,7 +52,7 @@ import org.junit.jupiter.api.Test;
 final class DefaultDynamoTest {
 
     @Test
-    public void loadsDynamoConfiguration() throws Exception {
+    void loadsDynamoConfiguration() throws Exception {
         final String table = "table";
         final Dynamo dynamo = new DefaultDynamo(
             this.mockRegion(table),

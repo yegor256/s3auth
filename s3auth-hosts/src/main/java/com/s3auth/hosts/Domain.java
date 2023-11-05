@@ -78,7 +78,7 @@ public interface Domain {
 
     /**
      * Region of S3 bucket.
-     * @return Region name/endpoint, e.g. "us-east-1"
+     * @return Region name/endpoint, e.g. "s3-us-east-1"
      * @see <a href="https://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region">S3 Regions</a>
      */
     String region();
@@ -110,6 +110,8 @@ public interface Domain {
 
     /**
      * Validator of Domain.
+     *
+     * @since 0.0.1
      */
     @SuppressWarnings("PMD.NPathComplexity")
     class Validator implements ConstraintValidator<Domain.Valid, Domain> {
@@ -125,12 +127,12 @@ public interface Domain {
             boolean isValid = true;
             if (domain.name() == null) {
                 ctx.buildConstraintViolationWithTemplate(
-                    "domain name is mandatory and can't be NULL"
+                    "Domain name is mandatory and can't be NULL"
                 ).addConstraintViolation();
                 isValid = false;
-            } else if (!domain.name().matches("\\s*[a-zA-Z0-9\\-\\.]+\\s*")) {
+            } else if (!domain.name().matches("\\s*[a-zA-Z0-9\\-.]+\\s*")) {
                 ctx.buildConstraintViolationWithTemplate(
-                    String.format("invalid domain name '%s'", domain.name())
+                    String.format("Invalid domain name '%s'", domain.name())
                 ).addPropertyNode("name").addConstraintViolation();
                 isValid = false;
             }
@@ -141,7 +143,7 @@ public interface Domain {
                 isValid = false;
             } else if (!domain.key().matches("\\s*[A-Z0-9]{20}\\s*")) {
                 ctx.buildConstraintViolationWithTemplate(
-                    String.format("invalid AWS key '%s'", domain.key())
+                    String.format("Invalid AWS key '%s'", domain.key())
                 ).addPropertyNode("key").addConstraintViolation();
                 isValid = false;
             }
@@ -150,9 +152,9 @@ public interface Domain {
                     "AWS S3 region is mandatory and can't be NULL"
                 ).addConstraintViolation();
                 isValid = false;
-            } else if (!domain.region().matches("s3[a-z0-9\\-]*")) {
+            } else if (!domain.region().matches("[a-z0-9\\-]*")) {
                 ctx.buildConstraintViolationWithTemplate(
-                    String.format("invalid AWS S3 region '%s'", domain.region())
+                    String.format("Invalid AWS S3 region '%s'", domain.region())
                 ).addPropertyNode("region").addConstraintViolation();
                 isValid = false;
             }
@@ -164,7 +166,7 @@ public interface Domain {
             } else if (!domain.secret()
                 .matches("\\s*[a-zA-Z0-9\\+/]{40}\\s*")) {
                 ctx.buildConstraintViolationWithTemplate(
-                    String.format("invalid AWS secret '%s'", domain.secret())
+                    String.format("Invalid AWS secret '%s'", domain.secret())
                 ).addPropertyNode("secret").addConstraintViolation();
                 isValid = false;
             }
@@ -173,7 +175,7 @@ public interface Domain {
                     .matches("\\s*[a-zA-Z0-9\\-\\.]+(:\\d+)?\\s*")
             ) {
                 ctx.buildConstraintViolationWithTemplate(
-                    String.format("invalid syslog host '%s'", domain.syslog())
+                    String.format("Invalid syslog host '%s'", domain.syslog())
                 ).addPropertyNode("syslog").addConstraintViolation();
                 isValid = false;
             }

@@ -38,6 +38,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link Resource}.
+ * @since 0.0.1
  */
 final class ResourceTest {
 

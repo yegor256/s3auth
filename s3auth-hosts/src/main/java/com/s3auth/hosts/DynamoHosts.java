@@ -198,6 +198,8 @@ public final class DynamoHosts implements Hosts {
 
     /**
      * Wrap of domains.
+     *
+     * @since 0.0.1
      */
     @Loggable(Loggable.DEBUG)
     private final class Wrap extends AbstractSet<Domain> {
@@ -205,10 +207,12 @@ public final class DynamoHosts implements Hosts {
          * User.
          */
         private final transient User user;
+
         /**
          * Domains.
          */
         private final transient Domains domains;
+
         /**
          * Public ctor.
          * @param usr User
@@ -219,22 +223,27 @@ public final class DynamoHosts implements Hosts {
             this.user = usr;
             this.domains = dmns;
         }
+
         @Override
         public int size() {
             return this.domains.size();
         }
+
         @Override
         public Iterator<Domain> iterator() {
             return this.domains.iterator();
         }
+
         @Override
         public boolean contains(final Object obj) {
             return this.domains.contains(obj);
         }
+
         @Override
         public boolean add(@NotNull @Valid final Domain domain) {
             return DynamoHosts.this.add(this.user.identity(), domain);
         }
+
         @Override
         public boolean remove(final Object obj) {
             return DynamoHosts.this.remove(

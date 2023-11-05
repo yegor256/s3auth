@@ -29,7 +29,6 @@
  */
 package com.s3auth.hosts;
 
-import java.io.IOException;
 import java.net.URI;
 import lombok.Builder;
 
@@ -84,6 +83,11 @@ public final class HostMocker {
         return this.host.build();
     }
 
+    /**
+     * Mock.
+     *
+     * @since 0.0.1
+     */
     @Builder
     @SuppressWarnings({ "PMD.TooManyMethods",
         "PMD.AvoidFieldNameMatchingMethodName" })
@@ -92,18 +96,22 @@ public final class HostMocker {
          * The host resource.
          */
         private final transient Resource resource;
+
         /**
          * Whether the host authorized.
          */
         private final transient boolean authorized;
+
         /**
          * Whether the host is hidden.
          */
         private final transient boolean hidden;
+
         /**
          * The host syslog.
          */
         private final transient String syslog;
+        
         /**
          * The host stats.
          */

@@ -29,7 +29,6 @@
  */
 package com.s3auth.hosts;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
 
@@ -53,6 +52,11 @@ public final class HostsMocker {
         return this.hosts;
     }
 
+    /**
+     * Mock.
+     *
+     * @since 0.0.1
+     */
     private static class MkHosts implements Hosts {
         @Override
         public void close() {

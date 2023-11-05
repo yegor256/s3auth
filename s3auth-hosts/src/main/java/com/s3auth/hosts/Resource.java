@@ -97,6 +97,7 @@ public interface Resource extends Closeable {
 
     /**
      * Simple resource made out of plain text.
+     * @since 0.0.1
      */
     @Immutable
     @ToString
@@ -108,14 +109,17 @@ public interface Resource extends Closeable {
          */
         @Immutable.Array
         private final transient byte[] text;
+
         /**
          * Last modified date to return. Equal to the time of object creation.
          */
         private final transient long modified = System.currentTimeMillis();
+
         /**
          * Headers associated with this resource.
          */
         private final Array<String> hdrs;
+
         /**
          * Public ctor.
          * @param txt The text to show
@@ -135,33 +139,40 @@ public interface Resource extends Closeable {
                 )
             );
         }
+
         @Override
         public int status() {
             return HttpURLConnection.HTTP_OK;
         }
+
         @Override
         public long writeTo(@NotNull final OutputStream stream)
             throws IOException {
             IOUtils.write(this.text, stream);
             return this.text.length;
         }
+
         @Override
         public String etag() {
             return DigestUtils.md5Hex(this.text);
         }
+
         @Override
         public Date lastModified() {
             return new Date(this.modified);
         }
+
         @Override
         public String contentType() {
             return "text/plain";
         }
+
         @Override
         @NotNull
         public Collection<String> headers() {
             return this.hdrs;
         }
+
         @Override
         public void close() {
             // nothing to do

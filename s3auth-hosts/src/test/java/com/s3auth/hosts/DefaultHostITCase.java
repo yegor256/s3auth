@@ -42,15 +42,16 @@ import org.mockito.Mockito;
 
 /**
  * Integration test case for {@link DefaultHost}.
+ * @since 0.0.1
  */
-public final class DefaultHostITCase {
+final class DefaultHostITCase {
 
     /**
      * DefaultHost can fetch a real object from S3 bucket.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void fetchesRealObjectFromAmazonBucket() throws Exception {
+    void fetchesRealObjectFromAmazonBucket() throws Exception {
         final String key = System.getProperty("failsafe.aws.key");
         final String secret = System.getProperty("failsafe.aws.secret");
         Assume.assumeThat(key, Matchers.notNullValue());
@@ -81,10 +82,9 @@ public final class DefaultHostITCase {
 
     /**
      * DefaultHost can throw IOException for absent object.
-     * @throws Exception If there is some problem inside
      */
     @Test
-    public void throwsWhenAbsentResource() throws Exception {
+    void throwsWhenAbsentResource() {
         final Host host = new DefaultHost(
             new DefaultBucket(
                 new DomainMocker()

@@ -44,35 +44,42 @@ public interface Version {
 
     /**
      * Specify that the latest version be fetched.
+     *
+     * @since 0.0.1
      */
     Version LATEST = new Version() {
         @Override
         public boolean latest() {
             return true;
         }
+
         @Override
         public boolean list() {
             return false;
         }
+
         @Override
         public String version() {
-            // @checkstyle MultipleStringLiterals (1 line)
             throw new UnsupportedOperationException("Version is unspecified.");
         }
     };
 
     /**
      * Specify that the object's versions be listed.
+     *
+     * @since 0.0.1
      */
     Version LIST = new Version() {
         @Override
         public boolean latest() {
             return false;
         }
+
         @Override
         public boolean list() {
             return true;
         }
+
         @Override
         public String version() {
             throw new UnsupportedOperationException("Version is unspecified.");
@@ -100,6 +107,8 @@ public interface Version {
 
     /**
      * Simple implementation.
+     *
+     * @since 0.0.1
      */
     @Immutable
     @Loggable(Loggable.DEBUG)
@@ -110,6 +119,7 @@ public interface Version {
          * The version ID.
          */
         private final String ver;
+
         /**
          * Public ctor.
          * @param version Version ID string
@@ -117,14 +127,17 @@ public interface Version {
         public Simple(final String version) {
             this.ver = version;
         }
+
         @Override
         public boolean latest() {
             return false;
         }
+
         @Override
         public boolean list() {
             return false;
         }
+
         @Override
         public String version() {
             return this.ver;

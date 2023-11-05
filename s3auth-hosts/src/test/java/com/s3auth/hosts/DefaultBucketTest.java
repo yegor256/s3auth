@@ -35,6 +35,8 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link DefaultBucket}.
+ *
+ * @since 0.0.1
  */
 final class DefaultBucketTest {
 

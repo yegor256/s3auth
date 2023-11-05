@@ -89,6 +89,7 @@ public final class ResourceMocker {
      * @return Its text
      * @throws IOException If fails
      */
+    @SuppressWarnings("PMD.ProhibitPublicStaticMethods")
     public static String toString(final Resource res) throws IOException {
         return new String(ResourceMocker.toByteArray(res), StandardCharsets.UTF_8);
     }
@@ -99,6 +100,7 @@ public final class ResourceMocker {
      * @return Its text
      * @throws IOException If fails
      */
+    @SuppressWarnings("PMD.ProhibitPublicStaticMethods")
     public static byte[] toByteArray(final Resource res) throws IOException {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         res.writeTo(baos);
@@ -113,6 +115,11 @@ public final class ResourceMocker {
         return this.resource.build();
     }
 
+    /**
+     * Mock.
+     *
+     * @since 0.0.1
+     */
     @Builder
     @SuppressWarnings({ "PMD.TooManyMethods",
         "PMD.AvoidFieldNameMatchingMethodName" })
@@ -121,23 +128,28 @@ public final class ResourceMocker {
          * The resource content.
          */
         private final transient char[] content;
+
         /**
          * The resource status.
          */
         private final transient int status;
+
         /**
          * The resource headers.
          */
         private final transient Collection<String> headers;
+
         /**
          * The resource etag.
          */
         private final transient String etag;
+
         /**
          * The resource lastModified.
          * @checkstyle MemberName (3 lines)
          */
         private final transient Date lastModified;
+
         /**
          * The resource contentType.
          * @checkstyle MemberName (3 lines)

@@ -288,6 +288,7 @@ final class DefaultHost implements Host {
          * Original name.
          */
         private final transient String origin;
+
         /**
          * Public ctor.
          * @param name The original name
@@ -295,6 +296,7 @@ final class DefaultHost implements Host {
         NameWithSuffix(final String name) {
             this.origin = name;
         }
+
         @Override
         public String get() {
             String suffix = null;
@@ -328,6 +330,8 @@ final class DefaultHost implements Host {
 
     /**
      * Object name.
+     *
+     * @since 0.0.1
      */
     @EqualsAndHashCode(of = "name")
     private static final class Simple implements DefaultHost.ObjectName {
@@ -335,6 +339,7 @@ final class DefaultHost implements Host {
          * Original name.
          */
         private final transient String name;
+
         /**
          * Public ctor.
          * @param nme The name
@@ -342,10 +347,12 @@ final class DefaultHost implements Host {
         Simple(final String nme) {
             this.name = nme;
         }
+
         @Override
         public String get() {
             return this.name;
         }
+
         @Override
         public String toString() {
             return this.name;
@@ -354,6 +361,8 @@ final class DefaultHost implements Host {
 
     /**
      * Stats for this domain.
+     *
+     * @since 0.0.1
      */
     @Loggable(Loggable.DEBUG)
     @EqualsAndHashCode(of = "bucket")
@@ -362,6 +371,7 @@ final class DefaultHost implements Host {
          * The S3 bucket.
          */
         private final transient String bucket;
+
         /**
          * Public ctor.
          * @param bckt The name of the bucket
@@ -369,6 +379,7 @@ final class DefaultHost implements Host {
         public HostStats(final String bckt) {
             this.bucket = bckt;
         }
+
         @Override
         @Cacheable(lifetime = 30, unit = TimeUnit.MINUTES)
         public long bytesTransferred() {
@@ -399,6 +410,8 @@ final class DefaultHost implements Host {
 
     /**
      * Name of an S3 Object, context dependent.
+     *
+     * @since 0.0.1
      */
     private interface ObjectName {
         /**

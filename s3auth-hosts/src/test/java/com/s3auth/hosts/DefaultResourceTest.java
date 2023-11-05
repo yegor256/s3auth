@@ -43,6 +43,7 @@ import java.util.Random;
 import org.apache.http.client.methods.HttpGet;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
@@ -138,7 +139,7 @@ final class DefaultResourceTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void throwsWhenFailedToRead() throws Exception {
+    void throwsWhenFailedToRead() throws Exception {
         final S3ObjectInputStream stream =
             Mockito.mock(S3ObjectInputStream.class);
         Mockito.doThrow(new IOException("oops"))
@@ -148,14 +149,14 @@ final class DefaultResourceTest {
         Mockito.doReturn(object).when(client)
             .getObject(Mockito.any(GetObjectRequest.class));
         Mockito.doReturn(stream).when(object).getObjectContent();
-        MatcherAssert.assertThat(
-            ResourceMocker.toString(
+        Assertions.assertThrows(
+            IOException.class,
+            () -> ResourceMocker.toString(
                 new DefaultResource(
                     client, "d", "", Range.ENTIRE, Version.LATEST,
                     Mockito.mock(DomainStatsData.class)
                 )
-            ),
-            Matchers.equalTo("")
+            )
         );
     }
 

@@ -42,13 +42,10 @@ import org.mockito.Mockito;
 
 /**
  * Test case for {@link Htpasswd}.
+ * @since 0.0.1
  */
 final class HtpasswdTest {
 
-    /**
-     * Htpasswd can show some stats in {@code #toString()}.
-     * @throws Exception If there is some problem inside
-     */
     @Test
     void showsStatsInToString() throws Exception {
         MatcherAssert.assertThat(
@@ -57,11 +54,8 @@ final class HtpasswdTest {
         );
     }
 
-    /**
-     * Htpasswd can show some stats in {@code #toString()} with IO exception.
-     */
     @Test
-    void showsStatsInToStringWithIOException() {
+    void showsStatsInToStringWithIoException() {
         final AmazonS3 aws = Mockito.mock(AmazonS3.class);
         Mockito.doThrow(new AmazonClientException("")).when(aws)
             .getObject(Mockito.any(GetObjectRequest.class));
@@ -91,10 +85,6 @@ final class HtpasswdTest {
         );
     }
 
-    /**
-     * Htpasswd can manage apache hashes, with SHA1 algorithm.
-     * @throws Exception If there is some problem inside
-     */
     @Test
     void understandsShaHashValues() throws Exception {
         MatcherAssert.assertThat(

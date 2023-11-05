@@ -110,7 +110,7 @@ final class H2DomainStatsData implements DomainStatsData {
     H2DomainStatsData(final File file) throws IOException {
         this.jdbc = String.format("jdbc:h2:file:%s", file.getAbsolutePath());
         try {
-            this.session().sql(CREATE).execute().commit();
+            this.session().sql(H2DomainStatsData.CREATE).execute().commit();
         } catch (final SQLException ex) {
             throw new IOException(ex);
         }
@@ -120,7 +120,7 @@ final class H2DomainStatsData implements DomainStatsData {
     public void put(final String domain, final Stats stats) throws IOException {
         try {
             this.session()
-                .sql(INSERT)
+                .sql(H2DomainStatsData.INSERT)
                 .set(domain)
                 .set(stats.bytesTransferred())
                 .execute()
@@ -138,7 +138,7 @@ final class H2DomainStatsData implements DomainStatsData {
             final Stats result = session
                 .sql("SELECT SUM(BYTES) FROM DOMAIN_STATS WHERE DOMAIN = ?")
                 .set(domain)
-                .select(STATS);
+                .select(H2DomainStatsData.STATS);
             session.sql("DELETE FROM DOMAIN_STATS WHERE DOMAIN = ?")
                 .set(domain)
                 .execute()
@@ -157,7 +157,7 @@ final class H2DomainStatsData implements DomainStatsData {
             // @checkstyle LineLength (2 lines)
             final Map<String, Stats> result = session
                 .sql("SELECT DOMAIN, SUM(BYTES) FROM DOMAIN_STATS GROUP BY DOMAIN")
-                .select(STATS_ALL);
+                .select(H2DomainStatsData.STATS_ALL);
             session.sql("DELETE FROM DOMAIN_STATS").execute().commit();
             return result;
         } catch (final SQLException ex) {

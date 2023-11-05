@@ -42,10 +42,9 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 /**
@@ -58,7 +57,7 @@ final class FtpFacadeTest {
      * @throws IOException If it fails inside
      */
     @Test
-    @Ignore
+    @Disabled
     public void connectDisconnect() throws IOException {
         final FtpFacade facade = FtpFacadeTest.mockFacade();
         final FTPClient ftp = new FTPClient();

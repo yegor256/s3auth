@@ -112,6 +112,7 @@ final class DefaultDynamo implements Dynamo {
     /**
      * Public ctor.
      */
+    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     DefaultDynamo() {
         Credentials creds = new Credentials.Simple(
             Manifests.read("S3Auth-AwsDynamoKey"),

@@ -41,10 +41,6 @@ import org.junit.jupiter.api.Test;
  */
 final class H2DomainStatsDataTest {
 
-    /**
-     * H2DomainStatsData can put and get data for a single domain.
-     * @throws Exception If something goes wrong.
-     */
     @Test
     void putsAndGetsDataPerDomain() throws Exception {
         final H2DomainStatsData data = new H2DomainStatsData(
@@ -66,13 +62,9 @@ final class H2DomainStatsDataTest {
         );
     }
 
-    /**
-     * H2DomainStatsData can put and get data for all domains.
-     * @throws Exception If something goes wrong.
-     */
     @Test
     @SuppressWarnings("PMD.UseConcurrentHashMap")
-    public void getsDataForAllDomains() throws Exception {
+    void getsDataForAllDomains() throws Exception {
         final H2DomainStatsData data = new H2DomainStatsData(
             File.createTempFile("testAll", "tempAll")
         );
@@ -96,7 +88,7 @@ final class H2DomainStatsDataTest {
         );
         MatcherAssert.assertThat(
             stats.get(first).bytesTransferred(),
-            Matchers.is((long) (150))
+            Matchers.is((long) 150)
         );
         MatcherAssert.assertThat(
             stats.get(second).bytesTransferred(),

@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link DefaultDomain}.
+ * @since 0.0.1
  */
 final class DefaultDomainTest {
 

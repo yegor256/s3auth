@@ -58,10 +58,9 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.client.utils.DateUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 /**
@@ -492,7 +491,7 @@ final class HttpFacadeTest {
      *  Let's fix it and unignore the test.
      */
     @Test
-    @Ignore
+    @Disabled
     public void getsContentOverSSL() throws Exception {
         MatcherAssert.assertThat(
             System.getProperty("javax.net.ssl.keyStore"),

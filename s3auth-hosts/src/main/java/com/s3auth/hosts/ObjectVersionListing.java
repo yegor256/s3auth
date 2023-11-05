@@ -83,6 +83,7 @@ final class ObjectVersionListing implements Resource {
      * @param bucket Bucket name
      * @param key The S3 object key
      */
+    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     ObjectVersionListing(@NotNull final AmazonS3 client,
         @NotNull final String bucket, @NotNull final String key) {
         VersionListing listing = client.listVersions(

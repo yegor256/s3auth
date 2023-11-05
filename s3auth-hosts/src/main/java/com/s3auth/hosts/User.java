@@ -61,10 +61,12 @@ public interface User {
         public URN identity() {
             return URN.create("urn:anonymous:0");
         }
+
         @Override
         public String name() {
             return "Mr. Anonymous";
         }
+
         @Override
         public URI photo() {
             return URI.create("http://img.s3auth.com/unknown.png");
@@ -89,19 +91,26 @@ public interface User {
      */
     URI photo();
 
+    /**
+     * Valid User.
+     *
+     * @since 0.0.1
+     */
     @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
     @Constraint(validatedBy = User.Validator.class)
     @Documented
-    public @interface Valid {
+    @interface Valid {
         /**
          * Message of the validation error.
          */
         String message() default "invalid user";
+
         /**
          * Groups.
          */
         Class<?>[] groups() default { };
+
         /**
          * Payload.
          */
@@ -114,12 +123,13 @@ public interface User {
     class Validator implements ConstraintValidator<User.Valid, User> {
         @Override
         public void initialize(final User.Valid annotation) {
-            //nothing to do
+            // nothing to do
         }
+
         @Override
         public boolean isValid(final User user,
             final ConstraintValidatorContext ctx) {
-            boolean isValid = true;
+            boolean valid = true;
             final String nid = user.identity().nid();
             if (!"facebook".equals(nid)
                 && !"google".equals(nid)
@@ -128,15 +138,15 @@ public interface User {
                 ctx.buildConstraintViolationWithTemplate(
                     String.format("invalid NID of URN: %s", user.identity())
                 ).addPropertyNode("identity").addConstraintViolation();
-                isValid = false;
+                valid = false;
             }
             if (!user.identity().nss().matches("\\d+")) {
                 ctx.buildConstraintViolationWithTemplate(
                     String.format("invalid NSS of URN: %s", user.identity())
                 ).addPropertyNode("identity").addConstraintViolation();
-                isValid = false;
+                valid = false;
             }
-            return isValid;
+            return valid;
         }
     }
 

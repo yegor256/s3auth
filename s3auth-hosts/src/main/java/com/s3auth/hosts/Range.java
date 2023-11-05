@@ -44,16 +44,20 @@ public interface Range {
 
     /**
      * All inclusive range.
+     *
+     * @since 0.0.1
      */
     Range ENTIRE = new Range() {
         @Override
         public String toString() {
             return "ENTIRE";
         }
+
         @Override
         public long first() {
             return 0;
         }
+
         @Override
         public long last() {
             return Long.MAX_VALUE;
@@ -74,6 +78,7 @@ public interface Range {
 
     /**
      * Simple implementation.
+     * @since 0.0.1
      */
     @Loggable(Loggable.DEBUG)
     @ToString
@@ -83,10 +88,12 @@ public interface Range {
          * First byte.
          */
         private final transient long frst;
+
         /**
          * Last byte.
          */
         private final transient long lst;
+
         /**
          * Public ctor.
          * @param first First byte
@@ -96,10 +103,12 @@ public interface Range {
             this.frst = first;
             this.lst = last;
         }
+
         @Override
         public long first() {
             return this.frst;
         }
+
         @Override
         public long last() {
             return this.lst;

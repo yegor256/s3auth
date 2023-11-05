@@ -323,10 +323,10 @@ final class DefaultHostTest {
                     invocation.getArguments()[0]
                 ).getKey();
                 if (key.endsWith(suffix)) {
-                    final AmazonServiceException ex =
+                    final AmazonServiceException exp =
                         new AmazonServiceException("Object not found");
-                    ex.setStatusCode(HttpStatus.SC_NOT_FOUND);
-                    throw ex;
+                    exp.setStatusCode(HttpStatus.SC_NOT_FOUND);
+                    throw exp;
                 }
                 MatcherAssert.assertThat(key, Matchers.is(error));
                 final S3Object object = new S3Object();
@@ -352,13 +352,12 @@ final class DefaultHostTest {
     }
 
     @Test
-    public void throwsExceptionIfNoBucketWebsiteConfiguration()
-        throws Exception {
+    void throwsExceptionIfNoBucketWebsiteConfiguration() {
         final AmazonS3 aws = Mockito.mock(AmazonS3.class);
-        final AmazonServiceException ex =
+        final AmazonServiceException exp =
             new AmazonServiceException("The object is not found");
-        ex.setStatusCode(HttpStatus.SC_NOT_FOUND);
-        Mockito.doThrow(ex).when(aws)
+        exp.setStatusCode(HttpStatus.SC_NOT_FOUND);
+        Mockito.doThrow(exp).when(aws)
             .getObject(Mockito.any(GetObjectRequest.class));
         Assertions.assertThrows(
             IOException.class,
@@ -374,11 +373,9 @@ final class DefaultHostTest {
      */
     private CloudWatch cloudWatch() {
         return new Host.CloudWatch() {
-            /**
-             * Mock Cloudwatch client.
-             */
             private final transient AmazonCloudWatchClient cwatch =
                 Mockito.mock(AmazonCloudWatchClient.class);
+
             @Override
             public AmazonCloudWatchClient get() {
                 return this.cwatch;

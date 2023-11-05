@@ -30,7 +30,6 @@
 package com.s3auth.hosts;
 
 import com.jcabi.urn.URN;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -61,6 +60,7 @@ public final class DynamoMocker {
             public Map<URN, Domains> load() {
                 return Collections.unmodifiableMap(DynamoMocker.this.users);
             }
+
             @Override
             public boolean add(final URN user, final Domain domain) {
                 DynamoMocker.this.users.putIfAbsent(user, new Domains());
@@ -68,6 +68,7 @@ public final class DynamoMocker {
                     .add(new DefaultDomain(domain));
                 return true;
             }
+
             @Override
             public boolean remove(final Domain domain) {
                 for (final Set<Domain> domains
@@ -77,6 +78,7 @@ public final class DynamoMocker {
                 }
                 return true;
             }
+
             @Override
             public void close() {
                 assert this != null;

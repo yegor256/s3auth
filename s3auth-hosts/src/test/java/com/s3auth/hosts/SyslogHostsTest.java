@@ -55,17 +55,12 @@ import org.productivity.java.syslog4j.server.SyslogServerIF;
  */
 final class SyslogHostsTest {
 
-    /**
-     * SyslogHosts can return the domains of its underlying Hosts.
-     * @throws Exception If something goes wrong
-     */
     @Test
     void returnsUnderlyingDomains() throws Exception {
         final Hosts hosts = Mockito.mock(Hosts.class);
         final Domain first = new DomainMocker().mock();
         final Domain second = new DomainMocker().mock();
-        final Set<Domain> domains = new HashSet<>();
-        domains.addAll(Arrays.asList(new Domain[]{first, second}));
+        final Set<Domain> domains = new HashSet<>(Arrays.asList(first, second));
         final User user = new UserMocker().mock();
         Mockito.doReturn(domains).when(hosts).domains(user);
         @SuppressWarnings("resource")
@@ -76,10 +71,6 @@ final class SyslogHostsTest {
         );
     }
 
-    /**
-     * SyslogHosts can close its underlying Hosts.
-     * @throws Exception If something goes wrong
-     */
     @Test
     void closesUnderlyingHosts() throws Exception {
         final Hosts hosts = Mockito.mock(Hosts.class);
@@ -88,10 +79,6 @@ final class SyslogHostsTest {
         Mockito.verify(hosts, Mockito.only()).close();
     }
 
-    /**
-     * SyslogHosts can send messages to the syslog server.
-     * @throws Exception If something goes wrong
-     */
     @Test
     void sendsMessagesToServer() throws Exception {
         final SyslogServerIF server = SyslogServer.getInstance("udp");
@@ -101,9 +88,6 @@ final class SyslogHostsTest {
             new LinkedBlockingQueue<>();
         server.getConfig().addEventHandler(
             new SyslogServerEventHandlerIF() {
-                /**
-                 * Serial Version UID.
-                 */
                 private static final long serialVersionUID =
                     -7043255643054178133L;
                 @Override
@@ -143,7 +127,7 @@ final class SyslogHostsTest {
      * @return The port number
      */
     private static int port() {
-        int port;
+        final int port;
         try {
             final DatagramSocket socket = new DatagramSocket(0);
             try {

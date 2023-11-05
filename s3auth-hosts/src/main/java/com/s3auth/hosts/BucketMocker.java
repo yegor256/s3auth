@@ -135,26 +135,32 @@ public final class BucketMocker {
          * The Bucket Name.
          */
         private final transient String name;
+
         /**
          * The Bucket key.
          */
         private final transient String key;
+
         /**
          * The Bucket secret.
          */
         private final transient String secret;
+
         /**
          * The Bucket bucket.
          */
         private final transient String bucket;
+
         /**
          * The Bucket region.
          */
         private final transient String region;
+
         /**
          * The Bucket syslog.
          */
         private final transient String syslog;
+
         /**
          * The Bucket client.
          */
