@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,8 +36,7 @@ import org.junit.Test;
 
 /**
  * Test case for {@link HttpRequest}.
- * @checkstyle MultipleStringLiteralsCheck (300 lines)
- * @checkstyle MagicNumberCheck (300 lines)
+ * @since 0.0.1
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 final class HttpRequestTest {

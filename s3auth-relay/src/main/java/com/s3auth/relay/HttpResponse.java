@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -83,7 +83,7 @@ final class HttpResponse {
      * HTTP headers.
      */
     private final transient ConcurrentMap<String, Collection<String>> hdrs =
-        new ConcurrentHashMap<String, Collection<String>>(0);
+        new ConcurrentHashMap<>(0);
 
     /**
      * Resource to deliver.
@@ -118,7 +118,7 @@ final class HttpResponse {
      */
     public HttpResponse withHeader(final String name,
         @NotNull final String value) {
-        this.hdrs.putIfAbsent(name, new LinkedList<String>());
+        this.hdrs.putIfAbsent(name, new LinkedList<>());
         this.hdrs.get(name).add(value);
         return this;
     }

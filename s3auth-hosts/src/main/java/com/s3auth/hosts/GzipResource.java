@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -42,7 +42,7 @@ import org.apache.http.HttpHeaders;
 
 /**
  * Wrapper for {@link Resource} that writes GZIP compressed output.
- *
+ * @since 0.0.1
  */
 @Immutable
 @EqualsAndHashCode(of = "resource")

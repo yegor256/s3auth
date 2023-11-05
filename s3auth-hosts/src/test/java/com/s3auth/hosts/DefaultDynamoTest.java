@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,7 @@ import org.junit.Test;
 
 /**
  * Test case for {@link DefaultDynamo}.
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @since 0.0.1
  */
 final class DefaultDynamoTest {
 
@@ -129,7 +129,7 @@ final class DefaultDynamoTest {
      */
     private Map<String, AttributeValue> item() {
         final ConcurrentMap<String, AttributeValue> item =
-            new ConcurrentHashMap<String, AttributeValue>(0);
+            new ConcurrentHashMap<>(0);
         item.put(
             DefaultDynamo.USER,
             new AttributeValue(new URNMocker().mock().toString())

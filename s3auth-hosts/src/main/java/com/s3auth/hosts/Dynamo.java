@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -42,8 +42,6 @@ import java.util.Map;
  * <p>Implementation must be thread-safe.
  *
  * @since 0.0.1
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
- * @checkstyle MultipleStringLiterals (500 lines)
  */
 @Immutable
 interface Dynamo extends Closeable {

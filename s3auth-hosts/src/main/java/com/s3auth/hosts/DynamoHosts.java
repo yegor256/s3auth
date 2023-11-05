@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -50,7 +50,6 @@ import lombok.ToString;
  * <p>The class is mutable and thread-safe.
  *
  * @since 0.0.1
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @SuppressWarnings({ "PMD.TooManyMethods", "PMD.UseConcurrentHashMap" })
 @Immutable

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -116,10 +116,6 @@ public interface User {
         public void initialize(final User.Valid annotation) {
             //nothing to do
         }
-        /**
-         * {@inheritDoc}
-         * @checkstyle MultipleStringLiterals (50 lines)
-         */
         @Override
         public boolean isValid(final User user,
             final ConstraintValidatorContext ctx) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,7 +62,6 @@ import org.takes.rs.xe.XeStylesheet;
  * Index resource, front page of the website.
  *
  * @since 0.1
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @EqualsAndHashCode(callSuper = true)
 final class RsPage extends RsWrap {
@@ -72,7 +71,6 @@ final class RsPage extends RsWrap {
      */
     private static final String VERSION_LABEL = String.format(
         "%s/%s built on %s",
-        // @checkstyle MultipleStringLiterals (3 lines)
         Manifests.read("S3Auth-Version"),
         Manifests.read("S3Auth-Revision"),
         Manifests.read("S3Auth-Date")

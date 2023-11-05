@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,7 @@ import lombok.ToString;
 
 /**
  * S3 Object version.
- *
+ * @since 0.0.1
  */
 @Immutable
 @SuppressWarnings("PMD.TooManyMethods")

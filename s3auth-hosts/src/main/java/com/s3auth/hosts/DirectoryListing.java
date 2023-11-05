@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -84,6 +84,7 @@ final class DirectoryListing implements Resource {
      * @param bucket Bucket name
      * @param key The S3 object key
      */
+    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     DirectoryListing(@NotNull final AmazonS3 client,
         @NotNull final String bucket, @NotNull final String key) {
         ObjectListing listing = client.listObjects(
@@ -91,13 +92,12 @@ final class DirectoryListing implements Resource {
                 .withBucketName(bucket)
         );
         final Collection<S3ObjectSummary> objects =
-            new LinkedList<S3ObjectSummary>();
+            new LinkedList<>();
         objects.addAll(listing.getObjectSummaries());
         while (listing.isTruncated()) {
             listing = client.listNextBatchOfObjects(listing);
             objects.addAll(listing.getObjectSummaries());
         }
-        // @checkstyle LineLength (2 lines)
         final Directives dirs = new Directives()
             .add("directory").attr("prefix", key);
         for (final String prefix : listing.getCommonPrefixes()) {

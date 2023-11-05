@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,7 +64,6 @@ import org.apache.http.client.utils.DateUtils;
  *
  * @since 0.0.1
  * @see HttpFacade
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @ToString
 @EqualsAndHashCode(of = { "hosts", "sockets" })
@@ -138,7 +137,6 @@ final class HttpThread {
      * @return Amount of bytes sent to socket
      * @throws InterruptedException If interrupted while waiting for the queue
      * @checkstyle ExecutableStatementCount (100 lines)
-     * @checkstyle MultipleStringLiterals (100 lines)*
      */
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public long dispatch() throws InterruptedException {

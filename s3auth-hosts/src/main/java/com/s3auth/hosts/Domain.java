@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -78,8 +78,8 @@ public interface Domain {
 
     /**
      * Region of S3 bucket.
-     * @return Region name/endpoint, e.g. "s3-us-west-1"
-     * @see <a href="http://docs.amazonwebservices.com/general/latest/gr/rande.html#s3_region">S3 Regions</a>
+     * @return Region name/endpoint, e.g. "us-east-1"
+     * @see <a href="https://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region">S3 Regions</a>
      */
     String region();
 

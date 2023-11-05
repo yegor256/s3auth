@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -147,7 +147,6 @@ final class LocalHost implements Host {
             String.format(
                 "shutdown key ends with '%s...'",
                 LocalHost.SHUTDOWN.substring(
-                    // @checkstyle MagicNumber (1 line)
                     LocalHost.SHUTDOWN.length() - 5
                 )
             )

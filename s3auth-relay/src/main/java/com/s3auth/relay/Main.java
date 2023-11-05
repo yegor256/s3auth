@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,8 +68,6 @@ public final class Main {
     public static void main(final String[] args) throws Exception {
         final OptionParser parser = new OptionParser("p:s:d");
         final OptionSet options = parser.parse(args);
-        // @checkstyle MultipleStringLiterals (10 lines)
-        // @checkstyle MagicNumber (11 lines)
         final int port;
         if (options.has("p")) {
             port = Integer.parseInt(options.valueOf("p").toString());

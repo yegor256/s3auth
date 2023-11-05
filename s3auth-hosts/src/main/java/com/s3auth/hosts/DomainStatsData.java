@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,7 @@ import java.util.Map;
 
 /**
  * Store of {@link Stats} per domain.
- *
+ * @since 0.0.1
  */
 @Immutable
 interface DomainStatsData {

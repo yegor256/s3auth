@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,6 @@ import org.xembly.Directives;
  * Index page of a logged in user.
  *
  * @since 0.1
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 final class TkIndex implements Take {
 
@@ -105,7 +104,6 @@ final class TkIndex implements Take {
                         .add("syslog").set(domain.syslog())
                 ),
                 new XeLink(
-                    // @checkstyle MultipleStringLiteralsCheck (1 line)
                     "remove",
                     new Href().path("remove").with("host", domain.name())
                 )

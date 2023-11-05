@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,6 @@ import com.amazonaws.Protocol;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
-import com.amazonaws.services.cloudwatch.AmazonCloudWatchAsync;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchAsyncClientBuilder;
 import com.amazonaws.services.cloudwatch.model.Datapoint;
 import com.amazonaws.services.cloudwatch.model.Dimension;
@@ -66,7 +65,6 @@ import org.apache.http.HttpStatus;
  * Default implementation of {@link Host}.
  *
  * @since 0.0.1
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 @Immutable
 @EqualsAndHashCode(of = "bucket")
@@ -86,7 +84,7 @@ final class DefaultHost implements Host {
         @Override
         @Cacheable(lifetime = 1, unit = TimeUnit.HOURS)
         public AmazonCloudWatch get() {
-            AmazonCloudWatchAsync x = AmazonCloudWatchAsyncClientBuilder.standard()
+            return AmazonCloudWatchAsyncClientBuilder.standard()
                 .withExecutorFactory(() -> Executors.newFixedThreadPool(50))
                 .withClientConfiguration(new ClientConfiguration().withProtocol(Protocol.HTTP))
                 .withCredentials(
@@ -98,15 +96,6 @@ final class DefaultHost implements Host {
                     )
                 )
                 .build();
-            return x;
-//            return new AmazonCloudWatchAsyncClient(
-//                new BasicAWSCredentials(
-//                    Manifests.read("S3Auth-AwsCloudWatchKey"),
-//                    Manifests.read("S3Auth-AwsCloudWatchSecret")
-//                ),
-//                new ClientConfiguration().withProtocol(Protocol.HTTP),
-//                Executors.newFixedThreadPool(50)
-//            );
         }
     };
 
@@ -238,7 +227,7 @@ final class DefaultHost implements Host {
         if (resource == null) {
             throw new IOException(
                 Logger.format(
-                    "failed to fetch %s from '%s' (key=%s): %[list]s",
+                    "Failed to fetch %s from '%s' (key=%s): %[list]s",
                     uri, this.bucket.name(), this.bucket.key(), errors
                 )
             );

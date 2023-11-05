@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,31 +48,29 @@ public final class DefaultHostITCase {
      * @throws Exception If there is some problem inside
      */
     @Test
-    void fetchesRealObjectFromAmazonBucket() throws Exception {
+    public void fetchesRealObjectFromAmazonBucket() throws Exception {
         final String key = System.getProperty("failsafe.aws.key");
         final String secret = System.getProperty("failsafe.aws.secret");
         Assume.assumeThat(key, Matchers.notNullValue());
         final Host host = new DefaultHost(
             new DefaultBucket(
                 new DomainMocker()
-                    // @checkstyle MultipleStringLiterals (1 line)
                     .withName("maven.s3auth.com")
                     .withKey(key)
                     .withSecret(secret)
                     .withBucket("maven.s3auth.com")
-                    .withRegion("s3")
+                    .withRegion("us-east-1")
                     .mock()
             ),
             this.cloudWatch()
         );
-        // @checkstyle MagicNumber (2 lines)
         final Resource resource = host.fetch(
             URI.create("/index.html"), new Range.Simple(3, 500), Version.LATEST
         );
         try {
             MatcherAssert.assertThat(
                 ResourceMocker.toString(resource),
-                Matchers.startsWith("OCTYPE html>\n")
+                Matchers.startsWith("<DOCTYPE html>\n")
             );
         } finally {
             resource.close();
@@ -104,11 +102,6 @@ public final class DefaultHostITCase {
      * @return Mock cloudwatch
      */
     private CloudWatch cloudWatch() {
-        return new Host.CloudWatch() {
-            @Override
-            public AmazonCloudWatchClient get() {
-                return Mockito.mock(AmazonCloudWatchClient.class);
-            }
-        };
+        return () -> Mockito.mock(AmazonCloudWatchClient.class);
     }
 }

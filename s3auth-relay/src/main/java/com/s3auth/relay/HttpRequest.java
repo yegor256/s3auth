@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -179,7 +179,7 @@ final class HttpRequest {
                 )
             );
         }
-        final Collection<String> headers = new LinkedList<String>();
+        final Collection<String> headers = new LinkedList<>();
         while (true) {
             final String line = reader.readLine();
             if (StringUtils.isEmpty(line)) {
@@ -263,7 +263,7 @@ final class HttpRequest {
     private Map<String, Collection<String>> parseHeaders(
         final Iterable<String> lines) throws HttpException {
         final Map<String, Collection<String>> map =
-            new CaseInsensitiveMap<String, Collection<String>>();
+            new CaseInsensitiveMap<>();
         for (final String line : lines) {
             final Matcher matcher = HttpRequest.HEADER.matcher(line);
             if (!matcher.matches()) {
@@ -290,7 +290,7 @@ final class HttpRequest {
     private Map<String, Collection<String>> parseParameters(
         final CharSequence request) {
         final Map<String, Collection<String>> map =
-            new HashMap<String, Collection<String>>(0);
+            new HashMap<>(0);
         final Matcher matcher = HttpRequest.PARAMS.matcher(request);
         while (matcher.find()) {
             final String name = matcher.group(1).trim();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -143,7 +143,6 @@ final class DefaultResource implements Resource {
         final InputStream input = this.object.getObjectContent();
         assert input != null;
         int total = 0;
-        // @checkstyle MagicNumber (1 line)
         final byte[] buffer = new byte[16 * 1024];
         try {
             while (true) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -82,7 +82,6 @@ final class FtpFacadeTest {
      * Returns a mock FTPFacade.
      * @return Mock FTPFacade.
      * @throws IOException If something goes wrong.
-     * @checkstyle MagicNumberCheck (10 lines)
      */
     private static FtpFacade mockFacade() throws IOException {
         final Host host = Mockito.mock(Host.class);

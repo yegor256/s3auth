@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -60,7 +60,6 @@ import lombok.ToString;
  *
  * @since 0.0.1
  * @see Main
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
  * @todo #213:1hr Create new a class Facade with all protocol-neutral code
  *  (such as socket handling, socket queue, etc). Then convert {@link com
  *  .s3auth.relay.HttpFacade} and {@link com.s3auth.relay.FtpFacade} so they use
@@ -96,7 +95,7 @@ final class HttpFacade implements Closeable {
      * Blocking queue of ready-to-be-processed sockets.
      */
     private final transient BlockingQueue<Socket> sockets =
-        new SynchronousQueue<Socket>();
+        new SynchronousQueue<>();
 
     /**
      * Server socket.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -65,7 +65,7 @@ import org.mockito.stubbing.Answer;
 
 /**
  * Test case for {@link DefaultHost}.
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @since 0.0.1
  */
 @SuppressWarnings({ "PMD.ExcessiveImports", "PMD.TooManyMethods" })
 final class DefaultHostTest {
@@ -197,10 +197,10 @@ final class DefaultHostTest {
         summary.setKey(name);
         Mockito.doReturn(Collections.singletonList(summary))
             .when(listing).getObjectSummaries();
-        final AmazonServiceException ex =
+        final AmazonServiceException exc =
             new AmazonServiceException("No such key.");
-        ex.setErrorCode("NoSuchKey");
-        Mockito.doThrow(ex).when(client)
+        exc.setErrorCode("NoSuchKey");
+        Mockito.doThrow(exc).when(client)
             .getObject(Mockito.any(GetObjectRequest.class));
         Mockito.doReturn(listing).when(client)
             .listObjects(Mockito.any(ListObjectsRequest.class));

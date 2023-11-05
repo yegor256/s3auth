@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,9 +48,10 @@ public final class DomainMocker {
     /**
      * Public ctor.
      */
+    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     public DomainMocker() {
         this.withName("localhost");
-        this.withRegion("s3");
+        this.withRegion("us-east-1");
         this.withBucket("bucket");
         this.withKey("AAAAAAAAAAAAAAAAAAAA");
         this.withSecret("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");

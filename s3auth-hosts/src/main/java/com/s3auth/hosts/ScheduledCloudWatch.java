@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,7 +53,7 @@ import java.util.concurrent.TimeUnit;
  * This class obtains local stats and posts it to Amazon CloudWatch every hour.
  *
  * <p>The class is mutable and NOT thread-safe.</p>
- *
+ * @since 0.0.1
  */
 @Loggable(Loggable.DEBUG)
 @ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.HOURS)

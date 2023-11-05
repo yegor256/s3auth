@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -122,7 +122,7 @@ public interface Resource extends Closeable {
          */
         public PlainText(@NotNull final String txt) {
             this.text = txt.getBytes(StandardCharsets.UTF_8);
-            this.hdrs = new Array<String>(
+            this.hdrs = new Array<>(
                 String.format(
                     "%s: %s",
                     HttpHeaders.CONTENT_TYPE,

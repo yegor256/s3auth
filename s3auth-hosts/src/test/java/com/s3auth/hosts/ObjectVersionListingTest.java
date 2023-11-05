@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -44,7 +44,7 @@ import org.mockito.Mockito;
 
 /**
  * Test case for {@link ObjectVersionListing}.
- *
+ * @since 0.0.1
  */
 final class ObjectVersionListingTest {
     /**

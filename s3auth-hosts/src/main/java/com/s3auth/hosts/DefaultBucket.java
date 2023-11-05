@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,12 +69,13 @@ final class DefaultBucket implements Bucket {
     @NotNull
     @Cacheable(lifetime = 10, unit = TimeUnit.MINUTES)
     public AmazonS3 client() {
-        AmazonS3 client = AmazonS3ClientBuilder.standard()
+        return AmazonS3ClientBuilder.standard()
             .withClientConfiguration(
                 new ClientConfiguration()
                     .withSocketTimeout(0)
-                    .withProtocol(Protocol.HTTP)
+                    .withProtocol(Protocol.HTTPS)
             )
+            .withRegion(this.domain.region())
             .withCredentials(
                 new AWSStaticCredentialsProvider(
                     new BasicAWSCredentials(
@@ -84,10 +85,6 @@ final class DefaultBucket implements Bucket {
                 )
             )
             .build();
-        client.setEndpoint(
-            String.format("%s.amazonaws.com", this.domain.region())
-        );
-        return client;
     }
 
     @Override

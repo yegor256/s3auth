@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,8 +51,7 @@ import org.productivity.java.syslog4j.server.SyslogServerIF;
 /**
  * Test case for {@link SyslogHosts}.
  *
- * @checkstyle MultipleStringLiterals (500 lines)
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
+ * @since 0.0.1
  */
 final class SyslogHostsTest {
 
@@ -65,7 +64,7 @@ final class SyslogHostsTest {
         final Hosts hosts = Mockito.mock(Hosts.class);
         final Domain first = new DomainMocker().mock();
         final Domain second = new DomainMocker().mock();
-        final Set<Domain> domains = new HashSet<Domain>();
+        final Set<Domain> domains = new HashSet<>();
         domains.addAll(Arrays.asList(new Domain[]{first, second}));
         final User user = new UserMocker().mock();
         Mockito.doReturn(domains).when(hosts).domains(user);
@@ -99,7 +98,7 @@ final class SyslogHostsTest {
         final int port = port();
         server.getConfig().setPort(port);
         final BlockingQueue<String> messages =
-            new LinkedBlockingQueue<String>();
+            new LinkedBlockingQueue<>();
         server.getConfig().addEventHandler(
             new SyslogServerEventHandlerIF() {
                 /**

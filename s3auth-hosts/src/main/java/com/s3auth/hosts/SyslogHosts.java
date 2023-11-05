@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -49,7 +49,7 @@ import org.productivity.java.syslog4j.impl.net.udp.UDPNetSyslogConfig;
  * Decorator of {@link Hosts}, adds syslog capabilities for each domain.
  *
  * <p>The class is immutable and thread-safe.</p>
- *
+ * @since 0.0.1
  */
 @Immutable
 @ToString
@@ -121,7 +121,6 @@ public final class SyslogHosts implements Hosts {
             if (matcher.find()) {
                 final String syslg = matcher.group(1);
                 final int port;
-                // @checkstyle MagicNumber (4 lines)
                 if (matcher.group(3) == null) {
                     port = 514;
                 } else {

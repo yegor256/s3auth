@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -49,10 +49,11 @@ public final class BucketMocker {
     /**
      * Public ctor.
      */
+    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     public BucketMocker() {
         this.withName("maven.s3auth.com");
         this.withBucket("s3auth");
-        this.withRegion("s3-ap-southeast-1");
+        this.withRegion("ap-southeast-1");
         this.withKey("AAAAAAAAAAAAAAAAAAAA");
         this.withSecret("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
         this.withClient(new MkAmazonS3());

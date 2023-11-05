@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -59,7 +59,6 @@ import org.apache.commons.net.ftp.FTPReply;
  *
  * @since 0.0.1
  * @see Main
- * @checkstyle ClassDataAbstractionCoupling (10 lines)
  * @todo #213:30min Implement TLS secure port listening in a manner analogous to
  *  HttpFacade.
  */
@@ -93,7 +92,7 @@ final class FtpFacade implements Closeable {
      * Blocking queue of ready-to-be-processed sockets.
      */
     private final transient BlockingQueue<Socket> sockets =
-        new SynchronousQueue<Socket>();
+        new SynchronousQueue<>();
 
     /**
      * Server socket.

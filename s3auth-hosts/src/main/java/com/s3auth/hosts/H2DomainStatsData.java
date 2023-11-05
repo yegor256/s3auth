@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -44,7 +44,7 @@ import lombok.EqualsAndHashCode;
 /**
  * Storage of {@link Stats} per domain with H2 Database.
  *
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
+ * @since 0.0.1
  */
 @Immutable
 @EqualsAndHashCode(of = "jdbc")

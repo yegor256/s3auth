@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, Yegor Bugayenko
+ * Copyright (c) 2012-2023, Yegor Bugayenko
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,9 +66,7 @@ import org.mockito.stubbing.Answer;
 
 /**
  * Test case for {@link HttpFacade}.
- * @checkstyle MultipleStringLiteralsCheck (700 lines)
- * @checkstyle MagicNumberCheck (700 lines)
- * @checkstyle ClassDataAbstractionCoupling (700 lines)
+ * @since 0.0.1
  */
 @SuppressWarnings({
     "PMD.AvoidDuplicateLiterals",
