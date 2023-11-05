@@ -66,9 +66,8 @@ interface Dynamo extends Closeable {
      * Delete from DynamoDB.
      * @param domain The domain to save
      * @return TRUE if successfully deleted
-     * @throws IOException If some IO problem inside
      */
-    boolean remove(Domain domain) throws IOException;
+    boolean remove(Domain domain);
 
     /**
      * Client to Amazon.

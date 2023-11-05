@@ -92,13 +92,12 @@ final class FtpResponse {
      * Send it to the socket.
      * @param socket The socket to write to
      * @return How many bytes were actually sent
-     * @throws java.io.IOException If some IO problem inside
      */
     @Loggable(
         value = Loggable.DEBUG, limit = Integer.MAX_VALUE,
         ignore = IOException.class
     )
-    public long send(@NotNull final Socket socket) throws IOException {
+    public long send(@NotNull final Socket socket) {
         return 0L;
     }
 

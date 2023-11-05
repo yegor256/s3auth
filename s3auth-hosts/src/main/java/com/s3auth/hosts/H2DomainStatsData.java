@@ -168,9 +168,8 @@ final class H2DomainStatsData implements DomainStatsData {
     /**
      * Make new session.
      * @return Session
-     * @throws SQLException If it fails
      */
-    private JdbcSession session() throws SQLException {
+    private JdbcSession session() {
         return new JdbcSession(
             new UrlSource(this.jdbc)
         ).autocommit(false);

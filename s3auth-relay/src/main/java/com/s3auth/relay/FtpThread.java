@@ -84,9 +84,8 @@ final class FtpThread {
     /**
      * Dispatch one request from the encapsulated queue.
      * @return Amount of bytes sent to socket
-     * @throws InterruptedException If interrupted while waiting for the queue
      */
-    public long dispatch() throws InterruptedException {
+    public long dispatch() {
         assert this.hosts != null;
         assert this.sockets != null;
         return 0L;

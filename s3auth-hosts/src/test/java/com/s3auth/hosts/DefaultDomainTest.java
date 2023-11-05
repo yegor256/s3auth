@@ -31,7 +31,7 @@ package com.s3auth.hosts;
 
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link DefaultDomain}.
@@ -40,10 +40,9 @@ final class DefaultDomainTest {
 
     /**
      * DefaultDomain can reproduce properties of another domain.
-     * @throws Exception If there is some problem inside
      */
     @Test
-    void reproducesProperties() throws Exception {
+    void reproducesProperties() {
         final Domain domain = new DomainMocker().mock();
         MatcherAssert.assertThat(
             new DefaultDomain(domain).name(),

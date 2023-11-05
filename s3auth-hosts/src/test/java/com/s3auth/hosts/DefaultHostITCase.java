@@ -31,11 +31,13 @@ package com.s3auth.hosts;
 
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
 import com.s3auth.hosts.Host.CloudWatch;
+import java.io.IOException;
 import java.net.URI;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 /**
@@ -81,7 +83,7 @@ public final class DefaultHostITCase {
      * DefaultHost can throw IOException for absent object.
      * @throws Exception If there is some problem inside
      */
-    @Test(expected = java.io.IOException.class)
+    @Test
     public void throwsWhenAbsentResource() throws Exception {
         final Host host = new DefaultHost(
             new DefaultBucket(
@@ -93,7 +95,10 @@ public final class DefaultHostITCase {
             ),
             this.cloudWatch()
         );
-        host.fetch(URI.create("foo.html"), Range.ENTIRE, Version.LATEST);
+        Assertions.assertThrows(
+            IOException.class,
+            () -> host.fetch(URI.create("foo.html"), Range.ENTIRE, Version.LATEST)
+        );
     }
 
     /**

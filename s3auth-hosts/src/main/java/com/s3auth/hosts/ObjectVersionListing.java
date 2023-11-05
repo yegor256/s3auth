@@ -126,7 +126,7 @@ final class ObjectVersionListing implements Resource {
     }
 
     @Override
-    public Collection<String> headers() throws IOException {
+    public Collection<String> headers() {
         final ImmutableSet.Builder<String> headers = ImmutableSet.builder();
         headers.add(
             ObjectVersionListing.header(

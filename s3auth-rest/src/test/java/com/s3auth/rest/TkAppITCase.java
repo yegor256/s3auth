@@ -38,7 +38,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpHeaders;
 import org.junit.Assume;
 import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Integration case for {@link TkApp}.

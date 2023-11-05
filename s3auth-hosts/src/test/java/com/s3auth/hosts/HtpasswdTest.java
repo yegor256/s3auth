@@ -37,7 +37,7 @@ import com.s3auth.hosts.Host.CloudWatch;
 import java.net.URI;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 /**
@@ -59,10 +59,9 @@ final class HtpasswdTest {
 
     /**
      * Htpasswd can show some stats in {@code #toString()} with IO exception.
-     * @throws Exception If there is some problem inside
      */
     @Test
-    void showsStatsInToStringWithIOException() throws Exception {
+    void showsStatsInToStringWithIOException() {
         final AmazonS3 aws = Mockito.mock(AmazonS3.class);
         Mockito.doThrow(new AmazonClientException("")).when(aws)
             .getObject(Mockito.any(GetObjectRequest.class));
@@ -141,8 +140,8 @@ final class HtpasswdTest {
     /**
      * Htpasswd can manage apache hashes, with Crypt algorithm.
      * @throws Exception If there is some problem inside
-     * @link http://jxutil.sourceforge.net/API/org/sourceforge/jxutil/JCrypt.html
-     * @link http://www.dynamic.net.au/christos/crypt/
+     * @link <a href="http://jxutil.sourceforge.net/API/org/sourceforge/jxutil/JCrypt.html">JCrypt</a>
+     * @link <a href="http://www.dynamic.net.au/christos/crypt/">Crypt</a>
      */
     @Test
     void understandsCryptHashValues() throws Exception {
@@ -177,12 +176,7 @@ final class HtpasswdTest {
         final Htpasswd htpasswd = new Htpasswd(
             new DefaultHost(
                 new BucketMocker().mock(),
-                new Host.CloudWatch() {
-                    @Override
-                    public AmazonCloudWatchClient get() {
-                        return Mockito.mock(AmazonCloudWatchClient.class);
-                    }
-                }
+                () -> Mockito.mock(AmazonCloudWatchClient.class)
             )
         );
         MatcherAssert.assertThat(
@@ -210,11 +204,6 @@ final class HtpasswdTest {
      * @return Mock CloudWatch
      */
     private CloudWatch cloudWatch() {
-        return new Host.CloudWatch() {
-            @Override
-            public AmazonCloudWatchClient get() {
-                return Mockito.mock(AmazonCloudWatchClient.class);
-            }
-        };
+        return () -> Mockito.mock(AmazonCloudWatchClient.class);
     }
 }

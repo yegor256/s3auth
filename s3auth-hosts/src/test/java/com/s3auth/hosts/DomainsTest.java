@@ -31,7 +31,7 @@ package com.s3auth.hosts;
 
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link Domains}.
@@ -40,10 +40,9 @@ final class DomainsTest {
 
     /**
      * Domains can add and retrieve domains.
-     * @throws Exception If there is some problem inside
      */
     @Test
-    void addsAndRetrievesDomains() throws Exception {
+    void addsAndRetrievesDomains() {
         final Domain domain = new DomainMocker().mock();
         final Domains domains = new Domains();
         domains.add(domain);

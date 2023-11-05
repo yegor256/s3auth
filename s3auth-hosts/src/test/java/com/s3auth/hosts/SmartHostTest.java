@@ -32,7 +32,7 @@ package com.s3auth.hosts;
 import java.net.URI;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link SmartHost}.
@@ -58,10 +58,9 @@ final class SmartHostTest {
 
     /**
      * SmartHost can convert itself to string.
-     * @throws Exception If there is some problem inside
      */
     @Test
-    void convertsItselfToString() throws Exception {
+    void convertsItselfToString() {
         MatcherAssert.assertThat(
             new SmartHost(new HostMocker().mock()),
             Matchers.hasToString(Matchers.notNullValue())

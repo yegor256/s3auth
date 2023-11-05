@@ -110,25 +110,23 @@ public final class HostMocker {
         private final transient Stats stats;
 
         @Override
-        public void close() throws IOException {
+        public void close() {
             // do nothing.
         }
 
         @Override
         public Resource fetch(final URI uri, final Range range,
-            final Version version)
-            throws IOException {
+            final Version version) {
             return this.resource;
         }
 
         @Override
-        public boolean isHidden(final URI uri) throws IOException {
+        public boolean isHidden(final URI uri) {
             return this.hidden;
         }
 
         @Override
-        public boolean authorized(final String user, final String password)
-            throws IOException {
+        public boolean authorized(final String user, final String password) {
             return this.authorized;
         }
 

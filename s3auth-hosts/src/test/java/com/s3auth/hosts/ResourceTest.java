@@ -73,10 +73,9 @@ final class ResourceTest {
 
     /**
      * Resource.PlainText can convert itselt to string.
-     * @throws Exception If there is some problem inside
      */
     @Test
-    void convertsItselfToString() throws Exception {
+    void convertsItselfToString() {
         final String content = "\u0444\u0433 test!";
         MatcherAssert.assertThat(
             new Resource.PlainText(content),
@@ -86,10 +85,9 @@ final class ResourceTest {
 
     /**
      * Resource.PlainText can obtain its last modified time.
-     * @throws Exception If there is some problem inside
      */
     @Test
-    void getsLastModifiedTime() throws Exception {
+    void getsLastModifiedTime() {
         MatcherAssert.assertThat(
             new Resource.PlainText("blah").lastModified(),
             Matchers.notNullValue()

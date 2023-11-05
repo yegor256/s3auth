@@ -189,9 +189,8 @@ final class Htpasswd {
          * @param hash The hash
          * @param password The password
          * @return TRUE if they match
-         * @throws IOException If some error inside
          */
-        boolean matches(String hash, String password) throws IOException;
+        boolean matches(String hash, String password);
     }
 
     /**

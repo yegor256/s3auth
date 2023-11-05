@@ -139,23 +139,13 @@ final class HttpFacade implements Closeable {
     public void listen() {
         this.frontend.scheduleWithFixedDelay(
             new VerboseRunnable(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        HttpFacade.this.process(HttpFacade.this.server);
-                    }
-                }
+                () -> HttpFacade.this.process(HttpFacade.this.server)
             ),
             0L, 1L, TimeUnit.NANOSECONDS
         );
         this.frontend.scheduleWithFixedDelay(
             new VerboseRunnable(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        HttpFacade.this.process(HttpFacade.this.secured);
-                    }
-                }
+                () -> HttpFacade.this.process(HttpFacade.this.secured)
             ),
             0L, 1L, TimeUnit.NANOSECONDS
         );

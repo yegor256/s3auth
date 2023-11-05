@@ -43,9 +43,8 @@ import java.util.Random;
 import org.apache.http.client.methods.HttpGet;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 /**
@@ -138,7 +137,7 @@ final class DefaultResourceTest {
      * DefaultResource can throw when failed to read.
      * @throws Exception If there is some problem inside
      */
-    @Test(expected = IOException.class)
+    @Test
     public void throwsWhenFailedToRead() throws Exception {
         final S3ObjectInputStream stream =
             Mockito.mock(S3ObjectInputStream.class);
@@ -162,10 +161,9 @@ final class DefaultResourceTest {
 
     /**
      * DefaultResource can obtain its last modified date.
-     * @throws Exception If there is some problem inside
      */
     @Test
-    void getsLastModifiedDate() throws Exception {
+    void getsLastModifiedDate() {
         final Date date = new Date();
         final AmazonS3 client = Mockito.mock(AmazonS3.class);
         final S3Object object = Mockito.mock(S3Object.class);
@@ -269,23 +267,19 @@ final class DefaultResourceTest {
 
     /**
      * DefaultResource can specify an object version to retrieve.
-     * @throws Exception If there is some problem inside
      */
     @Test
-    void specifiesObjectVersion() throws Exception {
+    void specifiesObjectVersion() {
         final AmazonS3 client = Mockito.mock(AmazonS3.class);
         final String version = "abcd";
         Mockito.doAnswer(
-            new Answer<S3Object>() {
-                @Override
-                public S3Object answer(final InvocationOnMock invocation) {
-                    final GetObjectRequest req =
-                        (GetObjectRequest) invocation.getArguments()[0];
-                    MatcherAssert.assertThat(
-                        req.getVersionId(), Matchers.is(version)
-                    );
-                    return Mockito.mock(S3Object.class);
-                }
+            (Answer<S3Object>) invocation -> {
+                final GetObjectRequest req =
+                    (GetObjectRequest) invocation.getArguments()[0];
+                MatcherAssert.assertThat(
+                    req.getVersionId(), Matchers.is(version)
+                );
+                return Mockito.mock(S3Object.class);
             }
         ).when(client).getObject(Mockito.any(GetObjectRequest.class));
         new DefaultResource(

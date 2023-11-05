@@ -50,7 +50,7 @@ import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link HttpResponse}.
@@ -135,19 +135,16 @@ final class HttpResponseTest {
         final StringBuffer received = new StringBuffer(Tv.HUNDRED);
         new Thread(
             new VerboseRunnable(
-                new Callable<Void>() {
-                    @Override
-                    public Void call() throws Exception {
-                        final Socket reading = server.accept();
-                        received.append(
-                            IOUtils.toString(
-                                reading.getInputStream(), Charsets.UTF_8
-                            )
-                        );
-                        reading.close();
-                        done.countDown();
-                        return null;
-                    }
+                (Callable<Void>) () -> {
+                    final Socket reading = server.accept();
+                    received.append(
+                        IOUtils.toString(
+                            reading.getInputStream(), Charsets.UTF_8
+                        )
+                    );
+                    reading.close();
+                    done.countDown();
+                    return null;
                 },
                 true
             )

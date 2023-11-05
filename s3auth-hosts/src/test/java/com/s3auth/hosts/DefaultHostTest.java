@@ -58,7 +58,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
@@ -125,10 +125,9 @@ final class DefaultHostTest {
 
     /**
      * DefaultHost can show some stats in {@code #toString()}.
-     * @throws Exception If there is some problem inside
      */
     @Test
-    void showsStatsInToString() throws Exception {
+    void showsStatsInToString() {
         MatcherAssert.assertThat(
             new DefaultHost(new BucketMocker().mock()),
             Matchers.hasToString(Matchers.notNullValue())
@@ -152,11 +151,10 @@ final class DefaultHostTest {
     /**
      * DefaultHost can throw a specific exception for a non existent bucket.
      *
-     * @throws Exception If there is some problem inside
      * @see <a href="http://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html">S3 Error Responses</a>
      */
     @Test
-    void throwsExceptionForNonexistentBucket() throws Exception {
+    void throwsExceptionForNonexistentBucket() {
         final AmazonS3 aws = Mockito.mock(AmazonS3.class);
         final AmazonServiceException exp =
             new AmazonServiceException("No such bucket");
@@ -353,12 +351,7 @@ final class DefaultHostTest {
         );
     }
 
-    /**
-     * DefaultHost throws exception from S3 if status code is 4xx and there
-     * is no BucketWebsiteConfiguration.
-     * @throws Exception If there is some problem inside
-     */
-    @Test(expected = IOException.class)
+    @Test
     public void throwsExceptionIfNoBucketWebsiteConfiguration()
         throws Exception {
         final AmazonS3 aws = Mockito.mock(AmazonS3.class);
@@ -367,9 +360,12 @@ final class DefaultHostTest {
         ex.setStatusCode(HttpStatus.SC_NOT_FOUND);
         Mockito.doThrow(ex).when(aws)
             .getObject(Mockito.any(GetObjectRequest.class));
-        new DefaultHost(
-            new BucketMocker().withClient(aws).mock(), this.cloudWatch()
-        ).fetch(URI.create("failed.html"), Range.ENTIRE, Version.LATEST);
+        Assertions.assertThrows(
+            IOException.class,
+            () -> new DefaultHost(
+                new BucketMocker().withClient(aws).mock(), this.cloudWatch()
+            ).fetch(URI.create("failed.html"), Range.ENTIRE, Version.LATEST)
+        );
     }
 
     /**

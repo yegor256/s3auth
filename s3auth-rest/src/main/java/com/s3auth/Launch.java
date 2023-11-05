@@ -51,9 +51,8 @@ public final class Launch {
     /**
      * Entry point.
      * @param args Command line args
-     * @throws Exception If fails
      */
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
         new FtCLI(
             new TkApp(new SyslogHosts(new DynamoHosts())),
             args

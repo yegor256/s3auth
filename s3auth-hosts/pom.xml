@@ -173,7 +173,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-dynamo</artifactId>
-      <version>0.22.2</version>
+      <version>0.22.3</version>
     </dependency>
   </dependencies>
   <build>

@@ -36,7 +36,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link Main}.
@@ -57,18 +57,15 @@ final class MainTest {
         final CountDownLatch done = new CountDownLatch(1);
         final Thread thread = new Thread(
             new VerboseRunnable(
-                new Callable<Void>() {
-                    @Override
-                    public Void call() throws Exception {
-                        try {
-                            Main.main(new String[]{Integer.toString(port)});
-                        } catch (final InterruptedException ex) {
-                            done.countDown();
-                            Thread.currentThread().interrupt();
-                            throw new IllegalStateException(ex);
-                        }
-                        return null;
+                (Callable<Void>) () -> {
+                    try {
+                        Main.main(new String[]{Integer.toString(port)});
+                    } catch (final InterruptedException ex) {
+                        done.countDown();
+                        Thread.currentThread().interrupt();
+                        throw new IllegalStateException(ex);
                     }
+                    return null;
                 },
                 false
             )

@@ -151,7 +151,7 @@ final class DefaultHost implements Host {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         // nothing to do
     }
 

@@ -55,17 +55,17 @@ public final class HostsMocker {
 
     private static class MkHosts implements Hosts {
         @Override
-        public void close() throws IOException {
+        public void close() {
             // do nothing.
         }
 
         @Override
-        public Host find(final String domain) throws IOException {
+        public Host find(final String domain) {
             return new HostMocker().mock();
         }
 
         @Override
-        public Set<Domain> domains(final User user) throws IOException {
+        public Set<Domain> domains(final User user) {
             return Collections.emptySet();
         }
     }

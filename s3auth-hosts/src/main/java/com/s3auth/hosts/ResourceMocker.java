@@ -145,7 +145,7 @@ public final class ResourceMocker {
         private final transient String contentType;
 
         @Override
-        public void close() throws IOException {
+        public void close() {
             // do nothing.
         }
 
@@ -161,7 +161,7 @@ public final class ResourceMocker {
         }
 
         @Override
-        public Collection<String> headers() throws IOException {
+        public Collection<String> headers() {
             return this.headers;
         }
 

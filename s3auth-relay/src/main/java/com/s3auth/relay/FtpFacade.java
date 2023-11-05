@@ -126,12 +126,7 @@ final class FtpFacade implements Closeable {
     public void listen() {
         this.frontend.scheduleWithFixedDelay(
             new VerboseRunnable(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        FtpFacade.this.process(FtpFacade.this.server);
-                    }
-                }
+                () -> FtpFacade.this.process(FtpFacade.this.server)
             ),
             0L, 1L, TimeUnit.NANOSECONDS
         );
@@ -176,20 +171,16 @@ final class FtpFacade implements Closeable {
      * @param socket The socket to report to
      */
     private static void overflow(final Socket socket) {
-        try {
-            new FtpResponse()
-                .withCode(FTPReply.SERVICE_NOT_AVAILABLE)
-                .withText(
-                    String.format(
-                        // @checkstyle LineLength (1 line)
-                        "We're sorry, the service is under high load at the moment (%d open connections), please try again in a few minutes",
-                        FtpFacade.THREADS
-                    )
+        new FtpResponse()
+            .withCode(FTPReply.SERVICE_NOT_AVAILABLE)
+            .withText(
+                String.format(
+                    // @checkstyle LineLength (1 line)
+                    "We're sorry, the service is under high load at the moment (%d open connections), please try again in a few minutes",
+                    FtpFacade.THREADS
                 )
-                .send(socket);
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
-        }
+            )
+            .send(socket);
     }
 
     /**
@@ -232,12 +223,7 @@ final class FtpFacade implements Closeable {
 
         @Override
         public void run() {
-            try {
-                this.thread.dispatch();
-            } catch (final InterruptedException ex) {
-                Thread.currentThread().interrupt();
-                Logger.warn(this, "%s", ex);
-            }
+            this.thread.dispatch();
         }
     }
 

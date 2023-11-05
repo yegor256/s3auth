@@ -43,8 +43,7 @@ import java.util.concurrent.ConcurrentMap;
 import javax.validation.constraints.NotNull;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link DefaultDynamo}.
@@ -52,16 +51,7 @@ import org.junit.Test;
  */
 final class DefaultDynamoTest {
 
-    /**
-     * DefaultDynamo can load configuration.
-     * @throws Exception If there is some problem inside
-     * @todo #90 This test creates a mock region with a H2Data backend which
-     *  has table columns with characters unsupported by the h2 database.
-     *  Issue #7 in jcabi-dynamo should fix this. Don't forget to remove the
-     *  @Ignore annotation from this test.
-     */
     @Test
-    @Ignore
     public void loadsDynamoConfiguration() throws Exception {
         final String table = "table";
         final Dynamo dynamo = new DefaultDynamo(
@@ -83,10 +73,9 @@ final class DefaultDynamoTest {
 
     /**
      * DefaultDynamo can instantiate from default constructor.
-     * @throws Exception If there is some problem inside
      */
     @Test
-    void instantiatesDefault() throws Exception {
+    void instantiatesDefault() {
         MatcherAssert.assertThat(
             new DefaultDynamo(),
             Matchers.not(Matchers.nullValue())
@@ -107,15 +96,14 @@ final class DefaultDynamoTest {
             new H2Data().with(
                 table,
                 new String[] {DefaultDynamo.USER},
-                new String[] {
-                    DefaultDynamo.NAME,
-                    DefaultDynamo.KEY,
-                    DefaultDynamo.SECRET,
-                    DefaultDynamo.BUCKET,
-                    DefaultDynamo.REGION,
-                    DefaultDynamo.SYSLOG,
-                }
-            ));
+                DefaultDynamo.NAME,
+                DefaultDynamo.KEY,
+                DefaultDynamo.SECRET,
+                DefaultDynamo.BUCKET,
+                DefaultDynamo.REGION,
+                DefaultDynamo.SYSLOG
+            )
+        );
         final Table tbl = region.table(table);
         for (int num = 0; num < 20; ++num) {
             tbl.put(this.item());

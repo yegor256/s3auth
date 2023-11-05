@@ -58,19 +58,18 @@ public final class DynamoMocker {
         // @checkstyle AnonInnerLength (50 lines)
         return new Dynamo() {
             @Override
-            public Map<URN, Domains> load() throws IOException {
+            public Map<URN, Domains> load() {
                 return Collections.unmodifiableMap(DynamoMocker.this.users);
             }
             @Override
-            public boolean add(final URN user, final Domain domain)
-                throws IOException {
+            public boolean add(final URN user, final Domain domain) {
                 DynamoMocker.this.users.putIfAbsent(user, new Domains());
                 DynamoMocker.this.users.get(user)
                     .add(new DefaultDomain(domain));
                 return true;
             }
             @Override
-            public boolean remove(final Domain domain) throws IOException {
+            public boolean remove(final Domain domain) {
                 for (final Set<Domain> domains
                     : DynamoMocker.this.users.values()
                 ) {
@@ -79,7 +78,7 @@ public final class DynamoMocker {
                 return true;
             }
             @Override
-            public void close() throws IOException {
+            public void close() {
                 assert this != null;
             }
         };

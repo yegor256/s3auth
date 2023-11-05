@@ -43,7 +43,7 @@ import org.apache.commons.net.ftp.FTPReply;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -86,10 +86,7 @@ final class FtpFacadeTest {
     private static FtpFacade mockFacade() throws IOException {
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
-            new Answer<Resource>() {
-                @Override
-                public Resource answer(final InvocationOnMock inv)
-                    throws InterruptedException {
+                (Answer<Resource>) inv -> {
                     final Resource answer = Mockito.mock(Resource.class);
                     Mockito.doReturn(new Date(5000L))
                         .when(answer).lastModified();
@@ -97,8 +94,7 @@ final class FtpFacadeTest {
                         .when(answer).status();
                     return answer;
                 }
-            }
-        ).when(host)
+            ).when(host)
             .fetch(
                 Mockito.any(URI.class),
                 Mockito.any(Range.class),

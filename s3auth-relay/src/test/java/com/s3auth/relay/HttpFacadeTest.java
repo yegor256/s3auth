@@ -59,7 +59,7 @@ import org.apache.http.client.utils.DateUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -83,15 +83,11 @@ final class HttpFacadeTest {
     void handlesParallelHttpRequests() throws Exception {
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
-            new Answer<Resource>() {
-                @Override
-                public Resource answer(final InvocationOnMock inv)
-                    throws InterruptedException {
+                (Answer<Resource>) inv -> {
                     TimeUnit.SECONDS.sleep(1L);
                     throw new IllegalStateException("hello, world!");
                 }
-            }
-        ).when(host)
+            ).when(host)
             .fetch(
                 Mockito.any(URI.class),
                 Mockito.any(Range.class),
@@ -121,10 +117,7 @@ final class HttpFacadeTest {
     void handlesIfModifiedSinceHeader() throws Exception {
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
-            new Answer<Resource>() {
-                @Override
-                public Resource answer(final InvocationOnMock inv)
-                    throws InterruptedException {
+                (Answer<Resource>) inv -> {
                     final Resource answer = Mockito.mock(Resource.class);
                     Mockito.doReturn(new Date(5000L))
                         .when(answer).lastModified();
@@ -132,8 +125,7 @@ final class HttpFacadeTest {
                         .when(answer).status();
                     return answer;
                 }
-            }
-        ).when(host)
+            ).when(host)
             .fetch(
                 Mockito.any(URI.class),
                 Mockito.any(Range.class),
@@ -191,10 +183,7 @@ final class HttpFacadeTest {
         final Date date = new Date();
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
-            new Answer<Resource>() {
-                @Override
-                public Resource answer(final InvocationOnMock inv)
-                    throws InterruptedException {
+                (Answer<Resource>) inv -> {
                     final Resource answer = Mockito.mock(Resource.class);
                     Mockito.doReturn(date)
                         .when(answer).lastModified();
@@ -202,8 +191,7 @@ final class HttpFacadeTest {
                         .when(answer).status();
                     return answer;
                 }
-            }
-        ).when(host)
+            ).when(host)
             .fetch(
                 Mockito.any(URI.class),
                 Mockito.any(Range.class),
@@ -246,18 +234,14 @@ final class HttpFacadeTest {
     void respondsWithAgeHeader() throws Exception {
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
-            new Answer<Resource>() {
-                @Override
-                public Resource answer(final InvocationOnMock inv)
-                    throws InterruptedException {
+                (Answer<Resource>) inv -> {
                     final Resource answer = Mockito.mock(Resource.class);
                     Mockito.doReturn(HttpURLConnection.HTTP_OK)
                         .when(answer).status();
                     Thread.sleep(1100L);
                     return answer;
                 }
-            }
-        ).when(host)
+            ).when(host)
             .fetch(
                 Mockito.any(URI.class),
                 Mockito.any(Range.class),
@@ -301,10 +285,7 @@ final class HttpFacadeTest {
         final String version = "1234";
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
-            new Answer<Resource>() {
-                @Override
-                public Resource answer(final InvocationOnMock inv)
-                    throws InterruptedException {
+                (Answer<Resource>) inv -> {
                     MatcherAssert.assertThat(
                         ((Version) inv.getArguments()[2]).version(),
                         Matchers.is(version)
@@ -314,8 +295,7 @@ final class HttpFacadeTest {
                         .when(answer).status();
                     return answer;
                 }
-            }
-        ).when(host)
+            ).when(host)
             .fetch(
                 Mockito.any(URI.class),
                 Mockito.any(Range.class),
@@ -353,10 +333,7 @@ final class HttpFacadeTest {
     void getsLatestVersion() throws Exception {
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
-            new Answer<Resource>() {
-                @Override
-                public Resource answer(final InvocationOnMock inv)
-                    throws InterruptedException {
+                (Answer<Resource>) inv -> {
                     MatcherAssert.assertThat(
                         (Version) inv.getArguments()[2],
                         Matchers.is(Version.LATEST)
@@ -366,8 +343,7 @@ final class HttpFacadeTest {
                         .when(answer).status();
                     return answer;
                 }
-            }
-        ).when(host)
+            ).when(host)
             .fetch(
                 Mockito.any(URI.class),
                 Mockito.any(Range.class),
@@ -405,9 +381,7 @@ final class HttpFacadeTest {
     void getsVersionListing() throws Exception {
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
-            new Answer<Resource>() {
-                @Override
-                public Resource answer(final InvocationOnMock inv) {
+                (Answer<Resource>) inv -> {
                     MatcherAssert.assertThat(
                         (Version) inv.getArguments()[2],
                         Matchers.is(Version.LIST)
@@ -417,8 +391,7 @@ final class HttpFacadeTest {
                         .when(answer).status();
                     return answer;
                 }
-            }
-        ).when(host)
+            ).when(host)
             .fetch(
                 Mockito.any(URI.class),
                 Mockito.any(Range.class),
@@ -457,9 +430,7 @@ final class HttpFacadeTest {
         final Host host = Mockito.mock(Host.class);
         final String body = "compressed";
         Mockito.doAnswer(
-            new Answer<Resource>() {
-                @Override
-                public Resource answer(final InvocationOnMock inv) {
+                (Answer<Resource>) inv -> {
                     final Resource answer = Mockito.spy(
                         new ResourceMocker()
                             .withContent(body)
@@ -470,8 +441,7 @@ final class HttpFacadeTest {
                         .when(answer).contentType();
                     return answer;
                 }
-            }
-        ).when(host)
+            ).when(host)
             .fetch(
                 Mockito.any(URI.class),
                 Mockito.any(Range.class),

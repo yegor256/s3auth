@@ -33,7 +33,7 @@ import java.io.File;
 import java.util.Map;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link H2DomainStatsData}.
@@ -54,12 +54,7 @@ final class H2DomainStatsDataTest {
         final long bytes = 100;
         data.put(
             domain,
-            new Stats() {
-                @Override
-                public long bytesTransferred() {
-                    return bytes;
-                }
-            }
+            () -> bytes
         );
         MatcherAssert.assertThat(
             data.get(domain).bytesTransferred(),
