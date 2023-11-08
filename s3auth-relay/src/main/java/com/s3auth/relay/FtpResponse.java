@@ -80,7 +80,7 @@ final class FtpResponse {
      * @return The response's canonical String representation ($code $text)
      */
     public String asString() {
-        return "";
+        return this.toString();
     }
 
     @Override
@@ -92,6 +92,7 @@ final class FtpResponse {
      * Send it to the socket.
      * @param socket The socket to write to
      * @return How many bytes were actually sent
+     * @checkstyle NonStaticMethodCheck (10 lines)
      */
     @Loggable(
         value = Loggable.DEBUG, limit = Integer.MAX_VALUE,

@@ -38,6 +38,7 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -46,7 +47,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -85,7 +85,7 @@ final class HttpResponseTest {
      */
     @Test
     @SuppressWarnings("PMD.DoNotUseThreads")
-    public void sendsDataFromSlowResource() throws Exception {
+    void sendsDataFromSlowResource() throws Exception {
         final String content = "\u0433 some text";
         // @checkstyle AnonInnerLength (50 lines)
         final Resource res = new Resource() {
@@ -97,32 +97,38 @@ final class HttpResponseTest {
                     throw new IllegalStateException(ex);
                 }
                 final PrintWriter writer = new PrintWriter(
-                    new OutputStreamWriter(stream, Charsets.UTF_8)
+                    new OutputStreamWriter(stream, StandardCharsets.UTF_8)
                 );
                 writer.print(content);
                 writer.flush();
-                return (long) content.getBytes().length;
+                return content.getBytes().length;
             }
+
             @Override
             public int status() {
                 return HttpURLConnection.HTTP_OK;
             }
+
             @Override
             public Collection<String> headers() {
                 return Collections.emptyList();
             }
+
             @Override
             public String etag() {
                 return "";
             }
+
             @Override
             public Date lastModified() {
                 return new Date();
             }
+
             @Override
             public String contentType() {
                 return "text/plain";
             }
+
             @Override
             // @checkstyle MethodBodyComments (2 lines)
             public void close() {
@@ -139,7 +145,7 @@ final class HttpResponseTest {
                     final Socket reading = server.accept();
                     received.append(
                         IOUtils.toString(
-                            reading.getInputStream(), Charsets.UTF_8
+                            reading.getInputStream(), StandardCharsets.UTF_8
                         )
                     );
                     reading.close();

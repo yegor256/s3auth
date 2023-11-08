@@ -79,23 +79,17 @@ final class HttpFacade implements Closeable {
     /**
      * Executor service, with socket openers.
      */
-    private final transient ScheduledExecutorService frontend =
-        Executors.newScheduledThreadPool(2, new VerboseThreads("front"));
+    private final transient ScheduledExecutorService frontend;
 
     /**
      * Executor service, with consuming threads.
      */
-    private final transient ScheduledExecutorService backend =
-        Executors.newScheduledThreadPool(
-            HttpFacade.THREADS,
-            new VerboseThreads("back")
-        );
+    private final transient ScheduledExecutorService backend;
 
     /**
      * Blocking queue of ready-to-be-processed sockets.
      */
-    private final transient BlockingQueue<Socket> sockets =
-        new SynchronousQueue<>();
+    private final transient BlockingQueue<Socket> sockets;
 
     /**
      * Server socket.
@@ -114,9 +108,16 @@ final class HttpFacade implements Closeable {
      * @param sslport SSL port number.
      * @throws IOException If can't initialize
      */
+    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     HttpFacade(@NotNull final Hosts hosts, final int port, final int sslport)
         throws IOException {
+        this.frontend = Executors.newScheduledThreadPool(2, new VerboseThreads("front"));
         this.server = new ServerSocket(port);
+        this.backend = Executors.newScheduledThreadPool(
+            HttpFacade.THREADS,
+            new VerboseThreads("back")
+        );
+        this.sockets = new SynchronousQueue<>();
         this.secured = SSLServerSocketFactory.getDefault()
             .createServerSocket(sslport);
         final Runnable runnable = new VerboseRunnable(
@@ -139,13 +140,13 @@ final class HttpFacade implements Closeable {
     public void listen() {
         this.frontend.scheduleWithFixedDelay(
             new VerboseRunnable(
-                () -> HttpFacade.this.process(HttpFacade.this.server)
+                () -> this.process(this.server)
             ),
             0L, 1L, TimeUnit.NANOSECONDS
         );
         this.frontend.scheduleWithFixedDelay(
             new VerboseRunnable(
-                () -> HttpFacade.this.process(HttpFacade.this.secured)
+                () -> this.process(this.secured)
             ),
             0L, 1L, TimeUnit.NANOSECONDS
         );
@@ -232,12 +233,15 @@ final class HttpFacade implements Closeable {
 
     /**
      * Dispatcher of HttpThread.
+     *
+     * @since 0.0.1
      */
     private static final class HttpThreadRunnable implements Runnable {
         /**
          * The thread to run.
          */
         private final transient HttpThread thread;
+
         /**
          * Constructor.
          * @param thrd The HttpThread
@@ -245,6 +249,7 @@ final class HttpFacade implements Closeable {
         HttpThreadRunnable(final HttpThread thrd) {
             this.thread = thrd;
         }
+
         @Override
         public void run() {
             try {

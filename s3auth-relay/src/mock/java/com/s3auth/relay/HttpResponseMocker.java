@@ -35,11 +35,13 @@ import org.mockito.Mockito;
 
 /**
  * Mocker of {@link HttpResponse}.
+ *
+ * @since 0.0.1
  */
 public final class HttpResponseMocker {
 
     /**
-     * It's a unility class at the moment.
+     * It's a utility class at the moment.
      */
     private HttpResponseMocker() {
         // intentionally empty
@@ -51,6 +53,7 @@ public final class HttpResponseMocker {
      * @return Text form
      * @throws Exception If there is some problem inside
      */
+    @SuppressWarnings("PMD.ProhibitPublicStaticMethods")
     public static String toString(final HttpResponse resp) throws Exception {
         final Socket socket = Mockito.mock(Socket.class);
         final ByteArrayOutputStream stream = new ByteArrayOutputStream();

@@ -40,6 +40,7 @@ import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -52,7 +53,6 @@ import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
-import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -141,9 +141,10 @@ final class HttpRequest {
      * @see <a href="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>
      * @checkstyle ExecutableStatementCountCheck (100 lines)
      */
+    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     HttpRequest(@NotNull final Socket socket) throws IOException {
         final BufferedReader reader = new BufferedReader(
-            new InputStreamReader(socket.getInputStream(), Charsets.UTF_8)
+            new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8)
         );
         final String top = reader.readLine();
         if (top == null) {
@@ -159,7 +160,7 @@ final class HttpRequest {
                 String.format("invalid first line: '%s'", top)
             );
         }
-        this.parms = Collections.unmodifiableMap(this.parseParameters(top));
+        this.parms = Collections.unmodifiableMap(HttpRequest.parseParameters(top));
         final String method = matcher.group(1);
         if (!"GET".equals(method) && !"HEAD".equals(method)) {
             throw new HttpException(
@@ -187,7 +188,7 @@ final class HttpRequest {
             }
             headers.add(line);
         }
-        this.hdrs = Collections.unmodifiableMap(this.parseHeaders(headers));
+        this.hdrs = Collections.unmodifiableMap(HttpRequest.parseHeaders(headers));
     }
 
     /**
@@ -260,7 +261,7 @@ final class HttpRequest {
      * @return Map of headers
      * @throws HttpException If some socket problem
      */
-    private Map<String, Collection<String>> parseHeaders(
+    private static Map<String, Collection<String>> parseHeaders(
         final Iterable<String> lines) throws HttpException {
         final Map<String, Collection<String>> map =
             new CaseInsensitiveMap<>();
@@ -287,7 +288,7 @@ final class HttpRequest {
      * @param request Request string
      * @return Map of headers
      */
-    private Map<String, Collection<String>> parseParameters(
+    private static Map<String, Collection<String>> parseParameters(
         final CharSequence request) {
         final Map<String, Collection<String>> map =
             new HashMap<>(0);

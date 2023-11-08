@@ -49,6 +49,8 @@ import org.mockito.stubbing.Answer;
 
 /**
  * Test case for {@link FtpFacade}.
+ *
+ * @since 0.0.1
  */
 final class FtpFacadeTest {
 
@@ -58,7 +60,7 @@ final class FtpFacadeTest {
      */
     @Test
     @Disabled
-    public void connectDisconnect() throws IOException {
+    void connectDisconnect() throws IOException {
         final FtpFacade facade = FtpFacadeTest.mockFacade();
         final FTPClient ftp = new FTPClient();
         try {
@@ -85,20 +87,19 @@ final class FtpFacadeTest {
     private static FtpFacade mockFacade() throws IOException {
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
-                (Answer<Resource>) inv -> {
-                    final Resource answer = Mockito.mock(Resource.class);
-                    Mockito.doReturn(new Date(5000L))
-                        .when(answer).lastModified();
-                    Mockito.doReturn(HttpURLConnection.HTTP_OK)
-                        .when(answer).status();
-                    return answer;
-                }
-            ).when(host)
-            .fetch(
-                Mockito.any(URI.class),
-                Mockito.any(Range.class),
-                Mockito.any(Version.class)
-            );
+            (Answer<Resource>) inv -> {
+                final Resource answer = Mockito.mock(Resource.class);
+                Mockito.doReturn(new Date(5000L))
+                    .when(answer).lastModified();
+                Mockito.doReturn(HttpURLConnection.HTTP_OK)
+                    .when(answer).status();
+                return answer;
+            }
+        ).when(host).fetch(
+            Mockito.any(URI.class),
+            Mockito.any(Range.class),
+            Mockito.any(Version.class)
+        );
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         return new FtpFacade(hosts, PortMocker.reserve());

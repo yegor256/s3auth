@@ -33,11 +33,13 @@ import java.net.ServerSocket;
 
 /**
  * Mocker of HTTP port.
+ *
+ * @since 0.0.1
  */
 public final class PortMocker {
 
     /**
-     * It's a unility class at the moment.
+     * It's a utility class at the moment.
      */
     private PortMocker() {
         // intentionally empty
@@ -47,8 +49,9 @@ public final class PortMocker {
      * Find and return the first available port.
      * @return The port number
      */
+    @SuppressWarnings("PMD.ProhibitPublicStaticMethods")
     public static int reserve() {
-        int port;
+        final int port;
         try {
             final ServerSocket socket = new ServerSocket(0);
             try {

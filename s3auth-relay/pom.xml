@@ -147,11 +147,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>com.google.code.findbugs</groupId>
-      <artifactId>annotations</artifactId>
-      <version>3.0.1u2</version>
-    </dependency>
-    <dependency>
       <groupId>com.rexsl</groupId>
       <artifactId>rexsl-test</artifactId>
       <version>0.13.3</version>
@@ -161,6 +156,16 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       <groupId>commons-net</groupId>
       <artifactId>commons-net</artifactId>
       <version>3.10.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-core</artifactId>
+      <version>1.3</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
   <build>
@@ -244,6 +249,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
               <excludes>
                 <exclude>xml:/src/it/settings.xml</exclude>
                 <exclude>xml:/src/main/production/pom.xml</exclude>
+                <exclude>duplicatefinder:.*</exclude>
               </excludes>
             </configuration>
           </plugin>

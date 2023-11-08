@@ -38,7 +38,6 @@ import com.s3auth.hosts.Range;
 import com.s3auth.hosts.Resource;
 import com.s3auth.hosts.Stats;
 import com.s3auth.hosts.Version;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -75,6 +74,7 @@ final class LocalHost implements Host {
      * @param name The name of host, provided in "Host" HTTP header
      * @return TRUE if this is a localhost
      */
+    @SuppressWarnings("PMD.ProhibitPublicStaticMethods")
     public static boolean isIt(@NotNull final String name) {
         return "relay.s3auth.com".equals(name);
     }
@@ -136,7 +136,6 @@ final class LocalHost implements Host {
      * @return The exception to throw
      */
     @SuppressWarnings("PMD.DoNotCallSystemExit")
-    @SuppressFBWarnings("DM_EXIT")
     private IOException halt(final String uri) {
         if (uri.equals(LocalHost.SHUTDOWN)) {
             Logger.warn(this, "fetch(%s): shutting down..", uri);
@@ -155,6 +154,8 @@ final class LocalHost implements Host {
 
     /**
      * Dummy host stats.
+     *
+     * @since 0.0.1
      */
     private static final class DummyStats implements Stats {
         @Override

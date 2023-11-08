@@ -132,7 +132,7 @@ final class DirectoryListing implements Resource {
     @Override
     public long writeTo(final OutputStream stream) throws IOException {
         stream.write(this.content);
-        return (long) this.content.length;
+        return this.content.length;
     }
 
     @Override

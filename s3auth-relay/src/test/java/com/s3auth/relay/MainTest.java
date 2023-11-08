@@ -36,10 +36,13 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link Main}.
+ *
+ * @since 0.0.1
  */
 final class MainTest {
 
@@ -50,9 +53,9 @@ final class MainTest {
      *  in runtime. We should find a way to mock it properly.
      */
     @Test
-    @org.junit.Ignore
+    @Disabled
     @SuppressWarnings("PMD.DoNotUseThreads")
-    public void startsAndListensOnPort() throws Exception {
+    void startsAndListensOnPort() throws Exception {
         final int port = PortMocker.reserve();
         final CountDownLatch done = new CountDownLatch(1);
         final Thread thread = new Thread(

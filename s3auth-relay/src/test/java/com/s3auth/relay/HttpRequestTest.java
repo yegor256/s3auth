@@ -32,10 +32,12 @@ package com.s3auth.relay;
 import com.s3auth.hosts.Range;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link HttpRequest}.
+ *
  * @since 0.0.1
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
@@ -224,12 +226,14 @@ final class HttpRequestTest {
 
     /**
      * HttpRequest handles invalid URI correctly.
-     * @throws Exception If something goes wrong
      */
-    @Test(expected = HttpException.class)
-    public void handlesInvalidUriCorrectly() throws Exception {
-        HttpRequestMocker.toRequest(
-            "HEAD /%7B%7B%20item[' HTTP/1.1\nHost:local\nAccept:text/plain\n"
+    @Test
+    void handlesInvalidUriCorrectly() {
+        Assertions.assertThrows(
+            HttpException.class,
+            () -> HttpRequestMocker.toRequest(
+                "HEAD /%7B%7B%20item[' HTTP/1.1\nHost:local\nAccept:text/plain\n"
+            )
         );
     }
 

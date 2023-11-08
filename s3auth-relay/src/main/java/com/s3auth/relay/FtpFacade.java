@@ -76,23 +76,17 @@ final class FtpFacade implements Closeable {
     /**
      * Executor service, with socket openers.
      */
-    private final transient ScheduledExecutorService frontend =
-        Executors.newScheduledThreadPool(2, new VerboseThreads("FTP-front"));
+    private final transient ScheduledExecutorService frontend;
 
     /**
      * Executor service, with consuming threads.
      */
-    private final transient ScheduledExecutorService backend =
-        Executors.newScheduledThreadPool(
-            FtpFacade.THREADS,
-            new VerboseThreads("FTP-back")
-        );
+    private final transient ScheduledExecutorService backend;
 
     /**
      * Blocking queue of ready-to-be-processed sockets.
      */
-    private final transient BlockingQueue<Socket> sockets =
-        new SynchronousQueue<>();
+    private final transient BlockingQueue<Socket> sockets;
 
     /**
      * Server socket.
@@ -105,12 +99,21 @@ final class FtpFacade implements Closeable {
      * @param port Port number
      * @throws IOException If can't initialize
      */
+    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     FtpFacade(@NotNull final Hosts hosts, final int port)
         throws IOException {
+        this.frontend = Executors.newScheduledThreadPool(
+            2, new VerboseThreads("FTP-front")
+        );
+        this.backend = Executors.newScheduledThreadPool(
+            FtpFacade.THREADS,
+            new VerboseThreads("FTP-back")
+        );
+        this.sockets = new SynchronousQueue<>();
         this.server = new ServerSocket(port);
         final FtpThread thread = new FtpThread(this.sockets, hosts);
         final Runnable runnable = new VerboseRunnable(
-            new FtpFacade.FTPThreadRunnable(thread), true, true
+            new FtpThreadRunnable(thread), true, true
         );
         for (int idx = 0; idx < FtpFacade.THREADS; ++idx) {
             this.backend.scheduleWithFixedDelay(
@@ -125,9 +128,7 @@ final class FtpFacade implements Closeable {
      */
     public void listen() {
         this.frontend.scheduleWithFixedDelay(
-            new VerboseRunnable(
-                () -> FtpFacade.this.process(FtpFacade.this.server)
-            ),
+            new VerboseRunnable(() -> this.process(this.server)),
             0L, 1L, TimeUnit.NANOSECONDS
         );
     }
@@ -206,8 +207,10 @@ final class FtpFacade implements Closeable {
 
     /**
      * Dispatcher of FTPThread.
+     *
+     * @since 0.0.1
      */
-    private static final class FTPThreadRunnable implements Runnable {
+    private static final class FtpThreadRunnable implements Runnable {
         /**
          * The thread to run.
          */
@@ -217,7 +220,7 @@ final class FtpFacade implements Closeable {
          * Constructor.
          * @param thrd The FTPThread
          */
-        FTPThreadRunnable(final FtpThread thrd) {
+        FtpThreadRunnable(final FtpThread thrd) {
             this.thread = thrd;
         }
 

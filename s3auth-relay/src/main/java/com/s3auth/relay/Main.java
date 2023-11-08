@@ -29,7 +29,6 @@
  */
 package com.s3auth.relay;
 
-import com.amazonaws.SDKGlobalConfiguration;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
@@ -65,6 +64,7 @@ public final class Main {
      * @todo #213:30min Create a FtpFacade in order to provide a FTP gateway.
      *  Also unignore test 'connectDisconnect' in FtpFacadeTest.
      */
+    @SuppressWarnings("PMD.ProhibitPublicStaticMethods")
     public static void main(final String[] args) throws Exception {
         final OptionParser parser = new OptionParser("p:s:d");
         final OptionSet options = parser.parse(args);
@@ -83,10 +83,6 @@ public final class Main {
         final HttpFacade facade =
             new HttpFacade(new DynamoHosts(), port, secured);
         facade.listen();
-        System.setProperty(
-            SDKGlobalConfiguration.ENABLE_S3_SIGV4_SYSTEM_PROPERTY,
-            "true"
-        );
         Logger.warn(Main.class, "started at http://localhost:%d...", port);
         if (options.has("d")) {
             while (true) {

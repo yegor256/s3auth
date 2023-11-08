@@ -37,6 +37,8 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link com.s3auth.relay.FtpResponse}.
+ *
+ * @since 0.0.1
  */
 final class FtpResponseTest {
 
@@ -45,13 +47,12 @@ final class FtpResponseTest {
      */
     @Test
     @Disabled
-    public void constructsCorrectly() {
+    void constructsCorrectly() {
         MatcherAssert.assertThat(
             new FtpResponse()
                 .withCode(FTPReply.COMMAND_OK)
                 .withText("hi!")
-                .asString()
-            ,
+                .asString(),
             Matchers.equalTo("200 hi!")
         );
     }

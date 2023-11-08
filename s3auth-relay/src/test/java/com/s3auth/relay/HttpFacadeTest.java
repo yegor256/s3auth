@@ -45,6 +45,7 @@ import java.io.ByteArrayInputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
@@ -52,7 +53,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.client.utils.DateUtils;
@@ -65,6 +65,7 @@ import org.mockito.stubbing.Answer;
 
 /**
  * Test case for {@link HttpFacade}.
+ *
  * @since 0.0.1
  */
 @SuppressWarnings({
@@ -82,16 +83,15 @@ final class HttpFacadeTest {
     void handlesParallelHttpRequests() throws Exception {
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
-                (Answer<Resource>) inv -> {
-                    TimeUnit.SECONDS.sleep(1L);
-                    throw new IllegalStateException("hello, world!");
-                }
-            ).when(host)
-            .fetch(
-                Mockito.any(URI.class),
-                Mockito.any(Range.class),
-                Mockito.any(Version.class)
-            );
+            (Answer<Resource>) inv -> {
+                TimeUnit.SECONDS.sleep(1L);
+                throw new IllegalStateException("hello, world!");
+            }
+        ).when(host).fetch(
+            Mockito.any(URI.class),
+            Mockito.any(Range.class),
+            Mockito.any(Version.class)
+        );
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
@@ -116,20 +116,19 @@ final class HttpFacadeTest {
     void handlesIfModifiedSinceHeader() throws Exception {
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
-                (Answer<Resource>) inv -> {
-                    final Resource answer = Mockito.mock(Resource.class);
-                    Mockito.doReturn(new Date(5000L))
-                        .when(answer).lastModified();
-                    Mockito.doReturn(HttpURLConnection.HTTP_OK)
-                        .when(answer).status();
-                    return answer;
-                }
-            ).when(host)
-            .fetch(
-                Mockito.any(URI.class),
-                Mockito.any(Range.class),
-                Mockito.any(Version.class)
-            );
+            (Answer<Resource>) inv -> {
+                final Resource answer = Mockito.mock(Resource.class);
+                Mockito.doReturn(new Date(5000L))
+                    .when(answer).lastModified();
+                Mockito.doReturn(HttpURLConnection.HTTP_OK)
+                    .when(answer).status();
+                return answer;
+            }
+        ).when(host).fetch(
+            Mockito.any(URI.class),
+            Mockito.any(Range.class),
+            Mockito.any(Version.class)
+        );
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
@@ -165,7 +164,7 @@ final class HttpFacadeTest {
                 )
                 .header(
                     HttpHeaders.IF_MODIFIED_SINCE,
-                    DateUtils.formatDate(new Date(10000L))
+                    DateUtils.formatDate(new Date(10_000L))
                 ).uri().back().fetch().as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_NOT_MODIFIED);
         } finally {
@@ -182,20 +181,19 @@ final class HttpFacadeTest {
         final Date date = new Date();
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
-                (Answer<Resource>) inv -> {
-                    final Resource answer = Mockito.mock(Resource.class);
-                    Mockito.doReturn(date)
-                        .when(answer).lastModified();
-                    Mockito.doReturn(HttpURLConnection.HTTP_OK)
-                        .when(answer).status();
-                    return answer;
-                }
-            ).when(host)
-            .fetch(
-                Mockito.any(URI.class),
-                Mockito.any(Range.class),
-                Mockito.any(Version.class)
-            );
+            (Answer<Resource>) inv -> {
+                final Resource answer = Mockito.mock(Resource.class);
+                Mockito.doReturn(date)
+                    .when(answer).lastModified();
+                Mockito.doReturn(HttpURLConnection.HTTP_OK)
+                    .when(answer).status();
+                return answer;
+            }
+        ).when(host).fetch(
+            Mockito.any(URI.class),
+            Mockito.any(Range.class),
+            Mockito.any(Version.class)
+        );
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
@@ -233,19 +231,18 @@ final class HttpFacadeTest {
     void respondsWithAgeHeader() throws Exception {
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
-                (Answer<Resource>) inv -> {
-                    final Resource answer = Mockito.mock(Resource.class);
-                    Mockito.doReturn(HttpURLConnection.HTTP_OK)
-                        .when(answer).status();
-                    Thread.sleep(1100L);
-                    return answer;
-                }
-            ).when(host)
-            .fetch(
-                Mockito.any(URI.class),
-                Mockito.any(Range.class),
-                Mockito.any(Version.class)
-            );
+            (Answer<Resource>) inv -> {
+                final Resource answer = Mockito.mock(Resource.class);
+                Mockito.doReturn(HttpURLConnection.HTTP_OK)
+                    .when(answer).status();
+                Thread.sleep(1100L);
+                return answer;
+            }
+        ).when(host).fetch(
+            Mockito.any(URI.class),
+            Mockito.any(Range.class),
+            Mockito.any(Version.class)
+        );
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
@@ -284,22 +281,21 @@ final class HttpFacadeTest {
         final String version = "1234";
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
-                (Answer<Resource>) inv -> {
-                    MatcherAssert.assertThat(
-                        ((Version) inv.getArguments()[2]).version(),
-                        Matchers.is(version)
-                    );
-                    final Resource answer = Mockito.mock(Resource.class);
-                    Mockito.doReturn(HttpURLConnection.HTTP_OK)
-                        .when(answer).status();
-                    return answer;
-                }
-            ).when(host)
-            .fetch(
-                Mockito.any(URI.class),
-                Mockito.any(Range.class),
-                Mockito.any(Version.class)
-            );
+            (Answer<Resource>) inv -> {
+                MatcherAssert.assertThat(
+                    ((Version) inv.getArguments()[2]).version(),
+                    Matchers.is(version)
+                );
+                final Resource answer = Mockito.mock(Resource.class);
+                Mockito.doReturn(HttpURLConnection.HTTP_OK)
+                    .when(answer).status();
+                return answer;
+            }
+        ).when(host).fetch(
+            Mockito.any(URI.class),
+            Mockito.any(Range.class),
+            Mockito.any(Version.class)
+        );
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
@@ -332,22 +328,21 @@ final class HttpFacadeTest {
     void getsLatestVersion() throws Exception {
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
-                (Answer<Resource>) inv -> {
-                    MatcherAssert.assertThat(
-                        (Version) inv.getArguments()[2],
-                        Matchers.is(Version.LATEST)
-                    );
-                    final Resource answer = Mockito.mock(Resource.class);
-                    Mockito.doReturn(HttpURLConnection.HTTP_OK)
-                        .when(answer).status();
-                    return answer;
-                }
-            ).when(host)
-            .fetch(
-                Mockito.any(URI.class),
-                Mockito.any(Range.class),
-                Mockito.any(Version.class)
-            );
+            (Answer<Resource>) inv -> {
+                MatcherAssert.assertThat(
+                    (Version) inv.getArguments()[2],
+                    Matchers.is(Version.LATEST)
+                );
+                final Resource answer = Mockito.mock(Resource.class);
+                Mockito.doReturn(HttpURLConnection.HTTP_OK)
+                    .when(answer).status();
+                return answer;
+            }
+        ).when(host).fetch(
+            Mockito.any(URI.class),
+            Mockito.any(Range.class),
+            Mockito.any(Version.class)
+        );
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
@@ -380,22 +375,21 @@ final class HttpFacadeTest {
     void getsVersionListing() throws Exception {
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
-                (Answer<Resource>) inv -> {
-                    MatcherAssert.assertThat(
-                        (Version) inv.getArguments()[2],
-                        Matchers.is(Version.LIST)
-                    );
-                    final Resource answer = Mockito.mock(Resource.class);
-                    Mockito.doReturn(HttpURLConnection.HTTP_OK)
-                        .when(answer).status();
-                    return answer;
-                }
-            ).when(host)
-            .fetch(
-                Mockito.any(URI.class),
-                Mockito.any(Range.class),
-                Mockito.any(Version.class)
-            );
+            (Answer<Resource>) inv -> {
+                MatcherAssert.assertThat(
+                    (Version) inv.getArguments()[2],
+                    Matchers.is(Version.LIST)
+                );
+                final Resource answer = Mockito.mock(Resource.class);
+                Mockito.doReturn(HttpURLConnection.HTTP_OK)
+                    .when(answer).status();
+                return answer;
+            }
+        ).when(host).fetch(
+            Mockito.any(URI.class),
+            Mockito.any(Range.class),
+            Mockito.any(Version.class)
+        );
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
@@ -429,23 +423,22 @@ final class HttpFacadeTest {
         final Host host = Mockito.mock(Host.class);
         final String body = "compressed";
         Mockito.doAnswer(
-                (Answer<Resource>) inv -> {
-                    final Resource answer = Mockito.spy(
-                        new ResourceMocker().init()
-                            .withContent(body)
-                            .withHeaders("gzip")
-                            .mock()
-                    );
-                    Mockito.doReturn("text/plain")
-                        .when(answer).contentType();
-                    return answer;
-                }
-            ).when(host)
-            .fetch(
-                Mockito.any(URI.class),
-                Mockito.any(Range.class),
-                Mockito.any(Version.class)
-            );
+            (Answer<Resource>) inv -> {
+                final Resource answer = Mockito.spy(
+                    new ResourceMocker().init()
+                        .withContent(body)
+                        .withHeaders("gzip")
+                        .mock()
+                );
+                Mockito.doReturn("text/plain")
+                    .when(answer).contentType();
+                return answer;
+            }
+        ).when(host).fetch(
+            Mockito.any(URI.class),
+            Mockito.any(Range.class),
+            Mockito.any(Version.class)
+        );
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
@@ -472,7 +465,7 @@ final class HttpFacadeTest {
                     new GZIPInputStream(
                         new ByteArrayInputStream(resp.binary())
                     ),
-                    Charsets.UTF_8
+                    StandardCharsets.UTF_8
                 ),
                 Matchers.is(body)
             );
@@ -492,7 +485,7 @@ final class HttpFacadeTest {
      */
     @Test
     @Disabled
-    public void getsContentOverSSL() throws Exception {
+    void getsContentOverSsl() throws Exception {
         MatcherAssert.assertThat(
             System.getProperty("javax.net.ssl.keyStore"),
             Matchers.notNullValue()
