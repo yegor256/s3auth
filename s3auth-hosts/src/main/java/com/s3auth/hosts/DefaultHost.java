@@ -65,6 +65,7 @@ import org.apache.http.HttpStatus;
  * Default implementation of {@link Host}.
  *
  * @since 0.0.1
+ * @checkstyle ClassFanOutComplexityCheck (1000 lines)
  */
 @Immutable
 @EqualsAndHashCode(of = "bucket")
@@ -267,6 +268,7 @@ final class DefaultHost implements Host {
      * Convert URI to all possible S3 object names (in order of importance).
      * @param uri The URI
      * @return Object names
+     * @checkstyle NonStaticMethodCheck (20 lines)
      */
     private Iterable<DefaultHost.ObjectName> names(final URI uri) {
         final String name = StringUtils.strip(uri.getPath(), "/");
@@ -281,6 +283,8 @@ final class DefaultHost implements Host {
 
     /**
      * Object name with a suffix from a bucket.
+     *
+     * @since 0.0.1
      */
     @Loggable(Loggable.DEBUG)
     private final class NameWithSuffix implements DefaultHost.ObjectName {
@@ -322,6 +326,7 @@ final class DefaultHost implements Host {
             text.append(suffix);
             return text.toString();
         }
+
         @Override
         public String toString() {
             return String.format("%s+suffix", this.origin);
@@ -376,7 +381,7 @@ final class DefaultHost implements Host {
          * Public ctor.
          * @param bckt The name of the bucket
          */
-        public HostStats(final String bckt) {
+        HostStats(final String bckt) {
             this.bucket = bckt;
         }
 

@@ -62,7 +62,7 @@ final class HtpasswdTest {
         MatcherAssert.assertThat(
             new Htpasswd(
                 new DefaultHost(
-                    new BucketMocker().withClient(aws).mock(),
+                    new BucketMocker().init().withClient(aws).mock(),
                     this.cloudWatch()
                 )
             ),
@@ -165,7 +165,7 @@ final class HtpasswdTest {
     void worksWithDefaultHost() throws Exception {
         final Htpasswd htpasswd = new Htpasswd(
             new DefaultHost(
-                new BucketMocker().mock(),
+                new BucketMocker().init().mock(),
                 () -> Mockito.mock(AmazonCloudWatchClient.class)
             )
         );
@@ -182,8 +182,8 @@ final class HtpasswdTest {
      * @throws Exception If there is some problem inside
      */
     private Host host(final String htpasswd) throws Exception {
-        final Host host = Mockito.spy(new HostMocker().mock());
-        Mockito.doReturn(new ResourceMocker().withContent(htpasswd).mock())
+        final Host host = Mockito.spy(new HostMocker().init().mock());
+        Mockito.doReturn(new ResourceMocker().init().withContent(htpasswd).mock())
             .when(host)
             .fetch(URI.create("/.htpasswd"), Range.ENTIRE, Version.LATEST);
         return host;

@@ -55,12 +55,13 @@ public final class ResourceMocker {
         .builder();
 
     /**
-     * Public ctor.
+     * Default one.
+     * @return This object
      */
-    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
-    public ResourceMocker() {
+    public ResourceMocker init() {
         this.withContent("no content");
         this.resource.status(HttpURLConnection.HTTP_OK);
+        return this;
     }
 
     /**

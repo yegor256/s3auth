@@ -96,24 +96,31 @@ final class H2DomainStatsData implements DomainStatsData {
 
     /**
      * Public ctor.
-     * @throws IOException If an IO Exception occurs.
      */
-    H2DomainStatsData() throws IOException {
+    H2DomainStatsData() {
         this(new File("s3auth-domainStats"));
     }
 
     /**
      * Public ctor.
      * @param file The file pointing to the database to use.
+     */
+    H2DomainStatsData(final File file) {
+        this.jdbc = String.format("jdbc:h2:file:%s", file.getAbsolutePath());
+    }
+
+    /**
+     * Create tables.
+     * @return This
      * @throws IOException If an IO Exception occurs.
      */
-    H2DomainStatsData(final File file) throws IOException {
-        this.jdbc = String.format("jdbc:h2:file:%s", file.getAbsolutePath());
+    public H2DomainStatsData init() throws IOException {
         try {
             this.session().sql(H2DomainStatsData.CREATE).execute().commit();
         } catch (final SQLException ex) {
             throw new IOException(ex);
         }
+        return this;
     }
 
     @Override

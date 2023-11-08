@@ -44,7 +44,7 @@ final class DomainsTest {
      */
     @Test
     void addsAndRetrievesDomains() {
-        final Domain domain = new DomainMocker().mock();
+        final Domain domain = new DomainMocker().init().mock();
         final Domains domains = new Domains();
         domains.add(domain);
         MatcherAssert.assertThat(

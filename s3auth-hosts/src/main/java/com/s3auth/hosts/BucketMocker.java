@@ -47,16 +47,17 @@ public final class BucketMocker {
         .builder();
 
     /**
-     * Public ctor.
+     * Init.
+     * @return This object
      */
-    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
-    public BucketMocker() {
+    public BucketMocker init() {
         this.withName("maven.s3auth.com");
         this.withBucket("s3auth");
         this.withRegion("ap-southeast-1");
         this.withKey("AAAAAAAAAAAAAAAAAAAA");
         this.withSecret("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
         this.withClient(new MkAmazonS3());
+        return this;
     }
 
     /**
@@ -127,6 +128,11 @@ public final class BucketMocker {
         return this.bucket.build();
     }
 
+    /**
+     * Mock.
+     *
+     * @since 0.0.1
+     */
     @Builder
     @SuppressWarnings({ "PMD.TooManyMethods",
         "PMD.AvoidFieldNameMatchingMethodName" })

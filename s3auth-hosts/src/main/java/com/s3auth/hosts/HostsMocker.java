@@ -65,7 +65,7 @@ public final class HostsMocker {
 
         @Override
         public Host find(final String domain) {
-            return new HostMocker().mock();
+            return new HostMocker().init().mock();
         }
 
         @Override

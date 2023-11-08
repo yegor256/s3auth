@@ -45,13 +45,15 @@ public final class HostMocker {
     private final transient MkHost.MkHostBuilder host = MkHost.builder();
 
     /**
-     * Public ctor.
+     * Initialize it.
+     * @return This object
      */
-    public HostMocker() {
+    public HostMocker init() {
         this.host
-            .resource(new ResourceMocker().withContent("hello").mock())
+            .resource(new ResourceMocker().init().withContent("hello").mock())
             .authorized(true)
             .hidden(true);
+        return this;
     }
 
     /**
@@ -61,7 +63,7 @@ public final class HostMocker {
      * @return This object
      */
     public HostMocker withContent(final URI uri, final String content) {
-        this.host.resource(new ResourceMocker().withContent(content).mock());
+        this.host.resource(new ResourceMocker().init().withContent(content).mock());
         return this;
     }
 
@@ -111,7 +113,7 @@ public final class HostMocker {
          * The host syslog.
          */
         private final transient String syslog;
-        
+
         /**
          * The host stats.
          */

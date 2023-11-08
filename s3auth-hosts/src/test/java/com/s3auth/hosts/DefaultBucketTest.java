@@ -45,7 +45,7 @@ final class DefaultBucketTest {
      */
     @Test
     void reproducesPropertiesOfDomain() {
-        final Domain domain = new DomainMocker().mock();
+        final Domain domain = new DomainMocker().init().mock();
         MatcherAssert.assertThat(
             new DefaultBucket(domain).name(),
             Matchers.equalTo(domain.name())

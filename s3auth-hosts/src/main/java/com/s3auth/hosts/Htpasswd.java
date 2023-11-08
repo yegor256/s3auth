@@ -180,6 +180,8 @@ final class Htpasswd {
 
     /**
      * Algorithm.
+     *
+     * @since 0.0.1
      */
     private interface Algorithm {
         /**
@@ -193,6 +195,8 @@ final class Htpasswd {
 
     /**
      * MD5 hash builder.
+     *
+     * @since 0.0.1
      */
     @Loggable(Loggable.DEBUG)
     private static final class Md5 implements Htpasswd.Algorithm {
@@ -201,6 +205,7 @@ final class Htpasswd {
          */
         private static final Pattern PATTERN =
             Pattern.compile("\\$apr1\\$([^\\$]+)\\$([a-zA-Z0-9/\\.]+=*)");
+
         @Override
         public boolean matches(final String hash, final String password) {
             final Matcher matcher = Htpasswd.Md5.PATTERN.matcher(hash);
@@ -220,6 +225,8 @@ final class Htpasswd {
 
     /**
      * SHA1 hash builder.
+     *
+     * @since 0.0.1
      */
     @Loggable(Loggable.DEBUG)
     private static final class Sha implements Htpasswd.Algorithm {
@@ -228,6 +235,7 @@ final class Htpasswd {
          */
         private static final Pattern PATTERN =
             Pattern.compile("\\{SHA\\}([a-zA-Z0-9/\\+]+=*)");
+
         @Override
         public boolean matches(final String hash, final String password) {
             final Matcher matcher = Htpasswd.Sha.PATTERN.matcher(hash);
@@ -246,6 +254,8 @@ final class Htpasswd {
 
     /**
      * UNIX crypt.
+     *
+     * @since 0.0.1
      */
     @Loggable(Loggable.DEBUG)
     private static final class UnixCrypt implements Htpasswd.Algorithm {
@@ -254,6 +264,7 @@ final class Htpasswd {
          */
         private static final Pattern PATTERN =
             Pattern.compile("(\\$[156]\\$)?[a-zA-Z0-9./]+(\\$.*)*");
+
         @Override
         public boolean matches(final String hash, final String password) {
             return Htpasswd.UnixCrypt.PATTERN.matcher(hash).matches()
@@ -263,6 +274,8 @@ final class Htpasswd {
 
     /**
      * Plain Text.
+     *
+     * @since 0.0.1
      */
     @Loggable(Loggable.DEBUG)
     private static final class PlainText implements Htpasswd.Algorithm {

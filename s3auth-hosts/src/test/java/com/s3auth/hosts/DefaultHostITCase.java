@@ -57,7 +57,7 @@ final class DefaultHostITCase {
         Assume.assumeThat(key, Matchers.notNullValue());
         final Host host = new DefaultHost(
             new DefaultBucket(
-                new DomainMocker()
+                new DomainMocker().init()
                     .withName("maven.s3auth.com")
                     .withKey(key)
                     .withSecret(secret)
@@ -87,7 +87,7 @@ final class DefaultHostITCase {
     void throwsWhenAbsentResource() {
         final Host host = new DefaultHost(
             new DefaultBucket(
-                new DomainMocker()
+                new DomainMocker().init()
                     .withName("invalid-bucket.s3auth.com")
                     .withKey("foo")
                     .withSecret("invalid-data")

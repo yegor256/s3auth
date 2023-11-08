@@ -71,6 +71,8 @@ interface Dynamo extends Closeable {
 
     /**
      * Client to Amazon.
+     *
+     * @since 0.0.1
      */
     @Immutable
     interface Client {

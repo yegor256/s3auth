@@ -63,7 +63,7 @@ final class DefaultDynamoTest {
             dynamo.load().size(),
             Matchers.is(size)
         );
-        dynamo.add(new URN("urn:test:alpha"), new DomainMocker().mock());
+        dynamo.add(new URN("urn:test:alpha"), new DomainMocker().init().mock());
         MatcherAssert.assertThat(
             dynamo.load().size(),
             Matchers.is(size + 1)

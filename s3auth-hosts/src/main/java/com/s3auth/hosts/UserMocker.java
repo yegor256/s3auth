@@ -45,16 +45,17 @@ public final class UserMocker {
      * The mock.
      */
     private final transient MkUser.MkUserBuilder user = MkUser.builder();
+
     /**
      * Random generator.
      */
     private final transient Random rand = new Random();
 
     /**
-     * Public ctor.
+     * Default one.
+     * @return This object
      */
-    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
-    public UserMocker() {
+    public UserMocker init() {
         this.withIdentity(
             new URN(
                 "facebook",
@@ -63,6 +64,7 @@ public final class UserMocker {
         );
         this.user.name("John Doe");
         this.user.photo(URI.create("#"));
+        return this;
     }
 
     /**
@@ -92,6 +94,11 @@ public final class UserMocker {
         return this.user.build();
     }
 
+    /**
+     * Mock.
+     *
+     * @since 0.0.1
+     */
     @Builder
     @SuppressWarnings({ "PMD.TooManyMethods",
         "PMD.AvoidFieldNameMatchingMethodName" })
@@ -100,10 +107,12 @@ public final class UserMocker {
          * The User identity.
          */
         private final transient URN identity;
+
         /**
-         * The User name.
+         * The user name.
          */
         private final transient String name;
+
         /**
          * The User photo.
          */

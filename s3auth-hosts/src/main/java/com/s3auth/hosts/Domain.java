@@ -89,6 +89,11 @@ public interface Domain {
      */
     String syslog();
 
+    /**
+     * Valid.
+     *
+     * @since 0.0.1
+     */
     @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
     @Constraint(validatedBy = Domain.Validator.class)
@@ -96,14 +101,19 @@ public interface Domain {
     @interface Valid {
         /**
          * Message of the validation error.
+         * @return Message
          */
         String message() default "invalid domain";
+
         /**
          * Groups.
+         * @return Groups
          */
         Class<?>[] groups() default { };
+
         /**
          * Payload.
+         * @return Payload
          */
         Class<? extends Payload>[] payload() default { };
     }
@@ -112,6 +122,9 @@ public interface Domain {
      * Validator of Domain.
      *
      * @since 0.0.1
+     * @checkstyle CyclomaticComplexity (200 lines)
+     * @checkstyle ExecutableStatementCount (200 lines)
+     * @checkstyle NPathComplexityCheck (200 lines)
      */
     @SuppressWarnings("PMD.NPathComplexity")
     class Validator implements ConstraintValidator<Domain.Valid, Domain> {
@@ -119,56 +132,55 @@ public interface Domain {
         public void initialize(final Domain.Valid annotation) {
             //nothing to do
         }
-        // @checkstyle CyclomaticComplexity (60 lines)
-        // @checkstyle ExecutableStatementCount (60 lines)
+
         @Override
         public boolean isValid(final Domain domain,
             final ConstraintValidatorContext ctx) {
-            boolean isValid = true;
+            boolean valid = true;
             if (domain.name() == null) {
                 ctx.buildConstraintViolationWithTemplate(
                     "Domain name is mandatory and can't be NULL"
                 ).addConstraintViolation();
-                isValid = false;
+                valid = false;
             } else if (!domain.name().matches("\\s*[a-zA-Z0-9\\-.]+\\s*")) {
                 ctx.buildConstraintViolationWithTemplate(
                     String.format("Invalid domain name '%s'", domain.name())
                 ).addPropertyNode("name").addConstraintViolation();
-                isValid = false;
+                valid = false;
             }
             if (domain.key() == null) {
                 ctx.buildConstraintViolationWithTemplate(
                     "AWS key is mandatory and can't be NULL"
                 ).addConstraintViolation();
-                isValid = false;
+                valid = false;
             } else if (!domain.key().matches("\\s*[A-Z0-9]{20}\\s*")) {
                 ctx.buildConstraintViolationWithTemplate(
                     String.format("Invalid AWS key '%s'", domain.key())
                 ).addPropertyNode("key").addConstraintViolation();
-                isValid = false;
+                valid = false;
             }
             if (domain.region() == null) {
                 ctx.buildConstraintViolationWithTemplate(
                     "AWS S3 region is mandatory and can't be NULL"
                 ).addConstraintViolation();
-                isValid = false;
+                valid = false;
             } else if (!domain.region().matches("[a-z0-9\\-]*")) {
                 ctx.buildConstraintViolationWithTemplate(
                     String.format("Invalid AWS S3 region '%s'", domain.region())
                 ).addPropertyNode("region").addConstraintViolation();
-                isValid = false;
+                valid = false;
             }
             if (domain.secret() == null) {
                 ctx.buildConstraintViolationWithTemplate(
                     "AWS secret key is mandatory and can't be NULL"
                 ).addConstraintViolation();
-                isValid = false;
+                valid = false;
             } else if (!domain.secret()
                 .matches("\\s*[a-zA-Z0-9\\+/]{40}\\s*")) {
                 ctx.buildConstraintViolationWithTemplate(
                     String.format("Invalid AWS secret '%s'", domain.secret())
                 ).addPropertyNode("secret").addConstraintViolation();
-                isValid = false;
+                valid = false;
             }
             if (domain.syslog() != null
                 && !domain.syslog()
@@ -177,9 +189,9 @@ public interface Domain {
                 ctx.buildConstraintViolationWithTemplate(
                     String.format("Invalid syslog host '%s'", domain.syslog())
                 ).addPropertyNode("syslog").addConstraintViolation();
-                isValid = false;
+                valid = false;
             }
-            return isValid;
+            return valid;
         }
     }
 

@@ -431,7 +431,7 @@ final class HttpFacadeTest {
         Mockito.doAnswer(
                 (Answer<Resource>) inv -> {
                     final Resource answer = Mockito.spy(
-                        new ResourceMocker()
+                        new ResourceMocker().init()
                             .withContent(body)
                             .withHeaders("gzip")
                             .mock()
@@ -511,7 +511,7 @@ final class HttpFacadeTest {
         );
         final Host host = Mockito.mock(Host.class);
         final String body = "secured";
-        final Resource answer = new ResourceMocker().withContent(body).mock();
+        final Resource answer = new ResourceMocker().init().withContent(body).mock();
         Mockito.doReturn(answer).when(host).fetch(
             Mockito.any(URI.class),
             Mockito.any(Range.class),
@@ -548,7 +548,7 @@ final class HttpFacadeTest {
     @Test
     void closesUnderlyingResource() throws Exception {
         final Host host = Mockito.mock(Host.class);
-        final Resource resource = Mockito.spy(new ResourceMocker().mock());
+        final Resource resource = Mockito.spy(new ResourceMocker().init().mock());
         Mockito.doReturn(resource).when(host).fetch(
             Mockito.any(URI.class),
             Mockito.any(Range.class),
@@ -588,7 +588,7 @@ final class HttpFacadeTest {
     void servicesHeadMethod() throws Exception {
         final Host host = Mockito.mock(Host.class);
         final Resource resource = Mockito.spy(
-            new ResourceMocker()
+            new ResourceMocker().init()
                 .withContent("should not appear in body")
                 .mock()
         );

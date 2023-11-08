@@ -50,7 +50,7 @@ final class SmartHostTest {
         MatcherAssert.assertThat(
             ResourceMocker.toString(
                 new SmartHost(
-                    new HostMocker().withContent(uri, "test me").mock()
+                    new HostMocker().init().withContent(uri, "test me").mock()
                 ).fetch(uri, Range.ENTIRE, Version.LATEST)
             ),
             Matchers.equalTo("7 byte(s)")
@@ -63,7 +63,7 @@ final class SmartHostTest {
     @Test
     void convertsItselfToString() {
         MatcherAssert.assertThat(
-            new SmartHost(new HostMocker().mock()),
+            new SmartHost(new HostMocker().init().mock()),
             Matchers.hasToString(Matchers.notNullValue())
         );
     }

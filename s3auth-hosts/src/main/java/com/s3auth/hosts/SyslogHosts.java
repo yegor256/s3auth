@@ -88,6 +88,8 @@ public final class SyslogHosts implements Hosts {
 
     /**
      * Syslog host wrapper.
+     *
+     * @since 0.0.1
      */
     @Immutable
     @EqualsAndHashCode(of = "host")
@@ -163,6 +165,8 @@ public final class SyslogHosts implements Hosts {
 
     /**
      * Syslog Resource wrapper.
+     *
+     * @since 0.0.1
      */
     private static final class SyslogResource implements Resource {
         /**
@@ -188,6 +192,7 @@ public final class SyslogHosts implements Hosts {
          * @param port The syslog port
          * @checkstyle ParameterNumber (4 lines)
          */
+        @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
         SyslogResource(final Resource res, final URI uri, final String syslg,
             final int port) {
             this.resource = res;
@@ -203,7 +208,7 @@ public final class SyslogHosts implements Hosts {
 
         @Override
         public long writeTo(final OutputStream stream) throws IOException {
-            long bytes;
+            final long bytes;
             try {
                 bytes = this.resource.writeTo(stream);
                 this.syslog.info(

@@ -275,7 +275,7 @@ final class HttpRequest {
             final String name =
                 matcher.group(1).trim().toLowerCase(Locale.ENGLISH);
             if (!map.containsKey(name)) {
-                map.put(name, Lists.<String>newLinkedList());
+                map.put(name, Lists.newLinkedList());
             }
             map.get(name).add(matcher.group(2));
         }
@@ -295,7 +295,7 @@ final class HttpRequest {
         while (matcher.find()) {
             final String name = matcher.group(1).trim();
             if (!map.containsKey(name)) {
-                map.put(name, Lists.<String>newLinkedList());
+                map.put(name, Lists.newLinkedList());
             }
             map.get(name).add(
                 StringUtils.defaultString(matcher.group(Tv.THREE))

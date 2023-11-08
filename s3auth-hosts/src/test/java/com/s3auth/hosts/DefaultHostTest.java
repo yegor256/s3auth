@@ -58,8 +58,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 
@@ -97,7 +97,7 @@ final class DefaultHostTest {
         Mockito.doReturn(new BucketWebsiteConfiguration(suffix))
             .when(aws).getBucketWebsiteConfiguration(Mockito.anyString());
         final Host host = new DefaultHost(
-            new BucketMocker().withClient(aws).mock(), this.cloudWatch()
+            new BucketMocker().init().withClient(aws).mock(), this.cloudWatch()
         );
         @SuppressWarnings("PMD.NonStaticInitializer")
         final ConcurrentMap<String, String> paths =
@@ -129,7 +129,7 @@ final class DefaultHostTest {
     @Test
     void showsStatsInToString() {
         MatcherAssert.assertThat(
-            new DefaultHost(new BucketMocker().mock()),
+            new DefaultHost(new BucketMocker().init().mock()),
             Matchers.hasToString(Matchers.notNullValue())
         );
     }
@@ -142,7 +142,7 @@ final class DefaultHostTest {
     void rejectsAuthorizationWhenInvalidCredentials() throws Exception {
         MatcherAssert.assertThat(
             new DefaultHost(
-                new BucketMocker().mock(), this.cloudWatch()
+                new BucketMocker().init().mock(), this.cloudWatch()
             ).authorized("1", "2"),
             Matchers.is(false)
         );
@@ -168,7 +168,7 @@ final class DefaultHostTest {
             Assertions.assertThrows(
                 IOException.class,
                 () -> new DefaultHost(
-                    new BucketMocker().withBucket(bucket).withClient(aws).mock(),
+                    new BucketMocker().init().withBucket(bucket).withClient(aws).mock(),
                     this.cloudWatch()
                 ).fetch(URI.create("/.htpasswd"), Range.ENTIRE, Version.LATEST)
             ).getMessage(),
@@ -206,7 +206,7 @@ final class DefaultHostTest {
         MatcherAssert.assertThat(
             ResourceMocker.toString(
                 new DefaultHost(
-                    new BucketMocker().withClient(client).mock(),
+                    new BucketMocker().init().withClient(client).mock(),
                     this.cloudWatch()
                 ).fetch(new URI(key), Range.ENTIRE, Version.LATEST)
             ),
@@ -237,7 +237,7 @@ final class DefaultHostTest {
         MatcherAssert.assertThat(
             ResourceMocker.toString(
                 new DefaultHost(
-                    new BucketMocker().withClient(client).mock(),
+                    new BucketMocker().init().withClient(client).mock(),
                     this.cloudWatch()
                 ).fetch(new URI(key), Range.ENTIRE, Version.LIST)
             ),
@@ -266,7 +266,7 @@ final class DefaultHostTest {
         MatcherAssert.assertThat(
             ResourceMocker.toString(
                 new DefaultHost(
-                    new BucketMocker().withClient(client).mock(),
+                    new BucketMocker().init().withClient(client).mock(),
                     this.cloudWatch()
                 ).fetch(new URI(key), Range.ENTIRE, Version.LIST)
             ),
@@ -289,14 +289,14 @@ final class DefaultHostTest {
             .getMetricStatistics(Mockito.any(GetMetricStatisticsRequest.class));
         MatcherAssert.assertThat(
             new DefaultHost(
-                new BucketMocker().mock(),
+                new BucketMocker().init().mock(),
                 cloudwatch
             ).stats().bytesTransferred(),
             Matchers.allOf(
                 Matchers.is(sum),
                 Matchers.is(
                     new DefaultHost(
-                        new BucketMocker().mock(),
+                        new BucketMocker().init().mock(),
                         cloudwatch
                     ).stats().bytesTransferred()
                 )
@@ -339,7 +339,7 @@ final class DefaultHostTest {
             new BucketWebsiteConfiguration(suffix, error)
         ).when(aws).getBucketWebsiteConfiguration(Mockito.anyString());
         final Host host = new DefaultHost(
-            new BucketMocker().withClient(aws).mock(), this.cloudWatch()
+            new BucketMocker().init().withClient(aws).mock(), this.cloudWatch()
         );
         MatcherAssert.assertThat(
             ResourceMocker.toString(
@@ -362,7 +362,7 @@ final class DefaultHostTest {
         Assertions.assertThrows(
             IOException.class,
             () -> new DefaultHost(
-                new BucketMocker().withClient(aws).mock(), this.cloudWatch()
+                new BucketMocker().init().withClient(aws).mock(), this.cloudWatch()
             ).fetch(URI.create("failed.html"), Range.ENTIRE, Version.LATEST)
         );
     }

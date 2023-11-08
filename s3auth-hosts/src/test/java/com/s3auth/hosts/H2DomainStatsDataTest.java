@@ -45,7 +45,7 @@ final class H2DomainStatsDataTest {
     void putsAndGetsDataPerDomain() throws Exception {
         final H2DomainStatsData data = new H2DomainStatsData(
             File.createTempFile("test", "temp")
-        );
+        ).init();
         final String domain = "test-put-domain";
         final long bytes = 100;
         data.put(
@@ -67,7 +67,7 @@ final class H2DomainStatsDataTest {
     void getsDataForAllDomains() throws Exception {
         final H2DomainStatsData data = new H2DomainStatsData(
             File.createTempFile("testAll", "tempAll")
-        );
+        ).init();
         final String first = "test-put-domain1";
         final String second = "test-put-domain2";
         data.put(

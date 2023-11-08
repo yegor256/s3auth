@@ -84,6 +84,8 @@ public interface Host extends Closeable {
 
     /**
      * Client to Amazon CloudWatch.
+     *
+     * @since 0.0.1
      */
     @Immutable
     interface CloudWatch {

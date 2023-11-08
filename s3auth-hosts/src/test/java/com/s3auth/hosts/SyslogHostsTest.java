@@ -58,10 +58,10 @@ final class SyslogHostsTest {
     @Test
     void returnsUnderlyingDomains() throws Exception {
         final Hosts hosts = Mockito.mock(Hosts.class);
-        final Domain first = new DomainMocker().mock();
-        final Domain second = new DomainMocker().mock();
+        final Domain first = new DomainMocker().init().mock();
+        final Domain second = new DomainMocker().init().mock();
         final Set<Domain> domains = new HashSet<>(Arrays.asList(first, second));
-        final User user = new UserMocker().mock();
+        final User user = new UserMocker().init().mock();
         Mockito.doReturn(domains).when(hosts).domains(user);
         @SuppressWarnings("resource")
         final SyslogHosts syslog = new SyslogHosts(hosts);
@@ -103,6 +103,7 @@ final class SyslogHostsTest {
             final Hosts hosts = Mockito.mock(Hosts.class);
             final String path = "/path/to/fetch";
             final Host host = new HostMocker()
+                .init()
                 .withContent(URI.create(path), "blah")
                 .withSyslog(String.format("localhost:%d", port))
                 .mock();

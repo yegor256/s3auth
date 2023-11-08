@@ -46,16 +46,17 @@ public final class DomainMocker {
         .builder();
 
     /**
-     * Public ctor.
+     * Init.
+     * @return This object
      */
-    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
-    public DomainMocker() {
+    public DomainMocker init() {
         this.withName("localhost");
         this.withRegion("us-east-1");
         this.withBucket("bucket");
         this.withKey("AAAAAAAAAAAAAAAAAAAA");
         this.withSecret("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
         this.withSyslog("localhost:514");
+        return this;
     }
 
     /**
@@ -126,6 +127,11 @@ public final class DomainMocker {
         return this.domain.build();
     }
 
+    /**
+     * Mock.
+     *
+     * @since 0.0.1
+     */
     @Builder
     @SuppressWarnings({ "PMD.TooManyMethods",
         "PMD.AvoidFieldNameMatchingMethodName" })
@@ -134,22 +140,27 @@ public final class DomainMocker {
          * The Domain Name.
          */
         private final transient String name;
+
         /**
          * The Domain key.
          */
         private final transient String key;
+
         /**
          * The Domain secret.
          */
         private final transient String secret;
+
         /**
          * The Domain bucket.
          */
         private final transient String bucket;
+
         /**
          * The Domain region.
          */
         private final transient String region;
+
         /**
          * The Domain syslog.
          */

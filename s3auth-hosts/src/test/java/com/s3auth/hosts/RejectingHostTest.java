@@ -50,7 +50,7 @@ final class RejectingHostTest {
         MatcherAssert.assertThat(
             ResourceMocker.toString(
                 new RejectingHost(
-                    new HostMocker().withContent(uri, "test me").mock(),
+                    new HostMocker().init().withContent(uri, "test me").mock(),
                     "/test/.*"
                 ).fetch(uri, Range.ENTIRE, Version.LATEST)
             ),

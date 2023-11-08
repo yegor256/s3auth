@@ -68,7 +68,7 @@ final class SecuredHostTest {
         for (final String name : hosts) {
             try {
                 new SecuredHost(
-                    new HostMocker().mock(),
+                    new HostMocker().init().mock(),
                     HttpRequestMocker.toRequest(
                         String.format("GET / HTTP/1.1\nHost: %s\n\n", name)
                     )
@@ -102,7 +102,7 @@ final class SecuredHostTest {
         for (final String http : requests) {
             try {
                 new SecuredHost(
-                    new HostMocker().mock(),
+                    new HostMocker().init().mock(),
                     HttpRequestMocker.toRequest(http)
                 ).fetch(URI.create("/test.html"), Range.ENTIRE, Version.LATEST);
                 Assert.fail("exception expected, but didn't happen");

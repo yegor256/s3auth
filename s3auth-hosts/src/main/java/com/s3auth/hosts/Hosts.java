@@ -62,12 +62,15 @@ public interface Hosts extends Closeable {
 
     /**
      * Thrown by {@link #find(String)} if domain is not found.
+     *
+     * @since 0.0.1
      */
     class NotFoundException extends IOException {
         /**
          * Serialization marker.
          */
         private static final long serialVersionUID = 0x7529FA789ED21479L;
+
         /**
          * Public ctor.
          * @param cause The cause of it

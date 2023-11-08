@@ -57,6 +57,8 @@ import org.xembly.Xembler;
 
 /**
  * XML S3 Object Version Listing.
+ *
+ * @since 0.0.1
  */
 @Immutable
 @ToString
@@ -150,6 +152,7 @@ final class ObjectVersionListing implements Resource {
         crc.update(this.content);
         return Long.toHexString(crc.getValue());
     }
+
     @Override
     public Date lastModified() {
         return new Date();

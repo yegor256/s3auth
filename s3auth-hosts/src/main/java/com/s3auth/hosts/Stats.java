@@ -47,6 +47,8 @@ public interface Stats {
 
     /**
      * Simple stats.
+     *
+     * @since 0.0.1
      */
     @Immutable
     @EqualsAndHashCode(of = "bytes")

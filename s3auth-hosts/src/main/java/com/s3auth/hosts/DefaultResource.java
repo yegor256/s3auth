@@ -327,12 +327,15 @@ final class DefaultResource implements Resource {
 
     /**
      * Custom IO exception.
+     *
+     * @since 0.0.1
      */
     private static final class StreamingException extends IOException {
         /**
          * Serialization marker.
          */
         private static final long serialVersionUID = 0x7529FA781E111179L;
+
         /**
          * Public ctor.
          * @param cause The cause of it

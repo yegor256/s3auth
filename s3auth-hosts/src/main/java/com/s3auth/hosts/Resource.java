@@ -97,6 +97,7 @@ public interface Resource extends Closeable {
 
     /**
      * Simple resource made out of plain text.
+     *
      * @since 0.0.1
      */
     @Immutable
@@ -113,7 +114,7 @@ public interface Resource extends Closeable {
         /**
          * Last modified date to return. Equal to the time of object creation.
          */
-        private final transient long modified = System.currentTimeMillis();
+        private final transient long modified;
 
         /**
          * Headers associated with this resource.
@@ -125,6 +126,7 @@ public interface Resource extends Closeable {
          * @param txt The text to show
          */
         public PlainText(@NotNull final String txt) {
+            this.modified = System.currentTimeMillis();
             this.text = txt.getBytes(StandardCharsets.UTF_8);
             this.hdrs = new Array<>(
                 String.format(

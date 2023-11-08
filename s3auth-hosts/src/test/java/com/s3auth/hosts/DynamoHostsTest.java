@@ -40,6 +40,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link DynamoHosts}.
+ *
  * @since 0.0.1
  */
 final class DynamoHostsTest {
@@ -51,8 +52,8 @@ final class DynamoHostsTest {
     @Test
     void updatesCachedData() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
-        final Domain domain = new DomainMocker().mock();
-        final User user = new UserMocker().mock();
+        final Domain domain = new DomainMocker().init().mock();
+        final User user = new UserMocker().init().mock();
         MatcherAssert.assertThat(
             hosts.domains(user).add(domain),
             Matchers.is(true)
@@ -72,11 +73,11 @@ final class DynamoHostsTest {
     @Test
     void rejectsDuplicatesFromDifferentUsers() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
-        final Domain domain = new DomainMocker().withName("ibm.com").mock();
-        final User first = new UserMocker()
+        final Domain domain = new DomainMocker().init().withName("ibm.com").mock();
+        final User first = new UserMocker().init()
             .withIdentity("urn:facebook:7743")
             .mock();
-        final User second = new UserMocker()
+        final User second = new UserMocker().init()
             .withIdentity("urn:facebook:7746")
             .mock();
         hosts.domains(first).remove(domain);
@@ -98,11 +99,11 @@ final class DynamoHostsTest {
     @Test
     void protectsDomainsAgainstRemoval() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
-        final Domain domain = new DomainMocker().withName("yahoo.com").mock();
-        final User first = new UserMocker()
+        final Domain domain = new DomainMocker().init().withName("yahoo.com").mock();
+        final User first = new UserMocker().init()
             .withIdentity("urn:facebook:5543")
             .mock();
-        final User second = new UserMocker()
+        final User second = new UserMocker().init()
             .withIdentity("urn:facebook:5546")
             .mock();
         hosts.domains(first).remove(domain);
@@ -124,12 +125,12 @@ final class DynamoHostsTest {
     @Test
     void trimsDomainProperties() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
-        final Domain domain = new DomainMocker()
+        final Domain domain = new DomainMocker().init()
             .withName(" google.com ")
             .withKey(" AKI56FXVOY5FEEZNZXAQ   ")
             .withSecret("  ZFomiC6OObi6gD2J1QQcaW1evMUfqv5fVkpDImI9 ")
             .mock();
-        final User first = new UserMocker()
+        final User first = new UserMocker().init()
             .withIdentity("urn:facebook:8989")
             .mock();
         hosts.domains(first).remove(domain);
@@ -157,11 +158,11 @@ final class DynamoHostsTest {
     /**
      * DynamoHosts can reject invalid user names.
      */
-    @Disabled
     @Test
+    @Disabled
     void rejectsInvalidUserNames() {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
-        final User user = new UserMocker()
+        final User user = new UserMocker().init()
             .withIdentity("urn:unknown:4254353")
             .mock();
         Assertions.assertThrows(
@@ -182,16 +183,16 @@ final class DynamoHostsTest {
      */
     @Test
     @Disabled
-    public void rejectsBrokenDomains() throws Exception {
+    void rejectsBrokenDomains() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
-        final User user = new UserMocker().mock();
+        final User user = new UserMocker().init().mock();
         final Domain[] domains = new Domain[] {
-            new DomainMocker().withName("").mock(),
-            new DomainMocker().withName("invalid domain name").mock(),
-            new DomainMocker().withKey("").mock(),
-            new DomainMocker().withSecret("").mock(),
-            new DomainMocker().withKey("broken-key").mock(),
-            new DomainMocker().withSecret("broken-secret").mock(),
+            new DomainMocker().init().withName("").mock(),
+            new DomainMocker().init().withName("invalid domain name").mock(),
+            new DomainMocker().init().withKey("").mock(),
+            new DomainMocker().init().withSecret("").mock(),
+            new DomainMocker().init().withKey("broken-key").mock(),
+            new DomainMocker().init().withSecret("broken-secret").mock(),
         };
         for (final Domain domain : domains) {
             try {
@@ -211,20 +212,20 @@ final class DynamoHostsTest {
     @Test
     void fetchesAllDomainsForSuperUser() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
-        final Domain first = new DomainMocker().withName("first.com").mock();
-        final Domain second = new DomainMocker().withName("second.com").mock();
+        final Domain first = new DomainMocker().init().withName("first.com").mock();
+        final Domain second = new DomainMocker().init().withName("second.com").mock();
         hosts.domains(
-            new UserMocker().withIdentity("urn:facebook:5547").mock()
+            new UserMocker().init().withIdentity("urn:facebook:5547").mock()
         ).add(first);
         hosts.domains(
-            new UserMocker().withIdentity("urn:facebook:5548").mock()
+            new UserMocker().init().withIdentity("urn:facebook:5548").mock()
         ).add(second);
         final Set<Domain> domains = hosts.domains(
-            new UserMocker().withIdentity("urn:github:526301").mock()
+            new UserMocker().init().withIdentity("urn:github:526301").mock()
         );
         MatcherAssert.assertThat(
             domains,
-            Matchers.<Domain>iterableWithSize(2)
+            Matchers.iterableWithSize(2)
         );
         hosts.close();
     }

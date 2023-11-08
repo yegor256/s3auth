@@ -112,20 +112,11 @@ final class DefaultDynamo implements Dynamo {
     /**
      * Public ctor.
      */
-    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     DefaultDynamo() {
-        Credentials creds = new Credentials.Simple(
-            Manifests.read("S3Auth-AwsDynamoKey"),
-            Manifests.read("S3Auth-AwsDynamoSecret")
+        this(
+            new ReRegion(new Region.Simple(DefaultDynamo.creds())),
+            Manifests.read("S3Auth-AwsDynamoTable")
         );
-        if (Manifests.exists("S3Auth-AwsDynamoEntryPoint")) {
-            creds = new Credentials.Direct(
-                Credentials.Simple.class.cast(creds),
-                Manifests.read("S3Auth-AwsDynamoEntryPoint")
-            );
-        }
-        this.region = new ReRegion(new Region.Simple(creds));
-        this.table = Manifests.read("S3Auth-AwsDynamoTable");
     }
 
     /**
@@ -204,6 +195,24 @@ final class DefaultDynamo implements Dynamo {
             removed = true;
         }
         return removed;
+    }
+
+    /**
+     * Create AWS credentials.
+     * @return Creds
+     */
+    private static Credentials creds() {
+        Credentials creds = new Credentials.Simple(
+            Manifests.read("S3Auth-AwsDynamoKey"),
+            Manifests.read("S3Auth-AwsDynamoSecret")
+        );
+        if (Manifests.exists("S3Auth-AwsDynamoEntryPoint")) {
+            creds = new Credentials.Direct(
+                Credentials.Simple.class.cast(creds),
+                Manifests.read("S3Auth-AwsDynamoEntryPoint")
+            );
+        }
+        return creds;
     }
 
     /**

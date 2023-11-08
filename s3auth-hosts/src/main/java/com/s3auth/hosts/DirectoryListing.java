@@ -57,6 +57,8 @@ import org.xembly.Xembler;
 
 /**
  * XML Directory Listing.
+ *
+ * @since 0.0.1
  * @checkstyle ClassDataAbstraction (200 lines)
  */
 @Immutable
@@ -157,6 +159,7 @@ final class DirectoryListing implements Resource {
         crc.update(this.content);
         return Long.toHexString(crc.getValue());
     }
+
     @Override
     public Date lastModified() {
         return new Date();

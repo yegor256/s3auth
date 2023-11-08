@@ -44,7 +44,7 @@ final class DefaultDomainTest {
      */
     @Test
     void reproducesProperties() {
-        final Domain domain = new DomainMocker().mock();
+        final Domain domain = new DomainMocker().init().mock();
         MatcherAssert.assertThat(
             new DefaultDomain(domain).name(),
             Matchers.equalTo(domain.name())

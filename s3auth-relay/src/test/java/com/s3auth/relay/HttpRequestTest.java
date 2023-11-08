@@ -169,7 +169,7 @@ final class HttpRequestTest {
         MatcherAssert.assertThat(
             request.parameters().get("first"),
             Matchers.allOf(
-                Matchers.<String>iterableWithSize(2),
+                Matchers.iterableWithSize(2),
                 Matchers.hasItems("one", "three")
             )
         );

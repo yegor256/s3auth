@@ -103,22 +103,27 @@ public interface User {
     @interface Valid {
         /**
          * Message of the validation error.
+         * @return Message
          */
         String message() default "invalid user";
 
         /**
          * Groups.
+         * @return Groups
          */
         Class<?>[] groups() default { };
 
         /**
          * Payload.
+         * @return Payload
          */
         Class<? extends Payload>[] payload() default { };
     }
 
     /**
      * Validator of User.
+     *
+     * @since 0.0.1
      */
     class Validator implements ConstraintValidator<User.Valid, User> {
         @Override
