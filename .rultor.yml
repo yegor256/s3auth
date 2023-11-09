@@ -1,5 +1,5 @@
 docker:
-  image: yegor256/rultor-image:1.9.1
+  image: yegor256/rultor-image:1.21.0
 install: |
   sudo locale-gen en_US en_US.UTF-8
   export LC_ALL=en_US.UTF-8
@@ -7,18 +7,12 @@ install: |
   export LANGUAGE=en_US.UTF-8
   sudo gem install pdd -v 0.20.5
   sudo apt-get install -y netpbm texlive-fonts-recommended
-  sudo apt-get install -y phantomjs
-  sudo npm install -g casperjs
-
-  sudo apt-get install -y openjdk-8-jdk
-  sudo update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
 assets:
   secring.gpg: yegor256/home#assets/secring.gpg
   id_rsa: yegor256/home#assets/heroku-key
   settings.xml: yegor256/home#assets/s3auth/settings.xml
   pubring.gpg: yegor256/home#assets/pubring.gpg
   id_rsa.pub: yegor256/home#assets/heroku-key.pub
-  s3cfg: yegor256/home#assets/s3cfg
 merge:
   script: |-
     mvn help:system clean install --errors -Pqulice --settings ../settings.xml
@@ -48,5 +42,3 @@ deploy:
     mvn clean
     pdd --source=$(pwd) --verbose --file=s3auth.xml
     s3cmd --no-progress put s3auth.xml --config=../s3cfg s3://pdd.teamed.io/s3auth.xml
-env:
-  MAVEN_OPTS: -XX:MaxPermSize=256m -Xmx1g
