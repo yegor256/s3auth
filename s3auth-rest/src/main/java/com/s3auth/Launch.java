@@ -32,8 +32,9 @@ package com.s3auth;
 import com.s3auth.hosts.DynamoHosts;
 import com.s3auth.hosts.SyslogHosts;
 import com.s3auth.rest.TkApp;
+import java.io.IOException;
 import org.takes.http.Exit;
-import org.takes.http.FtCLI;
+import org.takes.http.FtCli;
 
 /**
  * Launch (used only for heroku).
@@ -51,9 +52,11 @@ public final class Launch {
     /**
      * Entry point.
      * @param args Command line args
+     * @throws IOException If fails
      */
-    public static void main(final String[] args) {
-        new FtCLI(
+    @SuppressWarnings("PMD.ProhibitPublicStaticMethods")
+    public static void main(final String[] args) throws IOException {
+        new FtCli(
             new TkApp(new SyslogHosts(new DynamoHosts())),
             args
         ).start(Exit.NEVER);

@@ -44,7 +44,7 @@ import org.junit.jupiter.api.Test;
  * Integration case for {@link TkApp}.
  * @since 0.5
  */
-public final class TkAppITCase {
+final class TkAppITCase {
 
     /**
      * Home page of Tomcat.

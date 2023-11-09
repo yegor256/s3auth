@@ -39,6 +39,7 @@ import org.takes.Take;
 import org.takes.facets.flash.RsFlash;
 import org.takes.facets.forward.RsForward;
 import org.takes.rq.RqForm;
+import org.takes.rq.form.RqFormBase;
 
 /**
  * Add a domain.
@@ -63,7 +64,7 @@ final class TkAdd implements Take {
     @Override
     public Response act(final Request request) throws IOException {
         final User user = new RqUser(request).user();
-        final RqForm form = new RqForm(request);
+        final RqForm form = new RqFormBase(request);
         final String host = form.param("host").iterator().next();
         final boolean added = this.hosts.domains(user).add(
             new SimpleDomain(

@@ -34,8 +34,6 @@ import com.s3auth.hosts.Hosts;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -51,7 +49,7 @@ import org.takes.facets.auth.codecs.CcCompact;
 import org.takes.facets.auth.codecs.CcHex;
 import org.takes.facets.auth.codecs.CcSafe;
 import org.takes.facets.auth.codecs.CcSalted;
-import org.takes.facets.auth.codecs.CcXOR;
+import org.takes.facets.auth.codecs.CcXor;
 import org.takes.facets.auth.social.PsFacebook;
 import org.takes.facets.auth.social.PsGithub;
 import org.takes.facets.auth.social.PsGoogle;
@@ -67,6 +65,7 @@ import org.takes.facets.fork.FkParams;
 import org.takes.facets.fork.FkRegex;
 import org.takes.facets.fork.TkFork;
 import org.takes.facets.forward.TkForward;
+import org.takes.misc.Opt;
 import org.takes.rs.RsVelocity;
 import org.takes.rs.RsWithStatus;
 import org.takes.rs.RsWithType;
@@ -147,12 +146,12 @@ public class TkApp extends TkWrap {
                 // @checkstyle AnonInnerLengthCheck (50 lines)
                 new Fallback() {
                     @Override
-                    public Iterator<Response> route(final RqFallback req)
+                    public Opt<Response> route(final RqFallback req)
                         throws IOException {
                         final String err = ExceptionUtils.getStackTrace(
                             req.throwable()
                         );
-                        return Collections.<Response>singleton(
+                        return new Opt.Single<>(
                             new RsWithStatus(
                                 new RsWithType(
                                     new RsVelocity(
@@ -166,7 +165,7 @@ public class TkApp extends TkWrap {
                                 ),
                                 HttpURLConnection.HTTP_INTERNAL_ERROR
                             )
-                        ).iterator();
+                        );
                     }
                 }
             )
@@ -216,7 +215,7 @@ public class TkApp extends TkWrap {
                 new PsCookie(
                     new CcSafe(
                         new CcHex(
-                            new CcXOR(
+                            new CcXor(
                                 new CcSalted(new CcCompact()),
                                 Manifests.read("S3Auth-SecurityKey")
                             )

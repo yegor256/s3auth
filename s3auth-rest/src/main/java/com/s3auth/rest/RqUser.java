@@ -80,10 +80,12 @@ final class RqUser extends RqWrap {
                 public URN identity() {
                     return URN.create(identity.urn());
                 }
+
                 @Override
                 public String name() {
                     return identity.properties().get("name");
                 }
+
                 @Override
                 public URI photo() {
                     return URI.create(

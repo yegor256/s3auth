@@ -35,9 +35,7 @@ import com.jcabi.http.response.XmlResponse;
 import com.jcabi.http.wire.VerboseWire;
 import com.jcabi.matchers.XhtmlMatchers;
 import com.s3auth.hosts.HostsMocker;
-import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -82,7 +80,7 @@ final class TkAppTest {
      */
     @Test
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public void rendersManyUrls() throws Exception {
+    void rendersManyUrls() throws Exception {
         final Take take = new TkApp(
             new HostsMocker().mock()
         );

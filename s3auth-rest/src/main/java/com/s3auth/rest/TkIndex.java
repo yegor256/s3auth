@@ -72,14 +72,9 @@ final class TkIndex implements Take {
             new XeLink("add", "/add"),
             new XeAppend(
                 "domains",
-                new XeTransform<Domain>(
+                new XeTransform<>(
                     this.hosts.domains(new RqUser(request).user()),
-                    new XeTransform.Func<Domain>() {
-                        @Override
-                        public XeSource transform(final Domain domain) {
-                            return TkIndex.source(domain);
-                        }
-                    }
+                    TkIndex::source
                 )
             )
         );

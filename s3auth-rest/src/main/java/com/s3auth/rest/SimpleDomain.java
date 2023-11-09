@@ -86,6 +86,7 @@ final class SimpleDomain implements Domain {
      * @param syslg The syslog host and port
      * @checkstyle ParameterNumber (4 lines)
      */
+    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     SimpleDomain(final String hst, final String access, final String scrt,
         final String bckt, final String rgn, final String syslg) {
         this.host = hst;
