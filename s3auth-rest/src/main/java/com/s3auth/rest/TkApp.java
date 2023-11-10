@@ -37,6 +37,9 @@ import java.nio.charset.Charset;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.cactoos.io.ResourceOf;
+import org.cactoos.text.TextOf;
+import org.cactoos.text.UncheckedText;
 import org.takes.Response;
 import org.takes.Take;
 import org.takes.facets.auth.PsByFlag;
@@ -271,7 +274,11 @@ public class TkApp extends TkWrap {
             new FkRegex("/version", new TkText(TkApp.REV)),
             new FkRegex(
                 "/license",
-                new TkText(TkApp.class.getResourceAsStream("/LICENSE.txt"))
+                new TkText(
+                    new UncheckedText(
+                        new TextOf(new ResourceOf("LICENSE.txt"))
+                    ).asString()
+                )
             )
         );
     }

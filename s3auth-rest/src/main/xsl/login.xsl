@@ -38,7 +38,28 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
   </xsl:template>
   <xsl:template name="content">
     <p>
-      <xsl:text>To start, login using one of your accounts at:</xsl:text>
+      <xsl:text>To start, login using one of your accounts at </xsl:text>
+      <a>
+        <xsl:attribute name="href">
+          <xsl:value-of select="/page/links/link[@rel='takes:facebook']/@href"/>
+        </xsl:attribute>
+        <xsl:text>Facebook</xsl:text>
+      </a>
+      <xsl:text>, </xsl:text>
+      <a>
+        <xsl:attribute name="href">
+          <xsl:value-of select="/page/links/link[@rel='takes:google']/@href"/>
+        </xsl:attribute>
+        <xsl:text>Google</xsl:text>
+      </a>
+      <xsl:text>, or </xsl:text>
+      <a>
+        <xsl:attribute name="href">
+          <xsl:value-of select="/page/links/link[@rel='takes:github']/@href"/>
+        </xsl:attribute>
+        <xsl:text>Github</xsl:text>
+      </a>
+      <xsl:text>:</xsl:text>
     </p>
     <p style="font-size: 2.5em;">
       <a>
