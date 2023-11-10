@@ -61,9 +61,15 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       <version>0.28.1</version>
     </dependency>
     <dependency>
-      <groupId>org.json</groupId>
-      <artifactId>json</artifactId>
-      <version>20230227</version>
+      <groupId>javax.json</groupId>
+      <artifactId>javax.json-api</artifactId>
+      <version>1.1.4</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>javax.json</artifactId>
+      <version>1.1.4</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -137,7 +143,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-http</artifactId>
-      <version>2.0.0</version>
+      <version>1.20.1</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
