@@ -55,6 +55,7 @@ final class DefaultHostITCase {
         final String key = System.getProperty("failsafe.aws.key");
         final String secret = System.getProperty("failsafe.aws.secret");
         Assume.assumeThat(key, Matchers.notNullValue());
+        Assume.assumeThat(key.isEmpty(), Matchers.is(false));
         final Host host = new DefaultHost(
             new DefaultBucket(
                 new DomainMocker().init()

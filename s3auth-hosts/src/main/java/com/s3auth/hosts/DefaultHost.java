@@ -165,6 +165,16 @@ final class DefaultHost implements Host {
     public Resource fetch(@NotNull final URI uri,
         @NotNull final Range range, @NotNull final Version version)
         throws IOException {
+        if (this.bucket.key().isEmpty()) {
+            throw new IllegalStateException(
+                "The key of the bucket is empty"
+            );
+        }
+        if (this.bucket.secret().isEmpty()) {
+            throw new IllegalStateException(
+                "The secret of the bucket is empty"
+            );
+        }
         Resource resource = null;
         final Collection<String> errors = new LinkedList<>();
         final DomainStatsData data = new H2DomainStatsData();

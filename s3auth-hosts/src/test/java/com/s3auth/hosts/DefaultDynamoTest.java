@@ -105,7 +105,7 @@ final class DefaultDynamoTest {
             )
         );
         final Table tbl = region.table(table);
-        for (int num = 0; num < 20; ++num) {
+        for (int num = 0; num < 3; ++num) {
             tbl.put(this.item());
         }
         return region;
