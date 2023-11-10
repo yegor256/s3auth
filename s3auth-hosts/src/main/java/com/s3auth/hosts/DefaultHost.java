@@ -177,7 +177,7 @@ final class DefaultHost implements Host {
         }
         Resource resource = null;
         final Collection<String> errors = new LinkedList<>();
-        final DomainStatsData data = new H2DomainStatsData();
+        final DomainStatsData data = new H2DomainStatsData().init();
         for (final DefaultHost.ObjectName name : this.names(uri)) {
             try {
                 if (version.list()) {
