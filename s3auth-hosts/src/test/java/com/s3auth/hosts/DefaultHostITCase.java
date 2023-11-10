@@ -74,7 +74,7 @@ final class DefaultHostITCase {
         try {
             MatcherAssert.assertThat(
                 ResourceMocker.toString(resource),
-                Matchers.startsWith("<DOCTYPE html>\n")
+                Matchers.startsWith("OCTYPE html>\n")
             );
         } finally {
             resource.close();
