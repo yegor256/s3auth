@@ -59,7 +59,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
               <xsl:attribute name="href">
                 <xsl:value-of select="/page/links/link[@rel='home']/@href"/>
               </xsl:attribute>
-              <img src="http://img.s3auth.com/logo.svg" alt="s3auth.com logo" style="width:20em;height:3.4em;"/>
+              <img src="/images/logo.svg" alt="s3auth.com logo" style="width:20em;height:3.4em;"/>
             </a>
           </p>
           <xsl:apply-templates select="identity"/>
@@ -75,7 +75,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
               <xsl:text>Heroku</xsl:text>
             </a>
             <xsl:text>. We are not affiliated anyhow with </xsl:text>
-            <a href="http://aws.amazon.com/">
+            <a href="https://aws.amazon.com/">
               <xsl:text>Amazon Web Services</xsl:text>
             </a>
             <xsl:text>, although we provide a service for their clients.</xsl:text>

@@ -398,6 +398,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
               <excludes>
                 <exclude>xml:/src/main/webapp/WEB-INF/web.xml</exclude>
                 <exclude>xml:/src/test/.*</exclude>
+                <exclude>checkstyle:/src/main/resources/.*</exclude>
                 <exclude>duplicatefinder:.*</exclude>
                 <exclude>findbugs:.*</exclude>
               </excludes>

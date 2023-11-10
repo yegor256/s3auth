@@ -92,7 +92,7 @@ final class TkAppTest {
         );
         final String[] paths = {
             "/robots.txt", "/xsl/index.xsl", "/css/layout.css",
-            "/version", "/license",
+            "/version", "/license", "/images/logo.svg",
         };
         for (final String path : paths) {
             MatcherAssert.assertThat(

@@ -73,7 +73,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         <input name="host"/>
         <label>
           <xsl:text>AWS key, exactly 20 symbols (</xsl:text>
-          <a href="http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_SettingUpUser.html">
+          <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/Using_SettingUpUser.html">
             <xsl:text>where do I get it?</xsl:text>
           </a>
           <xsl:text>):</xsl:text>
@@ -89,7 +89,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         <input name="bucket" size="45" maxlength="250"/>
         <label>
           <xsl:text>Optional AWS S3 endpoint (</xsl:text>
-          <a href="http://docs.amazonwebservices.com/general/latest/gr/rande.html#s3_region">
+          <a href="https://docs.amazonwebservices.com/general/latest/gr/rande.html#s3_region">
             <xsl:text>what is it?</xsl:text>
           </a>
           <xsl:text>), for example </xsl:text>
@@ -122,7 +122,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     </p>
     <p>
       <xsl:text>2. Create a new user in Amazon IAM and attach new custom policy to it (</xsl:text>
-      <a href="http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingPolicies.html">
+      <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingPolicies.html">
         <xsl:text>how?</xsl:text>
       </a>
       <xsl:text>):</xsl:text>
@@ -148,11 +148,11 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         <xsl:text>.htpasswd</xsl:text>
       </span>
       <xsl:text> file in </xsl:text>
-      <a href="http://httpd.apache.org/docs/2.2/misc/password_encryptions.html">
+      <a href="https://httpd.apache.org/docs/2.2/misc/password_encryptions.html">
         <xsl:text>Apache HTTP Server format</xsl:text>
       </a>
       <xsl:text> using </xsl:text>
-      <a href="http://httpd.apache.org/docs/2.2/programs/htpasswd.html">
+      <a href="https://httpd.apache.org/docs/2.2/programs/htpasswd.html">
         <xsl:text>htpasswd</xsl:text>
       </a>
       <xsl:text> tool:</xsl:text>
@@ -183,7 +183,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <ol>
       <li>
         <xsl:text>Password is wrong. Encode it with </xsl:text>
-        <a href="http://aspirine.org/htpasswd_en.html">
+        <a href="https://aspirine.org/htpasswd_en.html">
           <xsl:text>this online tool</xsl:text>
         </a>
         <xsl:text> and try again in 10 minutes (not earlier).</xsl:text>
@@ -212,7 +212,7 @@ maven.s3auth.com with .htpasswd(3 user(s) updated 2min ago)]]></pre>
         <xsl:text>am9lOnNlY3JldA==</xsl:text>
       </span>
       <xsl:text> is a </xsl:text>
-      <a href="http://en.wikipedia.org/wiki/Base64">
+      <a href="https://en.wikipedia.org/wiki/Base64">
         <xsl:text>Base64 encoded</xsl:text>
       </a>
       <xsl:text> version of </xsl:text>
@@ -228,7 +228,7 @@ maven.s3auth.com with .htpasswd(3 user(s) updated 2min ago)]]></pre>
         <xsl:text>secret</xsl:text>
       </span>
       <xsl:text> is a password (this is how </xsl:text>
-      <a href="http://en.wikipedia.org/wiki/Basic_access_authentication">
+      <a href="https://en.wikipedia.org/wiki/Basic_access_authentication">
         <xsl:text>HTTP Basic Authentication</xsl:text>
       </a>
       <xsl:text> works).</xsl:text>
@@ -255,7 +255,7 @@ maven.s3auth.com with .htpasswd(3 user(s) updated 2min ago)]]></pre>
     <li>
       <a>
         <xsl:attribute name="href">
-          <xsl:text>http://</xsl:text>
+          <xsl:text>https://</xsl:text>
           <xsl:value-of select="name"/>
           <xsl:text>/</xsl:text>
         </xsl:attribute>
