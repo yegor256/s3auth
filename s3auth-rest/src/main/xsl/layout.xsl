@@ -92,7 +92,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             -->
             <xsl:text>. </xsl:text>
             <xsl:text>See also terms of use, privacy policy and license agreement at </xsl:text>
-            <a href="https://github.com/yegor256/s3auth/blob/master/LICENSE.txt">
+            <a href="/license">
               <xsl:text>LICENSE.txt</xsl:text>
             </a>
             <xsl:text>.</xsl:text>
