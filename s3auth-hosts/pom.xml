@@ -41,6 +41,11 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
   <dependencies>
     <dependency>
       <groupId>com.jcabi</groupId>
+      <artifactId>jcabi-aspects</artifactId>
+      <!-- version from parent -->
+    </dependency>
+    <dependency>
+      <groupId>com.jcabi</groupId>
       <artifactId>jcabi-immutable</artifactId>
       <!-- version from parent -->
     </dependency>

@@ -40,6 +40,11 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
   <name>s3auth-rest</name>
   <dependencies>
     <dependency>
+      <groupId>com.jcabi</groupId>
+      <artifactId>jcabi-aspects</artifactId>
+      <!-- version from parent -->
+    </dependency>
+    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
       <!-- version from parent -->
@@ -56,14 +61,10 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       <version>0.28.1</version>
     </dependency>
     <dependency>
-      <groupId>javax.json</groupId>
-      <artifactId>javax.json-api</artifactId>
-      <!-- version from parent -->
-    </dependency>
-    <dependency>
-      <groupId>org.glassfish</groupId>
-      <artifactId>javax.json</artifactId>
-      <!-- version from parent -->
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20230227</version>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>

@@ -80,21 +80,24 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             </a>
             <xsl:text>, although we provide a service for their clients.</xsl:text>
             <xsl:text> The service is absolutely free of charge, since it is sponsored by </xsl:text>
-            <a href="http://www.technoparkcorp.com/">
-              <xsl:text>TechnoPark Corp.</xsl:text>
+            <a href="https://www.zerocracy.com/">
+              <xsl:text>Zerocracy</xsl:text>
             </a>
+            <!--
             <xsl:text> (a </xsl:text>
             <a href="http://www.aws-partner-directory.com/PartnerDirectory/PartnerDetail?Name=TechnoPark+Corp.">
               <xsl:text>Standard Technology Partner</xsl:text>
             </a>
-            <xsl:text> of AWS). </xsl:text>
+            <xsl:text> of AWS)</xsl:text>
+            -->
+            <xsl:text>. </xsl:text>
             <xsl:text>See also terms of use, privacy policy and license agreement at </xsl:text>
             <a href="https://github.com/yegor256/s3auth/blob/master/LICENSE.txt">
               <xsl:text>LICENSE.txt</xsl:text>
             </a>
             <xsl:text>.</xsl:text>
             <xsl:text> This website is using </xsl:text>
-            <a href="http://www.takes.org/">
+            <a href="https://www.takes.org/">
               <xsl:text>Takes</xsl:text>
             </a>
             <xsl:text> framework.</xsl:text>
