@@ -37,14 +37,14 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
   <googleAnalyticsAccountId>UA-1963507-21</googleAnalyticsAccountId>
   <bannerLeft>
     <name>s3auth.com</name>
-    <src>http://img.s3auth.com/logo.svg</src>
+    <src>https://www.s3auth.com/images/logo.svg</src>
     <href>http://maven.s3auth.com/</href>
     <width>250</width>
     <height>43</height>
   </bannerLeft>
   <body>
     <head>
-      <link href="http://img.s3auth.com/favicon.ico" rel="shortcut icon"/>
+      <link href="https://www.s3auth.com/images/favicon.ico" rel="shortcut icon"/>
     </head>
     <breadcrumbs>
       <item name="s3auth.com" href="http://maven.s3auth.com"/>

@@ -69,7 +69,7 @@ public interface User {
 
         @Override
         public URI photo() {
-            return URI.create("http://img.s3auth.com/unknown.png");
+            return URI.create("https://www.s3auth.com/images/unknown.png");
         }
     };
 

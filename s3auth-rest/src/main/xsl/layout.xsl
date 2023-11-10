@@ -37,7 +37,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         <meta name="keywords" content="S3 Basic Auth, Amazon S3 Auth, S3 Auth, S3 HTTP Auth, S3 Basic Authentication"/>
         <meta name="author" content="s3auth.com"/>
         <link rel="stylesheet" type="text/css" media="all" href="/css/layout.css?{version/revision}"/>
-        <link rel="icon" type="image/gif" href="http://img.s3auth.com/favicon.ico?{version/revision}"/>
+        <link rel="icon" type="image/gif" href="/images/favicon.ico?{version/revision}"/>
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"/>
         <xsl:call-template name="head"/>
         <script type="text/javascript"><![CDATA[

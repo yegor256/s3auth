@@ -252,6 +252,14 @@ public class TkApp extends TkWrap {
                 new TkWithType(new TkClasspath(), "image/svg+xml")
             ),
             new FkRegex(
+                "/images/[a-z]+\\.ico",
+                new TkWithType(new TkClasspath(), "image/png")
+            ),
+            new FkRegex(
+                "/images/[a-z-]+\\.png",
+                new TkWithType(new TkClasspath(), "image/png")
+            ),
+            new FkRegex(
                 "/",
                 new TkFork(
                     new FkAuthenticated(new TkIndex(hosts)),

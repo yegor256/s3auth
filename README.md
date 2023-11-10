@@ -1,4 +1,4 @@
-<img src="http://img.s3auth.com/logo.png" width="200px" height="35px"/>
+<img src="https://www.s3auth.com/images/logo.svg" width="200px" height="35px"/>
 
 [![EO principles respected here](https://www.elegantobjects.org/badge.svg)](https://www.elegantobjects.org)
 [![DevOps By Rultor.com](http://www.rultor.com/b/yegor256/s3auth)](http://www.rultor.com/p/yegor256/s3auth)

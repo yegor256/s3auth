@@ -5,14 +5,13 @@
         <link href="/css/layout.css?${rev}"
             rel="stylesheet" type="text/css"></link>
         <link rel="icon" type="image/gif"
-            href="http://img.s3auth.com/favicon.ico?${rev}"/>
+            href="/images/favicon.ico?${rev}"/>
     </head>
     <body>
         <div id="content">
             <p>
-                <a href="http://www.s3auth.com/">
-                    <img src="http://img.s3auth.com/logo.png?${rev}"
-                        style="width: 180px; height: 31px;"/>
+                <a href="https://www.s3auth.com/">
+                    <img src="/images/logo.svg?${rev}" style="width: 180px; height: 31px;"/>
                 </a>
             </p>
             <p>
