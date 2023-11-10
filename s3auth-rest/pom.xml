@@ -150,6 +150,12 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       <version>1.19.4</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.glassfish.jersey.core</groupId>
+      <artifactId>jersey-common</artifactId>
+      <version>3.1.2</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
     <pluginManagement>
@@ -287,7 +293,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
                     <artifactItem>
                       <groupId>com.jcabi</groupId>
                       <artifactId>DynamoDBLocal</artifactId>
-                      <version>2014-01-08</version>
+                      <version>2023-05-26</version>
                       <type>zip</type>
                       <outputDirectory>${project.build.directory}/dynamodb-dist</outputDirectory>
                       <overWrite>false</overWrite>
@@ -318,7 +324,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
           <plugin>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-dynamodb-maven-plugin</artifactId>
-            <version>0.7.1</version>
+            <version>0.10.1</version>
             <executions>
               <execution>
                 <id>dynamodb-integration-test</id>

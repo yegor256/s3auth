@@ -36,6 +36,7 @@ import com.jcabi.http.response.XmlResponse;
 import java.net.HttpURLConnection;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpHeaders;
+import org.hamcrest.Matchers;
 import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.jupiter.api.Test;
@@ -74,11 +75,11 @@ final class TkAppITCase {
         for (final String page : pages) {
             request.uri().path(page).back()
                 .method(Request.GET)
+                .header("Accept", "text/html")
                 .fetch()
                 .as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_NOT_FOUND)
-                .as(XmlResponse.class)
-                .assertXPath("//xhtml:title[contains(.,'page not found')]");
+                .assertBody(Matchers.containsString("page not found"));
         }
     }
 

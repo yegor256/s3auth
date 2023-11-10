@@ -204,7 +204,7 @@ public class TkApp extends TkWrap {
                         new PsGoogle(
                             Manifests.read("S3Auth-GoogleId"),
                             Manifests.read("S3Auth-GoogleSecret"),
-                            "http://www.s3auth.com/?PsByFlag=PsGoogle"
+                            "https://www.s3auth.com/?PsByFlag=PsGoogle"
                         )
                     ),
                     new PsByFlag.Pair(

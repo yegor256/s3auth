@@ -43,6 +43,7 @@ import org.takes.Take;
 import org.takes.http.FtRemote;
 import org.takes.rq.RqFake;
 import org.takes.rq.RqMethod;
+import org.takes.rq.RqWithHeader;
 import org.takes.rs.RsPrint;
 
 /**
@@ -63,7 +64,12 @@ final class TkAppTest {
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(
                 new RsPrint(
-                    take.act(new RqFake(RqMethod.GET, "/"))
+                    take.act(
+                        new RqWithHeader(
+                            new RqFake(RqMethod.GET, "/"),
+                            "Accept", "application/xml"
+                        )
+                    )
                 ).printBody()
             ),
             XhtmlMatchers.hasXPaths(
@@ -110,11 +116,11 @@ final class TkAppTest {
         new FtRemote(take).exec(
             home -> {
                 new JdkRequest(home)
+                    .header("Accept", "text/html")
                     .fetch()
                     .as(RestResponse.class)
                     .assertStatus(HttpURLConnection.HTTP_OK)
-                    .as(XmlResponse.class)
-                    .assertXPath("/xhtml:html");
+                    .assertBody(Matchers.containsString("<!DOCTYPE html"));
                 new JdkRequest(home)
                     .through(VerboseWire.class)
                     .header("Accept", "application/xml")

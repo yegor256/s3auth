@@ -116,7 +116,7 @@ final class RsPage extends RsWrap {
                 new XeFacebookLink(req, Manifests.read("S3Auth-FbId")),
                 new XeGoogleLink(
                     req, Manifests.read("S3Auth-GoogleId"),
-                    "http://www.s3auth.com/?PsByFlag=PsGoogle"
+                    "https://www.s3auth.com/?PsByFlag=PsGoogle"
                 ),
                 new XeLogoutLink(req),
                 new XeAppend(
