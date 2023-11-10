@@ -31,7 +31,6 @@ package com.s3auth.relay;
 
 import com.google.common.collect.Lists;
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
 import com.s3auth.hosts.Range;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -299,7 +298,7 @@ final class HttpRequest {
                 map.put(name, Lists.newLinkedList());
             }
             map.get(name).add(
-                StringUtils.defaultString(matcher.group(Tv.THREE))
+                StringUtils.defaultString(matcher.group(3))
             );
         }
         return map;

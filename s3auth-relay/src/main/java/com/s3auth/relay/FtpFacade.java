@@ -30,7 +30,6 @@
 package com.s3auth.relay;
 
 import com.jcabi.aspects.Loggable;
-import com.jcabi.aspects.Tv;
 import com.jcabi.log.Logger;
 import com.jcabi.log.VerboseRunnable;
 import com.jcabi.log.VerboseThreads;
@@ -71,7 +70,7 @@ final class FtpFacade implements Closeable {
     /**
      * How many threads to use.
      */
-    private static final int THREADS = Tv.HUNDRED;
+    private static final int THREADS = 100;
 
     /**
      * Executor service, with socket openers.
@@ -157,7 +156,7 @@ final class FtpFacade implements Closeable {
             throw new IllegalStateException(ex);
         }
         try {
-            if (!this.sockets.offer(socket, Tv.TEN, TimeUnit.SECONDS)) {
+            if (!this.sockets.offer(socket, 10, TimeUnit.SECONDS)) {
                 FtpFacade.overflow(socket);
                 Logger.warn(this, "too many open connections");
             }
@@ -192,12 +191,12 @@ final class FtpFacade implements Closeable {
     private void shutdown(final ExecutorService service)
         throws InterruptedException {
         service.shutdown();
-        if (service.awaitTermination(Tv.TEN, TimeUnit.SECONDS)) {
+        if (service.awaitTermination(10, TimeUnit.SECONDS)) {
             Logger.info(this, "#shutdown(): succeeded");
         } else {
             Logger.warn(this, "#shutdown(): failed");
             service.shutdownNow();
-            if (service.awaitTermination(Tv.TEN, TimeUnit.SECONDS)) {
+            if (service.awaitTermination(10, TimeUnit.SECONDS)) {
                 Logger.info(this, "#shutdown(): shutdownNow() succeeded");
             } else {
                 Logger.error(this, "#shutdown(): failed to stop threads");

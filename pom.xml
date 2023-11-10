@@ -285,7 +285,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
           <mergeUserSettings>true</mergeUserSettings>
           <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
           <debug>false</debug>
-          <localRepositoryPath>${project.basedir}/local-repo</localRepositoryPath>
+          <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
           <noLog>false</noLog>
           <postBuildHookScript>verify</postBuildHookScript>
           <preBuildHookScript>setup</preBuildHookScript>

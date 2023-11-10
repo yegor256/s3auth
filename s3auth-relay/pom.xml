@@ -121,6 +121,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       <groupId>org.glassfish.jersey.core</groupId>
       <artifactId>jersey-common</artifactId>
       <version>3.1.2</version>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>com.sun.jersey</groupId>
@@ -131,7 +132,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-aspects</artifactId>
-      <!-- version from parent -->
+      <version>0.25.1</version>
     </dependency>
     <dependency>
       <groupId>com.jcabi</groupId>

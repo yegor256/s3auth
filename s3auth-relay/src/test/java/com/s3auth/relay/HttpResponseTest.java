@@ -29,7 +29,6 @@
  */
 package com.s3auth.relay;
 
-import com.jcabi.aspects.Tv;
 import com.jcabi.log.VerboseRunnable;
 import com.s3auth.hosts.Resource;
 import java.io.OutputStream;
@@ -138,7 +137,7 @@ final class HttpResponseTest {
         final HttpResponse response = new HttpResponse().withBody(res);
         final ServerSocket server = new ServerSocket(0);
         final CountDownLatch done = new CountDownLatch(1);
-        final StringBuffer received = new StringBuffer(Tv.HUNDRED);
+        final StringBuffer received = new StringBuffer(100);
         new Thread(
             new VerboseRunnable(
                 (Callable<Void>) () -> {

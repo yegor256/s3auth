@@ -30,7 +30,6 @@
 package com.s3auth.relay;
 
 import com.jcabi.aspects.Parallel;
-import com.jcabi.aspects.Tv;
 import com.jcabi.http.Response;
 import com.jcabi.http.request.ApacheRequest;
 import com.jcabi.http.request.JdkRequest;
@@ -566,7 +565,7 @@ final class HttpFacadeTest {
                         Base64.encodeBase64String("a:b".getBytes())
                     )
                 ).uri().back().fetch();
-            TimeUnit.SECONDS.sleep(Tv.THREE);
+            TimeUnit.SECONDS.sleep(3);
             Mockito.verify(resource, Mockito.times(1)).close();
         } finally {
             facade.close();
@@ -625,7 +624,7 @@ final class HttpFacadeTest {
      * @param path URI to hit
      * @throws Exception If fails
      */
-    @Parallel(threads = Tv.FIFTY)
+    @Parallel(threads = 50)
     private static void http(final URI path) throws Exception {
         new JdkRequest(path)
             .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
@@ -637,7 +636,7 @@ final class HttpFacadeTest {
                 )
             )
             .uri()
-            .queryParam("rnd", RandomStringUtils.randomAlphabetic(Tv.FIVE))
+            .queryParam("rnd", RandomStringUtils.randomAlphabetic(5))
             .back()
             .fetch().as(RestResponse.class)
             .assertStatus(HttpURLConnection.HTTP_INTERNAL_ERROR)
