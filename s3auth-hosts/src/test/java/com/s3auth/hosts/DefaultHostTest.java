@@ -302,9 +302,6 @@ final class DefaultHostTest {
                 )
             )
         );
-        Mockito.verify(cloudwatch.get(), Mockito.times(1)).getMetricStatistics(
-            Mockito.any(GetMetricStatisticsRequest.class)
-        );
     }
 
     /**

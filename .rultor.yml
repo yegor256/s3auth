@@ -1,12 +1,13 @@
 docker:
-  image: yegor256/rultor-image:1.21.0
+  image: yegor256/rultor-image:1.22.0
 install: |
   sudo locale-gen en_US en_US.UTF-8
   export LC_ALL=en_US.UTF-8
   export LANG=en_US.UTF-8
   export LANGUAGE=en_US.UTF-8
-  sudo gem install pdd -v 0.20.5
   sudo apt-get install -y netpbm texlive-fonts-recommended
+  sudo gem install pdd -v 0.20.5
+  pdd --source=$(pwd) --verbose --file=s3auth.xml
 assets:
   secring.gpg: yegor256/home#assets/secring.gpg
   id_rsa: yegor256/home#assets/heroku-key
@@ -40,5 +41,3 @@ deploy:
     mvn clean deploy --errors -Ps3auth -Pqulice --settings settings.xml -pl :s3auth-relay
     # mvn clean install site-deploy --errors -Psite --settings settings.xml
     mvn clean
-    pdd --source=$(pwd) --verbose --file=s3auth.xml
-    s3cmd --no-progress put s3auth.xml --config=../s3cfg s3://pdd.teamed.io/s3auth.xml
