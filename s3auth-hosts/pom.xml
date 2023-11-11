@@ -74,7 +74,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-core</artifactId>
-      <version>1.12.586</version>
+      <version>1.12.587</version>
       <exclusions>
         <exclusion>
           <groupId>org.apache.httpcomponents</groupId>
