@@ -79,7 +79,7 @@ public interface Resource extends Closeable {
     /**
      * Get its ETag.
      * @return The etag
-     * @link <a href="http://en.wikipedia.org/wiki/HTTP_ETag">ETag</a>
+     * @link <a href="https://en.wikipedia.org/wiki/HTTP_ETag">ETag</a>
      */
     String etag();
 

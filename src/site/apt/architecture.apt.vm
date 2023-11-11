@@ -44,7 +44,7 @@ s3auth.com High-Level Architecture
 
    * <<<s3auth-rest>>> is a web front-end that manipulates with
      user accounts and supplementary HTML pages (at
-     {{{http://www.s3auth.com}http://www.s3auth.com}}).
+     {{{https://www.s3auth.com}https://www.s3auth.com}}).
 
    * <<<s3auth-relay>>> is an HTTP web server that 1) consumes HTTP requests,
      2) authenticates users, and 3) responds to them using the

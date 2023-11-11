@@ -34,7 +34,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <html lang="en">
       <head>
         <meta charset="UTF-8"/>
-        <link rel="stylesheet" type="text/css" media="all" href="http://www.s3auth.com/css/layout.css"/>
+        <link rel="stylesheet" type="text/css" media="all" href="/css/layout.css"/>
       </head>
       <body>
         <div id="content">

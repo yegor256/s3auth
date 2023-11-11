@@ -137,7 +137,7 @@ final class HttpRequest {
      *
      * @param socket Socket to read from
      * @throws IOException If some socket problem
-     * @see <a href="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>
+     * @see <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>
      * @checkstyle ExecutableStatementCountCheck (100 lines)
      */
     @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")

@@ -54,7 +54,7 @@ public interface Domain {
     /**
      * Name of domain.
      * @return Full name of domain
-     * @see <a href="http://en.wikipedia.org/wiki/Domain_name">Domain Name</a>
+     * @see <a href="https://en.wikipedia.org/wiki/Domain_name">Domain Name</a>
      */
     String name();
 
