@@ -52,7 +52,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-cloudwatch</artifactId>
-      <version>1.12.589</version>
+      <version>1.12.590</version>
       <exclusions>
         <exclusion>
           <groupId>org.apache.httpcomponents</groupId>
