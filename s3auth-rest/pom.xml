@@ -165,7 +165,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>org.glassfish.jersey.core</groupId>
       <artifactId>jersey-common</artifactId>
-      <version>3.1.3</version>
+      <version>3.1.4</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
