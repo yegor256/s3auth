@@ -145,7 +145,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>5.9.0</version>
+      <version>5.10.0</version>
     </dependency>
   </dependencies>
   <dependencyManagement>
