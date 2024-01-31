@@ -163,7 +163,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       <dependency>
         <groupId>com.amazonaws</groupId>
         <artifactId>aws-java-sdk</artifactId>
-        <version>1.12.647</version>
+        <version>1.12.648</version>
       </dependency>
       <dependency>
         <groupId>com.jcabi</groupId>
