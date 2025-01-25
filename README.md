@@ -9,7 +9,6 @@
 [![PDD status](https://www.0pdd.com/svg?name=yegor256/s3auth)](https://www.0pdd.com/p?name=yegor256/s3auth)
 [![codecov](https://codecov.io/gh/yegor256/s3auth/branch/master/graph/badge.svg)](https://codecov.io/gh/yegor256/s3auth)
 [![Hits-of-Code](https://hitsofcode.com/github/yegor256/s3auth)](https://hitsofcode.com/view/github/yegor256/s3auth)
-![Lines of code](https://img.shields.io/tokei/lines/github/yegor256/s3auth)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/yegor256/s3auth/blob/master/LICENSE.txt)
 
 [s3auth.com](https://www.s3auth.com) is a Basic HTTP Auth gateway
