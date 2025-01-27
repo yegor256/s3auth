@@ -19,7 +19,7 @@ jobs:
           restore-keys: |
             maven-
       - run: mvn install -Pjacoco -Dinvoker.skip
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         with:
           files: ./s3auth-hosts/target/site/jacoco/jacoco.xml,./s3auth-rest/target/site/jacoco/jacoco.xml,./s3auth-relay/target/site/jacoco/jacoco.xml
           file: ./target/site/jacoco/jacoco.xml

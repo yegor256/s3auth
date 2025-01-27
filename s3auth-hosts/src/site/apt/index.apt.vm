@@ -41,4 +41,3 @@ Persistence Layer
   information we fetch from Amazon S3:
 
 [../latex/classes-hosts.png] UML class diagram of s3auth-hosts
-

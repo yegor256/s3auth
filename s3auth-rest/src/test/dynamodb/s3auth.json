@@ -1,27 +1,27 @@
 {
-    "AttributeDefinitions": [
-        {
-            "AttributeName": "user.urn",
-            "AttributeType": "S"
-        },
-        {
-            "AttributeName": "domain.name",
-            "AttributeType": "S"
-        }
-    ],
-    "KeySchema": [
-        {
-            "AttributeName": "user.urn",
-            "KeyType": "HASH"
-        },
-        {
-            "AttributeName": "domain.name",
-            "KeyType": "RANGE"
-        }
-    ],
-    "ProvisionedThroughput": {
-        "ReadCapacityUnits": "1",
-        "WriteCapacityUnits": "1"
+  "AttributeDefinitions": [
+    {
+      "AttributeName": "user.urn",
+      "AttributeType": "S"
     },
-    "TableName": "s3auth"
+    {
+      "AttributeName": "domain.name",
+      "AttributeType": "S"
+    }
+  ],
+  "KeySchema": [
+    {
+      "AttributeName": "user.urn",
+      "KeyType": "HASH"
+    },
+    {
+      "AttributeName": "domain.name",
+      "KeyType": "RANGE"
+    }
+  ],
+  "ProvisionedThroughput": {
+    "ReadCapacityUnits": "1",
+    "WriteCapacityUnits": "1"
+  },
+  "TableName": "s3auth"
 }

@@ -75,4 +75,3 @@ s3auth.com High-Level Architecture
   to get access to our persistence layer.
 
 [latex/classes-relay.png] UML class diagram of s3auth-relay
-
