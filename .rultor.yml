@@ -7,7 +7,7 @@ install: |
   export LC_ALL=en_US.UTF-8
   export LANG=en_US.UTF-8
   export LANGUAGE=en_US.UTF-8
-  sudo apt-get install -y netpbm texlive-fonts-recommended
+  sudo apt-get install --yes netpbm texlive-fonts-recommended
   sudo gem install pdd
   pdd --source=$(pwd) --verbose --file=/dev/null
 assets:
