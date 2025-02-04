@@ -9,6 +9,7 @@ name: mvn
       - master
 jobs:
   maven-build:
+    timeout-minutes: 15
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
