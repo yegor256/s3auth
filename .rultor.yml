@@ -5,7 +5,7 @@
 readers:
   - "urn:github:526301"
 docker:
-  image: yegor256/rultor-image:1.22.0
+  image: yegor256/rultor-image:1.24.0
 install: |
   sudo locale-gen en_US en_US.UTF-8
   export LC_ALL=en_US.UTF-8
