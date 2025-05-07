@@ -1,12 +1,12 @@
-*.db
-*.h2.db
-*.iml
-.DS_Store
 .classpath
+.DS_Store
 .idea
 .idea/
 .project
 .settings/
+*.db
+*.h2.db
+*.iml
 /bin
 local-repo/
 node_modules/
