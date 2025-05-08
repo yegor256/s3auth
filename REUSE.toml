@@ -4,10 +4,6 @@
 version = 1
 [[annotations]]
 path = [
-    "s3auth-hosts/src/main/resources/META-INF/services/javax.validation.spi.ValidationProvider",
-    "s3auth-relay/src/main/resources/META-INF/services/javax.validation.spi.ValidationProvider",
-    "s3auth-rest/src/main/resources/META-INF/services/javax.validation.spi.ValidationProvider",
-    "s3auth-rest/src/main/resources/images/favicon.ico",
     ".DS_Store",
     ".gitattributes",
     ".gitignore",
@@ -37,6 +33,10 @@ path = [
     "Procfile",
     "README.md",
     "renovate.json",
+    "s3auth-hosts/src/main/resources/META-INF/services/javax.validation.spi.ValidationProvider",
+    "s3auth-relay/src/main/resources/META-INF/services/javax.validation.spi.ValidationProvider",
+    "s3auth-rest/src/main/resources/images/favicon.ico",
+    "s3auth-rest/src/main/resources/META-INF/services/javax.validation.spi.ValidationProvider",
 ]
 precedence = "override"
 SPDX-FileCopyrightText = "Copyright (c) 2025 Yegor Bugayenko"
