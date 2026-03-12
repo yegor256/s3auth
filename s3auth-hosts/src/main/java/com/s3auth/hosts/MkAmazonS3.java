@@ -112,6 +112,8 @@ import com.amazonaws.services.s3.model.ListBucketInventoryConfigurationsRequest;
 import com.amazonaws.services.s3.model.ListBucketInventoryConfigurationsResult;
 import com.amazonaws.services.s3.model.ListBucketMetricsConfigurationsRequest;
 import com.amazonaws.services.s3.model.ListBucketMetricsConfigurationsResult;
+import com.amazonaws.services.s3.model.ListBucketsPaginatedRequest;
+import com.amazonaws.services.s3.model.ListBucketsPaginatedResult;
 import com.amazonaws.services.s3.model.ListBucketsRequest;
 import com.amazonaws.services.s3.model.ListMultipartUploadsRequest;
 import com.amazonaws.services.s3.model.ListNextBatchOfObjectsRequest;
@@ -435,6 +437,9 @@ public class MkAmazonS3 implements AmazonS3, Serializable {
 
     @Override
     public List<com.amazonaws.services.s3.model.Bucket> listBuckets(ListBucketsRequest arg0) throws AmazonClientException { return null; }
+
+    @Override
+    public ListBucketsPaginatedResult listBuckets(ListBucketsPaginatedRequest arg0) throws AmazonClientException { return null; }
 
     @Override
     public MultipartUploadListing listMultipartUploads(ListMultipartUploadsRequest arg0) throws AmazonClientException { return null; }

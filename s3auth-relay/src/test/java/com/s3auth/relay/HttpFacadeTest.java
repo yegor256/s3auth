@@ -611,7 +611,7 @@ final class HttpFacadeTest {
                 )
             )
             .uri()
-            .queryParam("rnd", RandomStringUtils.randomAlphabetic(5))
+            .queryParam("rnd", RandomStringUtils.secure().nextAlphabetic(5))
             .back()
             .fetch().as(RestResponse.class)
             .assertStatus(HttpURLConnection.HTTP_INTERNAL_ERROR)

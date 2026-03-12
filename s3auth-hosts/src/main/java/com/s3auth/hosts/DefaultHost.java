@@ -177,12 +177,13 @@ final class DefaultHost implements Host {
                 }
                 break;
             } catch (final AmazonServiceException ex) {
-                if (StringUtils.endsWith(name.get(), DefaultHost.SUFFIX)
+                if (name.get().endsWith(DefaultHost.SUFFIX)
                     && "NoSuchKey".equals(ex.getErrorCode())
                 ) {
+                    final String path = name.get();
                     resource = new DirectoryListing(
                         this.bucket.client(), this.bucket.bucket(),
-                        StringUtils.removeEnd(name.get(), DefaultHost.SUFFIX)
+                        path.substring(0, path.length() - DefaultHost.SUFFIX.length())
                     );
                     break;
                 } else if ("NoSuchBucket".equals(ex.getErrorCode())) {
