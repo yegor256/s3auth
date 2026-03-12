@@ -28,10 +28,10 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.http.HttpStatus;
@@ -43,7 +43,6 @@ import org.apache.http.HttpStatus;
  * @checkstyle ClassFanOutComplexityCheck (1000 lines)
  */
 @Immutable
-@EqualsAndHashCode(of = "bucket")
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ExcessiveImports" })
 final class DefaultHost implements Host {
@@ -124,6 +123,17 @@ final class DefaultHost implements Host {
     @Override
     public String toString() {
         return this.bucket.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.bucket);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return obj instanceof DefaultHost
+            && Objects.equals(this.bucket, ((DefaultHost) obj).bucket);
     }
 
     @Override
@@ -323,7 +333,6 @@ final class DefaultHost implements Host {
      *
      * @since 0.0.1
      */
-    @EqualsAndHashCode(of = "name")
     private static final class Simple implements DefaultHost.ObjectName {
         /**
          * Original name.
@@ -347,6 +356,17 @@ final class DefaultHost implements Host {
         public String toString() {
             return this.name;
         }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(this.name);
+        }
+
+        @Override
+        public boolean equals(final Object obj) {
+            return obj instanceof Simple
+                && Objects.equals(this.name, ((Simple) obj).name);
+        }
     }
 
     /**
@@ -355,7 +375,6 @@ final class DefaultHost implements Host {
      * @since 0.0.1
      */
     @Loggable(Loggable.DEBUG)
-    @EqualsAndHashCode(of = "bucket")
     private final class HostStats implements Stats {
         /**
          * The S3 bucket.
@@ -395,6 +414,17 @@ final class DefaultHost implements Host {
                 sum += datapoint.getSum();
             }
             return sum;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(this.bucket);
+        }
+
+        @Override
+        public boolean equals(final Object obj) {
+            return obj instanceof HostStats
+                && Objects.equals(this.bucket, ((HostStats) obj).bucket);
         }
     }
 

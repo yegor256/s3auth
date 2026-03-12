@@ -11,8 +11,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Objects;
 import java.util.zip.GZIPOutputStream;
-import lombok.EqualsAndHashCode;
 import org.apache.http.HttpHeaders;
 
 /**
@@ -20,7 +20,6 @@ import org.apache.http.HttpHeaders;
  * @since 0.0.1
  */
 @Immutable
-@EqualsAndHashCode(of = "resource")
 @Loggable(Loggable.DEBUG)
 public final class GzipResource implements Resource {
 
@@ -80,6 +79,17 @@ public final class GzipResource implements Resource {
     @Override
     public void close() throws IOException {
         this.resource.close();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.resource);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return obj instanceof GzipResource
+            && Objects.equals(this.resource, ((GzipResource) obj).resource);
     }
 
 }

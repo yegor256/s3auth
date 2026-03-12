@@ -5,7 +5,6 @@
 package com.s3auth.hosts;
 
 import com.amazonaws.services.s3.AmazonS3;
-import lombok.Builder;
 
 /**
  * Mocker of {@link Bucket}.
@@ -18,8 +17,7 @@ public final class BucketMocker {
     /**
      * The mock.
      */
-    private final transient MkBucket.MkBucketBuilder bucket = MkBucket
-        .builder();
+    private final transient MkBucketBuilder bucket = new MkBucketBuilder();
 
     /**
      * Init.
@@ -104,14 +102,122 @@ public final class BucketMocker {
     }
 
     /**
+     * Builder for MkBucket.
+     *
+     * @since 0.0.1
+     */
+    @SuppressWarnings("PMD.TooManyFields")
+    private static final class MkBucketBuilder {
+        /**
+         * The Bucket Name.
+         */
+        private String name;
+
+        /**
+         * The Bucket key.
+         */
+        private String key;
+
+        /**
+         * The Bucket secret.
+         */
+        private String secret;
+
+        /**
+         * The Bucket bucket.
+         */
+        private String bucket;
+
+        /**
+         * The Bucket region.
+         */
+        private String region;
+
+        /**
+         * The Bucket client.
+         */
+        private AmazonS3 client;
+
+        /**
+         * Set name.
+         * @param value The name
+         * @return This builder
+         */
+        MkBucketBuilder name(final String value) {
+            this.name = value;
+            return this;
+        }
+
+        /**
+         * Set key.
+         * @param value The key
+         * @return This builder
+         */
+        MkBucketBuilder key(final String value) {
+            this.key = value;
+            return this;
+        }
+
+        /**
+         * Set secret.
+         * @param value The secret
+         * @return This builder
+         */
+        MkBucketBuilder secret(final String value) {
+            this.secret = value;
+            return this;
+        }
+
+        /**
+         * Set bucket.
+         * @param value The bucket
+         * @return This builder
+         */
+        MkBucketBuilder bucket(final String value) {
+            this.bucket = value;
+            return this;
+        }
+
+        /**
+         * Set region.
+         * @param value The region
+         * @return This builder
+         */
+        MkBucketBuilder region(final String value) {
+            this.region = value;
+            return this;
+        }
+
+        /**
+         * Set client.
+         * @param value The client
+         * @return This builder
+         */
+        MkBucketBuilder client(final AmazonS3 value) {
+            this.client = value;
+            return this;
+        }
+
+        /**
+         * Build the bucket.
+         * @return The bucket
+         */
+        MkBucket build() {
+            return new MkBucket(
+                this.name, this.key, this.secret,
+                this.bucket, this.region, this.client
+            );
+        }
+    }
+
+    /**
      * Mock.
      *
      * @since 0.0.1
      */
-    @Builder
     @SuppressWarnings({ "PMD.TooManyMethods",
         "PMD.AvoidFieldNameMatchingMethodName" })
-    private static class MkBucket implements Bucket {
+    private static final class MkBucket implements Bucket {
         /**
          * The Bucket Name.
          */
@@ -138,14 +244,29 @@ public final class BucketMocker {
         private final transient String region;
 
         /**
-         * The Bucket syslog.
-         */
-        private final transient String syslog;
-
-        /**
          * The Bucket client.
          */
         private final transient AmazonS3 client;
+
+        /**
+         * Constructor.
+         * @param nme The name
+         * @param keyy The key
+         * @param scr The secret
+         * @param bkt The bucket
+         * @param rgn The region
+         * @param clt The client
+         * @checkstyle ParameterNumberCheck (5 lines)
+         */
+        MkBucket(final String nme, final String keyy, final String scr,
+            final String bkt, final String rgn, final AmazonS3 clt) {
+            this.name = nme;
+            this.key = keyy;
+            this.secret = scr;
+            this.bucket = bkt;
+            this.region = rgn;
+            this.client = clt;
+        }
 
         @Override
         public String name() {
@@ -174,7 +295,7 @@ public final class BucketMocker {
 
         @Override
         public String syslog() {
-            return this.syslog;
+            return "";
         }
 
         @Override

@@ -12,7 +12,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import lombok.Builder;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -26,8 +25,7 @@ public final class ResourceMocker {
     /**
      * The mock.
      */
-    private final transient MkResource.MkResourceBuilder resource = MkResource
-        .builder();
+    private final transient MkResourceBuilder resource = new MkResourceBuilder();
 
     /**
      * Default one.
@@ -92,14 +90,74 @@ public final class ResourceMocker {
     }
 
     /**
+     * Builder for MkResource.
+     *
+     * @since 0.0.1
+     */
+    @SuppressWarnings("PMD.TooManyFields")
+    private static final class MkResourceBuilder {
+        /**
+         * The resource content.
+         */
+        private char[] content;
+
+        /**
+         * The resource status.
+         */
+        private int status;
+
+        /**
+         * The resource headers.
+         */
+        private Collection<String> headers;
+
+        /**
+         * Set content.
+         * @param value The content
+         * @return This builder
+         */
+        MkResourceBuilder content(final char[] value) {
+            this.content = value.clone();
+            return this;
+        }
+
+        /**
+         * Set status.
+         * @param value The status
+         * @return This builder
+         */
+        MkResourceBuilder status(final int value) {
+            this.status = value;
+            return this;
+        }
+
+        /**
+         * Set headers.
+         * @param value The headers
+         * @return This builder
+         */
+        MkResourceBuilder headers(final Collection<String> value) {
+            this.headers = value;
+            return this;
+        }
+
+        /**
+         * Build the resource.
+         * @return The resource
+         */
+        MkResource build() {
+            return new MkResource(this.content, this.status, this.headers);
+        }
+    }
+
+    /**
      * Mock.
      *
      * @since 0.0.1
      */
-    @Builder
     @SuppressWarnings({ "PMD.TooManyMethods",
         "PMD.AvoidFieldNameMatchingMethodName" })
-    private static class MkResource implements Resource {
+    private static final class MkResource implements Resource {
         /**
          * The resource content.
          */
@@ -116,21 +174,17 @@ public final class ResourceMocker {
         private final transient Collection<String> headers;
 
         /**
-         * The resource etag.
+         * Constructor.
+         * @param cnt The content
+         * @param sts The status
+         * @param hdrs The headers
          */
-        private final transient String etag;
-
-        /**
-         * The resource lastModified.
-         * @checkstyle MemberName (3 lines)
-         */
-        private final transient Date lastModified;
-
-        /**
-         * The resource contentType.
-         * @checkstyle MemberName (3 lines)
-         */
-        private final transient String contentType;
+        MkResource(final char[] cnt, final int sts,
+            final Collection<String> hdrs) {
+            this.content = cnt.clone();
+            this.status = sts;
+            this.headers = hdrs;
+        }
 
         @Override
         public void close() {
@@ -155,17 +209,17 @@ public final class ResourceMocker {
 
         @Override
         public String etag() {
-            return this.etag;
+            return "";
         }
 
         @Override
         public Date lastModified() {
-            return this.lastModified;
+            return null;
         }
 
         @Override
         public String contentType() {
-            return this.contentType;
+            return "";
         }
     }
 }

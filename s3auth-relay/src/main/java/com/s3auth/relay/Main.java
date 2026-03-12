@@ -11,8 +11,6 @@ import com.s3auth.hosts.DynamoHosts;
 import java.util.concurrent.TimeUnit;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * Main entrance to the system.
@@ -20,8 +18,6 @@ import lombok.ToString;
  * @since 0.0.1
  */
 @Immutable
-@ToString
-@EqualsAndHashCode
 @Loggable(value = Loggable.INFO, limit = Integer.MAX_VALUE)
 public final class Main {
 

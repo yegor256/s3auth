@@ -6,8 +6,6 @@ package com.s3auth.hosts;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * Range of data.
@@ -56,8 +54,6 @@ public interface Range {
      * @since 0.0.1
      */
     @Loggable(Loggable.DEBUG)
-    @ToString
-    @EqualsAndHashCode(of = { "frst", "lst" })
     final class Simple implements Range {
         /**
          * First byte.
@@ -87,6 +83,28 @@ public interface Range {
         @Override
         public long last() {
             return this.lst;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("Range.Simple(%d, %d)", this.frst, this.lst);
+        }
+
+        @Override
+        public int hashCode() {
+            return Long.hashCode(this.frst) * 31 + Long.hashCode(this.lst);
+        }
+
+        @Override
+        public boolean equals(final Object obj) {
+            final boolean result;
+            if (obj instanceof Simple) {
+                final Simple other = (Simple) obj;
+                result = this.frst == other.frst && this.lst == other.lst;
+            } else {
+                result = false;
+            }
+            return result;
         }
     }
 

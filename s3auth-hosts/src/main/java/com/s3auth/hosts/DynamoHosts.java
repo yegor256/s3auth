@@ -12,12 +12,11 @@ import java.net.URISyntaxException;
 import java.util.AbstractSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * Collection of hosts, persisted in Amazon DynamoDB.
@@ -28,8 +27,6 @@ import lombok.ToString;
  */
 @SuppressWarnings({ "PMD.TooManyMethods", "PMD.UseConcurrentHashMap" })
 @Immutable
-@ToString
-@EqualsAndHashCode(of = "dynamo")
 @Loggable(Loggable.DEBUG)
 public final class DynamoHosts implements Hosts {
 
@@ -51,6 +48,22 @@ public final class DynamoHosts implements Hosts {
      */
     public DynamoHosts(@NotNull final Dynamo dnm) {
         this.dynamo = dnm;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("DynamoHosts(%s)", this.dynamo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.dynamo);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return obj instanceof DynamoHosts
+            && Objects.equals(this.dynamo, ((DynamoHosts) obj).dynamo);
     }
 
     @Override

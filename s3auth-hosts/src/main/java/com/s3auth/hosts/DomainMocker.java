@@ -4,8 +4,6 @@
  */
 package com.s3auth.hosts;
 
-import lombok.Builder;
-
 /**
  * Mocker of {@link Domain}.
  *
@@ -17,8 +15,7 @@ public final class DomainMocker {
     /**
      * The mock.
      */
-    private final transient MkDomain.MkDomainBuilder domain = MkDomain
-        .builder();
+    private final transient MkDomainBuilder domain = new MkDomainBuilder();
 
     /**
      * Init.
@@ -103,14 +100,122 @@ public final class DomainMocker {
     }
 
     /**
+     * Builder for MkDomain.
+     *
+     * @since 0.0.1
+     */
+    @SuppressWarnings("PMD.TooManyFields")
+    private static final class MkDomainBuilder {
+        /**
+         * The Domain Name.
+         */
+        private String name;
+
+        /**
+         * The Domain key.
+         */
+        private String key;
+
+        /**
+         * The Domain secret.
+         */
+        private String secret;
+
+        /**
+         * The Domain bucket.
+         */
+        private String bucket;
+
+        /**
+         * The Domain region.
+         */
+        private String region;
+
+        /**
+         * The Domain syslog.
+         */
+        private String syslog;
+
+        /**
+         * Set name.
+         * @param value The name
+         * @return This builder
+         */
+        MkDomainBuilder name(final String value) {
+            this.name = value;
+            return this;
+        }
+
+        /**
+         * Set key.
+         * @param value The key
+         * @return This builder
+         */
+        MkDomainBuilder key(final String value) {
+            this.key = value;
+            return this;
+        }
+
+        /**
+         * Set secret.
+         * @param value The secret
+         * @return This builder
+         */
+        MkDomainBuilder secret(final String value) {
+            this.secret = value;
+            return this;
+        }
+
+        /**
+         * Set bucket.
+         * @param value The bucket
+         * @return This builder
+         */
+        MkDomainBuilder bucket(final String value) {
+            this.bucket = value;
+            return this;
+        }
+
+        /**
+         * Set region.
+         * @param value The region
+         * @return This builder
+         */
+        MkDomainBuilder region(final String value) {
+            this.region = value;
+            return this;
+        }
+
+        /**
+         * Set syslog.
+         * @param value The syslog
+         * @return This builder
+         */
+        MkDomainBuilder syslog(final String value) {
+            this.syslog = value;
+            return this;
+        }
+
+        /**
+         * Build the domain.
+         * @return The domain
+         */
+        MkDomain build() {
+            return new MkDomain(
+                this.name, this.key, this.secret,
+                this.bucket, this.region, this.syslog
+            );
+        }
+    }
+
+    /**
      * Mock.
      *
      * @since 0.0.1
      */
-    @Builder
     @SuppressWarnings({ "PMD.TooManyMethods",
         "PMD.AvoidFieldNameMatchingMethodName" })
-    private static class MkDomain implements Domain {
+    private static final class MkDomain implements Domain {
         /**
          * The Domain Name.
          */
@@ -140,6 +245,26 @@ public final class DomainMocker {
          * The Domain syslog.
          */
         private final transient String syslog;
+
+        /**
+         * Constructor.
+         * @param nme The name
+         * @param keyy The key
+         * @param scr The secret
+         * @param bkt The bucket
+         * @param rgn The region
+         * @param log The syslog
+         * @checkstyle ParameterNumberCheck (5 lines)
+         */
+        MkDomain(final String nme, final String keyy, final String scr,
+            final String bkt, final String rgn, final String log) {
+            this.name = nme;
+            this.key = keyy;
+            this.secret = scr;
+            this.bucket = bkt;
+            this.region = rgn;
+            this.syslog = log;
+        }
 
         @Override
         public String name() {

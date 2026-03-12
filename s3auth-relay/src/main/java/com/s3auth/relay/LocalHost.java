@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
 
 /**
  * Local host with data.
@@ -28,11 +27,10 @@ import lombok.EqualsAndHashCode;
  * {@link HttpThread} according to the information in {@code "Host"}
  * HTTP header.
  *
- * @since 0.0.1
  * @see HttpThread
+ * @since 0.0.1
  */
 @Immutable
-@EqualsAndHashCode
 @Loggable(Loggable.DEBUG)
 final class LocalHost implements Host {
 

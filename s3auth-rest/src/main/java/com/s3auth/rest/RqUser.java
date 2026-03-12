@@ -8,7 +8,6 @@ import com.jcabi.urn.URN;
 import com.s3auth.hosts.User;
 import java.io.IOException;
 import java.net.URI;
-import lombok.EqualsAndHashCode;
 import org.takes.Request;
 import org.takes.facets.auth.Identity;
 import org.takes.facets.auth.RqAuth;
@@ -19,7 +18,6 @@ import org.takes.rq.RqWrap;
  *
  * @since 0.1
  */
-@EqualsAndHashCode(callSuper = true)
 final class RqUser extends RqWrap {
 
     /**

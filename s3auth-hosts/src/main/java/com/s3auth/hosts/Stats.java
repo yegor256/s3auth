@@ -5,7 +5,6 @@
 package com.s3auth.hosts;
 
 import com.jcabi.aspects.Immutable;
-import lombok.EqualsAndHashCode;
 
 /**
  * Statistics for a given domain.
@@ -26,7 +25,6 @@ public interface Stats {
      * @since 0.0.1
      */
     @Immutable
-    @EqualsAndHashCode(of = "bytes")
     final class Simple implements Stats {
         /**
          * Bytes transferred.
@@ -44,6 +42,17 @@ public interface Stats {
         @Override
         public long bytesTransferred() {
             return this.bytes;
+        }
+
+        @Override
+        public int hashCode() {
+            return Long.hashCode(this.bytes);
+        }
+
+        @Override
+        public boolean equals(final Object obj) {
+            return obj instanceof Simple
+                && this.bytes == ((Simple) obj).bytes;
         }
     }
 }

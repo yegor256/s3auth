@@ -102,7 +102,7 @@ public interface Domain {
      * @checkstyle NPathComplexityCheck (200 lines)
      */
     @SuppressWarnings("PMD.NPathComplexity")
-    class Validator implements ConstraintValidator<Domain.Valid, Domain> {
+    final class Validator implements ConstraintValidator<Domain.Valid, Domain> {
         @Override
         public void initialize(final Domain.Valid annotation) {
             //nothing to do

@@ -6,8 +6,8 @@ package com.s3auth.hosts;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import java.util.Objects;
 import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
 
 /**
  * Default implementation of domain.
@@ -16,7 +16,6 @@ import lombok.EqualsAndHashCode;
  */
 @SuppressWarnings("PMD.TooManyMethods")
 @Immutable
-@EqualsAndHashCode(of = "origin")
 @Loggable(Loggable.DEBUG)
 final class DefaultDomain implements Domain {
 
@@ -90,6 +89,17 @@ final class DefaultDomain implements Domain {
     @Override
     public String toString() {
         return this.origin.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.origin);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return obj instanceof DefaultDomain
+            && Objects.equals(this.origin, ((DefaultDomain) obj).origin);
     }
 
     @Override

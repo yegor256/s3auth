@@ -13,12 +13,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.Crypt;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -31,7 +31,6 @@ import org.apache.commons.codec.digest.Md5Crypt;
  */
 @Immutable
 @Loggable(Loggable.DEBUG)
-@EqualsAndHashCode(of = "host")
 @SuppressWarnings("PMD.UnusedPrivateField")
 final class Htpasswd {
 
@@ -71,6 +70,17 @@ final class Htpasswd {
             this.fetch().size(),
             Htpasswd.LIFETIME
         );
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.host);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return obj instanceof Htpasswd
+            && Objects.equals(this.host, ((Htpasswd) obj).host);
     }
 
     /**

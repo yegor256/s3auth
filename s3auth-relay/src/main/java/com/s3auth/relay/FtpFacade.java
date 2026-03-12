@@ -20,8 +20,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.apache.commons.net.ftp.FTPReply;
 
 /**
@@ -31,13 +29,11 @@ import org.apache.commons.net.ftp.FTPReply;
  *
  * <p>The class is immutable and thread-safe.
  *
- * @since 0.0.1
  * @see Main
+ * @since 0.0.1
  * @todo #213:30min Implement TLS secure port listening in a manner analogous to
  *  HttpFacade.
  */
-@ToString
-@EqualsAndHashCode(of = { "sockets", "server" })
 @SuppressWarnings("PMD.DoNotUseThreads")
 @Loggable(Loggable.DEBUG)
 final class FtpFacade implements Closeable {

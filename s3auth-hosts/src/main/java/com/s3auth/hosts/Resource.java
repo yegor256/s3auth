@@ -12,11 +12,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpHeaders;
@@ -76,8 +75,6 @@ public interface Resource extends Closeable {
      * @since 0.0.1
      */
     @Immutable
-    @ToString
-    @EqualsAndHashCode(of = "text")
     @Loggable(Loggable.DEBUG)
     final class PlainText implements Resource {
         /**
@@ -153,6 +150,22 @@ public interface Resource extends Closeable {
         @Override
         public void close() {
             // nothing to do
+        }
+
+        @Override
+        public String toString() {
+            return String.format("PlainText(%d bytes)", this.text.length);
+        }
+
+        @Override
+        public int hashCode() {
+            return Arrays.hashCode(this.text);
+        }
+
+        @Override
+        public boolean equals(final Object obj) {
+            return obj instanceof PlainText
+                && Arrays.equals(this.text, ((PlainText) obj).text);
         }
     }
 

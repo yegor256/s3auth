@@ -7,19 +7,16 @@ package com.s3auth.hosts;
 import com.jcabi.aspects.Loggable;
 import java.util.AbstractSet;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * Bag of domains.
  *
  * @since 0.0.1
  */
-@ToString
-@EqualsAndHashCode(callSuper = false, of = "all")
 @Loggable(Loggable.DEBUG)
 final class Domains extends AbstractSet<Domain> {
 
@@ -28,6 +25,22 @@ final class Domains extends AbstractSet<Domain> {
      */
     private final transient ConcurrentMap<String, Domain> all =
         new ConcurrentHashMap<>();
+
+    @Override
+    public String toString() {
+        return String.format("Domains(%s)", this.all);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.all);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return obj instanceof Domains
+            && Objects.equals(this.all, ((Domains) obj).all);
+    }
 
     /**
      * Has this domain inside?

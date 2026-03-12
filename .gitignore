@@ -1,12 +1,16 @@
+# SPDX-FileCopyrightText: Copyright (c) 2025 Yegor Bugayenko
+# SPDX-License-Identifier: MIT
+
+*.db
+*.h2.db
+*.iml
 .classpath
+.claude/
 .DS_Store
 .idea
 .idea/
 .project
 .settings/
-*.db
-*.h2.db
-*.iml
 /bin
 local-repo/
 node_modules/

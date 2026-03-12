@@ -32,7 +32,7 @@ public final class HostsMocker {
      *
      * @since 0.0.1
      */
-    private static class MkHosts implements Hosts {
+    private static final class MkHosts implements Hosts {
         @Override
         public void close() {
             // do nothing.

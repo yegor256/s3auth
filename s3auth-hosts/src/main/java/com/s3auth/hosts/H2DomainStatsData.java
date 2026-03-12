@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import lombok.EqualsAndHashCode;
+import java.util.Objects;
 
 /**
  * Storage of {@link Stats} per domain with H2 Database.
@@ -22,7 +22,6 @@ import lombok.EqualsAndHashCode;
  * @since 0.0.1
  */
 @Immutable
-@EqualsAndHashCode(of = "jdbc")
 @Loggable(Loggable.DEBUG)
 final class H2DomainStatsData implements DomainStatsData {
     /**
@@ -82,6 +81,17 @@ final class H2DomainStatsData implements DomainStatsData {
      */
     H2DomainStatsData(final File file) {
         this.jdbc = String.format("jdbc:h2:file:%s", file.getAbsolutePath());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.jdbc);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return obj instanceof H2DomainStatsData
+            && Objects.equals(this.jdbc, ((H2DomainStatsData) obj).jdbc);
     }
 
     /**

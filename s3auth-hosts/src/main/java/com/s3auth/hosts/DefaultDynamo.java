@@ -20,11 +20,10 @@ import com.jcabi.manifests.Manifests;
 import com.jcabi.urn.URN;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * Abstraction on top of DynamoDB SDK.
@@ -34,8 +33,6 @@ import lombok.ToString;
  * @since 0.0.1
  */
 @Immutable
-@ToString
-@EqualsAndHashCode(of = { "region", "table" })
 @Loggable(Loggable.INFO)
 final class DefaultDynamo implements Dynamo {
 
@@ -103,6 +100,29 @@ final class DefaultDynamo implements Dynamo {
         @NotNull final String tbl) {
         this.region = rgn;
         this.table = tbl;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("DefaultDynamo(%s, %s)", this.region, this.table);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.region, this.table);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        final boolean result;
+        if (obj instanceof DefaultDynamo) {
+            final DefaultDynamo other = (DefaultDynamo) obj;
+            result = Objects.equals(this.region, other.region)
+                && Objects.equals(this.table, other.table);
+        } else {
+            result = false;
+        }
+        return result;
     }
 
     @Override

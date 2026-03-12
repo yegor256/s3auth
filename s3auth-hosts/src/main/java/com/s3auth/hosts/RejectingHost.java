@@ -8,7 +8,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.immutable.Array;
 import java.io.IOException;
 import java.net.URI;
-import lombok.EqualsAndHashCode;
+import java.util.Objects;
 
 /**
  * A {@link Host} that temporarily rejects certain resources, by regex.
@@ -18,7 +18,6 @@ import lombok.EqualsAndHashCode;
  * @since 0.0.1
  */
 @Immutable
-@EqualsAndHashCode(of = "host")
 final class RejectingHost implements Host {
 
     /**
@@ -44,6 +43,17 @@ final class RejectingHost implements Host {
     @Override
     public String toString() {
         return this.host.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.host);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return obj instanceof RejectingHost
+            && Objects.equals(this.host, ((RejectingHost) obj).host);
     }
 
     @Override

@@ -6,7 +6,6 @@ package com.s3auth.rest;
 
 import com.jcabi.manifests.Manifests;
 import java.io.IOException;
-import lombok.EqualsAndHashCode;
 import org.takes.Request;
 import org.takes.Response;
 import org.takes.facets.auth.XeIdentity;
@@ -38,7 +37,6 @@ import org.takes.rs.xe.XeStylesheet;
  *
  * @since 0.1
  */
-@EqualsAndHashCode(callSuper = true)
 final class RsPage extends RsWrap {
 
     /**

@@ -24,8 +24,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.apache.commons.lang3.StringUtils;
 
@@ -45,11 +43,9 @@ import org.apache.commons.lang3.StringUtils;
  *
  * <p>The class is mutable and thread-safe.
  *
- * @since 0.0.1
  * @see HttpThread
+ * @since 0.0.1
  */
-@ToString
-@EqualsAndHashCode(of = { "mtd", "uri", "hdrs" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.UseConcurrentHashMap")
 final class HttpRequest {

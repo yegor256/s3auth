@@ -22,8 +22,6 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * HTTP facade (port listener).
@@ -32,15 +30,13 @@ import lombok.ToString;
  *
  * <p>The class is mutable and thread-safe.
  *
- * @since 0.0.1
  * @see Main
+ * @since 0.0.1
  * @todo #213:1hr Create new a class Facade with all protocol-neutral code
  *  (such as socket handling, socket queue, etc). Then convert {@link com
  *  .s3auth.relay.HttpFacade} and {@link com.s3auth.relay.FtpFacade} so they use
  *  the new Facade class in order to avoid code duplication.
  */
-@ToString
-@EqualsAndHashCode(of = { "sockets", "server" })
 @SuppressWarnings("PMD.DoNotUseThreads")
 @Loggable(Loggable.DEBUG)
 final class HttpFacade implements Closeable {

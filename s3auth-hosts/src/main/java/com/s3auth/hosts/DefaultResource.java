@@ -16,9 +16,9 @@ import java.net.HttpURLConnection;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.Objects;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
-import lombok.EqualsAndHashCode;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -29,7 +29,6 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @since 0.0.1
  */
-@EqualsAndHashCode(of = { "bucket", "key", "range" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.TooManyMethods")
 final class DefaultResource implements Resource {
@@ -96,6 +95,25 @@ final class DefaultResource implements Resource {
     @Override
     public String toString() {
         return String.format("%s:%s", this.bucket, this.key);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.bucket, this.key, this.range);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        final boolean result;
+        if (obj instanceof DefaultResource) {
+            final DefaultResource other = (DefaultResource) obj;
+            result = Objects.equals(this.bucket, other.bucket)
+                && Objects.equals(this.key, other.key)
+                && Objects.equals(this.range, other.range);
+        } else {
+            result = false;
+        }
+        return result;
     }
 
     @Override

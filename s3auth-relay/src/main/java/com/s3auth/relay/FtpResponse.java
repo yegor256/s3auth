@@ -23,8 +23,8 @@ import javax.validation.constraints.NotNull;
  *
  * <p>The class is NOT thread-safe.
  *
- * @since 0.0.1
  * @see FtpThread
+ * @since 0.0.1
  * @todo #213:30min Implement methods 'withCode', 'withText', 'send' as above.
  *  Also, implement 'asString' and unignore test 'constructsCorrectly' in
  *  FtpResponseTest.

@@ -18,7 +18,6 @@ import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
 import org.apache.commons.httpclient.HttpStatus;
 
 /**
@@ -37,10 +36,9 @@ import org.apache.commons.httpclient.HttpStatus;
  *
  * <p>The class is NOT thread-safe.
  *
- * @since 0.0.1
  * @see HttpThread
+ * @since 0.0.1
  */
-@EqualsAndHashCode(of = { "status", "hdrs", "body" })
 @Loggable(Loggable.DEBUG)
 final class HttpResponse {
 

@@ -13,9 +13,9 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
 
 /**
  * Default implementation of {@link Bucket}.
@@ -23,7 +23,6 @@ import lombok.EqualsAndHashCode;
  * @since 0.0.1
  */
 @Immutable
-@EqualsAndHashCode(of = "domain")
 @Loggable(Loggable.DEBUG)
 final class DefaultBucket implements Bucket {
 
@@ -65,6 +64,17 @@ final class DefaultBucket implements Bucket {
     @Override
     public String toString() {
         return this.domain.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.domain);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return obj instanceof DefaultBucket
+            && Objects.equals(this.domain, ((DefaultBucket) obj).domain);
     }
 
     @Override

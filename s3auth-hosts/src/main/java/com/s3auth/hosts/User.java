@@ -100,7 +100,7 @@ public interface User {
      *
      * @since 0.0.1
      */
-    class Validator implements ConstraintValidator<User.Valid, User> {
+    final class Validator implements ConstraintValidator<User.Valid, User> {
         @Override
         public void initialize(final User.Valid annotation) {
             // nothing to do

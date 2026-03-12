@@ -10,9 +10,9 @@ import com.jcabi.log.Logger;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
 
 /**
  * A {@link Host} that adds extra information on top of bucket's
@@ -23,7 +23,6 @@ import lombok.EqualsAndHashCode;
  * @since 0.0.1
  */
 @Immutable
-@EqualsAndHashCode(of = "host")
 @Loggable(Loggable.DEBUG)
 final class SmartHost implements Host {
 
@@ -48,6 +47,17 @@ final class SmartHost implements Host {
     @Override
     public String toString() {
         return this.host.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.host);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return obj instanceof SmartHost
+            && Objects.equals(this.host, ((SmartHost) obj).host);
     }
 
     @Override

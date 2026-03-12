@@ -8,8 +8,6 @@ import com.s3auth.hosts.Hosts;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import javax.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * Single FTP processing thread.
@@ -20,8 +18,8 @@ import lombok.ToString;
  *
  * <p>The class is thread-safe.
  *
- * @since 0.0.1
  * @see FtpFacade
+ * @since 0.0.1
  * @todo #213:30min Implement authentication based on the USER and PASS
  *  commands.
  * @todo #213:30min Implement relay functionality to fetch resource upon
@@ -29,8 +27,6 @@ import lombok.ToString;
  *  in case of other commands (unsupported for now). Remove unnecessary asserts
  *  ffor fields 'sockets' and 'hosts' in method 'dispatch'.
  */
-@ToString
-@EqualsAndHashCode(of = { "hosts", "sockets" })
 final class FtpThread {
 
     /**

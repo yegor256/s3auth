@@ -5,7 +5,6 @@
 package com.s3auth.hosts;
 
 import java.net.URI;
-import lombok.Builder;
 
 /**
  * Mocker of {@link Host}.
@@ -17,7 +16,7 @@ public final class HostMocker {
     /**
      * The mock.
      */
-    private final transient MkHost.MkHostBuilder host = MkHost.builder();
+    private final transient MkHostBuilder host = new MkHostBuilder();
 
     /**
      * Initialize it.
@@ -61,14 +60,90 @@ public final class HostMocker {
     }
 
     /**
+     * Builder for MkHost.
+     *
+     * @since 0.0.1
+     */
+    private static final class MkHostBuilder {
+        /**
+         * The host resource.
+         */
+        private Resource resource;
+
+        /**
+         * Whether the host authorized.
+         */
+        private boolean authorized;
+
+        /**
+         * Whether the host is hidden.
+         */
+        private boolean hidden;
+
+        /**
+         * The host syslog.
+         */
+        private String syslog;
+
+        /**
+         * Set resource.
+         * @param value The resource
+         * @return This builder
+         */
+        MkHostBuilder resource(final Resource value) {
+            this.resource = value;
+            return this;
+        }
+
+        /**
+         * Set authorized.
+         * @param value The authorized
+         * @return This builder
+         */
+        MkHostBuilder authorized(final boolean value) {
+            this.authorized = value;
+            return this;
+        }
+
+        /**
+         * Set hidden.
+         * @param value The hidden
+         * @return This builder
+         */
+        MkHostBuilder hidden(final boolean value) {
+            this.hidden = value;
+            return this;
+        }
+
+        /**
+         * Set syslog.
+         * @param value The syslog
+         * @return This builder
+         */
+        MkHostBuilder syslog(final String value) {
+            this.syslog = value;
+            return this;
+        }
+
+        /**
+         * Build the host.
+         * @return The host
+         */
+        MkHost build() {
+            return new MkHost(
+                this.resource, this.authorized, this.hidden, this.syslog
+            );
+        }
+    }
+
+    /**
      * Mock.
      *
      * @since 0.0.1
      */
-    @Builder
     @SuppressWarnings({ "PMD.TooManyMethods",
         "PMD.AvoidFieldNameMatchingMethodName" })
-    private static class MkHost implements Host {
+    private static final class MkHost implements Host {
         /**
          * The host resource.
          */
@@ -90,9 +165,20 @@ public final class HostMocker {
         private final transient String syslog;
 
         /**
-         * The host stats.
+         * Constructor.
+         * @param res The resource
+         * @param auth The authorized
+         * @param hid The hidden
+         * @param log The syslog
+         * @checkstyle ParameterNumberCheck (5 lines)
          */
-        private final transient Stats stats;
+        MkHost(final Resource res, final boolean auth,
+            final boolean hid, final String log) {
+            this.resource = res;
+            this.authorized = auth;
+            this.hidden = hid;
+            this.syslog = log;
+        }
 
         @Override
         public void close() {
@@ -122,7 +208,7 @@ public final class HostMocker {
 
         @Override
         public Stats stats() {
-            return this.stats;
+            return null;
         }
     }
 }

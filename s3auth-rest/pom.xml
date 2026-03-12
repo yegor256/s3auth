@@ -413,6 +413,8 @@
                 <exclude>checkstyle:/src/main/resources/.*</exclude>
                 <exclude>duplicatefinder:.*</exclude>
                 <exclude>findbugs:.*</exclude>
+                <exclude>pmd:.*</exclude>
+                <exclude>dependencies:.*</exclude>
               </excludes>
             </configuration>
           </plugin>

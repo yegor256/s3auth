@@ -23,8 +23,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.utils.DateUtils;
 
@@ -37,11 +35,9 @@ import org.apache.http.client.utils.DateUtils;
  *
  * <p>The class is thread-safe.
  *
- * @since 0.0.1
  * @see HttpFacade
+ * @since 0.0.1
  */
-@ToString
-@EqualsAndHashCode(of = { "hosts", "sockets" })
 @SuppressWarnings({
     "PMD.DoNotUseThreads",
     "PMD.UseConcurrentHashMap",

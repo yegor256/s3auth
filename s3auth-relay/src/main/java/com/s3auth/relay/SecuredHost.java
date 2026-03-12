@@ -18,8 +18,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.apache.commons.codec.binary.Base64;
 
 /**
@@ -31,11 +29,9 @@ import org.apache.commons.codec.binary.Base64;
  *
  * <p>The class is immutable and thread-safe.
  *
- * @since 0.0.1
  * @see HttpThread
+ * @since 0.0.1
  */
-@ToString(of = "host")
-@EqualsAndHashCode(of = { "host", "request" })
 @Loggable(Loggable.DEBUG)
 final class SecuredHost implements Host {
 
@@ -64,6 +60,11 @@ final class SecuredHost implements Host {
         @NotNull final HttpRequest rqst) {
         this.host = hst;
         this.request = rqst;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("SecuredHost(%s)", this.host);
     }
 
     @Override

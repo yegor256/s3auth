@@ -6,8 +6,7 @@ package com.s3auth.hosts;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import java.util.Objects;
 
 /**
  * S3 Object version.
@@ -87,8 +86,6 @@ public interface Version {
      */
     @Immutable
     @Loggable(Loggable.DEBUG)
-    @ToString
-    @EqualsAndHashCode(of = "ver")
     final class Simple implements Version {
         /**
          * The version ID.
@@ -116,6 +113,22 @@ public interface Version {
         @Override
         public String version() {
             return this.ver;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("Version.Simple(%s)", this.ver);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(this.ver);
+        }
+
+        @Override
+        public boolean equals(final Object obj) {
+            return obj instanceof Simple
+                && Objects.equals(this.ver, ((Simple) obj).ver);
         }
     }
 

@@ -11,11 +11,10 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.productivity.java.syslog4j.SyslogIF;
 import org.productivity.java.syslog4j.impl.net.udp.UDPNetSyslog;
 import org.productivity.java.syslog4j.impl.net.udp.UDPNetSyslogConfig;
@@ -27,8 +26,6 @@ import org.productivity.java.syslog4j.impl.net.udp.UDPNetSyslogConfig;
  * @since 0.0.1
  */
 @Immutable
-@ToString
-@EqualsAndHashCode(of = "hosts")
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.TooManyMethods")
 public final class SyslogHosts implements Hosts {
@@ -44,6 +41,22 @@ public final class SyslogHosts implements Hosts {
      */
     public SyslogHosts(final Hosts hsts) {
         this.hosts = hsts;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("SyslogHosts(%s)", this.hosts);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.hosts);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return obj instanceof SyslogHosts
+            && Objects.equals(this.hosts, ((SyslogHosts) obj).hosts);
     }
 
     @Override
@@ -67,7 +80,6 @@ public final class SyslogHosts implements Hosts {
      * @since 0.0.1
      */
     @Immutable
-    @EqualsAndHashCode(of = "host")
     private static final class SyslogHost implements Host {
         /**
          * Pattern for matching syslog host and port.
@@ -135,6 +147,17 @@ public final class SyslogHosts implements Hosts {
         @Override
         public Stats stats() {
             return this.host.stats();
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(this.host);
+        }
+
+        @Override
+        public boolean equals(final Object obj) {
+            return obj instanceof SyslogHost
+                && Objects.equals(this.host, ((SyslogHost) obj).host);
         }
     }
 

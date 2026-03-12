@@ -18,14 +18,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.zip.CRC32;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
 import org.xembly.Xembler;
@@ -37,8 +36,6 @@ import org.xembly.Xembler;
  * @checkstyle ClassDataAbstraction (200 lines)
  */
 @Immutable
-@ToString
-@EqualsAndHashCode(of = "content")
 @Loggable(Loggable.DEBUG)
 final class DirectoryListing implements Resource {
 
@@ -148,6 +145,22 @@ final class DirectoryListing implements Resource {
     @Override
     public void close() {
         // nothing to do
+    }
+
+    @Override
+    public String toString() {
+        return String.format("DirectoryListing(%d bytes)", this.content.length);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(this.content);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return obj instanceof DirectoryListing
+            && Arrays.equals(this.content, ((DirectoryListing) obj).content);
     }
 
     /**

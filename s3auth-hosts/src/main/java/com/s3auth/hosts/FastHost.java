@@ -8,8 +8,8 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Timeable;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import lombok.EqualsAndHashCode;
 
 /**
  * A {@link Host} that does everything fast.
@@ -19,7 +19,6 @@ import lombok.EqualsAndHashCode;
  * @since 0.2
  */
 @Immutable
-@EqualsAndHashCode(of = "origin")
 final class FastHost implements Host {
 
     /**
@@ -38,6 +37,17 @@ final class FastHost implements Host {
     @Override
     public String toString() {
         return this.origin.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.origin);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return obj instanceof FastHost
+            && Objects.equals(this.origin, ((FastHost) obj).origin);
     }
 
     @Override

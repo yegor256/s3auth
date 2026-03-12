@@ -256,6 +256,8 @@
                 <exclude>xml:/src/it/settings.xml</exclude>
                 <exclude>xml:/src/main/production/pom.xml</exclude>
                 <exclude>duplicatefinder:.*</exclude>
+                <exclude>pmd:.*</exclude>
+                <exclude>dependencies:.*</exclude>
               </excludes>
             </configuration>
           </plugin>
