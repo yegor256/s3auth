@@ -1,4 +1,6 @@
-<img src="https://www.s3auth.com/images/logo.svg" width="200px" height="35px"/>
+# s3auth.com
+
+[![logo](https://www.s3auth.com/images/logo.svg)](https://www.s3auth.com)
 
 [![EO principles respected here](https://www.elegantobjects.org/badge.svg)](https://www.elegantobjects.org)
 [![DevOps By Rultor.com](https://www.rultor.com/b/yegor256/s3auth)](https://www.rultor.com/p/yegor256/s3auth)
@@ -34,16 +36,16 @@ your changes and apply them to the `master` branch shortly, provided
 they don't violate our quality standards. To avoid frustration, before
 sending us your pull request please run full Maven build:
 
-```
-$ mvn clean install -Pqulice
+```bash
+mvn clean install -Pqulice
 ```
 
 To avoid build errors use JDK 11+ and Maven 3.3+.
 
 To run it locally:
 
-```
-$ mvn clean install -Phit-refresh -Dport=8080
+```bash
+mvn clean install -Phit-refresh -Dport=8080
 ```
 
 You will be able to open it at `http://localhost:8080`
