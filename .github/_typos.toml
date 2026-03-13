@@ -7,5 +7,6 @@ frst = "frst"
 parms = "parms"
 
 [default.extend-words]
+ba = "ba"
 ba14 = "ba14"
 Dentity = "Dentity"
