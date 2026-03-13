@@ -370,7 +370,7 @@
           <plugin>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-ssl-maven-plugin</artifactId>
-            <version>0.14.0</version>
+            <version>0.15.0</version>
             <executions>
               <execution>
                 <goals>
