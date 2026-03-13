@@ -26,5 +26,6 @@ jobs:
       - run: mvn install -Pjacoco -Dinvoker.skip
       - uses: codecov/codecov-action@v5
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: ./s3auth-hosts/target/site/jacoco/jacoco.xml,./s3auth-rest/target/site/jacoco/jacoco.xml,./s3auth-relay/target/site/jacoco/jacoco.xml
           fail_ci_if_error: true

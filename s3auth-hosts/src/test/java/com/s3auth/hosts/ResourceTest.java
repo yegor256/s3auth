@@ -48,7 +48,7 @@ final class ResourceTest {
     }
 
     /**
-     * Resource.PlainText can convert itselt to string.
+     * Resource.PlainText can convert itself to string.
      */
     @Test
     void convertsItselfToString() {

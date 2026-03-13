@@ -3,3 +3,9 @@
 
 [default.extend-identifiers]
 thr = "thr"
+frst = "frst"
+parms = "parms"
+
+[default.extend-words]
+ba14 = "ba14"
+Dentity = "Dentity"

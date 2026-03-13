@@ -153,7 +153,7 @@ final class HttpThread {
                     }
                     bytes = response.send(socket);
                     Logger.info(
-                        this, "#dispath(): %d bytes of %s", bytes, resource
+                        this, "#dispatch(): %d bytes of %s", bytes, resource
                     );
                 } finally {
                     if (resource != null) {
