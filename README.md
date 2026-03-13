@@ -1,4 +1,4 @@
-# s3auth.com
+# Basic HTTP Auth for Private Amazon S3 Buckets
 
 [![logo](https://www.s3auth.com/images/logo.svg)](https://www.s3auth.com)
 
