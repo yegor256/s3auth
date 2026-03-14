@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: Copyright (c) 2012-2026, Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
-set -e -o pipeline
+set -e -o pipefail
 
 cd "$(dirname "$0")"
 cp /code/home/assets/s3auth/settings.xml .
