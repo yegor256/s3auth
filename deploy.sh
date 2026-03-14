@@ -9,5 +9,5 @@ cd "$(dirname "$0")"
 cp /code/home/assets/s3auth/settings.xml .
 trap 'git reset HEAD~1 && rm settings.xml' EXIT
 git add settings.xml
-git commit -m 'settings.xml for dokku' --no-verify
-git push dokku master -f
+git commit -m 'settings.xml for heroku' --no-verify
+git push heroku master -f
