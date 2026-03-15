@@ -16,13 +16,13 @@
       <xsl:text>Amazon S3 HTTP Basic Auth Gateway</xsl:text>
     </h1>
     <p>
-      <xsl:text>Login </xsl:text>
       <a>
         <xsl:attribute name="href">
           <xsl:value-of select="/page/links/link[@rel='takes:github']/@href"/>
         </xsl:attribute>
-        <xsl:text>via GitHub</xsl:text>
+        <xsl:text>Click here</xsl:text>
       </a>
+      <xsl:text> to login via GitHub OAuth.</xsl:text>
     </p>
     <p>
       <xsl:text>s3auth.com is a </xsl:text>
