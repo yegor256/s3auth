@@ -140,9 +140,11 @@
         <version>33.5.0-jre</version>
       </dependency>
       <dependency>
-        <groupId>com.amazonaws</groupId>
-        <artifactId>aws-java-sdk</artifactId>
-        <version>1.12.797</version>
+        <groupId>software.amazon.awssdk</groupId>
+        <artifactId>bom</artifactId>
+        <version>2.41.22</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>com.jcabi</groupId>
@@ -239,24 +241,19 @@
         <version>2.1.0</version>
       </dependency>
       <dependency>
-        <groupId>com.amazonaws</groupId>
-        <artifactId>aws-java-sdk-s3</artifactId>
-        <version>1.12.797</version>
+        <groupId>software.amazon.awssdk</groupId>
+        <artifactId>s3</artifactId>
+        <version>2.41.22</version>
       </dependency>
       <dependency>
-        <groupId>com.amazonaws</groupId>
-        <artifactId>aws-java-sdk-core</artifactId>
-        <version>1.12.797</version>
+        <groupId>software.amazon.awssdk</groupId>
+        <artifactId>cloudwatch</artifactId>
+        <version>2.41.22</version>
       </dependency>
       <dependency>
-        <groupId>com.amazonaws</groupId>
-        <artifactId>aws-java-sdk-cloudwatch</artifactId>
-        <version>1.12.797</version>
-      </dependency>
-      <dependency>
-        <groupId>com.amazonaws</groupId>
-        <artifactId>aws-java-sdk-dynamodb</artifactId>
-        <version>1.12.797</version>
+        <groupId>software.amazon.awssdk</groupId>
+        <artifactId>dynamodb</artifactId>
+        <version>2.41.22</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -375,7 +372,7 @@
             <configuration>
               <excludes>
                 <exclude>duplicatefinder:.*</exclude>
-                <exclude>checkstyle:.*MkAmazonS3.*</exclude>
+                <exclude>checkstyle:.*FakeAws.*</exclude>
                 <exclude>pmd:.*</exclude>
                 <exclude>dependencies:.*</exclude>
               </excludes>

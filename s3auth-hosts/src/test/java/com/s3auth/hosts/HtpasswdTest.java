@@ -4,16 +4,16 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.s3auth.hosts.Host.CloudWatch;
 import java.net.URI;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import software.amazon.awssdk.services.cloudwatch.CloudWatchClient;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 
 /**
  * Test case for {@link Htpasswd}.
@@ -31,8 +31,8 @@ final class HtpasswdTest {
 
     @Test
     void showsStatsInToStringWithIoException() {
-        final AmazonS3 aws = Mockito.mock(AmazonS3.class);
-        Mockito.doThrow(new AmazonClientException("")).when(aws)
+        final S3Client aws = Mockito.mock(S3Client.class);
+        Mockito.doThrow(S3Exception.builder().message("error").build()).when(aws)
             .getObject(Mockito.any(GetObjectRequest.class));
         MatcherAssert.assertThat(
             new Htpasswd(
@@ -141,7 +141,7 @@ final class HtpasswdTest {
         final Htpasswd htpasswd = new Htpasswd(
             new DefaultHost(
                 new BucketMocker().init().mock(),
-                () -> Mockito.mock(AmazonCloudWatchClient.class)
+                () -> Mockito.mock(CloudWatchClient.class)
             )
         );
         MatcherAssert.assertThat(
@@ -169,6 +169,6 @@ final class HtpasswdTest {
      * @return Mock CloudWatch
      */
     private CloudWatch cloudWatch() {
-        return () -> Mockito.mock(AmazonCloudWatchClient.class);
+        return () -> Mockito.mock(CloudWatchClient.class);
     }
 }

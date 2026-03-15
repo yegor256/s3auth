@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
 import java.util.zip.GZIPOutputStream;
-import org.apache.http.HttpHeaders;
+import javax.ws.rs.core.HttpHeaders;
 
 /**
  * Wrapper for {@link Resource} that writes GZIP compressed output.

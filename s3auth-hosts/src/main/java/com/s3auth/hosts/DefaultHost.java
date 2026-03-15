@@ -4,37 +4,35 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.ClientConfiguration;
-import com.amazonaws.Protocol;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
-import com.amazonaws.services.cloudwatch.AmazonCloudWatchAsyncClientBuilder;
-import com.amazonaws.services.cloudwatch.model.Datapoint;
-import com.amazonaws.services.cloudwatch.model.Dimension;
-import com.amazonaws.services.cloudwatch.model.GetMetricStatisticsRequest;
-import com.amazonaws.services.cloudwatch.model.StandardUnit;
-import com.amazonaws.services.s3.model.BucketWebsiteConfiguration;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.jcabi.manifests.Manifests;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URI;
+import java.time.Instant;
 import java.util.Collection;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
-import org.apache.http.HttpStatus;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.services.cloudwatch.CloudWatchClient;
+import software.amazon.awssdk.services.cloudwatch.model.Datapoint;
+import software.amazon.awssdk.services.cloudwatch.model.Dimension;
+import software.amazon.awssdk.services.cloudwatch.model.GetMetricStatisticsRequest;
+import software.amazon.awssdk.services.cloudwatch.model.StandardUnit;
+import software.amazon.awssdk.services.cloudwatch.model.Statistic;
+import software.amazon.awssdk.services.s3.model.GetBucketWebsiteRequest;
+import software.amazon.awssdk.services.s3.model.GetBucketWebsiteResponse;
+import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 
 /**
  * Default implementation of {@link Host}.
@@ -58,13 +56,11 @@ final class DefaultHost implements Host {
     private static final Host.CloudWatch CLOUDWATCH = new Host.CloudWatch() {
         @Override
         @Cacheable(lifetime = 1, unit = TimeUnit.HOURS)
-        public AmazonCloudWatch get() {
-            return AmazonCloudWatchAsyncClientBuilder.standard()
-                .withExecutorFactory(() -> Executors.newFixedThreadPool(50))
-                .withClientConfiguration(new ClientConfiguration().withProtocol(Protocol.HTTP))
-                .withCredentials(
-                    new AWSStaticCredentialsProvider(
-                        new BasicAWSCredentials(
+        public CloudWatchClient get() {
+            return CloudWatchClient.builder()
+                .credentialsProvider(
+                    StaticCredentialsProvider.create(
+                        AwsBasicCredentials.create(
                             Manifests.read("S3Auth-AwsCloudWatchKey"),
                             Manifests.read("S3Auth-AwsCloudWatchSecret")
                         )
@@ -176,48 +172,50 @@ final class DefaultHost implements Host {
                     );
                 }
                 break;
-            } catch (final AmazonServiceException ex) {
-                if (name.get().endsWith(DefaultHost.SUFFIX)
-                    && "NoSuchKey".equals(ex.getErrorCode())
-                ) {
+            } catch (final NoSuchBucketException ex) {
+                throw new IOException(
+                    Logger.format(
+                        "The bucket '%s' does not exist.",
+                        this.bucket.bucket()
+                    ),
+                    ex
+                );
+            } catch (final NoSuchKeyException ex) {
+                if (name.get().endsWith(DefaultHost.SUFFIX)) {
                     final String path = name.get();
                     resource = new DirectoryListing(
                         this.bucket.client(), this.bucket.bucket(),
                         path.substring(0, path.length() - DefaultHost.SUFFIX.length())
                     );
                     break;
-                } else if ("NoSuchBucket".equals(ex.getErrorCode())) {
-                    throw new IOException(
-                        Logger.format(
-                            "The bucket '%s' does not exist.",
-                            this.bucket.bucket()
-                        ),
-                        ex
-                    );
-                } else if (ex.getStatusCode() >= HttpStatus.SC_BAD_REQUEST
-                    && ex.getStatusCode() < HttpStatus.SC_INTERNAL_SERVER_ERROR
+                }
+                errors.add(String.format("'%s': %s", name, ex.getMessage()));
+            } catch (final S3Exception ex) {
+                if (ex.statusCode() >= HttpURLConnection.HTTP_BAD_REQUEST
+                    && ex.statusCode() < HttpURLConnection.HTTP_INTERNAL_ERROR
                 ) {
                     try {
-                        final BucketWebsiteConfiguration config =
-                            this.bucket.client().getBucketWebsiteConfiguration(
-                                this.bucket.bucket()
+                        final GetBucketWebsiteResponse config =
+                            this.bucket.client().getBucketWebsite(
+                                GetBucketWebsiteRequest.builder()
+                                    .bucket(this.bucket.bucket())
+                                    .build()
                             );
                         if (config != null
-                            && config.getErrorDocument() != null) {
+                            && config.errorDocument() != null
+                            && config.errorDocument().key() != null) {
                             resource = new DefaultResource(
                                 this.bucket.client(), this.bucket.bucket(),
-                                config.getErrorDocument(), Range.ENTIRE,
+                                config.errorDocument().key(), Range.ENTIRE,
                                 Version.LATEST, data
                             );
                         }
-                    } catch (final AmazonClientException exc) {
+                    } catch (final S3Exception exc) {
                         errors.add(
                             String.format("'%s': %s", name, exc.getMessage())
                         );
                     }
                 }
-                errors.add(String.format("'%s': %s", name, ex.getMessage()));
-            } catch (final AmazonClientException ex) {
                 errors.add(String.format("'%s': %s", name, ex.getMessage()));
             }
         }
@@ -301,15 +299,17 @@ final class DefaultHost implements Host {
         public String get() {
             String suffix = null;
             try {
-                final BucketWebsiteConfiguration conf =
+                final GetBucketWebsiteResponse conf =
                     DefaultHost.this.bucket.client()
-                        .getBucketWebsiteConfiguration(
-                            DefaultHost.this.bucket.name()
+                        .getBucketWebsite(
+                            GetBucketWebsiteRequest.builder()
+                                .bucket(DefaultHost.this.bucket.name())
+                                .build()
                         );
-                if (conf != null) {
-                    suffix = conf.getIndexDocumentSuffix();
+                if (conf != null && conf.indexDocument() != null) {
+                    suffix = conf.indexDocument().suffix();
                 }
-            } catch (final AmazonClientException ex) {
+            } catch (final S3Exception ex) {
                 suffix = "";
             }
             if (suffix == null || suffix.isEmpty()) {
@@ -393,26 +393,28 @@ final class DefaultHost implements Host {
         @Override
         @Cacheable(lifetime = 30, unit = TimeUnit.MINUTES)
         public long bytesTransferred() {
-            final Date now = new Date();
+            final Instant now = Instant.now();
             final List<Datapoint> datapoints =
                 DefaultHost.this.cloudwatch.get().getMetricStatistics(
-                    new GetMetricStatisticsRequest()
-                        .withMetricName("BytesTransferred")
-                        .withNamespace("S3Auth")
-                        .withStatistics("Sum")
-                        .withDimensions(
-                            new Dimension()
-                                .withName("Bucket")
-                                .withValue(this.bucket)
+                    GetMetricStatisticsRequest.builder()
+                        .metricName("BytesTransferred")
+                        .namespace("S3Auth")
+                        .statistics(Statistic.SUM)
+                        .dimensions(
+                            Dimension.builder()
+                                .name("Bucket")
+                                .value(this.bucket)
+                                .build()
                         )
-                        .withUnit(StandardUnit.Bytes)
-                        .withPeriod((int) TimeUnit.DAYS.toSeconds(7))
-                        .withStartTime(DateUtils.addWeeks(now, -1))
-                        .withEndTime(now)
-                ).getDatapoints();
+                        .unit(StandardUnit.BYTES)
+                        .period((int) TimeUnit.DAYS.toSeconds(7))
+                        .startTime(now.minus(7, java.time.temporal.ChronoUnit.DAYS))
+                        .endTime(now)
+                        .build()
+                ).datapoints();
             long sum = 0L;
             for (final Datapoint datapoint : datapoints) {
-                sum += datapoint.getSum();
+                sum += datapoint.sum().longValue();
             }
             return sum;
         }

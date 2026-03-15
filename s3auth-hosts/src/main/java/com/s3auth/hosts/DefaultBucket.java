@@ -4,18 +4,16 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.ClientConfiguration;
-import com.amazonaws.Protocol;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
 
 /**
  * Default implementation of {@link Bucket}.
@@ -42,17 +40,12 @@ final class DefaultBucket implements Bucket {
     @Override
     @NotNull
     @Cacheable(lifetime = 10, unit = TimeUnit.MINUTES)
-    public AmazonS3 client() {
-        return AmazonS3ClientBuilder.standard()
-            .withClientConfiguration(
-                new ClientConfiguration()
-                    .withSocketTimeout(0)
-                    .withProtocol(Protocol.HTTPS)
-            )
-            .withRegion(this.domain.region())
-            .withCredentials(
-                new AWSStaticCredentialsProvider(
-                    new BasicAWSCredentials(
+    public S3Client client() {
+        return S3Client.builder()
+            .region(Region.of(this.domain.region()))
+            .credentialsProvider(
+                StaticCredentialsProvider.create(
+                    AwsBasicCredentials.create(
                         this.domain.key(),
                         this.domain.secret()
                     )

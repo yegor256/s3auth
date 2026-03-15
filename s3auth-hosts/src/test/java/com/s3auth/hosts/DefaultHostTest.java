@@ -4,24 +4,9 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
-import com.amazonaws.services.cloudwatch.model.Datapoint;
-import com.amazonaws.services.cloudwatch.model.GetMetricStatisticsRequest;
-import com.amazonaws.services.cloudwatch.model.GetMetricStatisticsResult;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.BucketWebsiteConfiguration;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.ListObjectsRequest;
-import com.amazonaws.services.s3.model.ListVersionsRequest;
-import com.amazonaws.services.s3.model.ObjectListing;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.amazonaws.services.s3.model.S3VersionSummary;
-import com.amazonaws.services.s3.model.VersionListing;
 import com.rexsl.test.XhtmlMatchers;
 import com.s3auth.hosts.Host.CloudWatch;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -29,14 +14,34 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpStatus;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
+import software.amazon.awssdk.core.ResponseInputStream;
+import software.amazon.awssdk.http.AbortableInputStream;
+import software.amazon.awssdk.services.cloudwatch.CloudWatchClient;
+import software.amazon.awssdk.services.cloudwatch.model.Datapoint;
+import software.amazon.awssdk.services.cloudwatch.model.GetMetricStatisticsRequest;
+import software.amazon.awssdk.services.cloudwatch.model.GetMetricStatisticsResponse;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.ErrorDocument;
+import software.amazon.awssdk.services.s3.model.GetBucketWebsiteRequest;
+import software.amazon.awssdk.services.s3.model.GetBucketWebsiteResponse;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+import software.amazon.awssdk.services.s3.model.IndexDocument;
+import software.amazon.awssdk.services.s3.model.ListObjectVersionsRequest;
+import software.amazon.awssdk.services.s3.model.ListObjectVersionsResponse;
+import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
+import software.amazon.awssdk.services.s3.model.ListObjectsResponse;
+import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
+import software.amazon.awssdk.services.s3.model.ObjectVersion;
+import software.amazon.awssdk.services.s3.model.S3Exception;
+import software.amazon.awssdk.services.s3.model.S3Object;
 
 /**
  * Test case for {@link DefaultHost}.
@@ -51,26 +56,33 @@ final class DefaultHostTest {
      */
     @Test
     void loadsAmazonResourcesFrom() throws Exception {
-        final AmazonS3 aws = Mockito.mock(AmazonS3.class);
+        final S3Client aws = Mockito.mock(S3Client.class);
         Mockito.doAnswer(
-            (Answer<S3Object>) invocation -> {
-                final String key = GetObjectRequest.class.cast(
-                    invocation.getArguments()[0]
-                ).getKey();
+            (Answer<ResponseInputStream<GetObjectResponse>>) invocation -> {
+                final GetObjectRequest req = (GetObjectRequest) invocation.getArguments()[0];
+                final String key = req.key();
                 if (key.matches(".*dir/?$")) {
-                    throw new AmazonClientException(
-                        String.format("%s not found", key)
-                    );
+                    throw NoSuchKeyException.builder()
+                        .message(String.format("%s not found", key))
+                        .build();
                 }
-                final S3Object object = new S3Object();
-                object.setObjectContent(IOUtils.toInputStream(key, StandardCharsets.UTF_8));
-                object.setKey(key);
-                return object;
+                final byte[] data = key.getBytes(StandardCharsets.UTF_8);
+                return new ResponseInputStream<>(
+                    GetObjectResponse.builder()
+                        .contentLength((long) data.length)
+                        .build(),
+                    AbortableInputStream.create(new ByteArrayInputStream(data))
+                );
             }
         ).when(aws).getObject(Mockito.any(GetObjectRequest.class));
         final String suffix = "index.htm";
-        Mockito.doReturn(new BucketWebsiteConfiguration(suffix))
-            .when(aws).getBucketWebsiteConfiguration(Mockito.anyString());
+        Mockito.doReturn(
+            GetBucketWebsiteResponse.builder()
+                .indexDocument(IndexDocument.builder().suffix(suffix).build())
+                .build()
+        ).when(aws).getBucketWebsite(
+            Mockito.any(GetBucketWebsiteRequest.class)
+        );
         final Host host = new DefaultHost(
             new BucketMocker().init().withClient(aws).mock(), this.cloudWatch()
         );
@@ -130,14 +142,17 @@ final class DefaultHostTest {
      */
     @Test
     void throwsExceptionForNonexistentBucket() {
-        final AmazonS3 aws = Mockito.mock(AmazonS3.class);
-        final AmazonServiceException exp =
-            new AmazonServiceException("No such bucket");
-        exp.setErrorCode("NoSuchBucket");
-        Mockito.doThrow(exp)
-            .when(aws).getObject(Mockito.any(GetObjectRequest.class));
-        Mockito.doReturn(new BucketWebsiteConfiguration())
-            .when(aws).getBucketWebsiteConfiguration(Mockito.anyString());
+        final S3Client aws = Mockito.mock(S3Client.class);
+        Mockito.doThrow(
+            NoSuchBucketException.builder()
+                .message("No such bucket")
+                .build()
+        ).when(aws).getObject(Mockito.any(GetObjectRequest.class));
+        Mockito.doReturn(
+            GetBucketWebsiteResponse.builder().build()
+        ).when(aws).getBucketWebsite(
+            Mockito.any(GetBucketWebsiteRequest.class)
+        );
         final String bucket = "nonExistent";
         MatcherAssert.assertThat(
             Assertions.assertThrows(
@@ -163,20 +178,20 @@ final class DefaultHostTest {
      */
     @Test
     void showsDirectoryListing() throws Exception {
-        final AmazonS3 client = Mockito.mock(AmazonS3.class);
-        final ObjectListing listing = Mockito.mock(ObjectListing.class);
-        final S3ObjectSummary summary = new S3ObjectSummary();
+        final S3Client client = Mockito.mock(S3Client.class);
         final String name = "foo/bar/boo";
-        summary.setKey(name);
-        Mockito.doReturn(Collections.singletonList(summary))
-            .when(listing).getObjectSummaries();
-        final AmazonServiceException exc =
-            new AmazonServiceException("No such key.");
-        exc.setErrorCode("NoSuchKey");
-        Mockito.doThrow(exc).when(client)
-            .getObject(Mockito.any(GetObjectRequest.class));
-        Mockito.doReturn(listing).when(client)
-            .listObjects(Mockito.any(ListObjectsRequest.class));
+        final S3Object summary = S3Object.builder().key(name).size(0L).build();
+        Mockito.doReturn(
+            ListObjectsResponse.builder()
+                .contents(Collections.singletonList(summary))
+                .isTruncated(false)
+                .build()
+        ).when(client).listObjects(Mockito.any(ListObjectsRequest.class));
+        Mockito.doThrow(
+            NoSuchKeyException.builder()
+                .message("No such key")
+                .build()
+        ).when(client).getObject(Mockito.any(GetObjectRequest.class));
         final String key = "foo/bar/index.html";
         MatcherAssert.assertThat(
             ResourceMocker.toString(
@@ -199,16 +214,20 @@ final class DefaultHostTest {
      */
     @Test
     void showsVersionListing() throws Exception {
-        final AmazonS3 client = Mockito.mock(AmazonS3.class);
-        final VersionListing listing = Mockito.mock(VersionListing.class);
-        final S3VersionSummary summary = new S3VersionSummary();
+        final S3Client client = Mockito.mock(S3Client.class);
         final String key = "README.md";
-        summary.setKey(key);
-        summary.setVersionId("abc");
-        Mockito.doReturn(Collections.singletonList(summary))
-            .when(listing).getVersionSummaries();
-        Mockito.doReturn(listing).when(client)
-            .listVersions(Mockito.any(ListVersionsRequest.class));
+        final ObjectVersion summary = ObjectVersion.builder()
+            .key(key)
+            .versionId("abc")
+            .build();
+        Mockito.doReturn(
+            ListObjectVersionsResponse.builder()
+                .versions(Collections.singletonList(summary))
+                .isTruncated(false)
+                .build()
+        ).when(client).listObjectVersions(
+            Mockito.any(ListObjectVersionsRequest.class)
+        );
         MatcherAssert.assertThat(
             ResourceMocker.toString(
                 new DefaultHost(
@@ -228,16 +247,20 @@ final class DefaultHostTest {
      */
     @Test
     void showsVersionListingForIndexHtml() throws Exception {
-        final AmazonS3 client = Mockito.mock(AmazonS3.class);
-        final VersionListing listing = Mockito.mock(VersionListing.class);
-        final S3VersionSummary summary = new S3VersionSummary();
+        final S3Client client = Mockito.mock(S3Client.class);
         final String key = "hello/index.html";
-        summary.setKey(key);
-        summary.setVersionId("def");
-        Mockito.doReturn(Collections.singletonList(summary))
-            .when(listing).getVersionSummaries();
-        Mockito.doReturn(listing).when(client)
-            .listVersions(Mockito.any(ListVersionsRequest.class));
+        final ObjectVersion summary = ObjectVersion.builder()
+            .key(key)
+            .versionId("def")
+            .build();
+        Mockito.doReturn(
+            ListObjectVersionsResponse.builder()
+                .versions(Collections.singletonList(summary))
+                .isTruncated(false)
+                .build()
+        ).when(client).listObjectVersions(
+            Mockito.any(ListObjectVersionsRequest.class)
+        );
         MatcherAssert.assertThat(
             ResourceMocker.toString(
                 new DefaultHost(
@@ -258,8 +281,9 @@ final class DefaultHostTest {
     void retrievesAndCachesCloudWatchStats() {
         final long sum = 10;
         final CloudWatch cloudwatch = this.cloudWatch();
-        final GetMetricStatisticsResult result = new GetMetricStatisticsResult()
-            .withDatapoints(new Datapoint().withSum(Double.valueOf(sum)));
+        final GetMetricStatisticsResponse result = GetMetricStatisticsResponse.builder()
+            .datapoints(Datapoint.builder().sum(Double.valueOf(sum)).build())
+            .build();
         Mockito.doReturn(result).when(cloudwatch.get())
             .getMetricStatistics(Mockito.any(GetMetricStatisticsRequest.class));
         MatcherAssert.assertThat(
@@ -285,31 +309,38 @@ final class DefaultHostTest {
      */
     @Test
     void loadsErrorDocument() throws Exception {
-        final AmazonS3 aws = Mockito.mock(AmazonS3.class);
+        final S3Client aws = Mockito.mock(S3Client.class);
         final String suffix = "nonExistent.html";
         final String error = "error.html";
         final String message = "Test output for error page";
         Mockito.doAnswer(
-            (Answer<S3Object>) invocation -> {
-                final String key = GetObjectRequest.class.cast(
-                    invocation.getArguments()[0]
-                ).getKey();
+            (Answer<ResponseInputStream<GetObjectResponse>>) invocation -> {
+                final GetObjectRequest req = (GetObjectRequest) invocation.getArguments()[0];
+                final String key = req.key();
                 if (key.endsWith(suffix)) {
-                    final AmazonServiceException exp =
-                        new AmazonServiceException("Object not found");
-                    exp.setStatusCode(HttpStatus.SC_NOT_FOUND);
-                    throw exp;
+                    throw S3Exception.builder()
+                        .message("Object not found")
+                        .statusCode(404)
+                        .build();
                 }
                 MatcherAssert.assertThat(key, Matchers.is(error));
-                final S3Object object = new S3Object();
-                object.setObjectContent(IOUtils.toInputStream(message, StandardCharsets.UTF_8));
-                object.setKey(message);
-                return object;
+                final byte[] data = message.getBytes(StandardCharsets.UTF_8);
+                return new ResponseInputStream<>(
+                    GetObjectResponse.builder()
+                        .contentLength((long) data.length)
+                        .build(),
+                    AbortableInputStream.create(new ByteArrayInputStream(data))
+                );
             }
         ).when(aws).getObject(Mockito.any(GetObjectRequest.class));
         Mockito.doReturn(
-            new BucketWebsiteConfiguration(suffix, error)
-        ).when(aws).getBucketWebsiteConfiguration(Mockito.anyString());
+            GetBucketWebsiteResponse.builder()
+                .indexDocument(IndexDocument.builder().suffix(suffix).build())
+                .errorDocument(ErrorDocument.builder().key(error).build())
+                .build()
+        ).when(aws).getBucketWebsite(
+            Mockito.any(GetBucketWebsiteRequest.class)
+        );
         final Host host = new DefaultHost(
             new BucketMocker().init().withClient(aws).mock(), this.cloudWatch()
         );
@@ -325,12 +356,13 @@ final class DefaultHostTest {
 
     @Test
     void throwsExceptionIfNoBucketWebsiteConfiguration() {
-        final AmazonS3 aws = Mockito.mock(AmazonS3.class);
-        final AmazonServiceException exp =
-            new AmazonServiceException("The object is not found");
-        exp.setStatusCode(HttpStatus.SC_NOT_FOUND);
-        Mockito.doThrow(exp).when(aws)
-            .getObject(Mockito.any(GetObjectRequest.class));
+        final S3Client aws = Mockito.mock(S3Client.class);
+        Mockito.doThrow(
+            S3Exception.builder()
+                .message("The object is not found")
+                .statusCode(404)
+                .build()
+        ).when(aws).getObject(Mockito.any(GetObjectRequest.class));
         Assertions.assertThrows(
             IOException.class,
             () -> new DefaultHost(
@@ -345,11 +377,11 @@ final class DefaultHostTest {
      */
     private CloudWatch cloudWatch() {
         return new Host.CloudWatch() {
-            private final transient AmazonCloudWatchClient cwatch =
-                Mockito.mock(AmazonCloudWatchClient.class);
+            private final transient CloudWatchClient cwatch =
+                Mockito.mock(CloudWatchClient.class);
 
             @Override
-            public AmazonCloudWatchClient get() {
+            public CloudWatchClient get() {
                 return this.cwatch;
             }
         };

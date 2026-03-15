@@ -4,10 +4,6 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ListObjectsRequest;
-import com.amazonaws.services.s3.model.ObjectListing;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.common.collect.ImmutableList;
 import com.rexsl.test.XhtmlMatchers;
 import java.nio.charset.StandardCharsets;
@@ -16,6 +12,11 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.CommonPrefix;
+import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
+import software.amazon.awssdk.services.s3.model.ListObjectsResponse;
+import software.amazon.awssdk.services.s3.model.S3Object;
 
 /**
  * Test case for {@link DirectoryListing}.
@@ -29,24 +30,26 @@ final class DirectoryListingTest {
     @Test
     void fetchesDirectoryListingInXhtml()
         throws Exception {
-        final AmazonS3 client = Mockito.mock(AmazonS3.class);
-        final ObjectListing listing = Mockito.mock(ObjectListing.class);
-        Mockito.doReturn(listing).when(client)
-            .listObjects(Mockito.any(ListObjectsRequest.class));
+        final S3Client client = Mockito.mock(S3Client.class);
         final String[] prefixes = {"baz/", "biz/", "boz/"};
-        Mockito.doReturn(ImmutableList.copyOf(prefixes)).when(listing)
-            .getCommonPrefixes();
+        final ImmutableList.Builder<CommonPrefix> prfxs =
+            ImmutableList.builder();
+        for (final String prefix : prefixes) {
+            prfxs.add(CommonPrefix.builder().prefix(prefix).build());
+        }
         final String[] names = {"baa.txt", "bee.jpg", "boo.png"};
-        final ImmutableList.Builder<S3ObjectSummary> builder =
+        final ImmutableList.Builder<S3Object> builder =
             ImmutableList.builder();
         for (final String key : names) {
-            @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-            final S3ObjectSummary summary = new S3ObjectSummary();
-            summary.setKey(key);
-            summary.setSize(10);
-            builder.add(summary);
+            builder.add(S3Object.builder().key(key).size(10L).build());
         }
-        Mockito.doReturn(builder.build()).when(listing).getObjectSummaries();
+        Mockito.doReturn(
+            ListObjectsResponse.builder()
+                .contents(builder.build())
+                .commonPrefixes(prfxs.build())
+                .isTruncated(false)
+                .build()
+        ).when(client).listObjects(Mockito.any(ListObjectsRequest.class));
         final String prefix = "foo/bar/";
         MatcherAssert.assertThat(
             new String(

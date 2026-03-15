@@ -16,9 +16,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.core.HttpHeaders;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpHeaders;
 
 /**
  * Found resource.

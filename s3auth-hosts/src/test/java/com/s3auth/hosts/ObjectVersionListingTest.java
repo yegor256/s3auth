@@ -4,10 +4,6 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ListVersionsRequest;
-import com.amazonaws.services.s3.model.S3VersionSummary;
-import com.amazonaws.services.s3.model.VersionListing;
 import com.google.common.collect.ImmutableList;
 import com.rexsl.test.XhtmlMatchers;
 import java.nio.charset.StandardCharsets;
@@ -16,6 +12,10 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.ListObjectVersionsRequest;
+import software.amazon.awssdk.services.s3.model.ListObjectVersionsResponse;
+import software.amazon.awssdk.services.s3.model.ObjectVersion;
 
 /**
  * Test case for {@link ObjectVersionListing}.
@@ -28,22 +28,27 @@ final class ObjectVersionListingTest {
      */
     @Test
     void fetchesVersionListingInXml() throws Exception {
-        final AmazonS3 client = Mockito.mock(AmazonS3.class);
-        final VersionListing listing = Mockito.mock(VersionListing.class);
-        Mockito.doReturn(listing).when(client)
-            .listVersions(Mockito.any(ListVersionsRequest.class));
+        final S3Client client = Mockito.mock(S3Client.class);
         final String[] versions = {"abc", "def", "ghi"};
-        final ImmutableList.Builder<S3VersionSummary> builder =
+        final ImmutableList.Builder<ObjectVersion> builder =
             ImmutableList.builder();
         final String key = "README.md";
         for (final String version : versions) {
-            @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-            final S3VersionSummary summary = new S3VersionSummary();
-            summary.setKey(key);
-            summary.setVersionId(version);
-            builder.add(summary);
+            builder.add(
+                ObjectVersion.builder()
+                    .key(key)
+                    .versionId(version)
+                    .build()
+            );
         }
-        Mockito.doReturn(builder.build()).when(listing).getVersionSummaries();
+        Mockito.doReturn(
+            ListObjectVersionsResponse.builder()
+                .versions(builder.build())
+                .isTruncated(false)
+                .build()
+        ).when(client).listObjectVersions(
+            Mockito.any(ListObjectVersionsRequest.class)
+        );
         MatcherAssert.assertThat(
             new String(
                 ResourceMocker.toByteArray(

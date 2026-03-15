@@ -4,16 +4,6 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.ClientConfiguration;
-import com.amazonaws.Protocol;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
-import com.amazonaws.services.cloudwatch.AmazonCloudWatchAsyncClientBuilder;
-import com.amazonaws.services.cloudwatch.model.Dimension;
-import com.amazonaws.services.cloudwatch.model.MetricDatum;
-import com.amazonaws.services.cloudwatch.model.PutMetricDataRequest;
-import com.amazonaws.services.cloudwatch.model.StandardUnit;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.aspects.RetryOnFailure;
 import com.jcabi.aspects.ScheduleWithFixedDelay;
@@ -23,6 +13,13 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.services.cloudwatch.CloudWatchClient;
+import software.amazon.awssdk.services.cloudwatch.model.Dimension;
+import software.amazon.awssdk.services.cloudwatch.model.MetricDatum;
+import software.amazon.awssdk.services.cloudwatch.model.PutMetricDataRequest;
+import software.amazon.awssdk.services.cloudwatch.model.StandardUnit;
 
 /**
  * This class obtains local stats and posts it to Amazon CloudWatch every hour.
@@ -43,7 +40,7 @@ public final class ScheduledCloudWatch implements Runnable, Closeable {
     /**
      * Amazon CloudWatch client.
      */
-    private final transient AmazonCloudWatch cloudwatch;
+    private final transient CloudWatchClient cloudwatch;
 
     /**
      * Ctor.
@@ -51,7 +48,7 @@ public final class ScheduledCloudWatch implements Runnable, Closeable {
      * @param cwatch The Cloudwatch client.
      */
     ScheduledCloudWatch(final DomainStatsData stats,
-        final AmazonCloudWatch cwatch) {
+        final CloudWatchClient cwatch) {
         this.cloudwatch = cwatch;
         this.data = stats;
     }
@@ -63,11 +60,10 @@ public final class ScheduledCloudWatch implements Runnable, Closeable {
     public ScheduledCloudWatch() throws IOException {
         this(
             new H2DomainStatsData(),
-            AmazonCloudWatchAsyncClientBuilder.standard()
-                .withClientConfiguration(new ClientConfiguration().withProtocol(Protocol.HTTP))
-                .withCredentials(
-                    new AWSStaticCredentialsProvider(
-                        new BasicAWSCredentials(
+            CloudWatchClient.builder()
+                .credentialsProvider(
+                    StaticCredentialsProvider.create(
+                        AwsBasicCredentials.create(
                             Manifests.read("S3Auth-AwsCloudWatchKey"),
                             Manifests.read("S3Auth-AwsCloudWatchSecret")
                         )
@@ -102,19 +98,22 @@ public final class ScheduledCloudWatch implements Runnable, Closeable {
     @RetryOnFailure(delay = 5L, unit = TimeUnit.SECONDS)
     private void putData(final Stats stats, final String bucket) {
         this.cloudwatch.putMetricData(
-            new PutMetricDataRequest()
-                .withNamespace("S3Auth")
-                .withMetricData(
-                    new MetricDatum()
-                        .withMetricName("BytesTransferred")
-                        .withDimensions(
-                            new Dimension()
-                                .withName("Bucket")
-                                .withValue(bucket)
+            PutMetricDataRequest.builder()
+                .namespace("S3Auth")
+                .metricData(
+                    MetricDatum.builder()
+                        .metricName("BytesTransferred")
+                        .dimensions(
+                            Dimension.builder()
+                                .name("Bucket")
+                                .value(bucket)
+                                .build()
                         )
-                        .withUnit(StandardUnit.Bytes)
-                        .withValue((double) stats.bytesTransferred())
+                        .unit(StandardUnit.BYTES)
+                        .value((double) stats.bytesTransferred())
+                        .build()
                 )
+                .build()
         );
     }
 

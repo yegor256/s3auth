@@ -4,8 +4,8 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.services.s3.AmazonS3;
 import com.jcabi.aspects.Immutable;
+import software.amazon.awssdk.services.s3.S3Client;
 
 /**
  * Single Amazon S3 bucket.
@@ -19,6 +19,6 @@ public interface Bucket extends Domain {
      * Get amazon client.
      * @return The client
      */
-    AmazonS3 client();
+    S3Client client();
 
 }

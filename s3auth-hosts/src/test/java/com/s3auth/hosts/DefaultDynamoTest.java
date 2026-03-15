@@ -4,7 +4,6 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.jcabi.dynamo.Table;
 import com.jcabi.dynamo.mock.H2Data;
 import com.jcabi.dynamo.mock.MkRegion;
@@ -19,6 +18,7 @@ import javax.validation.constraints.NotNull;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
+import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
 /**
  * Test case for {@link DefaultDynamo}.
@@ -95,25 +95,25 @@ final class DefaultDynamoTest {
             new ConcurrentHashMap<>(0);
         item.put(
             DefaultDynamo.USER,
-            new AttributeValue(new URNMocker().mock().toString())
+            AttributeValue.builder().s(new URNMocker().mock().toString()).build()
         );
         item.put(
             DefaultDynamo.NAME,
-            new AttributeValue(
+            AttributeValue.builder().s(
                 String.format(
                     "google-%d.com",
                     Math.abs(new Random().nextInt())
                 )
-            )
+            ).build()
         );
-        item.put(DefaultDynamo.KEY, new AttributeValue("aaaaaaaaaaaaaaaa"));
+        item.put(DefaultDynamo.KEY, AttributeValue.builder().s("aaaaaaaaaaaaaaaa").build());
         item.put(
             DefaultDynamo.SECRET,
-            new AttributeValue("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+            AttributeValue.builder().s("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa").build()
         );
-        item.put(DefaultDynamo.REGION, new AttributeValue("s3"));
-        item.put(DefaultDynamo.BUCKET, new AttributeValue("bucket"));
-        item.put(DefaultDynamo.SYSLOG, new AttributeValue("syslog"));
+        item.put(DefaultDynamo.REGION, AttributeValue.builder().s("s3").build());
+        item.put(DefaultDynamo.BUCKET, AttributeValue.builder().s("bucket").build());
+        item.put(DefaultDynamo.SYSLOG, AttributeValue.builder().s("syslog").build());
         return item;
     }
 }

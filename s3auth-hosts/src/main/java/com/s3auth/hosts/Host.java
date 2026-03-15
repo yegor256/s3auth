@@ -4,11 +4,11 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
 import com.jcabi.aspects.Immutable;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.URI;
+import software.amazon.awssdk.services.cloudwatch.CloudWatchClient;
 
 /**
  * One host.
@@ -68,7 +68,7 @@ public interface Host extends Closeable {
          * Get Amazon client.
          * @return The client
          */
-        AmazonCloudWatch get();
+        CloudWatchClient get();
     }
 
 }

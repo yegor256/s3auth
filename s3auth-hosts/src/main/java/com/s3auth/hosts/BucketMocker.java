@@ -4,7 +4,7 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.services.s3.AmazonS3;
+import software.amazon.awssdk.services.s3.S3Client;
 
 /**
  * Mocker of {@link Bucket}.
@@ -29,7 +29,7 @@ public final class BucketMocker {
         this.withRegion("ap-southeast-1");
         this.withKey("AAAAAAAAAAAAAAAAAAAA");
         this.withSecret("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-        this.withClient(new MkAmazonS3());
+        this.withClient(new FakeAws());
         return this;
     }
 
@@ -88,7 +88,7 @@ public final class BucketMocker {
      * @param client The client
      * @return This object
      */
-    public BucketMocker withClient(final AmazonS3 client) {
+    public BucketMocker withClient(final S3Client client) {
         this.bucket.client(client);
         return this;
     }
@@ -136,7 +136,7 @@ public final class BucketMocker {
         /**
          * The Bucket client.
          */
-        private AmazonS3 client;
+        private S3Client client;
 
         /**
          * Set name.
@@ -193,7 +193,7 @@ public final class BucketMocker {
          * @param value The client
          * @return This builder
          */
-        MkBucketBuilder client(final AmazonS3 value) {
+        MkBucketBuilder client(final S3Client value) {
             this.client = value;
             return this;
         }
@@ -246,7 +246,7 @@ public final class BucketMocker {
         /**
          * The Bucket client.
          */
-        private final transient AmazonS3 client;
+        private final transient S3Client client;
 
         /**
          * Constructor.
@@ -259,7 +259,7 @@ public final class BucketMocker {
          * @checkstyle ParameterNumberCheck (5 lines)
          */
         MkBucket(final String nme, final String keyy, final String scr,
-            final String bkt, final String rgn, final AmazonS3 clt) {
+            final String bkt, final String rgn, final S3Client clt) {
             this.name = nme;
             this.key = keyy;
             this.secret = scr;
@@ -299,7 +299,7 @@ public final class BucketMocker {
         }
 
         @Override
-        public AmazonS3 client() {
+        public S3Client client() {
             return this.client;
         }
     }

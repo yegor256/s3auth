@@ -4,10 +4,6 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ListVersionsRequest;
-import com.amazonaws.services.s3.model.S3VersionSummary;
-import com.amazonaws.services.s3.model.VersionListing;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.jcabi.aspects.Immutable;
@@ -28,6 +24,10 @@ import javax.ws.rs.core.HttpHeaders;
 import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
 import org.xembly.Xembler;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.ListObjectVersionsRequest;
+import software.amazon.awssdk.services.s3.model.ListObjectVersionsResponse;
+import software.amazon.awssdk.services.s3.model.ObjectVersion;
 
 /**
  * XML S3 Object Version Listing.
@@ -58,25 +58,40 @@ final class ObjectVersionListing implements Resource {
      * @param key The S3 object key
      */
     @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
-    ObjectVersionListing(@NotNull final AmazonS3 client,
+    ObjectVersionListing(@NotNull final S3Client client,
         @NotNull final String bucket, @NotNull final String key) {
-        VersionListing listing = client.listVersions(
-            new ListVersionsRequest().withPrefix(key).withBucketName(bucket)
-        );
-        final ImmutableList.Builder<S3VersionSummary> versions =
+        final ImmutableList.Builder<ObjectVersion> versions =
             ImmutableList.builder();
-        versions.addAll(listing.getVersionSummaries());
-        while (listing.isTruncated()) {
-            listing = client.listNextBatchOfVersions(listing);
-            versions.addAll(listing.getVersionSummaries());
-        }
-        // @checkstyle LineLength (2 lines)
+        String token = null;
+        String vtoken = null;
+        do {
+            final ListObjectVersionsRequest.Builder builder =
+                ListObjectVersionsRequest.builder()
+                    .prefix(key)
+                    .bucket(bucket);
+            if (token != null) {
+                builder.keyMarker(token);
+            }
+            if (vtoken != null) {
+                builder.versionIdMarker(vtoken);
+            }
+            final ListObjectVersionsResponse listing =
+                client.listObjectVersions(builder.build());
+            versions.addAll(listing.versions());
+            if (listing.isTruncated()) {
+                token = listing.nextKeyMarker();
+                vtoken = listing.nextVersionIdMarker();
+            } else {
+                token = null;
+                vtoken = null;
+            }
+        } while (token != null);
         final Directives dirs = new Directives()
             .add("versions").attr("object", key);
-        for (final S3VersionSummary version : versions.build()) {
+        for (final ObjectVersion version : versions.build()) {
             dirs.add("version")
-                .attr("key", version.getKey())
-                .set(version.getVersionId()).up();
+                .attr("key", version.key())
+                .set(version.versionId()).up();
         }
         try {
             this.content = ObjectVersionListing.STYLESHEET.transform(

@@ -4,12 +4,12 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.urn.URN;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Map;
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
 /**
  * Abstraction on top of DynamoDB SDK.
@@ -55,7 +55,7 @@ interface Dynamo extends Closeable {
          * Get Amazon client.
          * @return The client
          */
-        AmazonDynamoDB get();
+        DynamoDbClient get();
     }
 
 }

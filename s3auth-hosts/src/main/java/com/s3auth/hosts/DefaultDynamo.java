@@ -4,9 +4,6 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeAction;
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
@@ -24,6 +21,9 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import javax.validation.constraints.NotNull;
+import software.amazon.awssdk.services.dynamodb.model.AttributeAction;
+import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
+import software.amazon.awssdk.services.dynamodb.model.AttributeValueUpdate;
 
 /**
  * Abstraction on top of DynamoDB SDK.
@@ -152,7 +152,7 @@ final class DefaultDynamo implements Dynamo {
                 ).withLimit(1_000_000)
             );
         for (final Item item : items) {
-            final URN user = URN.create(item.get(DefaultDynamo.USER).getS());
+            final URN user = URN.create(item.get(DefaultDynamo.USER).s());
             domains.putIfAbsent(user, new Domains());
             domains.get(user).add(DefaultDynamo.domain(item));
         }
@@ -165,13 +165,13 @@ final class DefaultDynamo implements Dynamo {
         @NotNull final Domain domain) throws IOException {
         final ConcurrentMap<String, AttributeValue> attrs =
             new ConcurrentHashMap<>(0);
-        attrs.put(DefaultDynamo.USER, new AttributeValue(user.toString()));
-        attrs.put(DefaultDynamo.NAME, new AttributeValue(domain.name()));
-        attrs.put(DefaultDynamo.KEY, new AttributeValue(domain.key()));
-        attrs.put(DefaultDynamo.SECRET, new AttributeValue(domain.secret()));
-        attrs.put(DefaultDynamo.REGION, new AttributeValue(domain.region()));
-        attrs.put(DefaultDynamo.SYSLOG, new AttributeValue(domain.syslog()));
-        attrs.put(DefaultDynamo.BUCKET, new AttributeValue(domain.bucket()));
+        attrs.put(DefaultDynamo.USER, AttributeValue.builder().s(user.toString()).build());
+        attrs.put(DefaultDynamo.NAME, AttributeValue.builder().s(domain.name()).build());
+        attrs.put(DefaultDynamo.KEY, AttributeValue.builder().s(domain.key()).build());
+        attrs.put(DefaultDynamo.SECRET, AttributeValue.builder().s(domain.secret()).build());
+        attrs.put(DefaultDynamo.REGION, AttributeValue.builder().s(domain.region()).build());
+        attrs.put(DefaultDynamo.SYSLOG, AttributeValue.builder().s(domain.syslog()).build());
+        attrs.put(DefaultDynamo.BUCKET, AttributeValue.builder().s(domain.bucket()).build());
         this.region.table(this.table).put(attrs);
         return true;
     }
@@ -221,13 +221,14 @@ final class DefaultDynamo implements Dynamo {
             item.put(
                 new AttributeUpdates().with(
                     DefaultDynamo.SYSLOG,
-                    new AttributeValueUpdate()
-                        .withAction(AttributeAction.PUT)
-                        .withValue(
-                            new AttributeValue().withS(
-                                "syslog.s3auth.com:514"
-                            )
+                    AttributeValueUpdate.builder()
+                        .action(AttributeAction.PUT)
+                        .value(
+                            AttributeValue.builder()
+                                .s("syslog.s3auth.com:514")
+                                .build()
                         )
+                        .build()
                 )
             );
         }
@@ -235,23 +236,24 @@ final class DefaultDynamo implements Dynamo {
             item.put(
                 new AttributeUpdates().with(
                     DefaultDynamo.BUCKET,
-                    new AttributeValueUpdate()
-                        .withAction(AttributeAction.PUT)
-                        .withValue(
-                            new AttributeValue().withS(
-                                item.get(DefaultDynamo.NAME).getS()
-                            )
+                    AttributeValueUpdate.builder()
+                        .action(AttributeAction.PUT)
+                        .value(
+                            AttributeValue.builder()
+                                .s(item.get(DefaultDynamo.NAME).s())
+                                .build()
                         )
+                        .build()
                 )
             );
         }
         return new DefaultDomain(
-            item.get(DefaultDynamo.NAME).getS(),
-            item.get(DefaultDynamo.KEY).getS(),
-            item.get(DefaultDynamo.SECRET).getS(),
-            item.get(DefaultDynamo.BUCKET).getS(),
-            item.get(DefaultDynamo.REGION).getS(),
-            item.get(DefaultDynamo.SYSLOG).getS()
+            item.get(DefaultDynamo.NAME).s(),
+            item.get(DefaultDynamo.KEY).s(),
+            item.get(DefaultDynamo.SECRET).s(),
+            item.get(DefaultDynamo.BUCKET).s(),
+            item.get(DefaultDynamo.REGION).s(),
+            item.get(DefaultDynamo.SYSLOG).s()
         );
     }
 

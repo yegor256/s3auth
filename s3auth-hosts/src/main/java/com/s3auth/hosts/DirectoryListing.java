@@ -4,10 +4,6 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ListObjectsRequest;
-import com.amazonaws.services.s3.model.ObjectListing;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.common.collect.ImmutableSet;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
@@ -28,6 +24,11 @@ import javax.ws.rs.core.HttpHeaders;
 import org.xembly.Directives;
 import org.xembly.ImpossibleModificationException;
 import org.xembly.Xembler;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.CommonPrefix;
+import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
+import software.amazon.awssdk.services.s3.model.ListObjectsResponse;
+import software.amazon.awssdk.services.s3.model.S3Object;
 
 /**
  * XML Directory Listing.
@@ -59,30 +60,44 @@ final class DirectoryListing implements Resource {
      * @param key The S3 object key
      */
     @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
-    DirectoryListing(@NotNull final AmazonS3 client,
+    DirectoryListing(@NotNull final S3Client client,
         @NotNull final String bucket, @NotNull final String key) {
-        ObjectListing listing = client.listObjects(
-            new ListObjectsRequest().withDelimiter("/").withPrefix(key)
-                .withBucketName(bucket)
-        );
-        final Collection<S3ObjectSummary> objects =
-            new LinkedList<>();
-        objects.addAll(listing.getObjectSummaries());
-        while (listing.isTruncated()) {
-            listing = client.listNextBatchOfObjects(listing);
-            objects.addAll(listing.getObjectSummaries());
-        }
+        final Collection<S3Object> objects = new LinkedList<>();
+        final Collection<String> prefixes = new LinkedList<>();
+        String token = null;
+        do {
+            final ListObjectsRequest.Builder builder = ListObjectsRequest.builder()
+                .delimiter("/")
+                .prefix(key)
+                .bucket(bucket);
+            if (token != null) {
+                builder.marker(token);
+            }
+            final ListObjectsResponse listing = client.listObjects(builder.build());
+            objects.addAll(listing.contents());
+            for (final CommonPrefix prefix : listing.commonPrefixes()) {
+                prefixes.add(prefix.prefix());
+            }
+            if (listing.isTruncated()) {
+                token = listing.nextMarker();
+                if (token == null && !listing.contents().isEmpty()) {
+                    token = listing.contents().get(listing.contents().size() - 1).key();
+                }
+            } else {
+                token = null;
+            }
+        } while (token != null);
         final Directives dirs = new Directives()
             .add("directory").attr("prefix", key);
-        for (final String prefix : listing.getCommonPrefixes()) {
+        for (final String prefix : prefixes) {
             dirs.add("commonPrefix").set(prefix).up();
         }
-        for (final S3ObjectSummary object : objects) {
+        for (final S3Object object : objects) {
             dirs.add("object")
                 .add("path")
-                .set(object.getKey()).up()
+                .set(object.key()).up()
                 .add("size")
-                .set(Long.toString(object.getSize())).up()
+                .set(Long.toString(object.size())).up()
                 .up();
         }
         try {

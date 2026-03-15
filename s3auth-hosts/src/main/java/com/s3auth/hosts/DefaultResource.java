@@ -4,23 +4,23 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.S3Object;
 import com.jcabi.aspects.Loggable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Objects;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import software.amazon.awssdk.core.ResponseInputStream;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
 /**
  * Default implementation of {@link Resource}.
@@ -35,7 +35,7 @@ final class DefaultResource implements Resource {
     /**
      * Amazon S3 client.
      */
-    private final transient AmazonS3 client;
+    private final transient S3Client client;
 
     /**
      * Bucket name.
@@ -58,9 +58,14 @@ final class DefaultResource implements Resource {
     private final transient Version version;
 
     /**
-     * The object retrieved on construction.
+     * The object input stream.
      */
-    private final transient S3Object object;
+    private final transient ResponseInputStream<GetObjectResponse> stream;
+
+    /**
+     * The response metadata.
+     */
+    private final transient GetObjectResponse response;
 
     /**
      * Domain Stats.
@@ -77,7 +82,7 @@ final class DefaultResource implements Resource {
      * @param dstats Domain stats data
      * @checkstyle ParameterNumber (5 lines)
      */
-    DefaultResource(@NotNull final AmazonS3 clnt,
+    DefaultResource(@NotNull final S3Client clnt,
         @NotNull final String bckt, @NotNull final String name,
         @NotNull final Range rng, @NotNull final Version ver,
         @NotNull final DomainStatsData dstats) {
@@ -86,9 +91,10 @@ final class DefaultResource implements Resource {
         this.key = name;
         this.range = rng;
         this.version = ver;
-        this.object = this.client.getObject(
+        this.stream = this.client.getObject(
             this.request(this.range, this.version)
         );
+        this.response = this.stream.response();
         this.stats = dstats;
     }
 
@@ -133,8 +139,7 @@ final class DefaultResource implements Resource {
         ignore = DefaultResource.StreamingException.class
     )
     public long writeTo(@NotNull final OutputStream output) throws IOException {
-        final InputStream input = this.object.getObjectContent();
-        assert input != null;
+        final InputStream input = this.stream;
         int total = 0;
         final byte[] buffer = new byte[16 * 1024];
         try {
@@ -185,35 +190,34 @@ final class DefaultResource implements Resource {
     @Override
     @NotNull
     public Collection<String> headers() {
-        final ObjectMetadata meta = this.object.getObjectMetadata();
         final Collection<String> headers = new LinkedList<>();
         headers.add(
             DefaultResource.header(
                 HttpHeaders.CONTENT_LENGTH,
-                Long.toString(meta.getContentLength())
+                Long.toString(this.response.contentLength())
             )
         );
-        if (meta.getContentType() != null) {
+        if (this.response.contentType() != null) {
             headers.add(
                 DefaultResource.header(
                     HttpHeaders.CONTENT_TYPE,
-                    meta.getContentType()
+                    this.response.contentType()
                 )
             );
         }
-        if (meta.getContentEncoding() != null) {
+        if (this.response.contentEncoding() != null) {
             headers.add(
                 DefaultResource.header(
                     HttpHeaders.CONTENT_ENCODING,
-                    meta.getContentEncoding()
+                    this.response.contentEncoding()
                 )
             );
         }
-        if (meta.getETag() != null) {
+        if (this.response.eTag() != null) {
             headers.add(
                 DefaultResource.header(
                     HttpHeaders.ETAG,
-                    meta.getETag()
+                    this.response.eTag()
                 )
             );
         }
@@ -221,7 +225,7 @@ final class DefaultResource implements Resource {
             DefaultResource.header(
                 HttpHeaders.CACHE_CONTROL,
                 StringUtils.defaultIfBlank(
-                    meta.getCacheControl(),
+                    this.response.cacheControl(),
                     "must-revalidate"
                 )
             )
@@ -246,24 +250,29 @@ final class DefaultResource implements Resource {
     @Override
     @NotNull
     public String etag() {
-        return this.object.getObjectMetadata().getETag();
+        return this.response.eTag();
     }
 
     @Override
     public Date lastModified() {
-        return new Date(
-            this.object.getObjectMetadata().getLastModified().getTime()
-        );
+        final Instant modified = this.response.lastModified();
+        final Date result;
+        if (modified == null) {
+            result = new Date();
+        } else {
+            result = Date.from(modified);
+        }
+        return result;
     }
 
     @Override
     public String contentType() {
-        return this.object.getObjectMetadata().getContentType();
+        return this.response.contentType();
     }
 
     @Override
     public void close() throws IOException {
-        this.object.close();
+        this.stream.close();
     }
 
     /**
@@ -285,15 +294,16 @@ final class DefaultResource implements Resource {
      * @return Request
      */
     private GetObjectRequest request(final Range rng, final Version ver) {
-        final GetObjectRequest request =
-            new GetObjectRequest(this.bucket, this.key);
+        final GetObjectRequest.Builder builder = GetObjectRequest.builder()
+            .bucket(this.bucket)
+            .key(this.key);
         if (!rng.equals(Range.ENTIRE)) {
-            request.withRange(rng.first(), rng.last());
+            builder.range(String.format("bytes=%d-%d", rng.first(), rng.last()));
         }
         if (!ver.latest()) {
-            request.withVersionId(ver.version());
+            builder.versionId(ver.version());
         }
-        return request;
+        return builder.build();
     }
 
     /**
@@ -303,16 +313,13 @@ final class DefaultResource implements Resource {
     private long size() {
         final long size;
         if (this.range.equals(Range.ENTIRE)) {
-            size = this.object.getObjectMetadata().getContentLength();
+            size = this.response.contentLength();
         } else {
-            S3Object obj = null;
-            try {
-                obj = this.client.getObject(
-                    this.request(Range.ENTIRE, this.version)
-                );
-                size = obj.getObjectMetadata().getContentLength();
-            } finally {
-                IOUtils.closeQuietly(obj);
+            try (ResponseInputStream<GetObjectResponse> resp =
+                this.client.getObject(this.request(Range.ENTIRE, this.version))) {
+                size = resp.response().contentLength();
+            } catch (final IOException ex) {
+                throw new IllegalStateException("Failed to get object size", ex);
             }
         }
         return size;

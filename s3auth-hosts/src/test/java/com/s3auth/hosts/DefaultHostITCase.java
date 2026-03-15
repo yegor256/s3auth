@@ -4,7 +4,6 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
 import com.s3auth.hosts.Host.CloudWatch;
 import java.io.IOException;
 import java.net.URI;
@@ -14,6 +13,7 @@ import org.junit.Assume;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import software.amazon.awssdk.services.cloudwatch.CloudWatchClient;
 
 /**
  * Integration test case for {@link DefaultHost}.
@@ -83,6 +83,6 @@ final class DefaultHostITCase {
      * @return Mock cloudwatch
      */
     private CloudWatch cloudWatch() {
-        return () -> Mockito.mock(AmazonCloudWatchClient.class);
+        return () -> Mockito.mock(CloudWatchClient.class);
     }
 }

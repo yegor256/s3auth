@@ -4,14 +4,14 @@
  */
 package com.s3auth.hosts;
 
-import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
-import com.amazonaws.services.cloudwatch.model.Dimension;
-import com.amazonaws.services.cloudwatch.model.MetricDatum;
-import com.amazonaws.services.cloudwatch.model.PutMetricDataRequest;
-import com.amazonaws.services.cloudwatch.model.StandardUnit;
 import java.util.Collections;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import software.amazon.awssdk.services.cloudwatch.CloudWatchClient;
+import software.amazon.awssdk.services.cloudwatch.model.Dimension;
+import software.amazon.awssdk.services.cloudwatch.model.MetricDatum;
+import software.amazon.awssdk.services.cloudwatch.model.PutMetricDataRequest;
+import software.amazon.awssdk.services.cloudwatch.model.StandardUnit;
 
 /**
  * Test case for {@link ScheduledCloudWatch}.
@@ -31,23 +31,26 @@ final class ScheduledCloudWatchTest {
         Mockito.doReturn(
             Collections.singletonMap(bucket, new Stats.Simple(bytes))
         ).when(data).all();
-        final AmazonCloudWatch client = Mockito.mock(AmazonCloudWatch.class);
+        final CloudWatchClient client = Mockito.mock(CloudWatchClient.class);
         final ScheduledCloudWatch cloudwatch =
             new ScheduledCloudWatch(data, client);
         cloudwatch.run();
         Mockito.verify(client).putMetricData(
-            new PutMetricDataRequest()
-                .withNamespace("S3Auth")
-                .withMetricData(
-                    new MetricDatum()
-                        .withMetricName("BytesTransferred")
-                        .withDimensions(
-                            new Dimension()
-                                .withName("Bucket")
-                                .withValue(bucket)
-                        ).withUnit(StandardUnit.Bytes)
-                        .withValue(Double.valueOf(bytes))
+            PutMetricDataRequest.builder()
+                .namespace("S3Auth")
+                .metricData(
+                    MetricDatum.builder()
+                        .metricName("BytesTransferred")
+                        .dimensions(
+                            Dimension.builder()
+                                .name("Bucket")
+                                .value(bucket)
+                                .build()
+                        ).unit(StandardUnit.BYTES)
+                        .value(Double.valueOf(bytes))
+                        .build()
                 )
+                .build()
         );
         cloudwatch.close();
     }
