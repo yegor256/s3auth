@@ -10,9 +10,7 @@ import org.takes.Request;
 import org.takes.Response;
 import org.takes.facets.auth.XeIdentity;
 import org.takes.facets.auth.XeLogoutLink;
-import org.takes.facets.auth.social.XeFacebookLink;
 import org.takes.facets.auth.social.XeGithubLink;
-import org.takes.facets.auth.social.XeGoogleLink;
 import org.takes.facets.flash.XeFlash;
 import org.takes.facets.fork.FkTypes;
 import org.takes.facets.fork.RsFork;
@@ -86,11 +84,6 @@ final class RsPage extends RsWrap {
                 new XeIdentity(req),
                 new XeFlash(req),
                 new XeGithubLink(req, Manifests.read("S3Auth-GithubId")),
-                new XeFacebookLink(req, Manifests.read("S3Auth-FbId")),
-                new XeGoogleLink(
-                    req, Manifests.read("S3Auth-GoogleId"),
-                    "https://www.s3auth.com/?PsByFlag=PsGoogle"
-                ),
                 new XeLogoutLink(req),
                 new XeAppend(
                     "version",

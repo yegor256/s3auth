@@ -1,10 +1,6 @@
 S3Auth-Revision: BUILD
 S3Auth-Version: ${project.version}
 S3Auth-Date: ${maven.build.timestamp}
-S3Auth-FbId: ${fb.id}
-S3Auth-FbSecret: ${fb.secret}
-S3Auth-GoogleId: ${google.id}
-S3Auth-GoogleSecret: ${google.secret}
 S3Auth-GithubId: ${github.id}
 S3Auth-GithubSecret: ${github.secret}
 S3Auth-SecurityKey: ${security.key}

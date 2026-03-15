@@ -28,9 +28,7 @@ import org.takes.facets.auth.codecs.CcHex;
 import org.takes.facets.auth.codecs.CcSafe;
 import org.takes.facets.auth.codecs.CcSalted;
 import org.takes.facets.auth.codecs.CcXor;
-import org.takes.facets.auth.social.PsFacebook;
 import org.takes.facets.auth.social.PsGithub;
-import org.takes.facets.auth.social.PsGoogle;
 import org.takes.facets.fallback.Fallback;
 import org.takes.facets.fallback.FbChain;
 import org.takes.facets.fallback.FbStatus;
@@ -168,21 +166,6 @@ public class TkApp extends TkWrap {
                         new PsGithub(
                             Manifests.read("S3Auth-GithubId"),
                             Manifests.read("S3Auth-GithubSecret")
-                        )
-                    ),
-                    new PsByFlag.Pair(
-                        PsFacebook.class.getSimpleName(),
-                        new PsFacebook(
-                            Manifests.read("S3Auth-FbId"),
-                            Manifests.read("S3Auth-FbSecret")
-                        )
-                    ),
-                    new PsByFlag.Pair(
-                        PsGoogle.class.getSimpleName(),
-                        new PsGoogle(
-                            Manifests.read("S3Auth-GoogleId"),
-                            Manifests.read("S3Auth-GoogleSecret"),
-                            "https://www.s3auth.com/?PsByFlag=PsGoogle"
                         )
                     ),
                     new PsByFlag.Pair(

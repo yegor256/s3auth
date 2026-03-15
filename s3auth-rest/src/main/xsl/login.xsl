@@ -37,56 +37,13 @@
     </title>
   </xsl:template>
   <xsl:template name="content">
-    <p>
-      <xsl:text>To start, login using one of your accounts at </xsl:text>
-      <a>
-        <xsl:attribute name="href">
-          <xsl:value-of select="/page/links/link[@rel='takes:facebook']/@href"/>
-        </xsl:attribute>
-        <xsl:text>Facebook</xsl:text>
-      </a>
-      <xsl:text>, </xsl:text>
-      <a>
-        <xsl:attribute name="href">
-          <xsl:value-of select="/page/links/link[@rel='takes:google']/@href"/>
-        </xsl:attribute>
-        <xsl:text>Google</xsl:text>
-      </a>
-      <xsl:text>, or </xsl:text>
+    <p style="font-size: 2em;">
+      <xsl:text>Login </xsl:text>
       <a>
         <xsl:attribute name="href">
           <xsl:value-of select="/page/links/link[@rel='takes:github']/@href"/>
         </xsl:attribute>
-        <xsl:text>Github</xsl:text>
-      </a>
-      <xsl:text>:</xsl:text>
-    </p>
-    <p style="font-size: 2.5em;">
-      <a>
-        <xsl:attribute name="href">
-          <xsl:value-of select="/page/links/link[@rel='takes:facebook']/@href"/>
-        </xsl:attribute>
-        <i class="fa fa-facebook-square">
-          <xsl:comment>facebook</xsl:comment>
-        </i>
-      </a>
-      <xsl:text> </xsl:text>
-      <a>
-        <xsl:attribute name="href">
-          <xsl:value-of select="/page/links/link[@rel='takes:google']/@href"/>
-        </xsl:attribute>
-        <i class="fa fa-google-plus-square">
-          <xsl:comment>google-plus</xsl:comment>
-        </i>
-      </a>
-      <xsl:text> </xsl:text>
-      <a>
-        <xsl:attribute name="href">
-          <xsl:value-of select="/page/links/link[@rel='takes:github']/@href"/>
-        </xsl:attribute>
-        <i class="fa fa-github-square">
-          <xsl:comment>github</xsl:comment>
-        </i>
+        <xsl:text>via GitHub</xsl:text>
       </a>
     </p>
     <h1>

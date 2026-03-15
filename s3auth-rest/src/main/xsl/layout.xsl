@@ -114,18 +114,7 @@
       <xsl:text> </xsl:text>
       <i style="font-size: 1.5em;">
         <xsl:attribute name="class">
-          <xsl:text>fa </xsl:text>
-          <xsl:choose>
-            <xsl:when test="starts-with(urn, 'urn:facebook:')">
-              <xsl:text>fa-facebook-square</xsl:text>
-            </xsl:when>
-            <xsl:when test="starts-with(urn, 'urn:google:')">
-              <xsl:text>fa-google-plus-square</xsl:text>
-            </xsl:when>
-            <xsl:when test="starts-with(urn, 'urn:github:')">
-              <xsl:text>fa-github-square</xsl:text>
-            </xsl:when>
-          </xsl:choose>
+          <xsl:text>fa fa-github-square</xsl:text>
         </xsl:attribute>
         <xsl:comment>icon</xsl:comment>
       </i>
