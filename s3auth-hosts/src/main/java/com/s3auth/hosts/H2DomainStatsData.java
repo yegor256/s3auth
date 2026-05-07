@@ -101,7 +101,10 @@ final class H2DomainStatsData implements DomainStatsData {
      */
     public H2DomainStatsData init() throws IOException {
         try {
+            Class.forName("org.h2.Driver");
             this.session().sql(H2DomainStatsData.CREATE).execute().commit();
+        } catch (final ClassNotFoundException ex) {
+            throw new IOException("H2 JDBC driver not on classpath", ex);
         } catch (final SQLException ex) {
             throw new IOException(ex);
         }
