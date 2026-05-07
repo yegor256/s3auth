@@ -28,7 +28,7 @@ final class DefaultBucketTest {
     }
 
     @Test
-    void mapsLegacyS3RegionToUsEast() {
+    void mapsLegacyBareRegionToUsEast() {
         MatcherAssert.assertThat(
             "legacy 's3' must resolve to us-east-1",
             new DefaultBucket(
@@ -39,7 +39,7 @@ final class DefaultBucketTest {
     }
 
     @Test
-    void stripsS3PrefixFromRegionalEndpoint() {
+    void stripsLegacyPrefixFromRegionalEndpoint() {
         MatcherAssert.assertThat(
             "legacy 's3-eu-west-1' must drop the s3- prefix",
             new DefaultBucket(

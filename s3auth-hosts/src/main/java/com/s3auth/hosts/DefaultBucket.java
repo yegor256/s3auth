@@ -54,36 +54,6 @@ final class DefaultBucket implements Bucket {
             .build();
     }
 
-    /**
-     * Translate a legacy S3 region/endpoint string into a SDK v2 {@link Region}.
-     * Old s3auth records carry values like {@code s3}, {@code s3-eu-west-1},
-     * {@code s3-website-us-east-1} or {@code s3.amazonaws.com}, none of which
-     * the v2 SDK understands. This method strips the legacy prefixes and
-     * suffixes and returns the underlying region id.
-     * @return Region for the AWS SDK
-     */
-    private Region awsRegion() {
-        String raw = this.domain.region().trim();
-        if (raw.endsWith(".amazonaws.com")) {
-            raw = raw.substring(0, raw.length() - ".amazonaws.com".length());
-        }
-        final int idx = raw.indexOf("s3");
-        if (idx > 0) {
-            raw = raw.substring(idx);
-        }
-        final String id;
-        if ("s3".equals(raw) || "s3-external-1".equals(raw)) {
-            id = "us-east-1";
-        } else if (raw.startsWith("s3-website-")) {
-            id = raw.substring("s3-website-".length());
-        } else if (raw.startsWith("s3-")) {
-            id = raw.substring("s3-".length());
-        } else {
-            id = raw;
-        }
-        return Region.of(id);
-    }
-
     @Override
     public String toString() {
         return this.domain.toString();
@@ -133,6 +103,36 @@ final class DefaultBucket implements Bucket {
     @Override
     public String syslog() {
         return this.domain.syslog();
+    }
+
+    /**
+     * Translate a legacy S3 region/endpoint string into a SDK v2 {@link Region}.
+     * Old s3auth records carry values like {@code s3}, {@code s3-eu-west-1},
+     * {@code s3-website-us-east-1} or {@code s3.amazonaws.com}, none of which
+     * the v2 SDK understands. This method strips the legacy prefixes and
+     * suffixes and returns the underlying region id.
+     * @return Region for the AWS SDK
+     */
+    private Region awsRegion() {
+        String raw = this.domain.region().trim();
+        if (raw.endsWith(".amazonaws.com")) {
+            raw = raw.substring(0, raw.length() - ".amazonaws.com".length());
+        }
+        final int idx = raw.indexOf("s3");
+        if (idx > 0) {
+            raw = raw.substring(idx);
+        }
+        final String id;
+        if ("s3".equals(raw) || "s3-external-1".equals(raw)) {
+            id = "us-east-1";
+        } else if (raw.startsWith("s3-website-")) {
+            id = raw.substring("s3-website-".length());
+        } else if (raw.startsWith("s3-")) {
+            id = raw.substring("s3-".length());
+        } else {
+            id = raw;
+        }
+        return Region.of(id);
     }
 
 }
