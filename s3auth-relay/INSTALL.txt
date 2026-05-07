@@ -40,7 +40,7 @@ Install Java & supplementary tools
 
     sudo apt-get update
     sudo apt-get -y upgrade
-    sudo apt-get -y install openjdk-8-jre-headless maven
+    sudo apt-get -y install openjdk-17-jre-headless maven
 
 Copy src/main/production/pom.xml to /home/ubuntu/pom.xml
 
