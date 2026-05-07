@@ -5,7 +5,7 @@
 readers:
   - "urn:github:526301"
 docker:
-  image: yegor256/java
+  image: yegor256/latex
 install: |
   sudo locale-gen en_US en_US.UTF-8
   export LC_ALL=en_US.UTF-8
