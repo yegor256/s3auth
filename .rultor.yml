@@ -7,13 +7,7 @@ readers:
 docker:
   image: yegor256/java
 install: |
-  sudo locale-gen en_US en_US.UTF-8
-  export LC_ALL=en_US.UTF-8
-  export LANG=en_US.UTF-8
-  export LANGUAGE=en_US.UTF-8
-  sudo apt-get update --yes --allow-releaseinfo-change
-  sudo apt-get install --yes netpbm texlive-fonts-recommended
-  sudo gem install pdd
+  sudo /usr/bin/install-latex.sh
   pdd --source=$(pwd) --verbose --file=/dev/null
 assets:
   netrc: yegor256/home#assets/heroku-netrc
