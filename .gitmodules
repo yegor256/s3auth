@@ -1,0 +1,3 @@
+[submodule "dockers"]
+	path = dockers
+	url = https://github.com/yegor256/dockers
