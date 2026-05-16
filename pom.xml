@@ -196,7 +196,7 @@
       <dependency>
         <groupId>com.jcabi</groupId>
         <artifactId>jcabi-urn</artifactId>
-        <version>0.10.0</version>
+        <version>0.11.0</version>
         <classifier>mock</classifier>
         <scope>test</scope>
       </dependency>
