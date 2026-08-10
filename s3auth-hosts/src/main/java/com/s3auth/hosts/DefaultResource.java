@@ -10,9 +10,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.Objects;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
@@ -32,6 +32,7 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings("PMD.TooManyMethods")
 final class DefaultResource implements Resource {
+
     /**
      * Amazon S3 client.
      */
@@ -58,44 +59,37 @@ final class DefaultResource implements Resource {
     private final transient Version version;
 
     /**
-     * The object input stream.
-     */
-    private final transient ResponseInputStream<GetObjectResponse> stream;
-
-    /**
-     * The response metadata.
-     */
-    private final transient GetObjectResponse response;
-
-    /**
      * Domain Stats.
      */
     private final transient DomainStatsData stats;
 
     /**
-     * Public ctor.
+     * The object input stream, already opened.
+     */
+    private final transient ResponseInputStream<GetObjectResponse> stream;
+
+    /**
+     * Private ctor, stream opened by {@link #fetch}.
      * @param clnt Amazon S3 client
      * @param bckt Bucket name
      * @param name Key name
      * @param rng Range to deliver
      * @param ver Version of object to retrieve
      * @param dstats Domain stats data
-     * @checkstyle ParameterNumber (5 lines)
+     * @param strm Already opened object stream
      */
-    DefaultResource(@NotNull final S3Client clnt,
-        @NotNull final String bckt, @NotNull final String name,
-        @NotNull final Range rng, @NotNull final Version ver,
-        @NotNull final DomainStatsData dstats) {
+    private DefaultResource(final S3Client clnt,
+        final String bckt, final String name,
+        final Range rng, final Version ver,
+        final DomainStatsData dstats,
+        final ResponseInputStream<GetObjectResponse> strm) {
         this.client = clnt;
         this.bucket = bckt;
         this.key = name;
         this.range = rng;
         this.version = ver;
-        this.stream = this.client.getObject(
-            this.request(this.range, this.version)
-        );
-        this.response = this.stream.response();
         this.stats = dstats;
+        this.stream = strm;
     }
 
     @Override
@@ -167,7 +161,6 @@ final class DefaultResource implements Resource {
                 } catch (final IOException ex) {
                     throw new DefaultResource.StreamingException(
                         String.format(
-                            // @checkstyle LineLength (1 line)
                             "failed to write %s/%s, range=%s, total=%d, count=%d",
                             this.bucket,
                             this.key,
@@ -190,34 +183,34 @@ final class DefaultResource implements Resource {
     @Override
     @NotNull
     public Collection<String> headers() {
-        final Collection<String> headers = new LinkedList<>();
+        final Collection<String> headers = new ArrayList<>(5);
         headers.add(
             DefaultResource.header(
                 HttpHeaders.CONTENT_LENGTH,
-                Long.toString(this.response.contentLength())
+                Long.toString(this.response().contentLength())
             )
         );
-        if (this.response.contentType() != null) {
+        if (this.response().contentType() != null) {
             headers.add(
                 DefaultResource.header(
                     HttpHeaders.CONTENT_TYPE,
-                    this.response.contentType()
+                    this.response().contentType()
                 )
             );
         }
-        if (this.response.contentEncoding() != null) {
+        if (this.response().contentEncoding() != null) {
             headers.add(
                 DefaultResource.header(
                     HttpHeaders.CONTENT_ENCODING,
-                    this.response.contentEncoding()
+                    this.response().contentEncoding()
                 )
             );
         }
-        if (this.response.eTag() != null) {
+        if (this.response().eTag() != null) {
             headers.add(
                 DefaultResource.header(
                     HttpHeaders.ETAG,
-                    this.response.eTag()
+                    this.response().eTag()
                 )
             );
         }
@@ -225,7 +218,7 @@ final class DefaultResource implements Resource {
             DefaultResource.header(
                 HttpHeaders.CACHE_CONTROL,
                 StringUtils.defaultIfBlank(
-                    this.response.cacheControl(),
+                    this.response().cacheControl(),
                     "must-revalidate"
                 )
             )
@@ -250,15 +243,15 @@ final class DefaultResource implements Resource {
     @Override
     @NotNull
     public String etag() {
-        return this.response.eTag();
+        return this.response().eTag();
     }
 
     @Override
     public Date lastModified() {
-        final Instant modified = this.response.lastModified();
+        final Instant modified = this.response().lastModified();
         final Date result;
         if (modified == null) {
-            result = new Date();
+            result = Date.from(Instant.now());
         } else {
             result = Date.from(modified);
         }
@@ -267,12 +260,28 @@ final class DefaultResource implements Resource {
 
     @Override
     public String contentType() {
-        return this.response.contentType();
+        return this.response().contentType();
     }
 
     @Override
     public void close() throws IOException {
         this.stream.close();
+    }
+
+    /**
+     * Fetch an object from S3.
+     * @param clnt Amazon S3 client
+     * @param loc Coordinates of the object to fetch
+     * @param dstats Domain stats data
+     * @return Fetched resource
+     */
+    static DefaultResource fetch(@NotNull final S3Client clnt,
+        @NotNull final DefaultResource.Locator loc,
+        @NotNull final DomainStatsData dstats) {
+        return new DefaultResource(
+            clnt, loc.bucket, loc.key, loc.range, loc.version, dstats,
+            clnt.getObject(DefaultResource.request(loc))
+        );
     }
 
     /**
@@ -288,20 +297,27 @@ final class DefaultResource implements Resource {
     }
 
     /**
-     * Make S3 request with a specified range.
-     * @param rng Range to request
-     * @param ver Version of object to fetch
+     * The response metadata of the opened stream.
+     * @return Response
+     */
+    private GetObjectResponse response() {
+        return this.stream.response();
+    }
+
+    /**
+     * Make S3 request for the given coordinates.
+     * @param loc Coordinates of the object to fetch
      * @return Request
      */
-    private GetObjectRequest request(final Range rng, final Version ver) {
+    private static GetObjectRequest request(final DefaultResource.Locator loc) {
         final GetObjectRequest.Builder builder = GetObjectRequest.builder()
-            .bucket(this.bucket)
-            .key(this.key);
-        if (!rng.equals(Range.ENTIRE)) {
-            builder.range(String.format("bytes=%d-%d", rng.first(), rng.last()));
+            .bucket(loc.bucket)
+            .key(loc.key);
+        if (!loc.range.equals(Range.ENTIRE)) {
+            builder.range(String.format("bytes=%d-%d", loc.range.first(), loc.range.last()));
         }
-        if (!ver.latest()) {
-            builder.versionId(ver.version());
+        if (!loc.version.latest()) {
+            builder.versionId(loc.version.version());
         }
         return builder.build();
     }
@@ -313,10 +329,15 @@ final class DefaultResource implements Resource {
     private long size() {
         final long size;
         if (this.range.equals(Range.ENTIRE)) {
-            size = this.response.contentLength();
+            size = this.response().contentLength();
         } else {
-            try (ResponseInputStream<GetObjectResponse> resp =
-                this.client.getObject(this.request(Range.ENTIRE, this.version))) {
+            final DefaultResource.Locator loc = new DefaultResource.Locator(
+                this.bucket, this.key, Range.ENTIRE, this.version
+            );
+            try (
+                ResponseInputStream<GetObjectResponse> resp =
+                    this.client.getObject(DefaultResource.request(loc))
+            ) {
                 size = resp.response().contentLength();
             } catch (final IOException ex) {
                 throw new IllegalStateException("Failed to get object size", ex);
@@ -327,10 +348,10 @@ final class DefaultResource implements Resource {
 
     /**
      * Custom IO exception.
-     *
      * @since 0.0.1
      */
     private static final class StreamingException extends IOException {
+
         /**
          * Serialization marker.
          */
@@ -349,4 +370,45 @@ final class DefaultResource implements Resource {
         }
     }
 
+    /**
+     * Coordinates of an S3 object to fetch.
+     * @since 0.0.1
+     */
+    static final class Locator {
+
+        /**
+         * Bucket name.
+         */
+        private final transient String bucket;
+
+        /**
+         * Key in the bucket.
+         */
+        private final transient String key;
+
+        /**
+         * The range.
+         */
+        private final transient Range range;
+
+        /**
+         * The version.
+         */
+        private final transient Version version;
+
+        /**
+         * Ctor.
+         * @param bckt Bucket name
+         * @param name Key name
+         * @param rng Range to deliver
+         * @param ver Version of object to retrieve
+         */
+        Locator(final String bckt, final String name,
+            final Range rng, final Version ver) {
+            this.bucket = bckt;
+            this.key = name;
+            this.range = rng;
+            this.version = ver;
+        }
+    }
 }

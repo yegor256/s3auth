@@ -11,7 +11,6 @@ import org.mockito.Mockito;
 
 /**
  * Mocker of {@link HttpRequest}.
- *
  * @since 0.0.1
  */
 public final class HttpRequestMocker {
@@ -34,7 +33,6 @@ public final class HttpRequestMocker {
         final Socket socket = Mockito.mock(Socket.class);
         Mockito.doReturn(IOUtils.toInputStream(text, StandardCharsets.UTF_8))
             .when(socket).getInputStream();
-        return new HttpRequest(socket);
+        return HttpRequest.parse(socket);
     }
-
 }

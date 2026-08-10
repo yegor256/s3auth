@@ -103,5 +103,4 @@ final class RejectingHost implements Host {
         final String password) throws IOException {
         return this.host.authorized(user, password);
     }
-
 }

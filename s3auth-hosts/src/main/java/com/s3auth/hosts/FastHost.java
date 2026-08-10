@@ -82,5 +82,4 @@ final class FastHost implements Host {
         final String password) throws IOException {
         return this.origin.authorized(user, password);
     }
-
 }

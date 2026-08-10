@@ -14,10 +14,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.zip.CRC32;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
@@ -32,9 +33,7 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 
 /**
  * XML Directory Listing.
- *
  * @since 0.0.1
- * @checkstyle ClassDataAbstraction (200 lines)
  */
 @Immutable
 @Loggable(Loggable.DEBUG)
@@ -48,67 +47,17 @@ final class DirectoryListing implements Resource {
     );
 
     /**
-     * Byte representation of transformed data.
+     * Transformed XML content of the listing.
      */
     @Immutable.Array
     private final transient byte[] content;
 
     /**
-     * Public constructor.
-     * @param client Amazon S3 client
-     * @param bucket Bucket name
-     * @param key The S3 object key
+     * Private ctor, content fetched by {@link #fetch}.
+     * @param cnt The already-fetched content
      */
-    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
-    DirectoryListing(@NotNull final S3Client client,
-        @NotNull final String bucket, @NotNull final String key) {
-        final Collection<S3Object> objects = new LinkedList<>();
-        final Collection<String> prefixes = new LinkedList<>();
-        String token = null;
-        do {
-            final ListObjectsRequest.Builder builder = ListObjectsRequest.builder()
-                .delimiter("/")
-                .prefix(key)
-                .bucket(bucket);
-            if (token != null) {
-                builder.marker(token);
-            }
-            final ListObjectsResponse listing = client.listObjects(builder.build());
-            objects.addAll(listing.contents());
-            for (final CommonPrefix prefix : listing.commonPrefixes()) {
-                prefixes.add(prefix.prefix());
-            }
-            if (listing.isTruncated()) {
-                token = listing.nextMarker();
-                if (token == null && !listing.contents().isEmpty()) {
-                    token = listing.contents().get(listing.contents().size() - 1).key();
-                }
-            } else {
-                token = null;
-            }
-        } while (token != null);
-        final Directives dirs = new Directives()
-            .add("directory").attr("prefix", key);
-        for (final String prefix : prefixes) {
-            dirs.add("commonPrefix").set(prefix).up();
-        }
-        for (final S3Object object : objects) {
-            dirs.add("object")
-                .add("path")
-                .set(object.key()).up()
-                .add("size")
-                .set(Long.toString(object.size())).up()
-                .up();
-        }
-        try {
-            this.content = DirectoryListing.STYLESHEET.transform(
-                new XMLDocument(new Xembler(dirs).xml())
-            ).toString().getBytes(StandardCharsets.UTF_8);
-        } catch (final ImpossibleModificationException ex) {
-            throw new IllegalStateException(
-                "Unable to generate directory listing", ex
-            );
-        }
+    private DirectoryListing(final byte[] cnt) {
+        this.content = cnt;
     }
 
     @Override
@@ -149,7 +98,7 @@ final class DirectoryListing implements Resource {
 
     @Override
     public Date lastModified() {
-        return new Date();
+        return Date.from(Instant.now());
     }
 
     @Override
@@ -179,6 +128,91 @@ final class DirectoryListing implements Resource {
     }
 
     /**
+     * Fetch a directory listing from S3.
+     * @param clnt Amazon S3 client
+     * @param bckt Bucket name
+     * @param name The S3 object key
+     * @return Directory listing resource
+     */
+    static DirectoryListing fetch(@NotNull final S3Client clnt,
+        @NotNull final String bckt, @NotNull final String name) {
+        return new DirectoryListing(
+            DirectoryListing.transform(
+                name, DirectoryListing.paginate(clnt, bckt, name)
+            )
+        );
+    }
+
+    /**
+     * Paginate through all S3 objects and common prefixes under a key.
+     * @param clnt Amazon S3 client
+     * @param bckt Bucket name
+     * @param key The S3 object key prefix
+     * @return Objects and common prefixes found
+     */
+    private static DirectoryListing.Listing paginate(final S3Client clnt,
+        final String bckt, final String key) {
+        final Collection<S3Object> objects = new ArrayList<>(0);
+        final Collection<String> prefixes = new ArrayList<>(0);
+        String token = null;
+        do {
+            final ListObjectsRequest.Builder builder = ListObjectsRequest.builder()
+                .delimiter("/")
+                .prefix(key)
+                .bucket(bckt);
+            if (token != null) {
+                builder.marker(token);
+            }
+            final ListObjectsResponse listing = clnt.listObjects(builder.build());
+            objects.addAll(listing.contents());
+            for (final CommonPrefix prefix : listing.commonPrefixes()) {
+                prefixes.add(prefix.prefix());
+            }
+            if (listing.isTruncated()) {
+                token = listing.nextMarker();
+                if (token == null && !listing.contents().isEmpty()) {
+                    token = listing.contents().get(listing.contents().size() - 1).key();
+                }
+            } else {
+                token = null;
+            }
+        } while (token != null);
+        return new DirectoryListing.Listing(objects, prefixes);
+    }
+
+    /**
+     * Transform a listing into XHTML bytes.
+     * @param key The S3 object key prefix
+     * @param listing Objects and common prefixes found
+     * @return Transformed bytes
+     */
+    private static byte[] transform(final String key,
+        final DirectoryListing.Listing listing) {
+        final Directives dirs = new Directives()
+            .add("directory").attr("prefix", key);
+        for (final String prefix : listing.prefixes) {
+            dirs.add("commonPrefix").set(prefix).up();
+        }
+        for (final S3Object object : listing.objects) {
+            dirs.add("object")
+                .add("path")
+                .set(object.key()).up()
+                .add("size")
+                .set(Long.toString(object.size())).up()
+                .up();
+        }
+        try {
+            return DirectoryListing.STYLESHEET.transform(
+                new XMLDocument(new Xembler(dirs).xml())
+            ).toString().getBytes(StandardCharsets.UTF_8);
+        } catch (final ImpossibleModificationException ex) {
+            throw new IllegalStateException(
+                "Unable to generate directory listing", ex
+            );
+        }
+    }
+
+    /**
      * Create a HTTP header from name and value.
      * @param name Name of the header
      * @param value The value
@@ -188,5 +222,32 @@ final class DirectoryListing implements Resource {
     private static String header(@NotNull final String name,
         @NotNull final String value) {
         return String.format("%s: %s", name, value);
+    }
+
+    /**
+     * Objects and common prefixes found while paginating a bucket listing.
+     * @since 0.0.1
+     */
+    private static final class Listing {
+
+        /**
+         * S3 objects found.
+         */
+        private final transient Collection<S3Object> objects;
+
+        /**
+         * Common prefixes found.
+         */
+        private final transient Collection<String> prefixes;
+
+        /**
+         * Ctor.
+         * @param objs S3 objects found
+         * @param prfxs Common prefixes found
+         */
+        Listing(final Collection<S3Object> objs, final Collection<String> prfxs) {
+            this.objects = objs;
+            this.prefixes = prfxs;
+        }
     }
 }

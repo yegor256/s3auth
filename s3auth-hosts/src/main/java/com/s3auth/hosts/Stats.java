@@ -21,11 +21,11 @@ public interface Stats {
 
     /**
      * Simple stats.
-     *
      * @since 0.0.1
      */
     @Immutable
     final class Simple implements Stats {
+
         /**
          * Bytes transferred.
          */
@@ -33,7 +33,7 @@ public interface Stats {
 
         /**
          * Ctor.
-         * @param transferred Number of bytes transferred.
+         * @param transferred Number of bytes transferred
          */
         public Simple(final long transferred) {
             this.bytes = transferred;

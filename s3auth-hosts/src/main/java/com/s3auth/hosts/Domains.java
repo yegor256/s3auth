@@ -14,7 +14,6 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Bag of domains.
- *
  * @since 0.0.1
  */
 @Loggable(Loggable.DEBUG)
@@ -90,5 +89,4 @@ final class Domains extends AbstractSet<Domain> {
     public int size() {
         return this.all.size();
     }
-
 }

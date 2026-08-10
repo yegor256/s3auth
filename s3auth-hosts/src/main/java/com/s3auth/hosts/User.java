@@ -68,7 +68,6 @@ public interface User {
 
     /**
      * Valid User.
-     *
      * @since 0.0.1
      */
     @Target(ElementType.TYPE)
@@ -76,6 +75,7 @@ public interface User {
     @Constraint(validatedBy = User.Validator.class)
     @Documented
     @interface Valid {
+
         /**
          * Message of the validation error.
          * @return Message
@@ -97,10 +97,10 @@ public interface User {
 
     /**
      * Validator of User.
-     *
      * @since 0.0.1
      */
     final class Validator implements ConstraintValidator<User.Valid, User> {
+
         @Override
         public void initialize(final User.Valid annotation) {
             // nothing to do
@@ -129,5 +129,4 @@ public interface User {
             return valid;
         }
     }
-
 }

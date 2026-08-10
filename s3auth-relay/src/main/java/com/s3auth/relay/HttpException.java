@@ -67,7 +67,16 @@ final class HttpException extends IOException {
      * @param response The response
      */
     HttpException(@NotNull final HttpResponse response) {
-        super(response.toString());
+        this(response, response.toString());
+    }
+
+    /**
+     * Private ctor, with a pre-built message.
+     * @param response The response
+     * @param message The exception message
+     */
+    private HttpException(final HttpResponse response, final String message) {
+        super(message);
         this.resp = response;
     }
 
@@ -78,5 +87,4 @@ final class HttpException extends IOException {
     public HttpResponse response() {
         return this.resp;
     }
-
 }

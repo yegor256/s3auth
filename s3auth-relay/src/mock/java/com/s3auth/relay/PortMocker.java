@@ -8,7 +8,6 @@ import java.net.ServerSocket;
 
 /**
  * Mocker of HTTP port.
- *
  * @since 0.0.1
  */
 public final class PortMocker {
@@ -39,5 +38,4 @@ public final class PortMocker {
         }
         return port;
     }
-
 }

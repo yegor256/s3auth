@@ -49,7 +49,7 @@ final class DefaultHostITCase {
         try {
             MatcherAssert.assertThat(
                 ResourceMocker.toString(resource),
-                Matchers.startsWith("OCTYPE html>\n")
+                Matchers.startsWith(String.format("OCTYPE html>%n"))
             );
         } finally {
             resource.close();
@@ -79,7 +79,6 @@ final class DefaultHostITCase {
 
     /**
      * Mock CloudWatch for test.
-     *
      * @return Mock cloudwatch
      */
     private CloudWatch cloudWatch() {

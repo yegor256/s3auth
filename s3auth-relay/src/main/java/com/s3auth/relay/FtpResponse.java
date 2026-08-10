@@ -76,5 +76,4 @@ final class FtpResponse {
     public long send(@NotNull final Socket socket) {
         return 0L;
     }
-
 }

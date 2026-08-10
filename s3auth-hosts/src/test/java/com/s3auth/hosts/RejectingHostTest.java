@@ -32,5 +32,4 @@ final class RejectingHostTest {
             Matchers.equalTo("your resource it temporary disabled, sorry")
         );
     }
-
 }

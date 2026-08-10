@@ -25,7 +25,6 @@ import org.productivity.java.syslog4j.server.SyslogServerIF;
 
 /**
  * Test case for {@link SyslogHosts}.
- *
  * @since 0.0.1
  */
 final class SyslogHostsTest {

@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.SocketException;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
@@ -107,7 +108,6 @@ final class HttpThread {
      * Dispatch one request from the encapsulated queue.
      * @return Amount of bytes sent to socket
      * @throws InterruptedException If interrupted while waiting for the queue
-     * @checkstyle ExecutableStatementCount (100 lines)
      */
     @SuppressWarnings("PMD.AvoidCatchingThrowable")
     public long dispatch() throws InterruptedException {
@@ -115,22 +115,19 @@ final class HttpThread {
         final long start = System.currentTimeMillis();
         long bytes = 0L;
         try {
-            final HttpRequest request = new HttpRequest(socket);
+            final HttpRequest request = HttpRequest.parse(socket);
             final boolean get = "GET".equals(request.method());
             if (get || "HEAD".equals(request.method())) {
+                final String date = String.format(
+                    "%ta, %1$td %1$tb %1$tY %1$tT %1$tz",
+                    Date.from(Instant.now())
+                );
+                final String elapsed =
+                    Long.toString(System.currentTimeMillis() - start);
                 HttpResponse response = new HttpResponse()
                     .withHeader("Server", HttpThread.NAME)
-                    .withHeader(
-                        HttpHeaders.DATE,
-                        String.format(
-                            "%ta, %1$td %1$tb %1$tY %1$tT %1$tz",
-                            new Date()
-                        )
-                    )
-                    .withHeader(
-                        "X-S3auth-Time",
-                        Long.toString(System.currentTimeMillis() - start)
-                    );
+                    .withHeader(HttpHeaders.DATE, date)
+                    .withHeader("X-S3auth-Time", elapsed);
                 Resource resource = null;
                 try {
                     resource = HttpThread.resource(this.host(request), request);
@@ -227,7 +224,7 @@ final class HttpThread {
                 request.headers().get(HttpHeaders.IF_MODIFIED_SINCE)
                     .iterator().next()
             );
-            if (resource.lastModified().before(since)) {
+            if (resource.lastModified().toInstant().isBefore(since.toInstant())) {
                 throw new HttpException(HttpURLConnection.HTTP_NOT_MODIFIED);
             }
         }
@@ -294,8 +291,7 @@ final class HttpThread {
      * @param socket The socket to talk to
      * @return Number of bytes sent
      */
-    private long failure(final HttpException cause,
-        final Socket socket) {
+    private long failure(final HttpException cause, final Socket socket) {
         try {
             final long bytes = cause.response().send(socket);
             Logger.info(this, "#run(): failure sent to %s", socket);
@@ -304,5 +300,4 @@ final class HttpThread {
             throw new IllegalStateException(ex);
         }
     }
-
 }

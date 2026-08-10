@@ -6,11 +6,11 @@ package com.s3auth.relay;
 
 import java.io.ByteArrayOutputStream;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import org.mockito.Mockito;
 
 /**
  * Mocker of {@link HttpResponse}.
- *
  * @since 0.0.1
  */
 public final class HttpResponseMocker {
@@ -34,7 +34,6 @@ public final class HttpResponseMocker {
         final ByteArrayOutputStream stream = new ByteArrayOutputStream();
         Mockito.doReturn(stream).when(socket).getOutputStream();
         resp.send(socket);
-        return new String(stream.toByteArray());
+        return new String(stream.toByteArray(), StandardCharsets.UTF_8);
     }
-
 }

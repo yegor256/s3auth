@@ -57,7 +57,6 @@ import org.takes.tk.TkWrap;
 
 /**
  * Takes app.
- *
  * @since 0.1
  * @checkstyle ClassFanOutComplexityCheck (500 lines)
  */

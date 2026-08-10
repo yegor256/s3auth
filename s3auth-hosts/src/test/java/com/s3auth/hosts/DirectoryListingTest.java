@@ -23,13 +23,13 @@ import software.amazon.awssdk.services.s3.model.S3Object;
  * @since 0.0.1
  */
 final class DirectoryListingTest {
+
     /**
      * Fetches directory listing for bucket, if object does not exist.
      * @throws Exception If something goes wrong
      */
     @Test
-    void fetchesDirectoryListingInXhtml()
-        throws Exception {
+    void fetchesDirectoryListingInXhtml() throws Exception {
         final S3Client client = Mockito.mock(S3Client.class);
         final String[] prefixes = {"baz/", "biz/", "boz/"};
         final ImmutableList.Builder<CommonPrefix> prfxs =
@@ -54,7 +54,7 @@ final class DirectoryListingTest {
         MatcherAssert.assertThat(
             new String(
                 ResourceMocker.toByteArray(
-                    new DirectoryListing(client, "bucket", prefix)
+                    DirectoryListing.fetch(client, "bucket", prefix)
                 ),
                 StandardCharsets.UTF_8
             ),

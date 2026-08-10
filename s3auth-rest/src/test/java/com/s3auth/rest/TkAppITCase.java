@@ -95,5 +95,4 @@ final class TkAppITCase {
             .as(XmlResponse.class)
             .assertXPath("/page/version/name");
     }
-
 }

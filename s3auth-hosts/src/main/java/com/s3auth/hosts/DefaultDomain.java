@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Default implementation of domain.
- *
  * @since 0.0.1
  */
 @SuppressWarnings("PMD.TooManyMethods")
@@ -29,7 +28,7 @@ final class DefaultDomain implements Domain {
      * @param name Name of it
      * @param key Key of it
      * @param secret Secret of it
-     * @param bucket Bucket of it.
+     * @param bucket Bucket of it
      * @param region The region of S3 bucket
      * @param syslog Syslog host and port of the domain
      * @checkstyle ParameterNumber (3 lines)
@@ -136,5 +135,4 @@ final class DefaultDomain implements Domain {
     public String syslog() {
         return this.origin.syslog().trim();
     }
-
 }

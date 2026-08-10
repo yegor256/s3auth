@@ -18,6 +18,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLServerSocketFactory;
@@ -72,54 +73,41 @@ final class HttpFacade implements Closeable {
     private final transient ServerSocket secured;
 
     /**
-     * Public ctor.
-     * @param hosts Hosts
-     * @param port Port number
-     * @param sslport SSL port number.
-     * @throws IOException If can't initialize
+     * Private ctor, threads started by {@link #open}.
+     * @param frnt Frontend executor
+     * @param back Backend executor
+     * @param skts Blocking queue of ready-to-be-processed sockets
+     * @param srv Server socket
+     * @param sec Secured server socket
      */
-    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
-    HttpFacade(@NotNull final Hosts hosts, final int port, final int sslport)
-        throws IOException {
-        this.frontend = Executors.newScheduledThreadPool(2, new VerboseThreads("front"));
-        this.server = new ServerSocket(port);
-        this.backend = Executors.newScheduledThreadPool(
-            HttpFacade.THREADS,
-            new VerboseThreads("back")
-        );
-        this.sockets = new SynchronousQueue<>();
-        this.secured = SSLServerSocketFactory.getDefault()
-            .createServerSocket(sslport);
-        final Runnable runnable = new VerboseRunnable(
-            new HttpFacade.HttpThreadRunnable(
-                new HttpThread(this.sockets, hosts)
-            ),
-            true, true
-        );
-        for (int idx = 0; idx < HttpFacade.THREADS; ++idx) {
-            this.backend.scheduleWithFixedDelay(
-                runnable,
-                0L, 1L, TimeUnit.NANOSECONDS
-            );
-        }
+    private HttpFacade(final ScheduledExecutorService frnt,
+        final ScheduledExecutorService back, final BlockingQueue<Socket> skts,
+        final ServerSocket srv, final ServerSocket sec) {
+        this.frontend = frnt;
+        this.backend = back;
+        this.sockets = skts;
+        this.server = srv;
+        this.secured = sec;
     }
 
     /**
      * Start listening to the ports.
      */
     public void listen() {
-        this.frontend.scheduleWithFixedDelay(
+        final ScheduledFuture<?> plain = this.frontend.scheduleWithFixedDelay(
             new VerboseRunnable(
                 () -> this.process(this.server)
             ),
             0L, 1L, TimeUnit.NANOSECONDS
         );
-        this.frontend.scheduleWithFixedDelay(
+        Logger.debug(this, "#listen(): scheduled %s", plain);
+        final ScheduledFuture<?> ssl = this.frontend.scheduleWithFixedDelay(
             new VerboseRunnable(
                 () -> this.process(this.secured)
             ),
             0L, 1L, TimeUnit.NANOSECONDS
         );
+        Logger.debug(this, "#listen(): scheduled %s", ssl);
     }
 
     @Override
@@ -132,6 +120,46 @@ final class HttpFacade implements Closeable {
             throw new IOException(ex);
         }
         this.server.close();
+    }
+
+    /**
+     * Open a facade and start its backend threads.
+     * @param hosts Hosts
+     * @param port Port number
+     * @param sslport SSL port number
+     * @return Opened facade
+     * @throws IOException If can't initialize
+     */
+    static HttpFacade open(@NotNull final Hosts hosts, final int port, final int sslport)
+        throws IOException {
+        final HttpFacade facade = new HttpFacade(
+            Executors.newScheduledThreadPool(2, new VerboseThreads("front")),
+            Executors.newScheduledThreadPool(HttpFacade.THREADS, new VerboseThreads("back")),
+            new SynchronousQueue<>(),
+            new ServerSocket(port),
+            SSLServerSocketFactory.getDefault().createServerSocket(sslport)
+        );
+        facade.start(hosts);
+        return facade;
+    }
+
+    /**
+     * Start the backend dispatcher threads.
+     * @param hosts Hosts
+     */
+    private void start(final Hosts hosts) {
+        final Runnable runnable = new VerboseRunnable(
+            new HttpFacade.HttpThreadRunnable(
+                new HttpThread(this.sockets, hosts)
+            ),
+            true, true
+        );
+        for (int idx = 0; idx < HttpFacade.THREADS; ++idx) {
+            final ScheduledFuture<?> future = this.backend.scheduleWithFixedDelay(
+                runnable, 0L, 1L, TimeUnit.NANOSECONDS
+            );
+            Logger.debug(this, "#start(): scheduled %s", future);
+        }
     }
 
     /**
@@ -164,16 +192,14 @@ final class HttpFacade implements Closeable {
      * @param socket The socket to report to
      */
     private static void overflow(final Socket socket) {
+        final String message = String.format(
+            "We're sorry, the site is under high load at the moment (%d open connections), please try again in a few minutes",
+            HttpFacade.THREADS
+        );
         try {
             new HttpResponse()
                 .withStatus(HttpURLConnection.HTTP_GATEWAY_TIMEOUT)
-                .withBody(
-                    String.format(
-                        // @checkstyle LineLength (1 line)
-                        "We're sorry, the site is under high load at the moment (%d open connections), please try again in a few minutes",
-                        HttpFacade.THREADS
-                    )
-                )
+                .withBody(message)
                 .send(socket);
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
@@ -203,10 +229,10 @@ final class HttpFacade implements Closeable {
 
     /**
      * Dispatcher of HttpThread.
-     *
      * @since 0.0.1
      */
     private static final class HttpThreadRunnable implements Runnable {
+
         /**
          * The thread to run.
          */

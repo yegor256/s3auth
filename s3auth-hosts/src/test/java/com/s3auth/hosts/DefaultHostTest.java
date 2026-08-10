@@ -137,7 +137,6 @@ final class DefaultHostTest {
 
     /**
      * DefaultHost can throw a specific exception for a non existent bucket.
-     *
      * @see <a href="http://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html">S3 Error Responses</a>
      */
     @Test
@@ -174,7 +173,7 @@ final class DefaultHostTest {
     /**
      * DefaultHost can return a directory listing when the resource key does
      * not exist and ends with "index.html".
-     * @throws Exception If a problem occurs.
+     * @throws Exception If a problem occurs
      */
     @Test
     void showsDirectoryListing() throws Exception {
@@ -210,7 +209,7 @@ final class DefaultHostTest {
 
     /**
      * DefaultHost can return a version listing.
-     * @throws Exception If a problem occurs.
+     * @throws Exception If a problem occurs
      */
     @Test
     void showsVersionListing() throws Exception {
@@ -243,7 +242,7 @@ final class DefaultHostTest {
 
     /**
      * DefaultHost can correctly return index.html version listing.
-     * @throws Exception If a problem occurs.
+     * @throws Exception If a problem occurs
      */
     @Test
     void showsVersionListingForIndexHtml() throws Exception {
@@ -386,5 +385,4 @@ final class DefaultHostTest {
             }
         };
     }
-
 }

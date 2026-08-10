@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -31,7 +32,6 @@ import software.amazon.awssdk.services.s3.model.ObjectVersion;
 
 /**
  * XML S3 Object Version Listing.
- *
  * @since 0.0.1
  */
 @Immutable
@@ -46,62 +46,17 @@ final class ObjectVersionListing implements Resource {
     );
 
     /**
-     * Byte representation of XML data.
+     * Transformed XML content of the listing.
      */
     @Immutable.Array
     private final transient byte[] content;
 
     /**
-     * Public constructor.
-     * @param client Amazon S3 client
-     * @param bucket Bucket name
-     * @param key The S3 object key
+     * Private ctor, content fetched by {@link #fetch}.
+     * @param cnt The already-fetched content
      */
-    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
-    ObjectVersionListing(@NotNull final S3Client client,
-        @NotNull final String bucket, @NotNull final String key) {
-        final ImmutableList.Builder<ObjectVersion> versions =
-            ImmutableList.builder();
-        String token = null;
-        String vtoken = null;
-        do {
-            final ListObjectVersionsRequest.Builder builder =
-                ListObjectVersionsRequest.builder()
-                    .prefix(key)
-                    .bucket(bucket);
-            if (token != null) {
-                builder.keyMarker(token);
-            }
-            if (vtoken != null) {
-                builder.versionIdMarker(vtoken);
-            }
-            final ListObjectVersionsResponse listing =
-                client.listObjectVersions(builder.build());
-            versions.addAll(listing.versions());
-            if (listing.isTruncated()) {
-                token = listing.nextKeyMarker();
-                vtoken = listing.nextVersionIdMarker();
-            } else {
-                token = null;
-                vtoken = null;
-            }
-        } while (token != null);
-        final Directives dirs = new Directives()
-            .add("versions").attr("object", key);
-        for (final ObjectVersion version : versions.build()) {
-            dirs.add("version")
-                .attr("key", version.key())
-                .set(version.versionId()).up();
-        }
-        try {
-            this.content = ObjectVersionListing.STYLESHEET.transform(
-                new XMLDocument(new Xembler(dirs).xml())
-            ).toString().getBytes(StandardCharsets.UTF_8);
-        } catch (final ImpossibleModificationException ex) {
-            throw new IllegalStateException(
-                "Unable to generate version listing", ex
-            );
-        }
+    private ObjectVersionListing(final byte[] cnt) {
+        this.content = cnt;
     }
 
     @Override
@@ -142,7 +97,7 @@ final class ObjectVersionListing implements Resource {
 
     @Override
     public Date lastModified() {
-        return new Date();
+        return Date.from(Instant.now());
     }
 
     @Override
@@ -169,6 +124,72 @@ final class ObjectVersionListing implements Resource {
     public boolean equals(final Object obj) {
         return obj instanceof ObjectVersionListing
             && Arrays.equals(this.content, ((ObjectVersionListing) obj).content);
+    }
+
+    /**
+     * Fetch an object version listing from S3.
+     * @param clnt Amazon S3 client
+     * @param bckt Bucket name
+     * @param name The S3 object key
+     * @return Object version listing resource
+     */
+    static ObjectVersionListing fetch(@NotNull final S3Client clnt,
+        @NotNull final String bckt, @NotNull final String name) {
+        return new ObjectVersionListing(
+            ObjectVersionListing.list(clnt, bckt, name)
+        );
+    }
+
+    /**
+     * Fetch and transform the object version listing from S3.
+     * @param clnt Amazon S3 client
+     * @param bckt Bucket name
+     * @param key The S3 object key
+     * @return Transformed bytes
+     */
+    private static byte[] list(final S3Client clnt, final String bckt, final String key) {
+        final ImmutableList.Builder<ObjectVersion> versions =
+            ImmutableList.builder();
+        String token = null;
+        String vtoken = null;
+        do {
+            final ListObjectVersionsRequest.Builder builder =
+                ListObjectVersionsRequest.builder()
+                    .prefix(key)
+                    .bucket(bckt);
+            if (token != null) {
+                builder.keyMarker(token);
+            }
+            if (vtoken != null) {
+                builder.versionIdMarker(vtoken);
+            }
+            final ListObjectVersionsResponse listing =
+                clnt.listObjectVersions(builder.build());
+            versions.addAll(listing.versions());
+            if (listing.isTruncated()) {
+                token = listing.nextKeyMarker();
+                vtoken = listing.nextVersionIdMarker();
+            } else {
+                token = null;
+                vtoken = null;
+            }
+        } while (token != null);
+        final Directives dirs = new Directives()
+            .add("versions").attr("object", key);
+        for (final ObjectVersion version : versions.build()) {
+            dirs.add("version")
+                .attr("key", version.key())
+                .set(version.versionId()).up();
+        }
+        try {
+            return ObjectVersionListing.STYLESHEET.transform(
+                new XMLDocument(new Xembler(dirs).xml())
+            ).toString().getBytes(StandardCharsets.UTF_8);
+        } catch (final ImpossibleModificationException ex) {
+            throw new IllegalStateException(
+                "Unable to generate version listing", ex
+            );
+        }
     }
 
     /**

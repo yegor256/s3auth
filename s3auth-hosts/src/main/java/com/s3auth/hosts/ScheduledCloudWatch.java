@@ -25,6 +25,7 @@ import software.amazon.awssdk.services.cloudwatch.model.StandardUnit;
  * This class obtains local stats and posts it to Amazon CloudWatch every hour.
  *
  * <p>The class is mutable and NOT thread-safe.</p>
+ *
  * @since 0.0.1
  */
 @Loggable(Loggable.DEBUG)
@@ -43,17 +44,6 @@ public final class ScheduledCloudWatch implements Runnable, Closeable {
     private final transient CloudWatchClient cloudwatch;
 
     /**
-     * Ctor.
-     * @param stats The stats data to obtain.
-     * @param cwatch The Cloudwatch client.
-     */
-    ScheduledCloudWatch(final DomainStatsData stats,
-        final CloudWatchClient cwatch) {
-        this.cloudwatch = cwatch;
-        this.data = stats;
-    }
-
-    /**
      * Public ctor.
      * @throws IOException If an IO Exception occurs
      */
@@ -61,16 +51,20 @@ public final class ScheduledCloudWatch implements Runnable, Closeable {
         this(
             new H2DomainStatsData(),
             CloudWatchClient.builder()
-                .credentialsProvider(
-                    StaticCredentialsProvider.create(
-                        AwsBasicCredentials.create(
-                            Manifests.read("S3Auth-AwsCloudWatchKey"),
-                            Manifests.read("S3Auth-AwsCloudWatchSecret")
-                        )
-                    )
-                )
+                .credentialsProvider(ScheduledCloudWatch.credentials())
                 .build()
         );
+    }
+
+    /**
+     * Ctor.
+     * @param stats The stats data to obtain
+     * @param cwatch The Cloudwatch client
+     */
+    ScheduledCloudWatch(final DomainStatsData stats,
+        final CloudWatchClient cwatch) {
+        this.cloudwatch = cwatch;
+        this.data = stats;
     }
 
     @Override
@@ -91,6 +85,19 @@ public final class ScheduledCloudWatch implements Runnable, Closeable {
     }
 
     /**
+     * AWS credentials for CloudWatch, from manifest keys.
+     * @return Credentials provider for the AWS SDK
+     */
+    private static StaticCredentialsProvider credentials() {
+        return StaticCredentialsProvider.create(
+            AwsBasicCredentials.create(
+                Manifests.read("S3Auth-AwsCloudWatchKey"),
+                Manifests.read("S3Auth-AwsCloudWatchSecret")
+            )
+        );
+    }
+
+    /**
      * Put data in Amazon Cloudwatch.
      * @param stats The stats to put
      * @param bucket The bucket corresponding to these stats
@@ -100,21 +107,23 @@ public final class ScheduledCloudWatch implements Runnable, Closeable {
         this.cloudwatch.putMetricData(
             PutMetricDataRequest.builder()
                 .namespace("S3Auth")
-                .metricData(
-                    MetricDatum.builder()
-                        .metricName("BytesTransferred")
-                        .dimensions(
-                            Dimension.builder()
-                                .name("Bucket")
-                                .value(bucket)
-                                .build()
-                        )
-                        .unit(StandardUnit.BYTES)
-                        .value((double) stats.bytesTransferred())
-                        .build()
-                )
+                .metricData(ScheduledCloudWatch.datum(stats, bucket))
                 .build()
         );
     }
 
+    /**
+     * Metric datum for bytes transferred by a bucket.
+     * @param stats The stats to report
+     * @param bucket The bucket corresponding to these stats
+     * @return Datum ready to submit to CloudWatch
+     */
+    private static MetricDatum datum(final Stats stats, final String bucket) {
+        return MetricDatum.builder()
+            .metricName("BytesTransferred")
+            .dimensions(Dimension.builder().name("Bucket").value(bucket).build())
+            .unit(StandardUnit.BYTES)
+            .value((double) stats.bytesTransferred())
+            .build();
+    }
 }

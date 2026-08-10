@@ -31,5 +31,4 @@ final class DomainsTest {
             Matchers.is(true)
         );
     }
-
 }

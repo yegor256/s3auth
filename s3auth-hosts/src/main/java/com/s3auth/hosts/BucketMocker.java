@@ -8,7 +8,6 @@ import software.amazon.awssdk.services.s3.S3Client;
 
 /**
  * Mocker of {@link Bucket}.
- *
  * @since 0.0.1
  */
 @SuppressWarnings("PMD.TooManyMethods")
@@ -17,7 +16,8 @@ public final class BucketMocker {
     /**
      * The mock.
      */
-    private final transient MkBucketBuilder bucket = new MkBucketBuilder();
+    private final transient BucketMocker.MkBucketBuilder bucket =
+        new BucketMocker.MkBucketBuilder();
 
     /**
      * Init.
@@ -103,11 +103,11 @@ public final class BucketMocker {
 
     /**
      * Builder for MkBucket.
-     *
      * @since 0.0.1
      */
     @SuppressWarnings("PMD.TooManyFields")
     private static final class MkBucketBuilder {
+
         /**
          * The Bucket Name.
          */
@@ -202,8 +202,8 @@ public final class BucketMocker {
          * Build the bucket.
          * @return The bucket
          */
-        MkBucket build() {
-            return new MkBucket(
+        BucketMocker.MkBucket build() {
+            return new BucketMocker.MkBucket(
                 this.name, this.key, this.secret,
                 this.bucket, this.region, this.client
             );
@@ -212,12 +212,11 @@ public final class BucketMocker {
 
     /**
      * Mock.
-     *
      * @since 0.0.1
      */
-    @SuppressWarnings({ "PMD.TooManyMethods",
-        "PMD.AvoidFieldNameMatchingMethodName" })
+    @SuppressWarnings({ "PMD.TooManyMethods", "PMD.AvoidFieldNameMatchingMethodName" })
     private static final class MkBucket implements Bucket {
+
         /**
          * The Bucket Name.
          */
@@ -256,7 +255,6 @@ public final class BucketMocker {
          * @param bkt The bucket
          * @param rgn The region
          * @param clt The client
-         * @checkstyle ParameterNumberCheck (5 lines)
          */
         MkBucket(final String nme, final String keyy, final String scr,
             final String bkt, final String rgn, final S3Client clt) {

@@ -8,7 +8,6 @@ import java.net.URI;
 
 /**
  * Mocker of {@link Host}.
- *
  * @since 0.0.1
  */
 public final class HostMocker {
@@ -16,7 +15,7 @@ public final class HostMocker {
     /**
      * The mock.
      */
-    private final transient MkHostBuilder host = new MkHostBuilder();
+    private final transient HostMocker.MkHostBuilder host = new HostMocker.MkHostBuilder();
 
     /**
      * Initialize it.
@@ -61,10 +60,10 @@ public final class HostMocker {
 
     /**
      * Builder for MkHost.
-     *
      * @since 0.0.1
      */
     private static final class MkHostBuilder {
+
         /**
          * The host resource.
          */
@@ -129,8 +128,8 @@ public final class HostMocker {
          * Build the host.
          * @return The host
          */
-        MkHost build() {
-            return new MkHost(
+        HostMocker.MkHost build() {
+            return new HostMocker.MkHost(
                 this.resource, this.authorized, this.hidden, this.syslog
             );
         }
@@ -138,12 +137,11 @@ public final class HostMocker {
 
     /**
      * Mock.
-     *
      * @since 0.0.1
      */
-    @SuppressWarnings({ "PMD.TooManyMethods",
-        "PMD.AvoidFieldNameMatchingMethodName" })
+    @SuppressWarnings({ "PMD.TooManyMethods", "PMD.AvoidFieldNameMatchingMethodName" })
     private static final class MkHost implements Host {
+
         /**
          * The host resource.
          */
@@ -170,7 +168,6 @@ public final class HostMocker {
          * @param auth The authorized
          * @param hid The hidden
          * @param log The syslog
-         * @checkstyle ParameterNumberCheck (5 lines)
          */
         MkHost(final Resource res, final boolean auth,
             final boolean hid, final String log) {

@@ -9,7 +9,6 @@ import software.amazon.awssdk.services.s3.S3Client;
 
 /**
  * Single Amazon S3 bucket.
- *
  * @since 0.0.2
  */
 @Immutable
@@ -20,5 +19,4 @@ public interface Bucket extends Domain {
      * @return The client
      */
     S3Client client();
-
 }

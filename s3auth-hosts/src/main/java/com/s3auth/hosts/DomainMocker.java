@@ -6,7 +6,6 @@ package com.s3auth.hosts;
 
 /**
  * Mocker of {@link Domain}.
- *
  * @since 0.0.1
  */
 @SuppressWarnings("PMD.TooManyMethods")
@@ -15,7 +14,8 @@ public final class DomainMocker {
     /**
      * The mock.
      */
-    private final transient MkDomainBuilder domain = new MkDomainBuilder();
+    private final transient DomainMocker.MkDomainBuilder domain =
+        new DomainMocker.MkDomainBuilder();
 
     /**
      * Init.
@@ -101,11 +101,11 @@ public final class DomainMocker {
 
     /**
      * Builder for MkDomain.
-     *
      * @since 0.0.1
      */
     @SuppressWarnings("PMD.TooManyFields")
     private static final class MkDomainBuilder {
+
         /**
          * The Domain Name.
          */
@@ -200,8 +200,8 @@ public final class DomainMocker {
          * Build the domain.
          * @return The domain
          */
-        MkDomain build() {
-            return new MkDomain(
+        DomainMocker.MkDomain build() {
+            return new DomainMocker.MkDomain(
                 this.name, this.key, this.secret,
                 this.bucket, this.region, this.syslog
             );
@@ -210,12 +210,11 @@ public final class DomainMocker {
 
     /**
      * Mock.
-     *
      * @since 0.0.1
      */
-    @SuppressWarnings({ "PMD.TooManyMethods",
-        "PMD.AvoidFieldNameMatchingMethodName" })
+    @SuppressWarnings({ "PMD.TooManyMethods", "PMD.AvoidFieldNameMatchingMethodName" })
     private static final class MkDomain implements Domain {
+
         /**
          * The Domain Name.
          */
@@ -254,7 +253,6 @@ public final class DomainMocker {
          * @param bkt The bucket
          * @param rgn The region
          * @param log The syslog
-         * @checkstyle ParameterNumberCheck (5 lines)
          */
         MkDomain(final String nme, final String keyy, final String scr,
             final String bkt, final String rgn, final String log) {

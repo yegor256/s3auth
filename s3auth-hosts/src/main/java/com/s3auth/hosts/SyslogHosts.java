@@ -4,6 +4,7 @@
  */
 package com.s3auth.hosts;
 
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.io.IOException;
@@ -23,6 +24,7 @@ import org.productivity.java.syslog4j.impl.net.udp.UDPNetSyslogConfig;
  * Decorator of {@link Hosts}, adds syslog capabilities for each domain.
  *
  * <p>The class is immutable and thread-safe.</p>
+ *
  * @since 0.0.1
  */
 @Immutable
@@ -66,7 +68,7 @@ public final class SyslogHosts implements Hosts {
 
     @Override
     public Host find(final String domain) throws IOException {
-        return new SyslogHost(this.hosts.find(domain));
+        return new SyslogHosts.SyslogHost(this.hosts.find(domain));
     }
 
     @Override
@@ -76,11 +78,11 @@ public final class SyslogHosts implements Hosts {
 
     /**
      * Syslog host wrapper.
-     *
      * @since 0.0.1
      */
     @Immutable
     private static final class SyslogHost implements Host {
+
         /**
          * Pattern for matching syslog host and port.
          */
@@ -119,7 +121,7 @@ public final class SyslogHosts implements Hosts {
                 } else {
                     port = Integer.parseInt(matcher.group(3));
                 }
-                res = new SyslogResource(
+                res = new SyslogHosts.SyslogResource(
                     this.host.fetch(uri, range, version), uri, syslg, port
                 );
             } else {
@@ -163,10 +165,10 @@ public final class SyslogHosts implements Hosts {
 
     /**
      * Syslog Resource wrapper.
-     *
      * @since 0.0.1
      */
     private static final class SyslogResource implements Resource {
+
         /**
          * The underlying resource.
          */
@@ -178,25 +180,28 @@ public final class SyslogHosts implements Hosts {
         private final transient URI location;
 
         /**
-         * The syslog client.
+         * The syslog host.
          */
-        private final transient SyslogIF syslog;
+        private final transient String syslg;
+
+        /**
+         * The syslog port.
+         */
+        private final transient int port;
 
         /**
          * Constructor.
          * @param res The underlying resource
          * @param uri The URI to fetch
-         * @param syslg The syslog host
-         * @param port The syslog port
-         * @checkstyle ParameterNumber (4 lines)
+         * @param host The syslog host
+         * @param prt The syslog port
          */
-        @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
-        SyslogResource(final Resource res, final URI uri, final String syslg,
-            final int port) {
+        SyslogResource(final Resource res, final URI uri, final String host,
+            final int prt) {
             this.resource = res;
             this.location = uri;
-            this.syslog = new UDPNetSyslog();
-            this.syslog.initialize("udp", new UDPNetSyslogConfig(syslg, port));
+            this.syslg = host;
+            this.port = prt;
         }
 
         @Override
@@ -209,13 +214,13 @@ public final class SyslogHosts implements Hosts {
             final long bytes;
             try {
                 bytes = this.resource.writeTo(stream);
-                this.syslog.info(
+                this.syslog().info(
                     String.format(
                         "Obtained %d bytes from %s", bytes, this.location
                     )
                 );
             } catch (final IOException exp) {
-                this.syslog.error(
+                this.syslog().error(
                     String.format(
                         "Exception thrown when obtaining %s with message %s",
                         this.location,
@@ -251,6 +256,16 @@ public final class SyslogHosts implements Hosts {
         public void close() throws IOException {
             this.resource.close();
         }
-    }
 
+        /**
+         * The syslog client, initialized once and reused.
+         * @return Syslog client
+         */
+        @Cacheable(forever = true)
+        private SyslogIF syslog() {
+            final SyslogIF sys = new UDPNetSyslog();
+            sys.initialize("udp", new UDPNetSyslogConfig(this.syslg, this.port));
+            return sys;
+        }
+    }
 }

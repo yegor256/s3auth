@@ -100,7 +100,7 @@ final class LocalHost implements Host {
 
     @Override
     public Stats stats() {
-        return new DummyStats();
+        return new LocalHost.DummyStats();
     }
 
     /**
@@ -127,14 +127,13 @@ final class LocalHost implements Host {
 
     /**
      * Dummy host stats.
-     *
      * @since 0.0.1
      */
     private static final class DummyStats implements Stats {
+
         @Override
         public long bytesTransferred() {
             return 0;
         }
     }
-
 }

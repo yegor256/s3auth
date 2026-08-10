@@ -5,7 +5,6 @@
 
 /**
  * RESTful resources, tests.
- *
  * @since 0.0.1
  */
 package com.s3auth.rest;

@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link com.s3auth.relay.FtpResponse}.
- *
  * @since 0.0.1
  */
 final class FtpResponseTest {
@@ -31,5 +30,4 @@ final class FtpResponseTest {
             Matchers.equalTo("200 hi!")
         );
     }
-
 }

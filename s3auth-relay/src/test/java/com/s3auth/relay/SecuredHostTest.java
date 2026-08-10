@@ -23,7 +23,6 @@ import org.mockito.Mockito;
 
 /**
  * Test case for {@link SecuredHost}.
- *
  * @since 0.0.1
  */
 @SuppressWarnings({
@@ -47,7 +46,9 @@ final class SecuredHostTest {
                 new SecuredHost(
                     new HostMocker().init().mock(),
                     HttpRequestMocker.toRequest(
-                        String.format("GET / HTTP/1.1\nHost: %s\n\n", name)
+                        SecuredHostTest.text(
+                            "GET / HTTP/1.1", String.format("Host: %s", name), "", ""
+                        )
                     )
                 ).fetch(URI.create("/"), Range.ENTIRE, Version.LATEST);
                 Assert.fail("exception expected");
@@ -72,9 +73,11 @@ final class SecuredHostTest {
     @Test
     void requestsAuthorizationWhenBrokenData() throws Exception {
         final String[] requests = {
-            "GET / HTTP/1.1\nAuthorization: xxx\n\n",
-            "GET / HTTP/1.1\nAuthorization: Basic a1b2c3==\n\n",
-            "GET / HTTP/1.1\nAuthorization: Basic \n\n",
+            SecuredHostTest.text("GET / HTTP/1.1", "Authorization: xxx", "", ""),
+            SecuredHostTest.text(
+                "GET / HTTP/1.1", "Authorization: Basic a1b2c3==", "", ""
+            ),
+            SecuredHostTest.text("GET / HTTP/1.1", "Authorization: Basic ", "", ""),
         };
         for (final String http : requests) {
             try {
@@ -145,7 +148,9 @@ final class SecuredHostTest {
                     }
                 },
                 HttpRequestMocker.toRequest(
-                    "GET / HTTP/1.1\nAuthorization: Basic dGVzdDp0ZXN0\n\n"
+                    SecuredHostTest.text(
+                        "GET / HTTP/1.1", "Authorization: Basic dGVzdDp0ZXN0", "", ""
+                    )
                 )
             ).fetch(
                 URI.create("/test-request.html"), Range.ENTIRE, Version.LATEST
@@ -166,7 +171,7 @@ final class SecuredHostTest {
     @Test
     void recognizesCredentialsWithSpecialCharacters() throws Exception {
         final String user = "user";
-        final String password = "password%oD\u20ac";
+        final String password = "password%oD€";
         final Host host = Mockito.mock(Host.class);
         final Resource res = Mockito.mock(Resource.class);
         Mockito.doReturn(res).when(host).fetch(
@@ -180,12 +185,16 @@ final class SecuredHostTest {
             new SecuredHost(
                 host,
                 HttpRequestMocker.toRequest(
-                    String.format(
-                        "GET / HTTP/1.1\nAuthorization: Basic %s\n\n",
-                        Base64.encodeBase64String(
-                            String.format("%s:%s", user, password)
-                                .getBytes(StandardCharsets.UTF_8)
-                        )
+                    SecuredHostTest.text(
+                        "GET / HTTP/1.1",
+                        String.format(
+                            "Authorization: Basic %s",
+                            Base64.encodeBase64String(
+                                String.format("%s:%s", user, password)
+                                    .getBytes(StandardCharsets.UTF_8)
+                            )
+                        ),
+                        "", ""
                     )
                 )
             ).fetch(
@@ -210,10 +219,21 @@ final class SecuredHostTest {
             new SecuredHost(
                 host,
                 HttpRequestMocker.toRequest(
-                    "GET / HTTP/1.1\nAuthorization: Basic YT+hYTp4\n\n"
+                    SecuredHostTest.text(
+                        "GET / HTTP/1.1", "Authorization: Basic YT+hYTp4", "", ""
+                    )
                 )
             ).fetch(new URI("#1"), Range.ENTIRE, Version.LATEST),
             Matchers.nullValue()
         );
+    }
+
+    /**
+     * Build raw HTTP request text out of lines.
+     * @param lines Lines of the request
+     * @return Raw request text
+     */
+    private static String text(final String... lines) {
+        return String.join(System.lineSeparator(), lines);
     }
 }

@@ -61,5 +61,4 @@ final class FtpThread {
         assert this.sockets != null;
         return 0L;
     }
-
 }

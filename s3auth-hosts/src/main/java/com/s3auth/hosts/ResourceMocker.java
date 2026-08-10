@@ -16,7 +16,6 @@ import org.apache.commons.io.IOUtils;
 
 /**
  * Mocker of {@link Resource}.
- *
  * @since 0.0.1
  */
 @SuppressWarnings("PMD.TooManyMethods")
@@ -25,7 +24,8 @@ public final class ResourceMocker {
     /**
      * The mock.
      */
-    private final transient MkResourceBuilder resource = new MkResourceBuilder();
+    private final transient ResourceMocker.MkResourceBuilder resource =
+        new ResourceMocker.MkResourceBuilder();
 
     /**
      * Default one.
@@ -91,11 +91,11 @@ public final class ResourceMocker {
 
     /**
      * Builder for MkResource.
-     *
      * @since 0.0.1
      */
     @SuppressWarnings("PMD.TooManyFields")
     private static final class MkResourceBuilder {
+
         /**
          * The resource content.
          */
@@ -145,19 +145,18 @@ public final class ResourceMocker {
          * Build the resource.
          * @return The resource
          */
-        MkResource build() {
-            return new MkResource(this.content, this.status, this.headers);
+        ResourceMocker.MkResource build() {
+            return new ResourceMocker.MkResource(this.content, this.status, this.headers);
         }
     }
 
     /**
      * Mock.
-     *
      * @since 0.0.1
      */
-    @SuppressWarnings({ "PMD.TooManyMethods",
-        "PMD.AvoidFieldNameMatchingMethodName" })
+    @SuppressWarnings({ "PMD.TooManyMethods", "PMD.AvoidFieldNameMatchingMethodName" })
     private static final class MkResource implements Resource {
+
         /**
          * The resource content.
          */

@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link DynamoHosts}.
- *
  * @since 0.0.1
  */
 final class DynamoHostsTest {
@@ -204,5 +203,4 @@ final class DynamoHostsTest {
         );
         hosts.close();
     }
-
 }

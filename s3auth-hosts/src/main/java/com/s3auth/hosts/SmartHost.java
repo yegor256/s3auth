@@ -110,5 +110,4 @@ final class SmartHost implements Host {
         @NotNull final String password) throws IOException {
         return this.host.authorized(user, password);
     }
-
 }

@@ -56,8 +56,7 @@ final class SecuredHost implements Host {
      * @param hst Original host
      * @param rqst The request
      */
-    SecuredHost(@NotNull final Host hst,
-        @NotNull final HttpRequest rqst) {
+    SecuredHost(@NotNull final Host hst, @NotNull final HttpRequest rqst) {
         this.host = hst;
         this.request = rqst;
     }
@@ -117,17 +116,14 @@ final class SecuredHost implements Host {
     private Resource secured(final URI uri, final Range range,
         final Version version) throws IOException {
         if (!this.request.headers().containsKey(HttpHeaders.AUTHORIZATION)) {
+            final String realm = String.format(
+                "Basic realm=\"%s\"",
+                this.request.headers().get(HttpHeaders.HOST).iterator().next()
+            );
             throw new HttpException(
                 new HttpResponse()
                     .withStatus(HttpURLConnection.HTTP_UNAUTHORIZED)
-                    .withHeader(
-                        HttpHeaders.WWW_AUTHENTICATE,
-                        String.format(
-                            "Basic realm=\"%s\"",
-                            this.request.headers().get(HttpHeaders.HOST)
-                                .iterator().next()
-                        )
-                    )
+                    .withHeader(HttpHeaders.WWW_AUTHENTICATE, realm)
             );
         }
         final Matcher matcher = SecuredHost.AUTH_PATTERN.matcher(
@@ -158,14 +154,10 @@ final class SecuredHost implements Host {
             throw new HttpException(
                 new HttpResponse()
                     .withStatus(HttpURLConnection.HTTP_UNAUTHORIZED)
-                    .withHeader(
-                        HttpHeaders.WWW_AUTHENTICATE,
-                        "Basic realm=\"try again\""
-                    )
+                    .withHeader(HttpHeaders.WWW_AUTHENTICATE, "Basic realm=\"try again\"")
                     .withBody(this.host.toString())
             );
         }
         return this.host.fetch(uri, range, version);
     }
-
 }

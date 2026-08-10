@@ -12,6 +12,7 @@ import com.s3auth.hosts.Version;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.time.Instant;
 import java.util.Date;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
@@ -24,7 +25,6 @@ import org.mockito.stubbing.Answer;
 
 /**
  * Test case for {@link FtpFacade}.
- *
  * @since 0.0.1
  */
 final class FtpFacadeTest {
@@ -56,15 +56,15 @@ final class FtpFacadeTest {
 
     /**
      * Returns a mock FTPFacade.
-     * @return Mock FTPFacade.
-     * @throws IOException If something goes wrong.
+     * @return Mock FTPFacade
+     * @throws IOException If something goes wrong
      */
     private static FtpFacade mockFacade() throws IOException {
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
             (Answer<Resource>) inv -> {
                 final Resource answer = Mockito.mock(Resource.class);
-                Mockito.doReturn(new Date(5000L))
+                Mockito.doReturn(Date.from(Instant.ofEpochMilli(5000L)))
                     .when(answer).lastModified();
                 Mockito.doReturn(HttpURLConnection.HTTP_OK)
                     .when(answer).status();
@@ -77,7 +77,6 @@ final class FtpFacadeTest {
         );
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
-        return new FtpFacade(hosts, PortMocker.reserve());
+        return FtpFacade.open(hosts, PortMocker.reserve());
     }
-
 }

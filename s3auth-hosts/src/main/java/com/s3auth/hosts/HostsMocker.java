@@ -9,7 +9,6 @@ import java.util.Set;
 
 /**
  * Mocker of {@link Hosts}.
- *
  * @since 0.0.1
  */
 public final class HostsMocker {
@@ -17,7 +16,7 @@ public final class HostsMocker {
     /**
      * The mock.
      */
-    private final transient Hosts hosts = new MkHosts();
+    private final transient Hosts hosts = new HostsMocker.MkHosts();
 
     /**
      * Mock it.
@@ -29,10 +28,10 @@ public final class HostsMocker {
 
     /**
      * Mock.
-     *
      * @since 0.0.1
      */
     private static final class MkHosts implements Hosts {
+
         @Override
         public void close() {
             // do nothing.

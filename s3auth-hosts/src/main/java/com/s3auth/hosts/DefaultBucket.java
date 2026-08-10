@@ -17,7 +17,6 @@ import software.amazon.awssdk.services.s3.S3Client;
 
 /**
  * Default implementation of {@link Bucket}.
- *
  * @since 0.0.1
  */
 @Immutable
@@ -43,14 +42,7 @@ final class DefaultBucket implements Bucket {
     public S3Client client() {
         return S3Client.builder()
             .region(this.awsRegion())
-            .credentialsProvider(
-                StaticCredentialsProvider.create(
-                    AwsBasicCredentials.create(
-                        this.domain.key(),
-                        this.domain.secret()
-                    )
-                )
-            )
+            .credentialsProvider(this.credentials())
             .build();
     }
 
@@ -106,6 +98,19 @@ final class DefaultBucket implements Bucket {
     }
 
     /**
+     * AWS credentials, built from the domain's key and secret.
+     * @return Credentials provider for the AWS SDK
+     */
+    private StaticCredentialsProvider credentials() {
+        return StaticCredentialsProvider.create(
+            AwsBasicCredentials.create(
+                this.domain.key(),
+                this.domain.secret()
+            )
+        );
+    }
+
+    /**
      * Translate a legacy S3 region/endpoint string into a SDK v2 {@link Region}.
      * Old s3auth records carry values like {@code s3}, {@code s3-eu-west-1},
      * {@code s3-website-us-east-1} or {@code s3.amazonaws.com}, none of which
@@ -134,5 +139,4 @@ final class DefaultBucket implements Bucket {
         }
         return Region.of(id);
     }
-
 }

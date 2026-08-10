@@ -12,7 +12,6 @@ import software.amazon.awssdk.services.cloudwatch.CloudWatchClient;
 
 /**
  * One host.
- *
  * @since 0.0.1
  */
 @Immutable
@@ -59,16 +58,15 @@ public interface Host extends Closeable {
 
     /**
      * Client to Amazon CloudWatch.
-     *
      * @since 0.0.1
      */
     @Immutable
     interface CloudWatch {
+
         /**
          * Get Amazon client.
          * @return The client
          */
         CloudWatchClient get();
     }
-
 }

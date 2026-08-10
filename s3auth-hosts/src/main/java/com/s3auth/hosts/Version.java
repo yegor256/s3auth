@@ -18,7 +18,6 @@ public interface Version {
 
     /**
      * Specify that the latest version be fetched.
-     *
      * @since 0.0.1
      */
     Version LATEST = new Version() {
@@ -40,7 +39,6 @@ public interface Version {
 
     /**
      * Specify that the object's versions be listed.
-     *
      * @since 0.0.1
      */
     Version LIST = new Version() {
@@ -81,12 +79,12 @@ public interface Version {
 
     /**
      * Simple implementation.
-     *
      * @since 0.0.1
      */
     @Immutable
     @Loggable(Loggable.DEBUG)
     final class Simple implements Version {
+
         /**
          * The version ID.
          */
@@ -131,5 +129,4 @@ public interface Version {
                 && Objects.equals(this.ver, ((Simple) obj).ver);
         }
     }
-
 }

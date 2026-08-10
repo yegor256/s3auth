@@ -13,7 +13,6 @@ import org.takes.rs.RsWithStatus;
 
 /**
  * Not found page.
- *
  * @since 0.1
  */
 final class TkNotFound implements Take {
@@ -28,5 +27,4 @@ final class TkNotFound implements Take {
             HttpURLConnection.HTTP_NOT_FOUND
         );
     }
-
 }

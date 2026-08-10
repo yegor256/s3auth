@@ -46,8 +46,9 @@ final class DefaultResourceTest {
             );
         Mockito.doReturn(stream).when(client)
             .getObject(Mockito.any(GetObjectRequest.class));
-        final Resource res = new DefaultResource(
-            client, "a", "", Range.ENTIRE, Version.LATEST,
+        final Resource res = DefaultResource.fetch(
+            client,
+            new DefaultResource.Locator("a", "", Range.ENTIRE, Version.LATEST),
             Mockito.mock(DomainStatsData.class)
         );
         MatcherAssert.assertThat(
@@ -75,8 +76,9 @@ final class DefaultResourceTest {
             .getObject(Mockito.any(GetObjectRequest.class));
         MatcherAssert.assertThat(
             ResourceMocker.toString(
-                new DefaultResource(
-                    client, "b", "", Range.ENTIRE, Version.LATEST,
+                DefaultResource.fetch(
+                    client,
+                    new DefaultResource.Locator("b", "", Range.ENTIRE, Version.LATEST),
                     Mockito.mock(DomainStatsData.class)
                 )
             ),
@@ -109,8 +111,9 @@ final class DefaultResourceTest {
             .getObject(Mockito.any(GetObjectRequest.class));
         MatcherAssert.assertThat(
             ResourceMocker.toByteArray(
-                new DefaultResource(
-                    client, "c", "", Range.ENTIRE, Version.LATEST,
+                DefaultResource.fetch(
+                    client,
+                    new DefaultResource.Locator("c", "", Range.ENTIRE, Version.LATEST),
                     Mockito.mock(DomainStatsData.class)
                 )
             ),
@@ -133,6 +136,12 @@ final class DefaultResourceTest {
             public int read() throws IOException {
                 throw new IOException("oops");
             }
+
+            @Override
+            public int read(final byte[] buf, final int off, final int len)
+                throws IOException {
+                return this.read();
+            }
         };
         final ResponseInputStream<GetObjectResponse> stream =
             new ResponseInputStream<>(
@@ -144,8 +153,9 @@ final class DefaultResourceTest {
         Assertions.assertThrows(
             IOException.class,
             () -> ResourceMocker.toString(
-                new DefaultResource(
-                    client, "d", "", Range.ENTIRE, Version.LATEST,
+                DefaultResource.fetch(
+                    client,
+                    new DefaultResource.Locator("d", "", Range.ENTIRE, Version.LATEST),
                     Mockito.mock(DomainStatsData.class)
                 )
             )
@@ -170,8 +180,9 @@ final class DefaultResourceTest {
             );
         Mockito.doReturn(stream).when(client)
             .getObject(Mockito.any(GetObjectRequest.class));
-        final Resource res = new DefaultResource(
-            client, "x", "", Range.ENTIRE, Version.LATEST,
+        final Resource res = DefaultResource.fetch(
+            client,
+            new DefaultResource.Locator("x", "", Range.ENTIRE, Version.LATEST),
             Mockito.mock(DomainStatsData.class)
         );
         MatcherAssert.assertThat(
@@ -198,8 +209,9 @@ final class DefaultResourceTest {
             );
         Mockito.doReturn(stream).when(client)
             .getObject(Mockito.any(GetObjectRequest.class));
-        final Resource res = new DefaultResource(
-            client, "e", "", Range.ENTIRE, Version.LATEST,
+        final Resource res = DefaultResource.fetch(
+            client,
+            new DefaultResource.Locator("e", "", Range.ENTIRE, Version.LATEST),
             Mockito.mock(DomainStatsData.class)
         );
         MatcherAssert.assertThat(
@@ -226,8 +238,9 @@ final class DefaultResourceTest {
             );
         Mockito.doReturn(stream).when(client)
             .getObject(Mockito.any(GetObjectRequest.class));
-        final Resource res = new DefaultResource(
-            client, "f", "", Range.ENTIRE, Version.LATEST,
+        final Resource res = DefaultResource.fetch(
+            client,
+            new DefaultResource.Locator("f", "", Range.ENTIRE, Version.LATEST),
             Mockito.mock(DomainStatsData.class)
         );
         MatcherAssert.assertThat(
@@ -263,8 +276,10 @@ final class DefaultResourceTest {
         final String bucket = "MetricsTest";
         MatcherAssert.assertThat(
             ResourceMocker.toByteArray(
-                new DefaultResource(
-                    client, bucket, "", Range.ENTIRE, Version.LATEST, stats
+                DefaultResource.fetch(
+                    client,
+                    new DefaultResource.Locator(bucket, "", Range.ENTIRE, Version.LATEST),
+                    stats
                 )
             ),
             Matchers.equalTo(data)
@@ -297,8 +312,11 @@ final class DefaultResourceTest {
                 );
             }
         ).when(client).getObject(Mockito.any(GetObjectRequest.class));
-        new DefaultResource(
-            client, "h", "", Range.ENTIRE, new Version.Simple(version),
+        DefaultResource.fetch(
+            client,
+            new DefaultResource.Locator(
+                "h", "", Range.ENTIRE, new Version.Simple(version)
+            ),
             Mockito.mock(DomainStatsData.class)
         );
     }
@@ -324,8 +342,9 @@ final class DefaultResourceTest {
             );
         Mockito.doReturn(stream).when(client)
             .getObject(Mockito.any(GetObjectRequest.class));
-        new DefaultResource(
-            client, "i", "", Range.ENTIRE, Version.LATEST,
+        DefaultResource.fetch(
+            client,
+            new DefaultResource.Locator("i", "", Range.ENTIRE, Version.LATEST),
             Mockito.mock(DomainStatsData.class)
         ).close();
         Mockito.verify(stream, Mockito.times(1)).close();
@@ -350,8 +369,11 @@ final class DefaultResourceTest {
                 );
             }
         ).when(client).getObject(Mockito.any(GetObjectRequest.class));
-        final Collection<String> headers = new DefaultResource(
-            client, "j", "", new Range.Simple(0, 1), Version.LATEST,
+        final Collection<String> headers = DefaultResource.fetch(
+            client,
+            new DefaultResource.Locator(
+                "j", "", new Range.Simple(0, 1), Version.LATEST
+            ),
             Mockito.mock(DomainStatsData.class)
         ).headers();
         MatcherAssert.assertThat(
@@ -380,8 +402,9 @@ final class DefaultResourceTest {
             );
         Mockito.doReturn(stream).when(client)
             .getObject(Mockito.any(GetObjectRequest.class));
-        final Resource res = new DefaultResource(
-            client, "abcdef", "", Range.ENTIRE, Version.LATEST,
+        final Resource res = DefaultResource.fetch(
+            client,
+            new DefaultResource.Locator("abcdef", "", Range.ENTIRE, Version.LATEST),
             Mockito.mock(DomainStatsData.class)
         );
         MatcherAssert.assertThat(
@@ -389,5 +412,4 @@ final class DefaultResourceTest {
             Matchers.hasItem("Content-Encoding: gzip")
         );
     }
-
 }

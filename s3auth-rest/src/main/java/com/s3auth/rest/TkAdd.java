@@ -18,7 +18,6 @@ import org.takes.rq.form.RqFormBase;
 
 /**
  * Add a domain.
- *
  * @since 0.1
  */
 final class TkAdd implements Take {
@@ -48,7 +47,7 @@ final class TkAdd implements Take {
                 form.param("secret").iterator().next(),
                 form.param("bucket").iterator().next(),
                 form.param("region").iterator().next(),
-                form.param("syslog").iterator().next()
+                SimpleDomain.syslog(form.param("syslog").iterator().next())
             )
         );
         if (!added) {
@@ -68,5 +67,4 @@ final class TkAdd implements Take {
             )
         );
     }
-
 }

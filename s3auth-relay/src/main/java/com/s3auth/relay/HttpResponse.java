@@ -13,8 +13,9 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import javax.validation.constraints.NotNull;
@@ -45,7 +46,7 @@ final class HttpResponse {
     /**
      * EOL.
      */
-    private static final String EOL = "\n";
+    private static final String EOL = System.lineSeparator();
 
     /**
      * Status.
@@ -91,7 +92,7 @@ final class HttpResponse {
      */
     public HttpResponse withHeader(final String name,
         @NotNull final String value) {
-        this.hdrs.putIfAbsent(name, new LinkedList<>());
+        this.hdrs.putIfAbsent(name, new ArrayList<>(1));
         this.hdrs.get(name).add(value);
         return this;
     }
@@ -140,7 +141,7 @@ final class HttpResponse {
                     HttpResponse.EOL
                 )
             );
-            for (final ConcurrentMap.Entry<String, Collection<String>> hdr
+            for (final Map.Entry<String, Collection<String>> hdr
                 : this.hdrs.entrySet()) {
                 for (final String value : hdr.getValue()) {
                     writer.write(hdr.getKey());
@@ -160,5 +161,4 @@ final class HttpResponse {
             writer.close();
         }
     }
-
 }

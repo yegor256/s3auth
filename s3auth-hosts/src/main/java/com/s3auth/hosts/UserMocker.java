@@ -10,7 +10,6 @@ import java.util.Random;
 
 /**
  * Mocker of {@link User}.
- *
  * @since 0.0.1
  */
 public final class UserMocker {
@@ -18,7 +17,7 @@ public final class UserMocker {
     /**
      * The mock.
      */
-    private final transient MkUserBuilder user = new MkUserBuilder();
+    private final transient UserMocker.MkUserBuilder user = new UserMocker.MkUserBuilder();
 
     /**
      * Random generator.
@@ -70,10 +69,10 @@ public final class UserMocker {
 
     /**
      * Builder for MkUser.
-     *
      * @since 0.0.1
      */
     private static final class MkUserBuilder {
+
         /**
          * The User identity.
          */
@@ -123,19 +122,18 @@ public final class UserMocker {
          * Build the user.
          * @return The user
          */
-        MkUser build() {
-            return new MkUser(this.identity, this.name, this.photo);
+        UserMocker.MkUser build() {
+            return new UserMocker.MkUser(this.identity, this.name, this.photo);
         }
     }
 
     /**
      * Mock.
-     *
      * @since 0.0.1
      */
-    @SuppressWarnings({ "PMD.TooManyMethods",
-        "PMD.AvoidFieldNameMatchingMethodName" })
+    @SuppressWarnings({ "PMD.TooManyMethods", "PMD.AvoidFieldNameMatchingMethodName" })
     private static final class MkUser implements User {
+
         /**
          * The User identity.
          */

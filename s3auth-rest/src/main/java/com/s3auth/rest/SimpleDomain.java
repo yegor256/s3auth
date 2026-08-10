@@ -8,10 +8,14 @@ import com.s3auth.hosts.Domain;
 
 /**
  * Simple domain.
- *
  * @since 0.1
  */
 final class SimpleDomain implements Domain {
+
+    /**
+     * Default syslog host and port, used when none was set explicitly.
+     */
+    private static final String SYSLOG = "syslog.s3auth.com:514";
 
     /**
      * Host.
@@ -48,7 +52,7 @@ final class SimpleDomain implements Domain {
      * @param hst The host name
      */
     SimpleDomain(final String hst) {
-        this(hst, "", "", "", "", "");
+        this(hst, "", "", "", "", SimpleDomain.SYSLOG);
     }
 
     /**
@@ -59,7 +63,6 @@ final class SimpleDomain implements Domain {
      * @param bckt Bucket name
      * @param rgn S3 region
      * @param syslg The syslog host and port
-     * @checkstyle ParameterNumber (4 lines)
      */
     @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     SimpleDomain(final String hst, final String access, final String scrt,
@@ -73,11 +76,7 @@ final class SimpleDomain implements Domain {
             this.buckt = bckt;
         }
         this.regn = rgn;
-        if (syslg.isEmpty()) {
-            this.slog = "syslog.s3auth.com:514";
-        } else {
-            this.slog = syslg;
-        }
+        this.slog = syslg;
     }
 
     @Override
@@ -110,4 +109,19 @@ final class SimpleDomain implements Domain {
         return this.slog;
     }
 
+    /**
+     * Syslog host and port to use, falling back to the default one
+     * when the given value is empty.
+     * @param syslg Syslog host and port given, may be empty
+     * @return Syslog host and port to use
+     */
+    static String syslog(final String syslg) {
+        final String value;
+        if (syslg.isEmpty()) {
+            value = SimpleDomain.SYSLOG;
+        } else {
+            value = syslg;
+        }
+        return value;
+    }
 }

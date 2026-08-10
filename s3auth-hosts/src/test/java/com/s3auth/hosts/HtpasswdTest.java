@@ -90,13 +90,13 @@ final class HtpasswdTest {
     void understandsPlainTextHashValues() throws Exception {
         MatcherAssert.assertThat(
             new Htpasswd(
-                this.host("erik:super-secret-password-\u0433")
-            ).authorized("erik", "super-secret-password-\u0433"),
+                this.host("erik:super-secret-password-г")
+            ).authorized("erik", "super-secret-password-г"),
             Matchers.is(true)
         );
         MatcherAssert.assertThat(
             new Htpasswd(
-                this.host("nick:secret-password-\u0433")
+                this.host("nick:secret-password-г")
             ).authorized("nick", "incorrect-password"),
             Matchers.is(false)
         );

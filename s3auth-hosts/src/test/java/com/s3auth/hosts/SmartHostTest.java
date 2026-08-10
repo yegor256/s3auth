@@ -42,5 +42,4 @@ final class SmartHostTest {
             Matchers.hasToString(Matchers.notNullValue())
         );
     }
-
 }

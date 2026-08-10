@@ -21,7 +21,7 @@ final class ScheduledCloudWatchTest {
 
     /**
      * If an exception occurs.
-     * @throws Exception If something goes wrong.
+     * @throws Exception If something goes wrong
      */
     @Test
     void postsDataToCloudWatch() throws Exception {
@@ -38,21 +38,24 @@ final class ScheduledCloudWatchTest {
         Mockito.verify(client).putMetricData(
             PutMetricDataRequest.builder()
                 .namespace("S3Auth")
-                .metricData(
-                    MetricDatum.builder()
-                        .metricName("BytesTransferred")
-                        .dimensions(
-                            Dimension.builder()
-                                .name("Bucket")
-                                .value(bucket)
-                                .build()
-                        ).unit(StandardUnit.BYTES)
-                        .value(Double.valueOf(bytes))
-                        .build()
-                )
+                .metricData(ScheduledCloudWatchTest.datum(bytes, bucket))
                 .build()
         );
         cloudwatch.close();
     }
 
+    /**
+     * Metric datum expected for these bytes and bucket.
+     * @param bytes The bytes transferred
+     * @param bucket The bucket name
+     * @return Expected datum
+     */
+    private static MetricDatum datum(final long bytes, final String bucket) {
+        return MetricDatum.builder()
+            .metricName("BytesTransferred")
+            .dimensions(Dimension.builder().name("Bucket").value(bucket).build())
+            .unit(StandardUnit.BYTES)
+            .value((double) bytes)
+            .build();
+    }
 }

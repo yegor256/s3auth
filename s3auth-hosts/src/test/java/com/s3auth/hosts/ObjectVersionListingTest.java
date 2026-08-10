@@ -22,6 +22,7 @@ import software.amazon.awssdk.services.s3.model.ObjectVersion;
  * @since 0.0.1
  */
 final class ObjectVersionListingTest {
+
     /**
      * Fetches version listing for bucket.
      * @throws Exception If something goes wrong
@@ -52,7 +53,7 @@ final class ObjectVersionListingTest {
         MatcherAssert.assertThat(
             new String(
                 ResourceMocker.toByteArray(
-                    new ObjectVersionListing(client, "bucket", key)
+                    ObjectVersionListing.fetch(client, "bucket", key)
                 ),
                 StandardCharsets.UTF_8
             ),

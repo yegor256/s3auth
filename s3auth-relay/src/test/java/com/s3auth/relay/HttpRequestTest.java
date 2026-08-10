@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link HttpRequest}.
- *
  * @since 0.0.1
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
@@ -25,7 +24,10 @@ final class HttpRequestTest {
     @Test
     void parsesHttpRequest() throws Exception {
         final HttpRequest request = HttpRequestMocker.toRequest(
-            "GET /test.html HTTP/1.1\nHost:local\nAccept:text/plain\n\nbody"
+            HttpRequestTest.text(
+                "GET /test.html HTTP/1.1", "Host:local",
+                "Accept:text/plain", "", "body"
+            )
         );
         MatcherAssert.assertThat(
             request.requestUri().toString(),
@@ -44,7 +46,10 @@ final class HttpRequestTest {
     @Test
     void fetchesCaseInsensitiveHeaders() throws Exception {
         final HttpRequest request = HttpRequestMocker.toRequest(
-            "GET /test.html HTTP/1.1\nHost:local\nAccept:text/plain\n\nbody"
+            HttpRequestTest.text(
+                "GET /test.html HTTP/1.1", "Host:local",
+                "Accept:text/plain", "", "body"
+            )
         );
         MatcherAssert.assertThat(
             request.headers().get("Accept"),
@@ -71,11 +76,10 @@ final class HttpRequestTest {
     @Test
     void canFetchFullByteRange() throws Exception {
         final HttpRequest request = HttpRequestMocker.toRequest(
-            new StringBuilder("GET /test.html HTTP/1.1\n")
-                .append("Host:local\n")
-                .append("Accept:text/plain\n")
-                .append("Range: bytes=100-200\n\nbody")
-                .toString()
+            HttpRequestTest.text(
+                "GET /test.html HTTP/1.1", "Host:local", "Accept:text/plain",
+                "Range: bytes=100-200", "", "body"
+            )
         );
         final Range range = request.range();
         MatcherAssert.assertThat(
@@ -96,11 +100,10 @@ final class HttpRequestTest {
     @Test
     void canFetchRangeFromFirstByte() throws Exception {
         final HttpRequest request = HttpRequestMocker.toRequest(
-            new StringBuilder("GET /test.html HTTP/1.1\n")
-                .append("Host:local\n")
-                .append("Accept:text/plain\n")
-                .append("Range: bytes=100-\n\nbody")
-                .toString()
+            HttpRequestTest.text(
+                "GET /test.html HTTP/1.1", "Host:local", "Accept:text/plain",
+                "Range: bytes=100-", "", "body"
+            )
         );
         final Range range = request.range();
         MatcherAssert.assertThat(
@@ -120,8 +123,10 @@ final class HttpRequestTest {
     @Test
     void fetchesQueryParams() throws Exception {
         final HttpRequest request = HttpRequestMocker.toRequest(
-            //@checkstyle LineLength (1 line)
-            "GET /test.html?test=param&hello=world HTTP/1.1\nHost:local\nAccept:text/plain\n\nbody"
+            HttpRequestTest.text(
+                "GET /test.html?test=param&hello=world HTTP/1.1",
+                "Host:local", "Accept:text/plain", "", "body"
+            )
         );
         MatcherAssert.assertThat(
             request.parameters().get("test"),
@@ -140,8 +145,10 @@ final class HttpRequestTest {
     @Test
     void fetchesDuplicateQueryParams() throws Exception {
         final HttpRequest request = HttpRequestMocker.toRequest(
-            //@checkstyle LineLength (1 line)
-            "GET /test.html?first=one&second=two&first=three HTTP/1.1\nHost:local\nAccept:text/plain\n\nbody"
+            HttpRequestTest.text(
+                "GET /test.html?first=one&second=two&first=three HTTP/1.1",
+                "Host:local", "Accept:text/plain", "", "body"
+            )
         );
         MatcherAssert.assertThat(
             request.parameters().get("first"),
@@ -163,8 +170,10 @@ final class HttpRequestTest {
     @Test
     void fetchesQueryParamsWithNoValue() throws Exception {
         final HttpRequest request = HttpRequestMocker.toRequest(
-            //@checkstyle LineLength (1 line)
-            "GET /test.html?blank&something=yes&nothing HTTP/1.1\nHost:local\nAccept:text/plain\n\nbody"
+            HttpRequestTest.text(
+                "GET /test.html?blank&something=yes&nothing HTTP/1.1",
+                "Host:local", "Accept:text/plain", "", "body"
+            )
         );
         MatcherAssert.assertThat(
             request.parameters().get("blank"),
@@ -187,7 +196,9 @@ final class HttpRequestTest {
     @Test
     void supportsHeadMethod() throws Exception {
         final HttpRequest request = HttpRequestMocker.toRequest(
-            "HEAD /test.html HTTP/1.1\nHost:local\nAccept:text/plain\n"
+            HttpRequestTest.text(
+                "HEAD /test.html HTTP/1.1", "Host:local", "Accept:text/plain", ""
+            )
         );
         MatcherAssert.assertThat(
             request.requestUri().toString(),
@@ -207,9 +218,20 @@ final class HttpRequestTest {
         Assertions.assertThrows(
             HttpException.class,
             () -> HttpRequestMocker.toRequest(
-                "HEAD /%7B%7B%20item[' HTTP/1.1\nHost:local\nAccept:text/plain\n"
+                HttpRequestTest.text(
+                    "HEAD /%7B%7B%20item[' HTTP/1.1", "Host:local",
+                    "Accept:text/plain", ""
+                )
             )
         );
     }
 
+    /**
+     * Build raw HTTP request text out of lines.
+     * @param lines Lines of the request
+     * @return Raw request text
+     */
+    private static String text(final String... lines) {
+        return String.join(System.lineSeparator(), lines);
+    }
 }

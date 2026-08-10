@@ -80,7 +80,6 @@ public final class DynamoHosts implements Hosts {
         if (domain == null) {
             throw new Hosts.NotFoundException(
                 String.format(
-                    // @checkstyle LineLength (1 line)
                     "host '%s' not found, register it at www.s3auth.com and wait for 10 minutes",
                     name
                 )
@@ -186,11 +185,11 @@ public final class DynamoHosts implements Hosts {
 
     /**
      * Wrap of domains.
-     *
      * @since 0.0.1
      */
     @Loggable(Loggable.DEBUG)
     private final class Wrap extends AbstractSet<Domain> {
+
         /**
          * User.
          */
@@ -239,5 +238,4 @@ public final class DynamoHosts implements Hosts {
             );
         }
     }
-
 }

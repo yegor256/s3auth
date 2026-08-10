@@ -13,7 +13,6 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * Mocker of {@link Dynamo}.
- *
  * @since 0.0.1
  */
 public final class DynamoMocker {
@@ -56,9 +55,8 @@ public final class DynamoMocker {
 
             @Override
             public void close() {
-                assert this != null;
+                // nothing to do
             }
         };
     }
-
 }

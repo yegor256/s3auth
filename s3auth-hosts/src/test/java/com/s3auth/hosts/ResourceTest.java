@@ -23,7 +23,7 @@ final class ResourceTest {
      */
     @Test
     void returnsPlainTextContent() throws Exception {
-        final String content = "\u0433 test!";
+        final String content = "г test!";
         final Resource res = new Resource.PlainText(content);
         MatcherAssert.assertThat(
             ResourceMocker.toString(res),
@@ -52,7 +52,7 @@ final class ResourceTest {
      */
     @Test
     void convertsItselfToString() {
-        final String content = "\u0444\u0433 test!";
+        final String content = "фг test!";
         MatcherAssert.assertThat(
             new Resource.PlainText(content),
             Matchers.hasToString(Matchers.notNullValue())
@@ -81,5 +81,4 @@ final class ResourceTest {
             () -> new Resource.PlainText(null)
         );
     }
-
 }

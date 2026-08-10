@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link LocalHost}.
- *
  * @since 0.0.1
  */
 final class LocalHostTest {
@@ -62,5 +61,4 @@ final class LocalHostTest {
             Matchers.equalTo(Manifests.read("S3Auth-Revision"))
         );
     }
-
 }

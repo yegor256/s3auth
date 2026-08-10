@@ -102,7 +102,7 @@ final class DefaultDynamoTest {
             AttributeValue.builder().s(
                 String.format(
                     "google-%d.com",
-                    Math.abs(new Random().nextInt())
+                    new Random().nextInt(Integer.MAX_VALUE)
                 )
             ).build()
         );

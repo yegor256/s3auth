@@ -21,11 +21,11 @@ final class GzipResourceTest {
 
     /**
      * GzipResource writes gzip compressed output.
-     * @throws Exception If something goes wrong.
+     * @throws Exception If something goes wrong
      */
     @Test
     void compressesOutput() throws Exception {
-        final String text = "Hello compressed!\u00ac";
+        final String text = "Hello compressed!¬";
         final Resource res = new GzipResource(
             new Resource.PlainText(text)
         );
@@ -44,7 +44,7 @@ final class GzipResourceTest {
 
     /**
      * GzipResource returns Content-Encoding header.
-     * @throws Exception If something goes wrong.
+     * @throws Exception If something goes wrong
      */
     @Test
     void containsContentEncodingHeader() throws Exception {
@@ -53,5 +53,4 @@ final class GzipResourceTest {
             Matchers.hasItem("Content-Encoding: gzip")
         );
     }
-
 }

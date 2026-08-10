@@ -13,6 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -48,7 +49,7 @@ final class HttpResponseTest {
             ),
             Matchers.allOf(
                 Matchers.startsWith("HTTP/1.1 404"),
-                Matchers.containsString("\n\nhi!")
+                Matchers.containsString(String.format("%n%nhi!"))
             )
         );
     }
@@ -60,7 +61,7 @@ final class HttpResponseTest {
     @Test
     @SuppressWarnings("PMD.DoNotUseThreads")
     void sendsDataFromSlowResource() throws Exception {
-        final String content = "\u0433 some text";
+        final String content = "г some text";
         // @checkstyle AnonInnerLength (50 lines)
         final Resource res = new Resource() {
             @Override
@@ -75,7 +76,7 @@ final class HttpResponseTest {
                 );
                 writer.print(content);
                 writer.flush();
-                return content.getBytes().length;
+                return content.getBytes(StandardCharsets.UTF_8).length;
             }
 
             @Override
@@ -95,7 +96,7 @@ final class HttpResponseTest {
 
             @Override
             public Date lastModified() {
-                return new Date();
+                return Date.from(Instant.now());
             }
 
             @Override
@@ -104,7 +105,6 @@ final class HttpResponseTest {
             }
 
             @Override
-            // @checkstyle MethodBodyComments (2 lines)
             public void close() {
                 // Nothing to do here.
             }
@@ -112,7 +112,7 @@ final class HttpResponseTest {
         final HttpResponse response = new HttpResponse().withBody(res);
         final ServerSocket server = new ServerSocket(0);
         final CountDownLatch done = new CountDownLatch(1);
-        final StringBuffer received = new StringBuffer(100);
+        final StringBuilder received = new StringBuilder(100);
         new Thread(
             new VerboseRunnable(
                 (Callable<Void>) () -> {
@@ -144,5 +144,4 @@ final class HttpResponseTest {
             )
         );
     }
-
 }

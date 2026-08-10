@@ -91,5 +91,4 @@ public final class GzipResource implements Resource {
         return obj instanceof GzipResource
             && Objects.equals(this.resource, ((GzipResource) obj).resource);
     }
-
 }

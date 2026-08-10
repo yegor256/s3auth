@@ -4,6 +4,7 @@
  */
 package com.s3auth.hosts;
 
+import com.google.common.base.Splitter;
 import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.LogExceptions;
@@ -26,7 +27,6 @@ import org.apache.commons.codec.digest.Md5Crypt;
 
 /**
  * Htpasswd file abstraction.
- *
  * @since 0.0.1
  */
 @Immutable
@@ -106,7 +106,7 @@ final class Htpasswd {
     private ConcurrentMap<String, String> fetch() {
         final ConcurrentMap<String, String> map =
             new ConcurrentHashMap<>(0);
-        final String[] lines = this.content().split("\n");
+        final Iterable<String> lines = Splitter.on('\n').split(this.content());
         for (final String line : lines) {
             if (line.isEmpty()) {
                 continue;
@@ -134,7 +134,7 @@ final class Htpasswd {
             );
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             res.writeTo(baos);
-            content = baos.toString(StandardCharsets.UTF_8.name()).trim();
+            content = baos.toString(StandardCharsets.UTF_8).trim();
         } catch (final IOException ex) {
             Logger.warn(
                 this,
@@ -165,10 +165,10 @@ final class Htpasswd {
 
     /**
      * Algorithm.
-     *
      * @since 0.0.1
      */
     private interface Algorithm {
+
         /**
          * Do they match?
          * @param hash The hash
@@ -180,11 +180,11 @@ final class Htpasswd {
 
     /**
      * MD5 hash builder.
-     *
      * @since 0.0.1
      */
     @Loggable(Loggable.DEBUG)
     private static final class Md5 implements Htpasswd.Algorithm {
+
         /**
          * MD5 pattern.
          */
@@ -210,11 +210,11 @@ final class Htpasswd {
 
     /**
      * SHA1 hash builder.
-     *
      * @since 0.0.1
      */
     @Loggable(Loggable.DEBUG)
     private static final class Sha implements Htpasswd.Algorithm {
+
         /**
          * SHA1 pattern.
          */
@@ -239,11 +239,11 @@ final class Htpasswd {
 
     /**
      * UNIX crypt.
-     *
      * @since 0.0.1
      */
     @Loggable(Loggable.DEBUG)
     private static final class UnixCrypt implements Htpasswd.Algorithm {
+
         /**
          * Unix Crypt pattern.
          */
@@ -259,15 +259,14 @@ final class Htpasswd {
 
     /**
      * Plain Text.
-     *
      * @since 0.0.1
      */
     @Loggable(Loggable.DEBUG)
     private static final class PlainText implements Htpasswd.Algorithm {
+
         @Override
         public boolean matches(final String hash, final String password) {
             return password.equals(hash);
         }
     }
-
 }

@@ -53,5 +53,4 @@ final class DomainTest {
             Matchers.is(false)
         );
     }
-
 }

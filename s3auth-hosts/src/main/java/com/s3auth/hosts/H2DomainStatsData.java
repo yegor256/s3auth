@@ -18,29 +18,32 @@ import java.util.Objects;
 
 /**
  * Storage of {@link Stats} per domain with H2 Database.
- *
  * @since 0.0.1
  */
 @Immutable
 @Loggable(Loggable.DEBUG)
 final class H2DomainStatsData implements DomainStatsData {
+
     /**
      * Create Table statement.
      */
-    private static final String CREATE = new StringBuilder("CREATE TABLE ")
-        .append("IF NOT EXISTS DOMAIN_STATS( ")
-        .append("ID INT PRIMARY KEY auto_increment,")
-        .append("DOMAIN VARCHAR(255),")
-        .append("BYTES INT,")
-        .append("CREATE_TIME TIMESTAMP")
-        .append(" )").toString();
+    private static final String CREATE = String.join(
+        " ",
+        "CREATE TABLE IF NOT EXISTS DOMAIN_STATS(",
+        "ID INT PRIMARY KEY auto_increment,",
+        "DOMAIN VARCHAR(255),",
+        "BYTES INT,",
+        "CREATE_TIME TIMESTAMP )"
+    );
 
     /**
      * Insert statement.
      */
-    private static final String INSERT = new StringBuilder("INSERT INTO ")
-        .append("DOMAIN_STATS (DOMAIN, BYTES, CREATE_TIME) ")
-        .append("values (?, ?, CURRENT_TIMESTAMP())").toString();
+    private static final String INSERT = String.join(
+        " ",
+        "INSERT INTO DOMAIN_STATS (DOMAIN, BYTES, CREATE_TIME)",
+        "values (?, ?, CURRENT_TIMESTAMP())"
+    );
 
     /**
      * Outcome for obtaining a single Stats per domain.
@@ -64,9 +67,9 @@ final class H2DomainStatsData implements DomainStatsData {
     };
 
     /**
-     * The JDBC URL.
+     * The file pointing to the database to use.
      */
-    private final transient String jdbc;
+    private final transient File file;
 
     /**
      * Public ctor.
@@ -77,27 +80,27 @@ final class H2DomainStatsData implements DomainStatsData {
 
     /**
      * Public ctor.
-     * @param file The file pointing to the database to use.
+     * @param src The file pointing to the database to use
      */
-    H2DomainStatsData(final File file) {
-        this.jdbc = String.format("jdbc:h2:file:%s", file.getAbsolutePath());
+    H2DomainStatsData(final File src) {
+        this.file = src;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(this.jdbc);
+        return Objects.hashCode(this.file);
     }
 
     @Override
     public boolean equals(final Object obj) {
         return obj instanceof H2DomainStatsData
-            && Objects.equals(this.jdbc, ((H2DomainStatsData) obj).jdbc);
+            && Objects.equals(this.file, ((H2DomainStatsData) obj).file);
     }
 
     /**
      * Create tables.
      * @return This
-     * @throws IOException If an IO Exception occurs.
+     * @throws IOException If an IO Exception occurs
      */
     public H2DomainStatsData init() throws IOException {
         try {
@@ -129,7 +132,6 @@ final class H2DomainStatsData implements DomainStatsData {
     public Stats get(final String domain) throws IOException {
         try {
             final JdbcSession session = this.session();
-            // @checkstyle LineLength (2 lines)
             final Stats result = session
                 .sql("SELECT SUM(BYTES) FROM DOMAIN_STATS WHERE DOMAIN = ?")
                 .set(domain)
@@ -149,7 +151,6 @@ final class H2DomainStatsData implements DomainStatsData {
     public Map<String, Stats> all() throws IOException {
         try {
             final JdbcSession session = this.session();
-            // @checkstyle LineLength (2 lines)
             final Map<String, Stats> result = session
                 .sql("SELECT DOMAIN, SUM(BYTES) FROM DOMAIN_STATS GROUP BY DOMAIN")
                 .select(H2DomainStatsData.STATS_ALL);
@@ -166,8 +167,9 @@ final class H2DomainStatsData implements DomainStatsData {
      */
     private JdbcSession session() {
         return new JdbcSession(
-            new UrlSource(this.jdbc)
+            new UrlSource(
+                String.format("jdbc:h2:file:%s", this.file.getAbsolutePath())
+            )
         ).autocommit(false);
     }
-
 }

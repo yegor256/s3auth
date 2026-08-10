@@ -36,5 +36,4 @@ public final class Launch {
             args
         ).start(Exit.NEVER);
     }
-
 }

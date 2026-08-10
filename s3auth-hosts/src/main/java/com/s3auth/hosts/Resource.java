@@ -4,6 +4,7 @@
  */
 package com.s3auth.hosts;
 
+import com.jcabi.aspects.Cacheable;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.immutable.Array;
@@ -12,7 +13,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Date;
 import javax.validation.constraints.NotNull;
@@ -22,7 +23,6 @@ import org.apache.commons.io.IOUtils;
 
 /**
  * Found resource.
- *
  * @since 0.0.1
  */
 @Immutable
@@ -59,59 +59,35 @@ public interface Resource extends Closeable {
 
     /**
      * Get its last modified date.
-     * @return The last modified date.
+     * @return The last modified date
      */
     Date lastModified();
 
     /**
      * Get the resource's HTTP Content-Type.
-     * @return The HTTP Content-Type of the resource.
+     * @return The HTTP Content-Type of the resource
      */
     String contentType();
 
     /**
      * Simple resource made out of plain text.
-     *
      * @since 0.0.1
      */
     @Immutable
     @Loggable(Loggable.DEBUG)
     final class PlainText implements Resource {
+
         /**
          * Plain text to show.
          */
-        @Immutable.Array
-        private final transient byte[] text;
-
-        /**
-         * Last modified date to return. Equal to the time of object creation.
-         */
-        private final transient long modified;
-
-        /**
-         * Headers associated with this resource.
-         */
-        private final Array<String> hdrs;
+        private final transient String raw;
 
         /**
          * Public ctor.
          * @param txt The text to show
          */
         public PlainText(@NotNull final String txt) {
-            this.modified = System.currentTimeMillis();
-            this.text = txt.getBytes(StandardCharsets.UTF_8);
-            this.hdrs = new Array<>(
-                String.format(
-                    "%s: %s",
-                    HttpHeaders.CONTENT_TYPE,
-                    this.contentType()
-                ),
-                String.format(
-                    "%s: %d",
-                    HttpHeaders.CONTENT_LENGTH,
-                    this.text.length
-                )
-            );
+            this.raw = txt;
         }
 
         @Override
@@ -122,18 +98,18 @@ public interface Resource extends Closeable {
         @Override
         public long writeTo(@NotNull final OutputStream stream)
             throws IOException {
-            IOUtils.write(this.text, stream);
-            return this.text.length;
+            IOUtils.write(this.text(), stream);
+            return this.text().length;
         }
 
         @Override
         public String etag() {
-            return DigestUtils.md5Hex(this.text);
+            return DigestUtils.md5Hex(this.text());
         }
 
         @Override
         public Date lastModified() {
-            return new Date(this.modified);
+            return Date.from(Instant.now());
         }
 
         @Override
@@ -144,7 +120,7 @@ public interface Resource extends Closeable {
         @Override
         @NotNull
         public Collection<String> headers() {
-            return this.hdrs;
+            return this.hdrs();
         }
 
         @Override
@@ -154,19 +130,47 @@ public interface Resource extends Closeable {
 
         @Override
         public String toString() {
-            return String.format("PlainText(%d bytes)", this.text.length);
+            return String.format("PlainText(%d chars)", this.raw.length());
         }
 
         @Override
         public int hashCode() {
-            return Arrays.hashCode(this.text);
+            return this.raw.hashCode();
         }
 
         @Override
         public boolean equals(final Object obj) {
             return obj instanceof PlainText
-                && Arrays.equals(this.text, ((PlainText) obj).text);
+                && this.raw.equals(((PlainText) obj).raw);
+        }
+
+        /**
+         * Text as bytes.
+         * @return Bytes of the text
+         */
+        @Cacheable(forever = true)
+        private byte[] text() {
+            return this.raw.getBytes(StandardCharsets.UTF_8);
+        }
+
+        /**
+         * HTTP headers for this resource.
+         * @return Headers
+         */
+        @Cacheable(forever = true)
+        private Array<String> hdrs() {
+            return new Array<>(
+                String.format(
+                    "%s: %s",
+                    HttpHeaders.CONTENT_TYPE,
+                    this.contentType()
+                ),
+                String.format(
+                    "%s: %d",
+                    HttpHeaders.CONTENT_LENGTH,
+                    this.text().length
+                )
+            );
         }
     }
-
 }

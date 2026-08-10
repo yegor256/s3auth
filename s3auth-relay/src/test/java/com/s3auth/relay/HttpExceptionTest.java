@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link HttpException}.
- *
  * @since 0.0.1
  */
 final class HttpExceptionTest {
@@ -48,5 +47,4 @@ final class HttpExceptionTest {
             Matchers.startsWith("HTTP/1.1 303 See Other")
         );
     }
-
 }

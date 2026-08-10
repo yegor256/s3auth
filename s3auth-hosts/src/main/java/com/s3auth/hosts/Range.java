@@ -9,7 +9,6 @@ import com.jcabi.aspects.Loggable;
 
 /**
  * Range of data.
- *
  * @since 0.0.1
  */
 @Immutable
@@ -17,7 +16,6 @@ public interface Range {
 
     /**
      * All inclusive range.
-     *
      * @since 0.0.1
      */
     Range ENTIRE = new Range() {
@@ -55,6 +53,7 @@ public interface Range {
      */
     @Loggable(Loggable.DEBUG)
     final class Simple implements Range {
+
         /**
          * First byte.
          */
@@ -107,5 +106,4 @@ public interface Range {
             return result;
         }
     }
-
 }

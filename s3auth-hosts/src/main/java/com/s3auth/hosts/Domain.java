@@ -66,7 +66,6 @@ public interface Domain {
 
     /**
      * Valid.
-     *
      * @since 0.0.1
      */
     @Target(ElementType.TYPE)
@@ -74,6 +73,7 @@ public interface Domain {
     @Constraint(validatedBy = Domain.Validator.class)
     @Documented
     @interface Valid {
+
         /**
          * Message of the validation error.
          * @return Message
@@ -95,14 +95,13 @@ public interface Domain {
 
     /**
      * Validator of Domain.
-     *
      * @since 0.0.1
      * @checkstyle CyclomaticComplexity (200 lines)
-     * @checkstyle ExecutableStatementCount (200 lines)
      * @checkstyle NPathComplexityCheck (200 lines)
      */
     @SuppressWarnings("PMD.NPathComplexity")
     final class Validator implements ConstraintValidator<Domain.Valid, Domain> {
+
         @Override
         public void initialize(final Domain.Valid annotation) {
             //nothing to do
@@ -169,5 +168,4 @@ public interface Domain {
             return valid;
         }
     }
-
 }

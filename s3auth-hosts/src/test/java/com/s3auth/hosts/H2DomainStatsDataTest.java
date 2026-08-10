@@ -63,16 +63,15 @@ final class H2DomainStatsDataTest {
         );
         MatcherAssert.assertThat(
             stats.get(first).bytesTransferred(),
-            Matchers.is((long) 150)
+            Matchers.is(150L)
         );
         MatcherAssert.assertThat(
             stats.get(second).bytesTransferred(),
-            Matchers.is((long) 1000)
+            Matchers.is(1000L)
         );
         MatcherAssert.assertThat(
             data.all().size(),
             Matchers.is(0)
         );
     }
-
 }

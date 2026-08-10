@@ -15,7 +15,6 @@ import org.takes.rq.RqWrap;
 
 /**
  * User retriever from request.
- *
  * @since 0.1
  */
 final class RqUser extends RqWrap {
@@ -69,5 +68,4 @@ final class RqUser extends RqWrap {
         }
         return user;
     }
-
 }

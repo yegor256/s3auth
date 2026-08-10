@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -36,9 +36,7 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 
 /**
  * Default implementation of {@link Host}.
- *
  * @since 0.0.1
- * @checkstyle ClassFanOutComplexityCheck (1000 lines)
  */
 @Immutable
 @Loggable(Loggable.DEBUG)
@@ -58,14 +56,7 @@ final class DefaultHost implements Host {
         @Cacheable(lifetime = 1, unit = TimeUnit.HOURS)
         public CloudWatchClient get() {
             return CloudWatchClient.builder()
-                .credentialsProvider(
-                    StaticCredentialsProvider.create(
-                        AwsBasicCredentials.create(
-                            Manifests.read("S3Auth-AwsCloudWatchKey"),
-                            Manifests.read("S3Auth-AwsCloudWatchSecret")
-                        )
-                    )
-                )
+                .credentialsProvider(DefaultHost.credentials())
                 .build();
         }
     };
@@ -113,7 +104,7 @@ final class DefaultHost implements Host {
         this.bucket = bckt;
         this.htpasswd = new Htpasswd(this);
         this.cloudwatch = cwatch;
-        this.statistics = new HostStats(this.bucket.bucket());
+        this.statistics = new DefaultHost.HostStats(this.bucket);
     }
 
     @Override
@@ -138,7 +129,6 @@ final class DefaultHost implements Host {
     }
 
     // @checkstyle CyclomaticComplexity (100 lines)
-    // @checkstyle ExecutableStatementCount (100 lines)
     @Override
     @NotNull
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
@@ -157,18 +147,21 @@ final class DefaultHost implements Host {
             );
         }
         Resource resource = null;
-        final Collection<String> errors = new LinkedList<>();
+        final Collection<String> errors = new ArrayList<>(2);
         final DomainStatsData data = new H2DomainStatsData().init();
         for (final DefaultHost.ObjectName name : this.names(uri)) {
             try {
                 if (version.list()) {
-                    resource = new ObjectVersionListing(
+                    resource = ObjectVersionListing.fetch(
                         this.bucket.client(), this.bucket.bucket(), name.get()
                     );
                 } else {
-                    resource = new DefaultResource(
-                        this.bucket.client(), this.bucket.bucket(),
-                        name.get(), range, version, data
+                    resource = DefaultResource.fetch(
+                        this.bucket.client(),
+                        new DefaultResource.Locator(
+                            this.bucket.bucket(), name.get(), range, version
+                        ),
+                        data
                     );
                 }
                 break;
@@ -183,7 +176,7 @@ final class DefaultHost implements Host {
             } catch (final NoSuchKeyException ex) {
                 if (name.get().endsWith(DefaultHost.SUFFIX)) {
                     final String path = name.get();
-                    resource = new DirectoryListing(
+                    resource = DirectoryListing.fetch(
                         this.bucket.client(), this.bucket.bucket(),
                         path.substring(0, path.length() - DefaultHost.SUFFIX.length())
                     );
@@ -204,10 +197,13 @@ final class DefaultHost implements Host {
                         if (config != null
                             && config.errorDocument() != null
                             && config.errorDocument().key() != null) {
-                            resource = new DefaultResource(
-                                this.bucket.client(), this.bucket.bucket(),
-                                config.errorDocument().key(), Range.ENTIRE,
-                                Version.LATEST, data
+                            resource = DefaultResource.fetch(
+                                this.bucket.client(),
+                                new DefaultResource.Locator(
+                                    this.bucket.bucket(), config.errorDocument().key(),
+                                    Range.ENTIRE, Version.LATEST
+                                ),
+                                data
                             );
                         }
                     } catch (final S3Exception exc) {
@@ -267,7 +263,7 @@ final class DefaultHost implements Host {
     private Iterable<DefaultHost.ObjectName> names(final URI uri) {
         final String name = StringUtils.strip(uri.getPath(), "/");
         final Collection<DefaultHost.ObjectName> names =
-            new LinkedList<>();
+            new ArrayList<>(2);
         if (!name.isEmpty()) {
             names.add(new DefaultHost.Simple(name));
         }
@@ -276,12 +272,37 @@ final class DefaultHost implements Host {
     }
 
     /**
+     * Fetch this host's S3 bucket website configuration.
+     * @return Website configuration
+     */
+    private GetBucketWebsiteResponse website() {
+        return this.bucket.client().getBucketWebsite(
+            GetBucketWebsiteRequest.builder()
+                .bucket(this.bucket.name())
+                .build()
+        );
+    }
+
+    /**
+     * AWS credentials for CloudWatch, from manifest keys.
+     * @return Credentials provider for the AWS SDK
+     */
+    private static StaticCredentialsProvider credentials() {
+        return StaticCredentialsProvider.create(
+            AwsBasicCredentials.create(
+                Manifests.read("S3Auth-AwsCloudWatchKey"),
+                Manifests.read("S3Auth-AwsCloudWatchSecret")
+            )
+        );
+    }
+
+    /**
      * Object name with a suffix from a bucket.
-     *
      * @since 0.0.1
      */
     @Loggable(Loggable.DEBUG)
     private final class NameWithSuffix implements DefaultHost.ObjectName {
+
         /**
          * Original name.
          */
@@ -299,13 +320,7 @@ final class DefaultHost implements Host {
         public String get() {
             String suffix = null;
             try {
-                final GetBucketWebsiteResponse conf =
-                    DefaultHost.this.bucket.client()
-                        .getBucketWebsite(
-                            GetBucketWebsiteRequest.builder()
-                                .bucket(DefaultHost.this.bucket.name())
-                                .build()
-                        );
+                final GetBucketWebsiteResponse conf = DefaultHost.this.website();
                 if (conf != null && conf.indexDocument() != null) {
                     suffix = conf.indexDocument().suffix();
                 }
@@ -331,10 +346,10 @@ final class DefaultHost implements Host {
 
     /**
      * Object name.
-     *
      * @since 0.0.1
      */
     private static final class Simple implements DefaultHost.ObjectName {
+
         /**
          * Original name.
          */
@@ -372,21 +387,21 @@ final class DefaultHost implements Host {
 
     /**
      * Stats for this domain.
-     *
      * @since 0.0.1
      */
     @Loggable(Loggable.DEBUG)
     private final class HostStats implements Stats {
+
         /**
          * The S3 bucket.
          */
-        private final transient String bucket;
+        private final transient Bucket bucket;
 
         /**
          * Public ctor.
-         * @param bckt The name of the bucket
+         * @param bckt The bucket
          */
-        HostStats(final String bckt) {
+        HostStats(final Bucket bckt) {
             this.bucket = bckt;
         }
 
@@ -394,18 +409,17 @@ final class DefaultHost implements Host {
         @Cacheable(lifetime = 30, unit = TimeUnit.MINUTES)
         public long bytesTransferred() {
             final Instant now = Instant.now();
+            final Dimension dimension = Dimension.builder()
+                .name("Bucket")
+                .value(this.bucket.bucket())
+                .build();
             final List<Datapoint> datapoints =
                 DefaultHost.this.cloudwatch.get().getMetricStatistics(
                     GetMetricStatisticsRequest.builder()
                         .metricName("BytesTransferred")
                         .namespace("S3Auth")
                         .statistics(Statistic.SUM)
-                        .dimensions(
-                            Dimension.builder()
-                                .name("Bucket")
-                                .value(this.bucket)
-                                .build()
-                        )
+                        .dimensions(dimension)
                         .unit(StandardUnit.BYTES)
                         .period((int) TimeUnit.DAYS.toSeconds(7))
                         .startTime(now.minus(7, java.time.temporal.ChronoUnit.DAYS))
@@ -433,15 +447,14 @@ final class DefaultHost implements Host {
 
     /**
      * Name of an S3 Object, context dependent.
-     *
      * @since 0.0.1
      */
     private interface ObjectName {
+
         /**
          * Returns a name of S3 object.
          * @return The name
          */
         String get();
     }
-
 }

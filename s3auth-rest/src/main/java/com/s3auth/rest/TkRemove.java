@@ -17,7 +17,6 @@ import org.takes.rq.RqHref;
 
 /**
  * Remove a domain.
- *
  * @since 0.1
  */
 final class TkRemove implements Take {
@@ -59,5 +58,4 @@ final class TkRemove implements Take {
             )
         );
     }
-
 }

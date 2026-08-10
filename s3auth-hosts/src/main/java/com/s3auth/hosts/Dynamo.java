@@ -46,16 +46,15 @@ interface Dynamo extends Closeable {
 
     /**
      * Client to Amazon.
-     *
      * @since 0.0.1
      */
     @Immutable
     interface Client {
+
         /**
          * Get Amazon client.
          * @return The client
          */
         DynamoDbClient get();
     }
-
 }

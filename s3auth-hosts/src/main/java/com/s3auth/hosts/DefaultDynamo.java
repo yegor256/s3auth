@@ -96,8 +96,7 @@ final class DefaultDynamo implements Dynamo {
      * @param rgn The jcabi-dynamo Region
      * @param tbl Table name
      */
-    DefaultDynamo(@NotNull final Region rgn,
-        @NotNull final String tbl) {
+    DefaultDynamo(@NotNull final Region rgn, @NotNull final String tbl) {
         this.region = rgn;
         this.table = tbl;
     }
@@ -140,17 +139,7 @@ final class DefaultDynamo implements Dynamo {
         final Iterable<Item> items = this.region
             .table(this.table)
             .frame()
-            .through(
-                new ScanValve().withAttributeToGet(
-                    DefaultDynamo.USER,
-                    DefaultDynamo.NAME,
-                    DefaultDynamo.KEY,
-                    DefaultDynamo.SECRET,
-                    DefaultDynamo.BUCKET,
-                    DefaultDynamo.REGION,
-                    DefaultDynamo.SYSLOG
-                ).withLimit(1_000_000)
-            );
+            .through(DefaultDynamo.valve());
         for (final Item item : items) {
             final URN user = URN.create(item.get(DefaultDynamo.USER).s());
             domains.putIfAbsent(user, new Domains());
@@ -193,6 +182,22 @@ final class DefaultDynamo implements Dynamo {
     }
 
     /**
+     * Scan valve fetching only the attributes this class understands.
+     * @return Valve limited to relevant attributes
+     */
+    private static ScanValve valve() {
+        return new ScanValve().withAttributeToGet(
+            DefaultDynamo.USER,
+            DefaultDynamo.NAME,
+            DefaultDynamo.KEY,
+            DefaultDynamo.SECRET,
+            DefaultDynamo.BUCKET,
+            DefaultDynamo.REGION,
+            DefaultDynamo.SYSLOG
+        ).withLimit(1_000_000);
+    }
+
+    /**
      * Create AWS credentials.
      * @return Creds
      */
@@ -223,11 +228,7 @@ final class DefaultDynamo implements Dynamo {
                     DefaultDynamo.SYSLOG,
                     AttributeValueUpdate.builder()
                         .action(AttributeAction.PUT)
-                        .value(
-                            AttributeValue.builder()
-                                .s("syslog.s3auth.com:514")
-                                .build()
-                        )
+                        .value(AttributeValue.builder().s("syslog.s3auth.com:514").build())
                         .build()
                 )
             );
@@ -238,11 +239,7 @@ final class DefaultDynamo implements Dynamo {
                     DefaultDynamo.BUCKET,
                     AttributeValueUpdate.builder()
                         .action(AttributeAction.PUT)
-                        .value(
-                            AttributeValue.builder()
-                                .s(item.get(DefaultDynamo.NAME).s())
-                                .build()
-                        )
+                        .value(AttributeValue.builder().s(item.get(DefaultDynamo.NAME).s()).build())
                         .build()
                 )
             );
@@ -256,5 +253,4 @@ final class DefaultDynamo implements Dynamo {
             item.get(DefaultDynamo.SYSLOG).s()
         );
     }
-
 }

@@ -17,6 +17,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 import javax.validation.constraints.NotNull;
@@ -64,43 +65,30 @@ final class FtpFacade implements Closeable {
     private final transient ServerSocket server;
 
     /**
-     * Public ctor.
-     * @param hosts Hosts
-     * @param port Port number
-     * @throws IOException If can't initialize
+     * Private ctor, threads started by {@link #open}.
+     * @param frnt Frontend executor
+     * @param back Backend executor
+     * @param skts Blocking queue of ready-to-be-processed sockets
+     * @param srv Server socket
      */
-    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
-    FtpFacade(@NotNull final Hosts hosts, final int port)
-        throws IOException {
-        this.frontend = Executors.newScheduledThreadPool(
-            2, new VerboseThreads("FTP-front")
-        );
-        this.backend = Executors.newScheduledThreadPool(
-            FtpFacade.THREADS,
-            new VerboseThreads("FTP-back")
-        );
-        this.sockets = new SynchronousQueue<>();
-        this.server = new ServerSocket(port);
-        final FtpThread thread = new FtpThread(this.sockets, hosts);
-        final Runnable runnable = new VerboseRunnable(
-            new FtpThreadRunnable(thread), true, true
-        );
-        for (int idx = 0; idx < FtpFacade.THREADS; ++idx) {
-            this.backend.scheduleWithFixedDelay(
-                runnable,
-                0L, 1L, TimeUnit.NANOSECONDS
-            );
-        }
+    private FtpFacade(final ScheduledExecutorService frnt,
+        final ScheduledExecutorService back,
+        final BlockingQueue<Socket> skts, final ServerSocket srv) {
+        this.frontend = frnt;
+        this.backend = back;
+        this.sockets = skts;
+        this.server = srv;
     }
 
     /**
      * Start listening to the ports.
      */
     public void listen() {
-        this.frontend.scheduleWithFixedDelay(
+        final ScheduledFuture<?> future = this.frontend.scheduleWithFixedDelay(
             new VerboseRunnable(() -> this.process(this.server)),
             0L, 1L, TimeUnit.NANOSECONDS
         );
+        Logger.debug(this, "#listen(): scheduled %s", future);
     }
 
     @Override
@@ -113,6 +101,41 @@ final class FtpFacade implements Closeable {
             throw new IOException(ex);
         }
         this.server.close();
+    }
+
+    /**
+     * Open a facade and start its backend threads.
+     * @param hosts Hosts
+     * @param port Port number
+     * @return Opened facade
+     * @throws IOException If can't initialize
+     */
+    static FtpFacade open(@NotNull final Hosts hosts, final int port)
+        throws IOException {
+        final FtpFacade facade = new FtpFacade(
+            Executors.newScheduledThreadPool(2, new VerboseThreads("FTP-front")),
+            Executors.newScheduledThreadPool(FtpFacade.THREADS, new VerboseThreads("FTP-back")),
+            new SynchronousQueue<>(),
+            new ServerSocket(port)
+        );
+        facade.start(hosts);
+        return facade;
+    }
+
+    /**
+     * Start the backend dispatcher threads.
+     * @param hosts Hosts
+     */
+    private void start(final Hosts hosts) {
+        final Runnable runnable = new VerboseRunnable(
+            new FtpFacade.FtpThreadRunnable(new FtpThread(this.sockets, hosts)), true, true
+        );
+        for (int idx = 0; idx < FtpFacade.THREADS; ++idx) {
+            final ScheduledFuture<?> future = this.backend.scheduleWithFixedDelay(
+                runnable, 0L, 1L, TimeUnit.NANOSECONDS
+            );
+            Logger.debug(this, "#start(): scheduled %s", future);
+        }
     }
 
     /**
@@ -142,15 +165,13 @@ final class FtpFacade implements Closeable {
      * @param socket The socket to report to
      */
     private static void overflow(final Socket socket) {
+        final String message = String.format(
+            "We're sorry, the service is under high load at the moment (%d open connections), please try again in a few minutes",
+            FtpFacade.THREADS
+        );
         new FtpResponse()
             .withCode(FTPReply.SERVICE_NOT_AVAILABLE)
-            .withText(
-                String.format(
-                    // @checkstyle LineLength (1 line)
-                    "We're sorry, the service is under high load at the moment (%d open connections), please try again in a few minutes",
-                    FtpFacade.THREADS
-                )
-            )
+            .withText(message)
             .send(socket);
     }
 
@@ -177,10 +198,10 @@ final class FtpFacade implements Closeable {
 
     /**
      * Dispatcher of FTPThread.
-     *
      * @since 0.0.1
      */
     private static final class FtpThreadRunnable implements Runnable {
+
         /**
          * The thread to run.
          */
@@ -199,5 +220,4 @@ final class FtpFacade implements Closeable {
             this.thread.dispatch();
         }
     }
-
 }

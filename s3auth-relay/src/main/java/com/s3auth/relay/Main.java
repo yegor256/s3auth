@@ -14,7 +14,6 @@ import joptsimple.OptionSet;
 
 /**
  * Main entrance to the system.
- *
  * @since 0.0.1
  */
 @Immutable
@@ -52,7 +51,7 @@ public final class Main {
             secured = 443;
         }
         final HttpFacade facade =
-            new HttpFacade(new DynamoHosts(), port, secured);
+            HttpFacade.open(new DynamoHosts(), port, secured);
         facade.listen();
         Logger.warn(Main.class, "started at http://localhost:%d...", port);
         if (options.has("d")) {
@@ -61,5 +60,4 @@ public final class Main {
             }
         }
     }
-
 }
