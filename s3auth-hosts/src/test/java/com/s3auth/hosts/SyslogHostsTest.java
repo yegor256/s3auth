@@ -30,6 +30,7 @@ import org.productivity.java.syslog4j.server.SyslogServerIF;
 final class SyslogHostsTest {
 
     @Test
+    @SuppressWarnings("resource")
     void returnsUnderlyingDomains() throws Exception {
         final Hosts hosts = Mockito.mock(Hosts.class);
         final Domain first = new DomainMocker().init().mock();
@@ -37,10 +38,8 @@ final class SyslogHostsTest {
         final Set<Domain> domains = new HashSet<>(Arrays.asList(first, second));
         final User user = new UserMocker().init().mock();
         Mockito.doReturn(domains).when(hosts).domains(user);
-        @SuppressWarnings("resource")
-        final SyslogHosts syslog = new SyslogHosts(hosts);
         MatcherAssert.assertThat(
-            syslog.domains(user),
+            new SyslogHosts(hosts).domains(user),
             Matchers.containsInAnyOrder(first, second)
         );
     }
@@ -71,29 +70,30 @@ final class SyslogHostsTest {
                 }
             }
         );
-        final ExecutorService exec = Executors.newSingleThreadExecutor();
-        try {
+        try (ExecutorService exec = Executors.newSingleThreadExecutor()) {
             exec.execute(server);
-            final Hosts hosts = Mockito.mock(Hosts.class);
-            final String path = "/path/to/fetch";
-            final Host host = new HostMocker()
-                .init()
-                .withContent(URI.create(path), "blah")
-                .withSyslog(String.format("localhost:%d", port))
-                .mock();
-            Mockito.doReturn(host).when(hosts)
-                .find(Mockito.anyString());
-            ResourceMocker.toByteArray(
-                new SyslogHosts(hosts).find("dummy")
-                    .fetch(URI.create(path), Range.ENTIRE, Version.LATEST)
-            );
-            MatcherAssert.assertThat(
-                messages.poll(1, TimeUnit.MINUTES),
-                Matchers.containsString(String.format("from %s", path))
-            );
-        } finally {
-            server.shutdown();
-            exec.shutdown();
+            try {
+                final Hosts hosts = Mockito.mock(Hosts.class);
+                final String path = "/path/to/fetch";
+                Mockito.doReturn(
+                    new HostMocker()
+                        .init()
+                        .withContent(URI.create(path), "blah")
+                        .withSyslog(String.format("localhost:%d", port))
+                        .mock()
+                ).when(hosts)
+                    .find(Mockito.anyString());
+                ResourceMocker.toByteArray(
+                    new SyslogHosts(hosts).find("dummy")
+                        .fetch(URI.create(path), Range.ENTIRE, Version.LATEST)
+                );
+                MatcherAssert.assertThat(
+                    messages.poll(1, TimeUnit.MINUTES),
+                    Matchers.containsString(String.format("from %s", path))
+                );
+            } finally {
+                server.shutdown();
+            }
         }
     }
 
@@ -103,13 +103,8 @@ final class SyslogHostsTest {
      */
     private static int port() {
         final int port;
-        try {
-            final DatagramSocket socket = new DatagramSocket(0);
-            try {
-                port = socket.getLocalPort();
-            } finally {
-                socket.close();
-            }
+        try (DatagramSocket socket = new DatagramSocket(0)) {
+            port = socket.getLocalPort();
         } catch (final java.io.IOException ex) {
             throw new IllegalStateException("Failed to reserve port", ex);
         }

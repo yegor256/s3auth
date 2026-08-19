@@ -32,7 +32,7 @@ final class RqUser extends RqWrap {
      * @return TRUE if alias is there
      * @throws IOException If fails
      */
-    public boolean has() throws IOException {
+    boolean has() throws IOException {
         return !new RqAuth(this).identity().equals(Identity.ANONYMOUS);
     }
 
@@ -41,7 +41,7 @@ final class RqUser extends RqWrap {
      * @return User
      * @throws IOException If fails
      */
-    public User user() throws IOException {
+    User user() throws IOException {
         final Identity identity = new RqAuth(this).identity();
         final User user;
         if (identity.equals(Identity.ANONYMOUS)) {

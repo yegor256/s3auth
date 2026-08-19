@@ -29,7 +29,6 @@ import org.productivity.java.syslog4j.impl.net.udp.UDPNetSyslogConfig;
  */
 @Immutable
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings("PMD.TooManyMethods")
 public final class SyslogHosts implements Hosts {
 
     /**
@@ -111,7 +110,7 @@ public final class SyslogHosts implements Hosts {
         @Override
         public Resource fetch(final URI uri, final Range range,
             final Version version) throws IOException {
-            final Matcher matcher = PATTERN.matcher(this.host.syslog());
+            final Matcher matcher = SyslogHost.PATTERN.matcher(this.host.syslog());
             final Resource res;
             if (matcher.find()) {
                 final String syslg = matcher.group(1);

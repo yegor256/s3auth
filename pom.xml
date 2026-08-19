@@ -120,11 +120,13 @@
       <groupId>net.bytebuddy</groupId>
       <artifactId>byte-buddy</artifactId>
       <version>1.18.12-jdk5</version>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>net.bytebuddy</groupId>
       <artifactId>byte-buddy-agent</artifactId>
       <version>1.18.12-jdk5</version>
+      <scope>runtime</scope>
     </dependency>
   </dependencies>
   <dependencyManagement>
@@ -368,15 +370,7 @@
           <plugin>
             <groupId>com.qulice</groupId>
             <artifactId>qulice-maven-plugin</artifactId>
-            <version>0.30.15</version>
-            <configuration>
-              <excludes>
-                <exclude>duplicatefinder:.*</exclude>
-                <exclude>checkstyle:.*FakeAws.*</exclude>
-                <exclude>pmd:.*</exclude>
-                <exclude>dependencies:.*</exclude>
-              </excludes>
-            </configuration>
+            <version>0.31.1</version>
           </plugin>
         </plugins>
       </build>

@@ -49,6 +49,7 @@ interface Dynamo extends Closeable {
      * @since 0.0.1
      */
     @Immutable
+    @FunctionalInterface
     interface Client {
 
         /**

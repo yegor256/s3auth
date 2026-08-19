@@ -8,7 +8,6 @@ package com.s3auth.hosts;
  * Mocker of {@link Domain}.
  * @since 0.0.1
  */
-@SuppressWarnings("PMD.TooManyMethods")
 public final class DomainMocker {
 
     /**
@@ -103,7 +102,6 @@ public final class DomainMocker {
      * Builder for MkDomain.
      * @since 0.0.1
      */
-    @SuppressWarnings("PMD.TooManyFields")
     private static final class MkDomainBuilder {
 
         /**
@@ -212,7 +210,7 @@ public final class DomainMocker {
      * Mock.
      * @since 0.0.1
      */
-    @SuppressWarnings({ "PMD.TooManyMethods", "PMD.AvoidFieldNameMatchingMethodName" })
+    @SuppressWarnings("PMD.DataClass")
     private static final class MkDomain implements Domain {
 
         /**

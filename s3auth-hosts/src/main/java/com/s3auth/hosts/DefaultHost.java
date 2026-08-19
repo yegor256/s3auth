@@ -40,7 +40,6 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
  */
 @Immutable
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.ExcessiveImports" })
 final class DefaultHost implements Host {
 
     /**
@@ -128,91 +127,24 @@ final class DefaultHost implements Host {
         // nothing to do
     }
 
-    // @checkstyle CyclomaticComplexity (100 lines)
     @Override
     @NotNull
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     @Loggable(value = Loggable.DEBUG, ignore = IOException.class)
     public Resource fetch(@NotNull final URI uri,
         @NotNull final Range range, @NotNull final Version version)
         throws IOException {
-        if (this.bucket.key().isEmpty()) {
-            throw new IllegalStateException(
-                "The key of the bucket is empty"
-            );
-        }
-        if (this.bucket.secret().isEmpty()) {
-            throw new IllegalStateException(
-                "The secret of the bucket is empty"
-            );
-        }
+        this.validate();
         Resource resource = null;
         final Collection<String> errors = new ArrayList<>(2);
         final DomainStatsData data = new H2DomainStatsData().init();
         for (final DefaultHost.ObjectName name : this.names(uri)) {
-            try {
-                if (version.list()) {
-                    resource = ObjectVersionListing.fetch(
-                        this.bucket.client(), this.bucket.bucket(), name.get()
-                    );
-                } else {
-                    resource = DefaultResource.fetch(
-                        this.bucket.client(),
-                        new DefaultResource.Locator(
-                            this.bucket.bucket(), name.get(), range, version
-                        ),
-                        data
-                    );
-                }
+            final DefaultHost.Attempt outcome =
+                this.attempt(name, range, version, data, errors);
+            if (outcome.resource() != null) {
+                resource = outcome.resource();
+            }
+            if (outcome.done()) {
                 break;
-            } catch (final NoSuchBucketException ex) {
-                throw new IOException(
-                    Logger.format(
-                        "The bucket '%s' does not exist.",
-                        this.bucket.bucket()
-                    ),
-                    ex
-                );
-            } catch (final NoSuchKeyException ex) {
-                if (name.get().endsWith(DefaultHost.SUFFIX)) {
-                    final String path = name.get();
-                    resource = DirectoryListing.fetch(
-                        this.bucket.client(), this.bucket.bucket(),
-                        path.substring(0, path.length() - DefaultHost.SUFFIX.length())
-                    );
-                    break;
-                }
-                errors.add(String.format("'%s': %s", name, ex.getMessage()));
-            } catch (final S3Exception ex) {
-                if (ex.statusCode() >= HttpURLConnection.HTTP_BAD_REQUEST
-                    && ex.statusCode() < HttpURLConnection.HTTP_INTERNAL_ERROR
-                ) {
-                    try {
-                        final GetBucketWebsiteResponse config =
-                            this.bucket.client().getBucketWebsite(
-                                GetBucketWebsiteRequest.builder()
-                                    .bucket(this.bucket.bucket())
-                                    .build()
-                            );
-                        if (config != null
-                            && config.errorDocument() != null
-                            && config.errorDocument().key() != null) {
-                            resource = DefaultResource.fetch(
-                                this.bucket.client(),
-                                new DefaultResource.Locator(
-                                    this.bucket.bucket(), config.errorDocument().key(),
-                                    Range.ENTIRE, Version.LATEST
-                                ),
-                                data
-                            );
-                        }
-                    } catch (final S3Exception exc) {
-                        errors.add(
-                            String.format("'%s': %s", name, exc.getMessage())
-                        );
-                    }
-                }
-                errors.add(String.format("'%s': %s", name, ex.getMessage()));
             }
         }
         if (resource == null) {
@@ -252,6 +184,139 @@ final class DefaultHost implements Host {
     @Override
     public Stats stats() {
         return this.statistics;
+    }
+
+    /**
+     * Try to fetch a single object name, recording an error on failure.
+     * @param name Object name to try
+     * @param range Byte range requested
+     * @param version Version requested
+     * @param data Domain stats to record against
+     * @param errors Accumulator for error messages
+     * @return Outcome of the attempt
+     * @throws IOException If the bucket itself does not exist
+     */
+    private DefaultHost.Attempt attempt(final DefaultHost.ObjectName name,
+        final Range range, final Version version, final DomainStatsData data,
+        final Collection<String> errors) throws IOException {
+        Resource resource = null;
+        boolean done = false;
+        try {
+            resource = DefaultHost.fetchOne(this.bucket, name, range, version, data);
+            done = true;
+        } catch (final NoSuchBucketException ex) {
+            throw new IOException(
+                Logger.format(
+                    "The bucket '%s' does not exist.",
+                    this.bucket.bucket()
+                ),
+                ex
+            );
+        } catch (final NoSuchKeyException ex) {
+            if (name.get().endsWith(DefaultHost.SUFFIX)) {
+                final String path = name.get();
+                resource = DirectoryListing.fetch(
+                    this.bucket.client(), this.bucket.bucket(),
+                    path.substring(0, path.length() - DefaultHost.SUFFIX.length())
+                );
+                done = true;
+            } else {
+                errors.add(String.format("'%s': %s", name, ex.getMessage()));
+            }
+        } catch (final S3Exception ex) {
+            resource = this.errorDocument(name, data, ex, errors);
+        }
+        return new DefaultHost.Attempt(resource, done);
+    }
+
+    /**
+     * Fetch a single object, either as a version listing or a plain resource.
+     * @param bckt The S3 bucket
+     * @param name Object name to fetch
+     * @param range Byte range requested
+     * @param version Version requested
+     * @param data Domain stats to record against
+     * @return Fetched resource
+     */
+    private static Resource fetchOne(final Bucket bckt,
+        final DefaultHost.ObjectName name, final Range range,
+        final Version version, final DomainStatsData data) {
+        final Resource resource;
+        if (version.list()) {
+            resource = ObjectVersionListing.fetch(
+                bckt.client(), bckt.bucket(), name.get()
+            );
+        } else {
+            resource = DefaultResource.fetch(
+                bckt.client(),
+                new DefaultResource.Locator(
+                    bckt.bucket(), name.get(), range, version
+                ),
+                data
+            );
+        }
+        return resource;
+    }
+
+    /**
+     * Check that the bucket carries usable credentials.
+     */
+    private void validate() {
+        if (this.bucket.key().isEmpty()) {
+            throw new IllegalStateException(
+                "The key of the bucket is empty"
+            );
+        }
+        if (this.bucket.secret().isEmpty()) {
+            throw new IllegalStateException(
+                "The secret of the bucket is empty"
+            );
+        }
+    }
+
+    /**
+     * Fall back to the bucket website's configured error document,
+     * for a name that failed with an S3 client error.
+     * @param name The object name that failed
+     * @param data Domain stats to record against
+     * @param err The original client error
+     * @param errors Accumulator for error messages
+     * @return The error document's resource, or null if none applies
+     */
+    private Resource errorDocument(final DefaultHost.ObjectName name,
+        final DomainStatsData data, final S3Exception err,
+        final Collection<String> errors) {
+        Resource resource = null;
+        if (err.statusCode() >= HttpURLConnection.HTTP_BAD_REQUEST
+            && err.statusCode() < HttpURLConnection.HTTP_INTERNAL_ERROR
+        ) {
+            try {
+                final GetBucketWebsiteResponse config =
+                    this.bucket.client().getBucketWebsite(
+                        GetBucketWebsiteRequest.builder()
+                            .bucket(this.bucket.bucket())
+                            .build()
+                    );
+                if (config != null
+                    && config.errorDocument() != null
+                    && config.errorDocument().key() != null) {
+                    resource = DefaultResource.fetch(
+                        this.bucket.client(),
+                        new DefaultResource.Locator(
+                            this.bucket.bucket(), config.errorDocument().key(),
+                            Range.ENTIRE, Version.LATEST
+                        ),
+                        data
+                    );
+                }
+            } catch (final S3Exception exc) {
+                errors.add(
+                    String.format("'%s': %s", name, exc.getMessage())
+                );
+            }
+        }
+        errors.add(String.format("'%s': %s", name, err.getMessage()));
+        return resource;
     }
 
     /**
@@ -409,17 +474,17 @@ final class DefaultHost implements Host {
         @Cacheable(lifetime = 30, unit = TimeUnit.MINUTES)
         public long bytesTransferred() {
             final Instant now = Instant.now();
-            final Dimension dimension = Dimension.builder()
-                .name("Bucket")
-                .value(this.bucket.bucket())
-                .build();
             final List<Datapoint> datapoints =
                 DefaultHost.this.cloudwatch.get().getMetricStatistics(
                     GetMetricStatisticsRequest.builder()
                         .metricName("BytesTransferred")
                         .namespace("S3Auth")
-                        .statistics(Statistic.SUM)
-                        .dimensions(dimension)
+                        .statistics(Statistic.SUM).dimensions(
+                            Dimension.builder()
+                                .name("Bucket")
+                                .value(this.bucket.bucket())
+                                .build()
+                        )
                         .unit(StandardUnit.BYTES)
                         .period((int) TimeUnit.DAYS.toSeconds(7))
                         .startTime(now.minus(7, java.time.temporal.ChronoUnit.DAYS))
@@ -449,6 +514,7 @@ final class DefaultHost implements Host {
      * Name of an S3 Object, context dependent.
      * @since 0.0.1
      */
+    @FunctionalInterface
     private interface ObjectName {
 
         /**
@@ -456,5 +522,48 @@ final class DefaultHost implements Host {
          * @return The name
          */
         String get();
+    }
+
+    /**
+     * Outcome of one attempt to fetch an object by name.
+     * @since 0.0.1
+     */
+    private static final class Attempt {
+
+        /**
+         * Resource found, if any.
+         */
+        private final transient Resource resource;
+
+        /**
+         * Whether no other name should be tried.
+         */
+        private final transient boolean done;
+
+        /**
+         * Ctor.
+         * @param found Resource found, if any
+         * @param fin Whether no other name should be tried
+         */
+        Attempt(final Resource found, final boolean fin) {
+            this.resource = found;
+            this.done = fin;
+        }
+
+        /**
+         * Resource found, if any.
+         * @return The resource, or null
+         */
+        Resource resource() {
+            return this.resource;
+        }
+
+        /**
+         * Whether no other name should be tried.
+         * @return TRUE if done
+         */
+        boolean done() {
+            return this.done;
+        }
     }
 }

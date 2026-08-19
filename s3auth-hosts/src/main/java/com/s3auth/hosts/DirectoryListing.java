@@ -155,7 +155,8 @@ final class DirectoryListing implements Resource {
         final Collection<S3Object> objects = new ArrayList<>(0);
         final Collection<String> prefixes = new ArrayList<>(0);
         String token = null;
-        do {
+        boolean more = true;
+        while (more) {
             final ListObjectsRequest.Builder builder = ListObjectsRequest.builder()
                 .delimiter("/")
                 .prefix(key)
@@ -168,15 +169,15 @@ final class DirectoryListing implements Resource {
             for (final CommonPrefix prefix : listing.commonPrefixes()) {
                 prefixes.add(prefix.prefix());
             }
-            if (listing.isTruncated()) {
+            more = listing.isTruncated();
+            if (more) {
                 token = listing.nextMarker();
                 if (token == null && !listing.contents().isEmpty()) {
                     token = listing.contents().get(listing.contents().size() - 1).key();
                 }
-            } else {
-                token = null;
+                more = token != null;
             }
-        } while (token != null);
+        }
         return new DirectoryListing.Listing(objects, prefixes);
     }
 

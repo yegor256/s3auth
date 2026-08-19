@@ -139,7 +139,6 @@ public final class HostMocker {
      * Mock.
      * @since 0.0.1
      */
-    @SuppressWarnings({ "PMD.TooManyMethods", "PMD.AvoidFieldNameMatchingMethodName" })
     private static final class MkHost implements Host {
 
         /**

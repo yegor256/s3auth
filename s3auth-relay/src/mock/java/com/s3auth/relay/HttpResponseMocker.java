@@ -28,7 +28,10 @@ public final class HttpResponseMocker {
      * @return Text form
      * @throws Exception If there is some problem inside
      */
-    @SuppressWarnings("PMD.ProhibitPublicStaticMethods")
+    @SuppressWarnings({
+        "PMD.ProhibitPublicStaticMethods",
+        "PMD.CloseResource"
+    })
     public static String toString(final HttpResponse resp) throws Exception {
         final Socket socket = Mockito.mock(Socket.class);
         final ByteArrayOutputStream stream = new ByteArrayOutputStream();

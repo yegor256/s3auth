@@ -34,7 +34,6 @@ public final class Main {
      * @todo #213:30min Create a FtpFacade in order to provide a FTP gateway.
      *  Also unignore test 'connectDisconnect' in FtpFacadeTest.
      */
-    @SuppressWarnings("PMD.ProhibitPublicStaticMethods")
     public static void main(final String[] args) throws Exception {
         final OptionParser parser = new OptionParser("p:s:d");
         final OptionSet options = parser.parse(args);

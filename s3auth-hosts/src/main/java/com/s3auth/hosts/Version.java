@@ -13,7 +13,6 @@ import java.util.Objects;
  * @since 0.0.1
  */
 @Immutable
-@SuppressWarnings("PMD.TooManyMethods")
 public interface Version {
 
     /**

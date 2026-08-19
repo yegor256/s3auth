@@ -42,16 +42,6 @@ final class LocalHost implements Host {
         Manifests.read("S3Auth-ExitKey")
     );
 
-    /**
-     * Is it your name?
-     * @param name The name of host, provided in "Host" HTTP header
-     * @return TRUE if this is a localhost
-     */
-    @SuppressWarnings("PMD.ProhibitPublicStaticMethods")
-    public static boolean isIt(@NotNull final String name) {
-        return "relay.s3auth.com".equals(name);
-    }
-
     @Override
     public Resource fetch(@NotNull final URI uri, @NotNull final Range range,
         @NotNull final Version version) throws IOException {
@@ -104,11 +94,20 @@ final class LocalHost implements Host {
     }
 
     /**
+     * Is it your name?
+     * @param name The name of host, provided in "Host" HTTP header
+     * @return TRUE if this is a localhost
+     */
+    static boolean isIt(@NotNull final String name) {
+        return "relay.s3auth.com".equals(name);
+    }
+
+    /**
      * Shutdown.
      * @param uri URI just dispatched
      * @return The exception to throw
      */
-    @SuppressWarnings("PMD.DoNotCallSystemExit")
+    @SuppressWarnings("PMD.DoNotTerminateVM")
     private IOException halt(final String uri) {
         if (uri.equals(LocalHost.SHUTDOWN)) {
             Logger.warn(this, "fetch(%s): shutting down..", uri);

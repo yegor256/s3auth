@@ -28,10 +28,12 @@ final class DomainTest {
             .buildConstraintViolationWithTemplate(Mockito.anyString());
         Mockito.doReturn(Mockito.mock(NodeBuilderCustomizableContext.class))
             .when(builder).addPropertyNode(Mockito.anyString());
-        final Domain domain = new DomainMocker().init()
-            .withSyslog("sys-log.s3auth.com:514").mock();
         MatcherAssert.assertThat(
-            new Domain.Validator().isValid(domain, ctx),
+            new Domain.Validator().isValid(
+                new DomainMocker().init()
+                    .withSyslog("sys-log.s3auth.com:514").mock(),
+                ctx
+            ),
             Matchers.is(true)
         );
     }
@@ -46,10 +48,12 @@ final class DomainTest {
             .buildConstraintViolationWithTemplate(Mockito.anyString());
         Mockito.doReturn(Mockito.mock(NodeBuilderCustomizableContext.class))
             .when(builder).addPropertyNode(Mockito.anyString());
-        final Domain domain = new DomainMocker().init()
-            .withSyslog("!?@?#.com:ba14").mock();
         MatcherAssert.assertThat(
-            new Domain.Validator().isValid(domain, ctx),
+            new Domain.Validator().isValid(
+                new DomainMocker().init()
+                    .withSyslog("!?@?#.com:ba14").mock(),
+                ctx
+            ),
             Matchers.is(false)
         );
     }

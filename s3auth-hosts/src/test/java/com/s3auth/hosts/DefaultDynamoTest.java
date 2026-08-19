@@ -27,17 +27,27 @@ import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 final class DefaultDynamoTest {
 
     @Test
-    void loadsDynamoConfiguration() throws Exception {
+    void loadsDynamoConfigurationConsistently() throws Exception {
+        final String table = "table";
+        final Dynamo dynamo = new DefaultDynamo(
+            this.mockRegion(table),
+            table
+        );
+        MatcherAssert.assertThat(
+            dynamo.load().size(),
+            Matchers.is(dynamo.load().size())
+        );
+        dynamo.close();
+    }
+
+    @Test
+    void addsDomainToDynamoConfiguration() throws Exception {
         final String table = "table";
         final Dynamo dynamo = new DefaultDynamo(
             this.mockRegion(table),
             table
         );
         final int size = dynamo.load().size();
-        MatcherAssert.assertThat(
-            dynamo.load().size(),
-            Matchers.is(size)
-        );
         dynamo.add(new URN("urn:test:alpha"), new DomainMocker().init().mock());
         MatcherAssert.assertThat(
             dynamo.load().size(),

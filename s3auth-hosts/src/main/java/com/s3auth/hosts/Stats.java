@@ -11,6 +11,7 @@ import com.jcabi.aspects.Immutable;
  * @since 0.0.1
  */
 @Immutable
+@FunctionalInterface
 public interface Stats {
 
     /**

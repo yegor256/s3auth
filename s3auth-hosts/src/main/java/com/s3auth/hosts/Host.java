@@ -61,6 +61,7 @@ public interface Host extends Closeable {
      * @since 0.0.1
      */
     @Immutable
+    @FunctionalInterface
     interface CloudWatch {
 
         /**

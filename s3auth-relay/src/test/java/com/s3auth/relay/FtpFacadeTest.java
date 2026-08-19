@@ -30,12 +30,12 @@ import org.mockito.stubbing.Answer;
 final class FtpFacadeTest {
 
     /**
-     * Connects and disconnects.
+     * Connects successfully.
      * @throws IOException If it fails inside
      */
     @Test
     @Disabled
-    void connectDisconnect() throws IOException {
+    void connectsSuccessfully() throws IOException {
         final FtpFacade facade = FtpFacadeTest.mockFacade();
         final FTPClient ftp = new FTPClient();
         try {
@@ -45,6 +45,23 @@ final class FtpFacadeTest {
                 FTPReply.isPositiveCompletion(ftp.getReplyCode()),
                 Matchers.equalTo(true)
             );
+        } finally {
+            facade.close();
+        }
+    }
+
+    /**
+     * Disconnects successfully.
+     * @throws IOException If it fails inside
+     */
+    @Test
+    @Disabled
+    void disconnectsSuccessfully() throws IOException {
+        final FtpFacade facade = FtpFacadeTest.mockFacade();
+        final FTPClient ftp = new FTPClient();
+        try {
+            facade.listen();
+            ftp.connect("localhost");
             MatcherAssert.assertThat(
                 ftp.logout(),
                 Matchers.equalTo(true)

@@ -58,9 +58,9 @@ final class ObjectVersionListingTest {
                 StandardCharsets.UTF_8
             ),
             Matchers.allOf(
-                ObjectVersionListingTest.hasKeyXpath(key, versions[0]),
-                ObjectVersionListingTest.hasKeyXpath(key, versions[1]),
-                ObjectVersionListingTest.hasKeyXpath(key, versions[2])
+                ObjectVersionListingTest.matchesKeyXpath(key, versions[0]),
+                ObjectVersionListingTest.matchesKeyXpath(key, versions[1]),
+                ObjectVersionListingTest.matchesKeyXpath(key, versions[2])
             )
         );
     }
@@ -71,7 +71,7 @@ final class ObjectVersionListingTest {
      * @param version The version
      * @return The XML element matcher
      */
-    private static Matcher<String> hasKeyXpath(final String key,
+    private static Matcher<String> matchesKeyXpath(final String key,
         final String version) {
         return XhtmlMatchers.hasXPath(
             String.format(

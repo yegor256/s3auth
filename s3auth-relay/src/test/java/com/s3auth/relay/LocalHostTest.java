@@ -5,7 +5,6 @@
 package com.s3auth.relay;
 
 import com.jcabi.manifests.Manifests;
-import com.s3auth.hosts.Host;
 import com.s3auth.hosts.Range;
 import com.s3auth.hosts.ResourceMocker;
 import com.s3auth.hosts.Version;
@@ -21,27 +20,48 @@ import org.junit.jupiter.api.Test;
 final class LocalHostTest {
 
     /**
+     * LocalHost does not hide a regular URI.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    void isHiddenReturnsFalseForRegularUri() throws Exception {
+        MatcherAssert.assertThat(
+            new LocalHost().isHidden(new URI("/some-uri")),
+            Matchers.is(false)
+        );
+    }
+
+    /**
+     * LocalHost authorizes any credentials.
+     */
+    @Test
+    void authorizesAnyCredentials() {
+        MatcherAssert.assertThat(
+            new LocalHost().authorized("user-name", "user-password"),
+            Matchers.is(true)
+        );
+    }
+
+    /**
+     * LocalHost has a "localhost" toString.
+     */
+    @Test
+    void hasLocalhostToString() {
+        MatcherAssert.assertThat(
+            new LocalHost(),
+            Matchers.hasToString(Matchers.equalTo("localhost"))
+        );
+    }
+
+    /**
      * LocalHost can render a simple home page.
      * @throws Exception If there is some problem inside
      */
     @Test
-    void rendersHomePage() throws Exception {
-        final Host host = new LocalHost();
-        MatcherAssert.assertThat(
-            host.isHidden(new URI("/some-uri")),
-            Matchers.is(false)
-        );
-        MatcherAssert.assertThat(
-            host.authorized("user-name", "user-password"),
-            Matchers.is(true)
-        );
-        MatcherAssert.assertThat(
-            host,
-            Matchers.hasToString(Matchers.equalTo("localhost"))
-        );
+    void fetchesHomeResource() throws Exception {
         MatcherAssert.assertThat(
             ResourceMocker.toString(
-                host.fetch(URI.create("/"), Range.ENTIRE, Version.LATEST)
+                new LocalHost().fetch(URI.create("/"), Range.ENTIRE, Version.LATEST)
             ),
             Matchers.notNullValue()
         );
@@ -53,10 +73,11 @@ final class LocalHostTest {
      */
     @Test
     void reportsCurrentVersion() throws Exception {
-        final Host host = new LocalHost();
         MatcherAssert.assertThat(
             ResourceMocker.toString(
-                host.fetch(URI.create("/version"), Range.ENTIRE, Version.LATEST)
+                new LocalHost().fetch(
+                    URI.create("/version"), Range.ENTIRE, Version.LATEST
+                )
             ),
             Matchers.equalTo(Manifests.read("S3Auth-Revision"))
         );

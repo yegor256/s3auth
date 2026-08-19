@@ -17,7 +17,6 @@ import javax.ws.rs.core.HttpHeaders;
 import org.apache.commons.codec.binary.Base64;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -25,10 +24,6 @@ import org.mockito.Mockito;
  * Test case for {@link SecuredHost}.
  * @since 0.0.1
  */
-@SuppressWarnings({
-    "PMD.AvoidInstantiatingObjectsInLoops",
-    "PMD.TooManyMethods"
-})
 final class SecuredHostTest {
 
     /**
@@ -51,7 +46,7 @@ final class SecuredHostTest {
                         )
                     )
                 ).fetch(URI.create("/"), Range.ENTIRE, Version.LATEST);
-                Assert.fail("exception expected");
+                throw new AssertionError("exception expected");
             } catch (final HttpException ex) {
                 MatcherAssert.assertThat(
                     HttpResponseMocker.toString(ex.response()),
@@ -85,7 +80,7 @@ final class SecuredHostTest {
                     new HostMocker().init().mock(),
                     HttpRequestMocker.toRequest(http)
                 ).fetch(URI.create("/test.html"), Range.ENTIRE, Version.LATEST);
-                Assert.fail("exception expected, but didn't happen");
+                throw new AssertionError("exception expected, but didn't happen");
             } catch (final HttpException ex) {
                 MatcherAssert.assertThat(
                     HttpResponseMocker.toString(ex.response()),
@@ -155,7 +150,7 @@ final class SecuredHostTest {
             ).fetch(
                 URI.create("/test-request.html"), Range.ENTIRE, Version.LATEST
             );
-            Assert.fail("authorization failed expected, but didn't happen");
+            throw new AssertionError("authorization failed expected, but didn't happen");
         } catch (final HttpException ex) {
             MatcherAssert.assertThat(
                 HttpResponseMocker.toString(ex.response()),

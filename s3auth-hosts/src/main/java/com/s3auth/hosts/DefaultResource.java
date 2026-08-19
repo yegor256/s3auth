@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Optional;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +31,6 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse;
  * @since 0.0.1
  */
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings("PMD.TooManyMethods")
 final class DefaultResource implements Resource {
 
     /**
@@ -133,10 +133,9 @@ final class DefaultResource implements Resource {
         ignore = DefaultResource.StreamingException.class
     )
     public long writeTo(@NotNull final OutputStream output) throws IOException {
-        final InputStream input = this.stream;
         int total = 0;
         final byte[] buffer = new byte[16 * 1024];
-        try {
+        try (InputStream input = this.stream) {
             while (true) {
                 final int count;
                 try {
@@ -174,8 +173,6 @@ final class DefaultResource implements Resource {
                 total += count;
             }
             this.stats.put(this.bucket, new Stats.Simple(total));
-        } finally {
-            input.close();
         }
         return total;
     }
@@ -248,14 +245,10 @@ final class DefaultResource implements Resource {
 
     @Override
     public Date lastModified() {
-        final Instant modified = this.response().lastModified();
-        final Date result;
-        if (modified == null) {
-            result = Date.from(Instant.now());
-        } else {
-            result = Date.from(modified);
-        }
-        return result;
+        return Date.from(
+            Optional.ofNullable(this.response().lastModified())
+                .orElseGet(Instant::now)
+        );
     }
 
     @Override
@@ -331,12 +324,15 @@ final class DefaultResource implements Resource {
         if (this.range.equals(Range.ENTIRE)) {
             size = this.response().contentLength();
         } else {
-            final DefaultResource.Locator loc = new DefaultResource.Locator(
-                this.bucket, this.key, Range.ENTIRE, this.version
-            );
             try (
                 ResponseInputStream<GetObjectResponse> resp =
-                    this.client.getObject(DefaultResource.request(loc))
+                    this.client.getObject(
+                        DefaultResource.request(
+                            new DefaultResource.Locator(
+                                this.bucket, this.key, Range.ENTIRE, this.version
+                            )
+                        )
+                    )
             ) {
                 size = resp.response().contentLength();
             } catch (final IOException ex) {

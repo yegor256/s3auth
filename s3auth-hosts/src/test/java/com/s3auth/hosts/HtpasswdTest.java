@@ -61,19 +61,27 @@ final class HtpasswdTest {
     }
 
     @Test
-    void understandsShaHashValues() throws Exception {
+    void understandsShaHashValueOfFirstUser() throws Exception {
         MatcherAssert.assertThat(
             new Htpasswd(
                 this.host("john:{SHA}6qagQQ8seo0bw69C/mNKhYbSf34=")
             ).authorized("john", "victory"),
             Matchers.is(true)
         );
+    }
+
+    @Test
+    void understandsShaHashValueOfSecondUser() throws Exception {
         MatcherAssert.assertThat(
             new Htpasswd(
                 this.host("susi:{SHA}05jkyU4N/+ADjjOghbccdO5zKHE=")
             ).authorized("susi", "a7a6s-"),
             Matchers.is(true)
         );
+    }
+
+    @Test
+    void rejectsShaHashValueWithInvalidPassword() throws Exception {
         MatcherAssert.assertThat(
             new Htpasswd(
                 this.host("william:{SHA}qUqP5cyxm6YcTAhz05Hph5gvu9M=")
@@ -87,13 +95,21 @@ final class HtpasswdTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    void understandsPlainTextHashValues() throws Exception {
+    void understandsPlainTextHashValue() throws Exception {
         MatcherAssert.assertThat(
             new Htpasswd(
                 this.host("erik:super-secret-password-г")
             ).authorized("erik", "super-secret-password-г"),
             Matchers.is(true)
         );
+    }
+
+    /**
+     * Htpasswd can reject an incorrect password against a PLAIN/TEXT hash.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    void rejectsPlainTextHashValueWithIncorrectPassword() throws Exception {
         MatcherAssert.assertThat(
             new Htpasswd(
                 this.host("nick:secret-password-г")
@@ -138,14 +154,13 @@ final class HtpasswdTest {
      */
     @Test
     void worksWithDefaultHost() throws Exception {
-        final Htpasswd htpasswd = new Htpasswd(
-            new DefaultHost(
-                new BucketMocker().init().mock(),
-                () -> Mockito.mock(CloudWatchClient.class)
-            )
-        );
         MatcherAssert.assertThat(
-            htpasswd.authorized("jacky", "pwd"),
+            new Htpasswd(
+                new DefaultHost(
+                    new BucketMocker().init().mock(),
+                    () -> Mockito.mock(CloudWatchClient.class)
+                )
+            ).authorized("jacky", "pwd"),
             Matchers.is(false)
         );
     }

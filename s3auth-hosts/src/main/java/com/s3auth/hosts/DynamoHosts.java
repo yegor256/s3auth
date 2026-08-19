@@ -25,7 +25,6 @@ import javax.validation.constraints.Pattern;
  *
  * @since 0.0.1
  */
-@SuppressWarnings({ "PMD.TooManyMethods", "PMD.UseConcurrentHashMap" })
 @Immutable
 @Loggable(Loggable.DEBUG)
 public final class DynamoHosts implements Hosts {

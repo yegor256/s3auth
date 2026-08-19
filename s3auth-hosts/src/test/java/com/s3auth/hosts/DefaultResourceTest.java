@@ -8,7 +8,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.time.Instant;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Random;
 import org.hamcrest.MatcherAssert;
@@ -36,23 +35,21 @@ final class DefaultResourceTest {
     @Test
     void getsHeadersFromAmazonObject() throws Exception {
         final S3Client client = Mockito.mock(S3Client.class);
-        final GetObjectResponse response = GetObjectResponse.builder()
-            .contentLength(1L)
-            .build();
-        final ResponseInputStream<GetObjectResponse> stream =
+        Mockito.doReturn(
             new ResponseInputStream<>(
-                response,
+                GetObjectResponse.builder()
+                    .contentLength(1L)
+                    .build(),
                 AbortableInputStream.create(new ByteArrayInputStream(new byte[0]))
-            );
-        Mockito.doReturn(stream).when(client)
+            )
+        ).when(client)
             .getObject(Mockito.any(GetObjectRequest.class));
-        final Resource res = DefaultResource.fetch(
-            client,
-            new DefaultResource.Locator("a", "", Range.ENTIRE, Version.LATEST),
-            Mockito.mock(DomainStatsData.class)
-        );
         MatcherAssert.assertThat(
-            res.headers(),
+            DefaultResource.fetch(
+                client,
+                new DefaultResource.Locator("a", "", Range.ENTIRE, Version.LATEST),
+                Mockito.mock(DomainStatsData.class)
+            ).headers(),
             Matchers.hasItem("Content-Length: 1")
         );
     }
@@ -64,15 +61,14 @@ final class DefaultResourceTest {
     @Test
     void writesFromAmazonObjectToOutputStream() throws Exception {
         final S3Client client = Mockito.mock(S3Client.class);
-        final GetObjectResponse response = GetObjectResponse.builder()
-            .contentLength(0L)
-            .build();
-        final ResponseInputStream<GetObjectResponse> stream =
+        Mockito.doReturn(
             new ResponseInputStream<>(
-                response,
+                GetObjectResponse.builder()
+                    .contentLength(0L)
+                    .build(),
                 AbortableInputStream.create(new ByteArrayInputStream(new byte[0]))
-            );
-        Mockito.doReturn(stream).when(client)
+            )
+        ).when(client)
             .getObject(Mockito.any(GetObjectRequest.class));
         MatcherAssert.assertThat(
             ResourceMocker.toString(
@@ -99,15 +95,14 @@ final class DefaultResourceTest {
             data[pos] = (byte) random.nextInt();
         }
         final S3Client client = Mockito.mock(S3Client.class);
-        final GetObjectResponse response = GetObjectResponse.builder()
-            .contentLength((long) size)
-            .build();
-        final ResponseInputStream<GetObjectResponse> stream =
+        Mockito.doReturn(
             new ResponseInputStream<>(
-                response,
+                GetObjectResponse.builder()
+                    .contentLength((long) size)
+                    .build(),
                 AbortableInputStream.create(new ByteArrayInputStream(data))
-            );
-        Mockito.doReturn(stream).when(client)
+            )
+        ).when(client)
             .getObject(Mockito.any(GetObjectRequest.class));
         MatcherAssert.assertThat(
             ResourceMocker.toByteArray(
@@ -128,27 +123,27 @@ final class DefaultResourceTest {
     @Test
     void throwsWhenFailedToRead() throws Exception {
         final S3Client client = Mockito.mock(S3Client.class);
-        final GetObjectResponse response = GetObjectResponse.builder()
-            .contentLength(10L)
-            .build();
-        final java.io.InputStream bad = new java.io.InputStream() {
-            @Override
-            public int read() throws IOException {
-                throw new IOException("oops");
-            }
-
-            @Override
-            public int read(final byte[] buf, final int off, final int len)
-                throws IOException {
-                return this.read();
-            }
-        };
-        final ResponseInputStream<GetObjectResponse> stream =
+        Mockito.doReturn(
             new ResponseInputStream<>(
-                response,
-                AbortableInputStream.create(bad)
-            );
-        Mockito.doReturn(stream).when(client)
+                GetObjectResponse.builder()
+                    .contentLength(10L)
+                    .build(),
+                AbortableInputStream.create(
+                    new java.io.InputStream() {
+                        @Override
+                        public int read() throws IOException {
+                            throw new IOException("oops");
+                        }
+
+                        @Override
+                        public int read(final byte[] buf, final int off, final int len)
+                            throws IOException {
+                            return this.read();
+                        }
+                    }
+                )
+            )
+        ).when(client)
             .getObject(Mockito.any(GetObjectRequest.class));
         Assertions.assertThrows(
             IOException.class,
@@ -169,24 +164,22 @@ final class DefaultResourceTest {
     void getsLastModifiedDate() {
         final Instant date = Instant.now();
         final S3Client client = Mockito.mock(S3Client.class);
-        final GetObjectResponse response = GetObjectResponse.builder()
-            .contentLength(0L)
-            .lastModified(date)
-            .build();
-        final ResponseInputStream<GetObjectResponse> stream =
+        Mockito.doReturn(
             new ResponseInputStream<>(
-                response,
+                GetObjectResponse.builder()
+                    .contentLength(0L)
+                    .lastModified(date)
+                    .build(),
                 AbortableInputStream.create(new ByteArrayInputStream(new byte[0]))
-            );
-        Mockito.doReturn(stream).when(client)
+            )
+        ).when(client)
             .getObject(Mockito.any(GetObjectRequest.class));
-        final Resource res = DefaultResource.fetch(
-            client,
-            new DefaultResource.Locator("x", "", Range.ENTIRE, Version.LATEST),
-            Mockito.mock(DomainStatsData.class)
-        );
         MatcherAssert.assertThat(
-            res.lastModified(),
+            DefaultResource.fetch(
+                client,
+                new DefaultResource.Locator("x", "", Range.ENTIRE, Version.LATEST),
+                Mockito.mock(DomainStatsData.class)
+            ).lastModified(),
             Matchers.is(Date.from(date))
         );
     }
@@ -198,24 +191,22 @@ final class DefaultResourceTest {
     @Test
     void getsCacheControlHeaderFromAmazonObject() throws Exception {
         final S3Client client = Mockito.mock(S3Client.class);
-        final GetObjectResponse response = GetObjectResponse.builder()
-            .contentLength(0L)
-            .cacheControl("max-age: 600, public")
-            .build();
-        final ResponseInputStream<GetObjectResponse> stream =
+        Mockito.doReturn(
             new ResponseInputStream<>(
-                response,
+                GetObjectResponse.builder()
+                    .contentLength(0L)
+                    .cacheControl("max-age: 600, public")
+                    .build(),
                 AbortableInputStream.create(new ByteArrayInputStream(new byte[0]))
-            );
-        Mockito.doReturn(stream).when(client)
+            )
+        ).when(client)
             .getObject(Mockito.any(GetObjectRequest.class));
-        final Resource res = DefaultResource.fetch(
-            client,
-            new DefaultResource.Locator("e", "", Range.ENTIRE, Version.LATEST),
-            Mockito.mock(DomainStatsData.class)
-        );
         MatcherAssert.assertThat(
-            res.headers(),
+            DefaultResource.fetch(
+                client,
+                new DefaultResource.Locator("e", "", Range.ENTIRE, Version.LATEST),
+                Mockito.mock(DomainStatsData.class)
+            ).headers(),
             Matchers.hasItem("Cache-Control: max-age: 600, public")
         );
     }
@@ -228,23 +219,21 @@ final class DefaultResourceTest {
     @Test
     void getsDefaultCacheControlHeader() throws Exception {
         final S3Client client = Mockito.mock(S3Client.class);
-        final GetObjectResponse response = GetObjectResponse.builder()
-            .contentLength(0L)
-            .build();
-        final ResponseInputStream<GetObjectResponse> stream =
+        Mockito.doReturn(
             new ResponseInputStream<>(
-                response,
+                GetObjectResponse.builder()
+                    .contentLength(0L)
+                    .build(),
                 AbortableInputStream.create(new ByteArrayInputStream(new byte[0]))
-            );
-        Mockito.doReturn(stream).when(client)
+            )
+        ).when(client)
             .getObject(Mockito.any(GetObjectRequest.class));
-        final Resource res = DefaultResource.fetch(
-            client,
-            new DefaultResource.Locator("f", "", Range.ENTIRE, Version.LATEST),
-            Mockito.mock(DomainStatsData.class)
-        );
         MatcherAssert.assertThat(
-            res.headers(),
+            DefaultResource.fetch(
+                client,
+                new DefaultResource.Locator("f", "", Range.ENTIRE, Version.LATEST),
+                Mockito.mock(DomainStatsData.class)
+            ).headers(),
             Matchers.hasItem("Cache-Control: must-revalidate")
         );
     }
@@ -262,15 +251,14 @@ final class DefaultResourceTest {
             data[pos] = (byte) random.nextInt();
         }
         final S3Client client = Mockito.mock(S3Client.class);
-        final GetObjectResponse response = GetObjectResponse.builder()
-            .contentLength((long) size)
-            .build();
-        final ResponseInputStream<GetObjectResponse> stream =
+        Mockito.doReturn(
             new ResponseInputStream<>(
-                response,
+                GetObjectResponse.builder()
+                    .contentLength((long) size)
+                    .build(),
                 AbortableInputStream.create(new ByteArrayInputStream(data))
-            );
-        Mockito.doReturn(stream).when(client)
+            )
+        ).when(client)
             .getObject(Mockito.any(GetObjectRequest.class));
         final DomainStatsData stats = Mockito.mock(DomainStatsData.class);
         final String bucket = "MetricsTest";
@@ -298,16 +286,14 @@ final class DefaultResourceTest {
         final String version = "abcd";
         Mockito.doAnswer(
             (Answer<ResponseInputStream<GetObjectResponse>>) invocation -> {
-                final GetObjectRequest req =
-                    (GetObjectRequest) invocation.getArguments()[0];
                 MatcherAssert.assertThat(
-                    req.versionId(), Matchers.is(version)
+                    ((GetObjectRequest) invocation.getArguments()[0]).versionId(),
+                    Matchers.is(version)
                 );
-                final GetObjectResponse response = GetObjectResponse.builder()
-                    .contentLength(0L)
-                    .build();
                 return new ResponseInputStream<>(
-                    response,
+                    GetObjectResponse.builder()
+                        .contentLength(0L)
+                        .build(),
                     AbortableInputStream.create(new ByteArrayInputStream(new byte[0]))
                 );
             }
@@ -328,13 +314,12 @@ final class DefaultResourceTest {
     @Test
     void closesUnderlyingObject() throws Exception {
         final S3Client client = Mockito.mock(S3Client.class);
-        final GetObjectResponse response = GetObjectResponse.builder()
-            .contentLength(1L)
-            .build();
         final ResponseInputStream<GetObjectResponse> stream =
             Mockito.spy(
                 new ResponseInputStream<>(
-                    response,
+                    GetObjectResponse.builder()
+                        .contentLength(1L)
+                        .build(),
                     AbortableInputStream.create(
                         new ByteArrayInputStream(new byte[0])
                     )
@@ -360,24 +345,22 @@ final class DefaultResourceTest {
         final S3Client client = Mockito.mock(S3Client.class);
         Mockito.doAnswer(
             (Answer<ResponseInputStream<GetObjectResponse>>) invocation -> {
-                final GetObjectResponse response = GetObjectResponse.builder()
-                    .contentLength(10L)
-                    .build();
                 return new ResponseInputStream<>(
-                    response,
+                    GetObjectResponse.builder()
+                        .contentLength(10L)
+                        .build(),
                     AbortableInputStream.create(new ByteArrayInputStream(new byte[0]))
                 );
             }
         ).when(client).getObject(Mockito.any(GetObjectRequest.class));
-        final Collection<String> headers = DefaultResource.fetch(
-            client,
-            new DefaultResource.Locator(
-                "j", "", new Range.Simple(0, 1), Version.LATEST
-            ),
-            Mockito.mock(DomainStatsData.class)
-        ).headers();
         MatcherAssert.assertThat(
-            headers,
+            DefaultResource.fetch(
+                client,
+                new DefaultResource.Locator(
+                    "j", "", new Range.Simple(0, 1), Version.LATEST
+                ),
+                Mockito.mock(DomainStatsData.class)
+            ).headers(),
             Matchers.hasItem(
                 Matchers.containsString("Content-Range: bytes 0-1/10")
             )
@@ -391,24 +374,22 @@ final class DefaultResourceTest {
     @Test
     void getsContentEncodingHeaderFromAmazonObject() throws Exception {
         final S3Client client = Mockito.mock(S3Client.class);
-        final GetObjectResponse response = GetObjectResponse.builder()
-            .contentLength(0L)
-            .contentEncoding("gzip")
-            .build();
-        final ResponseInputStream<GetObjectResponse> stream =
+        Mockito.doReturn(
             new ResponseInputStream<>(
-                response,
+                GetObjectResponse.builder()
+                    .contentLength(0L)
+                    .contentEncoding("gzip")
+                    .build(),
                 AbortableInputStream.create(new ByteArrayInputStream(new byte[0]))
-            );
-        Mockito.doReturn(stream).when(client)
+            )
+        ).when(client)
             .getObject(Mockito.any(GetObjectRequest.class));
-        final Resource res = DefaultResource.fetch(
-            client,
-            new DefaultResource.Locator("abcdef", "", Range.ENTIRE, Version.LATEST),
-            Mockito.mock(DomainStatsData.class)
-        );
         MatcherAssert.assertThat(
-            res.headers(),
+            DefaultResource.fetch(
+                client,
+                new DefaultResource.Locator("abcdef", "", Range.ENTIRE, Version.LATEST),
+                Mockito.mock(DomainStatsData.class)
+            ).headers(),
             Matchers.hasItem("Content-Encoding: gzip")
         );
     }

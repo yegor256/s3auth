@@ -31,7 +31,6 @@ import org.apache.commons.codec.digest.Md5Crypt;
  */
 @Immutable
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings("PMD.UnusedPrivateField")
 final class Htpasswd {
 
     /**
@@ -91,7 +90,7 @@ final class Htpasswd {
      * @throws IOException If some error inside
      */
     @LogExceptions
-    public boolean authorized(@NotNull final String user,
+    boolean authorized(@NotNull final String user,
         @NotNull final String password) throws IOException {
         final ConcurrentMap<String, String> users = this.fetch();
         return users.containsKey(user)
@@ -167,6 +166,7 @@ final class Htpasswd {
      * Algorithm.
      * @since 0.0.1
      */
+    @FunctionalInterface
     private interface Algorithm {
 
         /**
@@ -196,11 +196,9 @@ final class Htpasswd {
             final Matcher matcher = Htpasswd.Md5.PATTERN.matcher(hash);
             final boolean matches;
             if (matcher.matches()) {
-                final String result = Md5Crypt.apr1Crypt(
-                    password,
-                    matcher.group(1)
+                matches = hash.equals(
+                    Md5Crypt.apr1Crypt(password, matcher.group(1))
                 );
-                matches = hash.equals(result);
             } else {
                 matches = false;
             }
@@ -226,10 +224,9 @@ final class Htpasswd {
             final Matcher matcher = Htpasswd.Sha.PATTERN.matcher(hash);
             final boolean matches;
             if (matcher.matches()) {
-                final String required = Base64.encodeBase64String(
-                    DigestUtils.sha1(password)
+                matches = matcher.group(1).equals(
+                    Base64.encodeBase64String(DigestUtils.sha1(password))
                 );
-                matches = matcher.group(1).equals(required);
             } else {
                 matches = false;
             }

@@ -13,7 +13,6 @@ import javax.validation.constraints.NotNull;
  * Default implementation of domain.
  * @since 0.0.1
  */
-@SuppressWarnings("PMD.TooManyMethods")
 @Immutable
 @Loggable(Loggable.DEBUG)
 final class DefaultDomain implements Domain {

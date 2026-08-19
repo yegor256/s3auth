@@ -38,7 +38,6 @@ import javax.validation.constraints.NotNull;
  *  .s3auth.relay.HttpFacade} and {@link com.s3auth.relay.FtpFacade} so they use
  *  the new Facade class in order to avoid code duplication.
  */
-@SuppressWarnings("PMD.DoNotUseThreads")
 @Loggable(Loggable.DEBUG)
 final class HttpFacade implements Closeable {
 
@@ -90,26 +89,6 @@ final class HttpFacade implements Closeable {
         this.secured = sec;
     }
 
-    /**
-     * Start listening to the ports.
-     */
-    public void listen() {
-        final ScheduledFuture<?> plain = this.frontend.scheduleWithFixedDelay(
-            new VerboseRunnable(
-                () -> this.process(this.server)
-            ),
-            0L, 1L, TimeUnit.NANOSECONDS
-        );
-        Logger.debug(this, "#listen(): scheduled %s", plain);
-        final ScheduledFuture<?> ssl = this.frontend.scheduleWithFixedDelay(
-            new VerboseRunnable(
-                () -> this.process(this.secured)
-            ),
-            0L, 1L, TimeUnit.NANOSECONDS
-        );
-        Logger.debug(this, "#listen(): scheduled %s", ssl);
-    }
-
     @Override
     public void close() throws IOException {
         try {
@@ -120,6 +99,26 @@ final class HttpFacade implements Closeable {
             throw new IOException(ex);
         }
         this.server.close();
+    }
+
+    /**
+     * Start listening to the ports.
+     */
+    void listen() {
+        Logger.debug(
+            this, "#listen(): scheduled %s",
+            this.frontend.scheduleWithFixedDelay(
+                new VerboseRunnable(() -> this.process(this.server)),
+                0L, 1L, TimeUnit.NANOSECONDS
+            )
+        );
+        Logger.debug(
+            this, "#listen(): scheduled %s",
+            this.frontend.scheduleWithFixedDelay(
+                new VerboseRunnable(() -> this.process(this.secured)),
+                0L, 1L, TimeUnit.NANOSECONDS
+            )
+        );
     }
 
     /**
@@ -164,8 +163,13 @@ final class HttpFacade implements Closeable {
 
     /**
      * Process one server socket.
+     *
+     * <p>Socket ownership transfers to the queue; {@link HttpThread} closes
+     * it later.
+     *
      * @param svr The server socket
      */
+    @SuppressWarnings("PMD.CloseResource")
     private void process(final ServerSocket svr) {
         final Socket socket;
         try {
@@ -192,14 +196,14 @@ final class HttpFacade implements Closeable {
      * @param socket The socket to report to
      */
     private static void overflow(final Socket socket) {
-        final String message = String.format(
-            "We're sorry, the site is under high load at the moment (%d open connections), please try again in a few minutes",
-            HttpFacade.THREADS
-        );
         try {
             new HttpResponse()
-                .withStatus(HttpURLConnection.HTTP_GATEWAY_TIMEOUT)
-                .withBody(message)
+                .withStatus(HttpURLConnection.HTTP_GATEWAY_TIMEOUT).withBody(
+                    String.format(
+                        "We're sorry, the site is under high load at the moment (%d open connections), please try again in a few minutes",
+                        HttpFacade.THREADS
+                    )
+                )
                 .send(socket);
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);

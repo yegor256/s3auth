@@ -24,9 +24,8 @@ final class ResourceTest {
     @Test
     void returnsPlainTextContent() throws Exception {
         final String content = "г test!";
-        final Resource res = new Resource.PlainText(content);
         MatcherAssert.assertThat(
-            ResourceMocker.toString(res),
+            ResourceMocker.toString(new Resource.PlainText(content)),
             Matchers.equalTo(content)
         );
     }
@@ -37,9 +36,8 @@ final class ResourceTest {
      */
     @Test
     void getsHeadersForPlainText() throws Exception {
-        final Resource res = new Resource.PlainText("");
         MatcherAssert.assertThat(
-            res.headers(),
+            new Resource.PlainText("").headers(),
             Matchers.allOf(
                 Matchers.hasItem("Content-Length: 0"),
                 Matchers.hasItem("Content-Type: text/plain")
@@ -52,9 +50,8 @@ final class ResourceTest {
      */
     @Test
     void convertsItselfToString() {
-        final String content = "фг test!";
         MatcherAssert.assertThat(
-            new Resource.PlainText(content),
+            new Resource.PlainText("фг test!"),
             Matchers.hasToString(Matchers.notNullValue())
         );
     }

@@ -59,11 +59,11 @@ final class DirectoryListingTest {
                 StandardCharsets.UTF_8
             ),
             Matchers.allOf(
-                hasCommonPrefix(prefixes[0]),
-                hasCommonPrefix(prefixes[1]),
-                hasObject(names[0], 10),
-                hasObject(names[1], 10),
-                hasObject(names[2], 10)
+                matchesCommonPrefix(prefixes[0]),
+                matchesCommonPrefix(prefixes[1]),
+                matchesObject(names[0], 10),
+                matchesObject(names[1], 10),
+                matchesObject(names[2], 10)
             )
         );
     }
@@ -74,7 +74,7 @@ final class DirectoryListingTest {
      * @param size The size
      * @return Matcher for object element
      */
-    private static Matcher<String> hasObject(final String key, final int size) {
+    private static Matcher<String> matchesObject(final String key, final int size) {
         return XhtmlMatchers.hasXPaths(
             String.format(
                 "//xhtml:a[@href=\"/%s\" and .=\"%s\"]",
@@ -89,7 +89,7 @@ final class DirectoryListingTest {
      * @param prefix The key
      * @return Matcher for common prefix element
      */
-    private static Matcher<String> hasCommonPrefix(final String prefix) {
+    private static Matcher<String> matchesCommonPrefix(final String prefix) {
         return XhtmlMatchers.hasXPath(
             String.format(
                 "//xhtml:a[@href=\"/%sindex.html\" and .=\"%s\"]",

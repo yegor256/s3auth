@@ -152,7 +152,8 @@ final class ObjectVersionListing implements Resource {
             ImmutableList.builder();
         String token = null;
         String vtoken = null;
-        do {
+        boolean more = true;
+        while (more) {
             final ListObjectVersionsRequest.Builder builder =
                 ListObjectVersionsRequest.builder()
                     .prefix(key)
@@ -166,14 +167,13 @@ final class ObjectVersionListing implements Resource {
             final ListObjectVersionsResponse listing =
                 clnt.listObjectVersions(builder.build());
             versions.addAll(listing.versions());
-            if (listing.isTruncated()) {
+            more = listing.isTruncated();
+            if (more) {
                 token = listing.nextKeyMarker();
                 vtoken = listing.nextVersionIdMarker();
-            } else {
-                token = null;
-                vtoken = null;
+                more = token != null;
             }
-        } while (token != null);
+        }
         final Directives dirs = new Directives()
             .add("versions").attr("object", key);
         for (final ObjectVersion version : versions.build()) {

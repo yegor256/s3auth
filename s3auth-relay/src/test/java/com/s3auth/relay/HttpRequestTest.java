@@ -4,7 +4,6 @@
  */
 package com.s3auth.relay;
 
-import com.s3auth.hosts.Range;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
@@ -14,198 +13,338 @@ import org.junit.jupiter.api.Test;
  * Test case for {@link HttpRequest}.
  * @since 0.0.1
  */
-@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 final class HttpRequestTest {
 
     /**
-     * HttpRequest can parse HTTP response.
+     * HttpRequest can parse the request URI.
      * @throws Exception If there is some problem inside
      */
     @Test
-    void parsesHttpRequest() throws Exception {
-        final HttpRequest request = HttpRequestMocker.toRequest(
-            HttpRequestTest.text(
-                "GET /test.html HTTP/1.1", "Host:local",
-                "Accept:text/plain", "", "body"
-            )
-        );
+    void parsesRequestUri() throws Exception {
         MatcherAssert.assertThat(
-            request.requestUri().toString(),
+            HttpRequestMocker.toRequest(
+                HttpRequestTest.text(
+                    "GET /test.html HTTP/1.1", "Host:local",
+                    "Accept:text/plain", "", "body"
+                )
+            ).requestUri().toString(),
             Matchers.equalTo("/test.html")
         );
+    }
+
+    /**
+     * HttpRequest can parse the Host header.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    void parsesHostHeader() throws Exception {
         MatcherAssert.assertThat(
-            request.headers().get("Host"),
+            HttpRequestMocker.toRequest(
+                HttpRequestTest.text(
+                    "GET /test.html HTTP/1.1", "Host:local",
+                    "Accept:text/plain", "", "body"
+                )
+            ).headers().get("Host"),
             Matchers.hasItem("local")
         );
     }
 
     /**
-     * HttpRequest can retrieve headers in a case-insensitive manner.
+     * HttpRequest can retrieve a header by its original case.
      * @throws Exception If there is some problem inside
      */
     @Test
-    void fetchesCaseInsensitiveHeaders() throws Exception {
-        final HttpRequest request = HttpRequestMocker.toRequest(
-            HttpRequestTest.text(
-                "GET /test.html HTTP/1.1", "Host:local",
-                "Accept:text/plain", "", "body"
-            )
-        );
+    void fetchesHeaderByOriginalCase() throws Exception {
         MatcherAssert.assertThat(
-            request.headers().get("Accept"),
-            Matchers.hasItem("text/plain")
-        );
-        MatcherAssert.assertThat(
-            request.headers().get("ACCEPT"),
-            Matchers.hasItem("text/plain")
-        );
-        MatcherAssert.assertThat(
-            request.headers().get("accept"),
-            Matchers.hasItem("text/plain")
-        );
-        MatcherAssert.assertThat(
-            request.headers().get("aCcEpT"),
+            HttpRequestMocker.toRequest(
+                HttpRequestTest.text(
+                    "GET /test.html HTTP/1.1", "Host:local",
+                    "Accept:text/plain", "", "body"
+                )
+            ).headers().get("Accept"),
             Matchers.hasItem("text/plain")
         );
     }
 
     /**
-     * HttpRequest can retrieve a full range header value.
+     * HttpRequest can retrieve a header by its uppercase name.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    void fetchesHeaderByUppercaseName() throws Exception {
+        MatcherAssert.assertThat(
+            HttpRequestMocker.toRequest(
+                HttpRequestTest.text(
+                    "GET /test.html HTTP/1.1", "Host:local",
+                    "Accept:text/plain", "", "body"
+                )
+            ).headers().get("ACCEPT"),
+            Matchers.hasItem("text/plain")
+        );
+    }
+
+    /**
+     * HttpRequest can retrieve a header by its lowercase name.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    void fetchesHeaderByLowercaseName() throws Exception {
+        MatcherAssert.assertThat(
+            HttpRequestMocker.toRequest(
+                HttpRequestTest.text(
+                    "GET /test.html HTTP/1.1", "Host:local",
+                    "Accept:text/plain", "", "body"
+                )
+            ).headers().get("accept"),
+            Matchers.hasItem("text/plain")
+        );
+    }
+
+    /**
+     * HttpRequest can retrieve a header by its mixed-case name.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    void fetchesHeaderByMixedCaseName() throws Exception {
+        MatcherAssert.assertThat(
+            HttpRequestMocker.toRequest(
+                HttpRequestTest.text(
+                    "GET /test.html HTTP/1.1", "Host:local",
+                    "Accept:text/plain", "", "body"
+                )
+            ).headers().get("aCcEpT"),
+            Matchers.hasItem("text/plain")
+        );
+    }
+
+    /**
+     * HttpRequest can retrieve the first byte of a full range header value.
      * @throws Exception If a problem occurs
      */
     @Test
-    void canFetchFullByteRange() throws Exception {
-        final HttpRequest request = HttpRequestMocker.toRequest(
-            HttpRequestTest.text(
-                "GET /test.html HTTP/1.1", "Host:local", "Accept:text/plain",
-                "Range: bytes=100-200", "", "body"
-            )
-        );
-        final Range range = request.range();
+    void fetchesFullByteRangeFirstByte() throws Exception {
         MatcherAssert.assertThat(
-            range.first(),
+            HttpRequestMocker.toRequest(
+                HttpRequestTest.text(
+                    "GET /test.html HTTP/1.1", "Host:local",
+                    "Accept:text/plain",
+                    "Range: bytes=100-200", "", "body"
+                )
+            ).range().first(),
             Matchers.is(100L)
         );
+    }
+
+    /**
+     * HttpRequest can retrieve the last byte of a full range header value.
+     * @throws Exception If a problem occurs
+     */
+    @Test
+    void fetchesFullByteRangeLastByte() throws Exception {
         MatcherAssert.assertThat(
-            range.last(),
+            HttpRequestMocker.toRequest(
+                HttpRequestTest.text(
+                    "GET /test.html HTTP/1.1", "Host:local",
+                    "Accept:text/plain",
+                    "Range: bytes=100-200", "", "body"
+                )
+            ).range().last(),
             Matchers.is(200L)
         );
     }
 
     /**
-     * HttpRequest can retrieve a range with only the first byte specified.
-     * e.g. "byte=100-" for "From byte 100"
+     * HttpRequest can retrieve the first byte of a range with only the
+     * first byte specified, e.g. "byte=100-" for "From byte 100".
      * @throws Exception If a problem occurs
      */
     @Test
-    void canFetchRangeFromFirstByte() throws Exception {
-        final HttpRequest request = HttpRequestMocker.toRequest(
-            HttpRequestTest.text(
-                "GET /test.html HTTP/1.1", "Host:local", "Accept:text/plain",
-                "Range: bytes=100-", "", "body"
-            )
-        );
-        final Range range = request.range();
+    void fetchesRangeFromFirstByteStart() throws Exception {
         MatcherAssert.assertThat(
-            range.first(),
+            HttpRequestMocker.toRequest(
+                HttpRequestTest.text(
+                    "GET /test.html HTTP/1.1", "Host:local",
+                    "Accept:text/plain",
+                    "Range: bytes=100-", "", "body"
+                )
+            ).range().first(),
             Matchers.is(100L)
         );
+    }
+
+    /**
+     * HttpRequest defaults the last byte to the maximum long value when
+     * only the first byte is specified, e.g. "byte=100-" for "From byte 100".
+     * @throws Exception If a problem occurs
+     */
+    @Test
+    void fetchesRangeFromFirstByteEnd() throws Exception {
         MatcherAssert.assertThat(
-            range.last(),
+            HttpRequestMocker.toRequest(
+                HttpRequestTest.text(
+                    "GET /test.html HTTP/1.1", "Host:local",
+                    "Accept:text/plain",
+                    "Range: bytes=100-", "", "body"
+                )
+            ).range().last(),
             Matchers.is(Long.MAX_VALUE)
         );
     }
 
     /**
-     * HttpRequest can retrieve query parameters.
+     * HttpRequest can retrieve the "test" query parameter.
      * @throws Exception If there is some problem inside
      */
     @Test
-    void fetchesQueryParams() throws Exception {
-        final HttpRequest request = HttpRequestMocker.toRequest(
-            HttpRequestTest.text(
-                "GET /test.html?test=param&hello=world HTTP/1.1",
-                "Host:local", "Accept:text/plain", "", "body"
-            )
-        );
+    void fetchesTestQueryParam() throws Exception {
         MatcherAssert.assertThat(
-            request.parameters().get("test"),
+            HttpRequestMocker.toRequest(
+                HttpRequestTest.text(
+                    "GET /test.html?test=param&hello=world HTTP/1.1",
+                    "Host:local", "Accept:text/plain", "", "body"
+                )
+            ).parameters().get("test"),
             Matchers.hasItem("param")
         );
+    }
+
+    /**
+     * HttpRequest can retrieve the "hello" query parameter.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    void fetchesHelloQueryParam() throws Exception {
         MatcherAssert.assertThat(
-            request.parameters().get("hello"),
+            HttpRequestMocker.toRequest(
+                HttpRequestTest.text(
+                    "GET /test.html?test=param&hello=world HTTP/1.1",
+                    "Host:local", "Accept:text/plain", "", "body"
+                )
+            ).parameters().get("hello"),
             Matchers.hasItem("world")
         );
     }
 
     /**
-     * HttpRequest can retrieve duplicate query parameters.
+     * HttpRequest can retrieve duplicate query parameter values.
      * @throws Exception If there is some problem inside
      */
     @Test
-    void fetchesDuplicateQueryParams() throws Exception {
-        final HttpRequest request = HttpRequestMocker.toRequest(
-            HttpRequestTest.text(
-                "GET /test.html?first=one&second=two&first=three HTTP/1.1",
-                "Host:local", "Accept:text/plain", "", "body"
-            )
-        );
+    void fetchesDuplicateQueryParamValues() throws Exception {
         MatcherAssert.assertThat(
-            request.parameters().get("first"),
+            HttpRequestMocker.toRequest(
+                HttpRequestTest.text(
+                    "GET /test.html?first=one&second=two&first=three HTTP/1.1",
+                    "Host:local", "Accept:text/plain", "", "body"
+                )
+            ).parameters().get("first"),
             Matchers.allOf(
                 Matchers.iterableWithSize(2),
                 Matchers.hasItems("one", "three")
             )
         );
+    }
+
+    /**
+     * HttpRequest can retrieve a non-duplicate query parameter alongside
+     * duplicate ones.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    void fetchesNonDuplicateQueryParam() throws Exception {
         MatcherAssert.assertThat(
-            request.parameters().get("second"),
+            HttpRequestMocker.toRequest(
+                HttpRequestTest.text(
+                    "GET /test.html?first=one&second=two&first=three HTTP/1.1",
+                    "Host:local", "Accept:text/plain", "", "body"
+                )
+            ).parameters().get("second"),
             Matchers.hasItem("two")
         );
     }
 
     /**
-     * HttpRequest can retrieve query parameters with no specified value.
+     * HttpRequest can retrieve a query parameter with no specified value
+     * at the start of the query string.
      * @throws Exception If there is some problem inside
      */
     @Test
-    void fetchesQueryParamsWithNoValue() throws Exception {
-        final HttpRequest request = HttpRequestMocker.toRequest(
-            HttpRequestTest.text(
-                "GET /test.html?blank&something=yes&nothing HTTP/1.1",
-                "Host:local", "Accept:text/plain", "", "body"
-            )
-        );
+    void fetchesBlankLeadingQueryParam() throws Exception {
         MatcherAssert.assertThat(
-            request.parameters().get("blank"),
-            Matchers.hasItem("")
-        );
-        MatcherAssert.assertThat(
-            request.parameters().get("something"),
-            Matchers.hasItem("yes")
-        );
-        MatcherAssert.assertThat(
-            request.parameters().get("nothing"),
+            HttpRequestMocker.toRequest(
+                HttpRequestTest.text(
+                    "GET /test.html?blank&something=yes&nothing HTTP/1.1",
+                    "Host:local", "Accept:text/plain", "", "body"
+                )
+            ).parameters().get("blank"),
             Matchers.hasItem("")
         );
     }
 
     /**
-     * HttpRequest supports HTTP HEAD method.
+     * HttpRequest can retrieve a query parameter with a specified value,
+     * among others with no value.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    void fetchesQueryParamWithValue() throws Exception {
+        MatcherAssert.assertThat(
+            HttpRequestMocker.toRequest(
+                HttpRequestTest.text(
+                    "GET /test.html?blank&something=yes&nothing HTTP/1.1",
+                    "Host:local", "Accept:text/plain", "", "body"
+                )
+            ).parameters().get("something"),
+            Matchers.hasItem("yes")
+        );
+    }
+
+    /**
+     * HttpRequest can retrieve a query parameter with no specified value
+     * at the end of the query string.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    void fetchesBlankTrailingQueryParam() throws Exception {
+        MatcherAssert.assertThat(
+            HttpRequestMocker.toRequest(
+                HttpRequestTest.text(
+                    "GET /test.html?blank&something=yes&nothing HTTP/1.1",
+                    "Host:local", "Accept:text/plain", "", "body"
+                )
+            ).parameters().get("nothing"),
+            Matchers.hasItem("")
+        );
+    }
+
+    /**
+     * HttpRequest parses the request URI for HTTP HEAD method requests.
      * @throws Exception If something goes wrong
      */
     @Test
-    void supportsHeadMethod() throws Exception {
-        final HttpRequest request = HttpRequestMocker.toRequest(
-            HttpRequestTest.text(
-                "HEAD /test.html HTTP/1.1", "Host:local", "Accept:text/plain", ""
-            )
-        );
+    void headMethodParsesRequestUri() throws Exception {
         MatcherAssert.assertThat(
-            request.requestUri().toString(),
+            HttpRequestMocker.toRequest(
+                HttpRequestTest.text(
+                    "HEAD /test.html HTTP/1.1", "Host:local", "Accept:text/plain", ""
+                )
+            ).requestUri().toString(),
             Matchers.equalTo("/test.html")
         );
+    }
+
+    /**
+     * HttpRequest parses the Host header for HTTP HEAD method requests.
+     * @throws Exception If something goes wrong
+     */
+    @Test
+    void headMethodParsesHostHeader() throws Exception {
         MatcherAssert.assertThat(
-            request.headers().get("Host"),
+            HttpRequestMocker.toRequest(
+                HttpRequestTest.text(
+                    "HEAD /test.html HTTP/1.1", "Host:local", "Accept:text/plain", ""
+                )
+            ).headers().get("Host"),
             Matchers.hasItem("local")
         );
     }

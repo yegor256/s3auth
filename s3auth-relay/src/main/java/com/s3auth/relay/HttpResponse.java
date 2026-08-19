@@ -74,7 +74,7 @@ final class HttpResponse {
      * @param stts The HTTP status to set
      * @return This object
      */
-    public HttpResponse withStatus(final int stts) {
+    HttpResponse withStatus(final int stts) {
         if (stts < HttpURLConnection.HTTP_OK) {
             throw new IllegalArgumentException(
                 String.format("illegal HTTP status %d", stts)
@@ -90,8 +90,7 @@ final class HttpResponse {
      * @param value Text value
      * @return This object
      */
-    public HttpResponse withHeader(final String name,
-        @NotNull final String value) {
+    HttpResponse withHeader(final String name, @NotNull final String value) {
         this.hdrs.putIfAbsent(name, new ArrayList<>(1));
         this.hdrs.get(name).add(value);
         return this;
@@ -102,7 +101,7 @@ final class HttpResponse {
      * @param res The resource to get the body from
      * @return This object
      */
-    public HttpResponse withBody(@NotNull final Resource res) {
+    HttpResponse withBody(@NotNull final Resource res) {
         this.body = res;
         this.withStatus(res.status());
         return this;
@@ -113,7 +112,7 @@ final class HttpResponse {
      * @param text Text of the body
      * @return This object
      */
-    public HttpResponse withBody(@NotNull final String text) {
+    HttpResponse withBody(@NotNull final String text) {
         this.body = new Resource.PlainText(text);
         return this;
     }
@@ -129,10 +128,9 @@ final class HttpResponse {
         value = Loggable.DEBUG, limit = Integer.MAX_VALUE,
         ignore = IOException.class
     )
-    public long send(@NotNull final Socket socket) throws IOException {
+    long send(@NotNull final Socket socket) throws IOException {
         final OutputStream stream = socket.getOutputStream();
-        final Writer writer = new OutputStreamWriter(stream, StandardCharsets.UTF_8);
-        try {
+        try (Writer writer = new OutputStreamWriter(stream, StandardCharsets.UTF_8)) {
             writer.write(
                 String.format(
                     "HTTP/1.1 %d %s%s",
@@ -157,8 +155,6 @@ final class HttpResponse {
             writer.write(HttpResponse.EOL);
             writer.flush();
             return this.body.writeTo(stream);
-        } finally {
-            writer.close();
         }
     }
 }

@@ -97,23 +97,6 @@ final class H2DomainStatsData implements DomainStatsData {
             && Objects.equals(this.file, ((H2DomainStatsData) obj).file);
     }
 
-    /**
-     * Create tables.
-     * @return This
-     * @throws IOException If an IO Exception occurs
-     */
-    public H2DomainStatsData init() throws IOException {
-        try {
-            Class.forName("org.h2.Driver");
-            this.session().sql(H2DomainStatsData.CREATE).execute().commit();
-        } catch (final ClassNotFoundException ex) {
-            throw new IOException("H2 JDBC driver not on classpath", ex);
-        } catch (final SQLException ex) {
-            throw new IOException(ex);
-        }
-        return this;
-    }
-
     @Override
     public void put(final String domain, final Stats stats) throws IOException {
         try {
@@ -147,7 +130,6 @@ final class H2DomainStatsData implements DomainStatsData {
     }
 
     @Override
-    @SuppressWarnings("PMD.UseConcurrentHashMap")
     public Map<String, Stats> all() throws IOException {
         try {
             final JdbcSession session = this.session();
@@ -159,6 +141,23 @@ final class H2DomainStatsData implements DomainStatsData {
         } catch (final SQLException ex) {
             throw new IOException(ex);
         }
+    }
+
+    /**
+     * Create tables.
+     * @return This
+     * @throws IOException If an IO Exception occurs
+     */
+    H2DomainStatsData init() throws IOException {
+        try {
+            Class.forName("org.h2.Driver");
+            this.session().sql(H2DomainStatsData.CREATE).execute().commit();
+        } catch (final ClassNotFoundException ex) {
+            throw new IOException("H2 JDBC driver not on classpath", ex);
+        } catch (final SQLException ex) {
+            throw new IOException(ex);
+        }
+        return this;
     }
 
     /**

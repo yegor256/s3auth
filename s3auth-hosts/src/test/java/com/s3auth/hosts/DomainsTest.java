@@ -15,10 +15,10 @@ import org.junit.jupiter.api.Test;
 final class DomainsTest {
 
     /**
-     * Domains can add and retrieve domains.
+     * Domains can add and retrieve domains by name.
      */
     @Test
-    void addsAndRetrievesDomains() {
+    void addsAndRetrievesDomainByName() {
         final Domain domain = new DomainMocker().init().mock();
         final Domains domains = new Domains();
         domains.add(domain);
@@ -26,6 +26,16 @@ final class DomainsTest {
             domains.has(domain.name()),
             Matchers.is(true)
         );
+    }
+
+    /**
+     * Domains can tell whether a domain is contained inside.
+     */
+    @Test
+    void containsAddedDomain() {
+        final Domain domain = new DomainMocker().init().mock();
+        final Domains domains = new Domains();
+        domains.add(domain);
         MatcherAssert.assertThat(
             domains.contains(new DefaultDomain(domain)),
             Matchers.is(true)

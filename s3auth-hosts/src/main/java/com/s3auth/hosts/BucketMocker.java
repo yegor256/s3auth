@@ -10,7 +10,6 @@ import software.amazon.awssdk.services.s3.S3Client;
  * Mocker of {@link Bucket}.
  * @since 0.0.1
  */
-@SuppressWarnings("PMD.TooManyMethods")
 public final class BucketMocker {
 
     /**
@@ -105,7 +104,6 @@ public final class BucketMocker {
      * Builder for MkBucket.
      * @since 0.0.1
      */
-    @SuppressWarnings("PMD.TooManyFields")
     private static final class MkBucketBuilder {
 
         /**
@@ -214,7 +212,7 @@ public final class BucketMocker {
      * Mock.
      * @since 0.0.1
      */
-    @SuppressWarnings({ "PMD.TooManyMethods", "PMD.AvoidFieldNameMatchingMethodName" })
+    @SuppressWarnings("PMD.DataClass")
     private static final class MkBucket implements Bucket {
 
         /**

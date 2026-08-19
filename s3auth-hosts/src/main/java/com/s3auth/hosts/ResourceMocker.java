@@ -18,7 +18,6 @@ import org.apache.commons.io.IOUtils;
  * Mocker of {@link Resource}.
  * @since 0.0.1
  */
-@SuppressWarnings("PMD.TooManyMethods")
 public final class ResourceMocker {
 
     /**
@@ -93,7 +92,6 @@ public final class ResourceMocker {
      * Builder for MkResource.
      * @since 0.0.1
      */
-    @SuppressWarnings("PMD.TooManyFields")
     private static final class MkResourceBuilder {
 
         /**
@@ -116,7 +114,7 @@ public final class ResourceMocker {
          * @param value The content
          * @return This builder
          */
-        MkResourceBuilder content(final char[] value) {
+        MkResourceBuilder content(final char... value) {
             this.content = value.clone();
             return this;
         }
@@ -154,7 +152,6 @@ public final class ResourceMocker {
      * Mock.
      * @since 0.0.1
      */
-    @SuppressWarnings({ "PMD.TooManyMethods", "PMD.AvoidFieldNameMatchingMethodName" })
     private static final class MkResource implements Resource {
 
         /**

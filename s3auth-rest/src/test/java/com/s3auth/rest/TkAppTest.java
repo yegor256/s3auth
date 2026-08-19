@@ -33,13 +33,10 @@ final class TkAppTest {
      */
     @Test
     void rendersHomePage() throws Exception {
-        final Take take = new TkApp(
-            new HostsMocker().mock()
-        );
         MatcherAssert.assertThat(
             XhtmlMatchers.xhtml(
                 new RsPrint(
-                    take.act(
+                    new TkApp(new HostsMocker().mock()).act(
                         new RqWithHeader(
                             new RqFake(RqMethod.GET, "/"),
                             "Accept", "application/xml"
@@ -60,7 +57,6 @@ final class TkAppTest {
      * @throws Exception If some problem inside
      */
     @Test
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     void rendersManyUrls() throws Exception {
         final Take take = new TkApp(
             new HostsMocker().mock()
@@ -86,10 +82,7 @@ final class TkAppTest {
      */
     @Test
     void rendersHomePageViaHttp() throws Exception {
-        final Take take = new TkApp(
-            new HostsMocker().mock()
-        );
-        new FtRemote(take).exec(
+        new FtRemote(new TkApp(new HostsMocker().mock())).exec(
             home -> {
                 new JdkRequest(home)
                     .header("Accept", "text/html")

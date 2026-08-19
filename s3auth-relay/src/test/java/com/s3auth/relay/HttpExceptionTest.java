@@ -22,12 +22,13 @@ final class HttpExceptionTest {
      */
     @Test
     void parsesHttpException() throws Exception {
-        final HttpException exp = new HttpException(
-            HttpURLConnection.HTTP_NOT_FOUND,
-            "not found"
-        );
         MatcherAssert.assertThat(
-            HttpResponseMocker.toString(exp.response()),
+            HttpResponseMocker.toString(
+                new HttpException(
+                    HttpURLConnection.HTTP_NOT_FOUND,
+                    "not found"
+                ).response()
+            ),
             Matchers.startsWith("HTTP/1.1 404 Not Found")
         );
     }
@@ -38,12 +39,13 @@ final class HttpExceptionTest {
      */
     @Test
     void makesHttpResponseWithNull() throws Exception {
-        final HttpException exp = new HttpException(
-            HttpURLConnection.HTTP_SEE_OTHER,
-            new IOException((String) null)
-        );
         MatcherAssert.assertThat(
-            HttpResponseMocker.toString(exp.response()),
+            HttpResponseMocker.toString(
+                new HttpException(
+                    HttpURLConnection.HTTP_SEE_OTHER,
+                    new IOException((String) null)
+                ).response()
+            ),
             Matchers.startsWith("HTTP/1.1 303 See Other")
         );
     }

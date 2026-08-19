@@ -131,7 +131,6 @@ public final class UserMocker {
      * Mock.
      * @since 0.0.1
      */
-    @SuppressWarnings({ "PMD.TooManyMethods", "PMD.AvoidFieldNameMatchingMethodName" })
     private static final class MkUser implements User {
 
         /**

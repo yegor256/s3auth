@@ -41,30 +41,6 @@ final class Domains extends AbstractSet<Domain> {
             && Objects.equals(this.all, ((Domains) obj).all);
     }
 
-    /**
-     * Has this domain inside?
-     * @param name The domain to check
-     * @return TRUE if it is inside already
-     */
-    public boolean has(@NotNull final String name) {
-        return this.all.containsKey(name);
-    }
-
-    /**
-     * Get domain by name (runtime exception if it doesn't exist).
-     * @param name The domain
-     * @return Found domain
-     */
-    public Domain get(@NotNull final String name) {
-        final Domain found = this.all.get(name);
-        if (found == null) {
-            throw new IllegalArgumentException(
-                String.format("domain %s not found", name)
-            );
-        }
-        return found;
-    }
-
     @Override
     public boolean add(final Domain domain) {
         boolean added = false;
@@ -88,5 +64,29 @@ final class Domains extends AbstractSet<Domain> {
     @Override
     public int size() {
         return this.all.size();
+    }
+
+    /**
+     * Has this domain inside?
+     * @param name The domain to check
+     * @return TRUE if it is inside already
+     */
+    boolean has(@NotNull final String name) {
+        return this.all.containsKey(name);
+    }
+
+    /**
+     * Get domain by name (runtime exception if it doesn't exist).
+     * @param name The domain
+     * @return Found domain
+     */
+    Domain get(@NotNull final String name) {
+        final Domain found = this.all.get(name);
+        if (found == null) {
+            throw new IllegalArgumentException(
+                String.format("domain %s not found", name)
+            );
+        }
+        return found;
     }
 }

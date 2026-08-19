@@ -47,7 +47,6 @@ import org.apache.commons.lang3.StringUtils;
  * @since 0.0.1
  */
 @Loggable(Loggable.DEBUG)
-@SuppressWarnings("PMD.UseConcurrentHashMap")
 final class HttpRequest {
 
     /**
@@ -120,7 +119,7 @@ final class HttpRequest {
      * Get all found HTTP headers. Note that the returned map is unmodifiable.
      * @return Headers
      */
-    public Map<String, Collection<String>> headers() {
+    Map<String, Collection<String>> headers() {
         return Collections.unmodifiableMap(this.hdrs);
     }
 
@@ -129,7 +128,7 @@ final class HttpRequest {
      * Note that the returned map is unmodifiable.
      * @return Headers
      */
-    public Map<String, Collection<String>> parameters() {
+    Map<String, Collection<String>> parameters() {
         return Collections.unmodifiableMap(this.parms);
     }
 
@@ -137,7 +136,7 @@ final class HttpRequest {
      * Get URI requested.
      * @return The URI
      */
-    public URI requestUri() {
+    URI requestUri() {
         return this.uri;
     }
 
@@ -145,7 +144,7 @@ final class HttpRequest {
      * Get HTTP method requested.
      * @return The method
      */
-    public String method() {
+    String method() {
         return this.mtd;
     }
 
@@ -155,7 +154,7 @@ final class HttpRequest {
      * @throws HttpException If something is wrong
      * @see <a href="http://en.wikipedia.org/wiki/Byte_serving">Byte Serving</a>
      */
-    public Range range() throws HttpException {
+    Range range() throws HttpException {
         final Range range;
         if (this.hdrs.containsKey(HttpRequest.RANGE_HEADER)) {
             final Matcher matcher = HttpRequest.RANGE_PATTERN.matcher(
@@ -191,6 +190,7 @@ final class HttpRequest {
      * @throws IOException If some socket problem
      * @see <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>
      */
+    @SuppressWarnings("PMD.CloseResource")
     static HttpRequest parse(@NotNull final Socket socket) throws IOException {
         final BufferedReader reader = new BufferedReader(
             new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8)

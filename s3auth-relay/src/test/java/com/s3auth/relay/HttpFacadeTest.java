@@ -5,7 +5,6 @@
 package com.s3auth.relay;
 
 import com.jcabi.aspects.Parallel;
-import com.jcabi.http.Response;
 import com.jcabi.http.request.ApacheRequest;
 import com.jcabi.http.request.JdkRequest;
 import com.jcabi.http.response.RestResponse;
@@ -42,11 +41,6 @@ import org.mockito.stubbing.Answer;
  * Test case for {@link HttpFacade}.
  * @since 0.0.1
  */
-@SuppressWarnings({
-    "PMD.AvoidDuplicateLiterals",
-    "PMD.TooManyMethods",
-    "PMD.ExcessiveImports"
-})
 final class HttpFacadeTest {
 
     /**
@@ -54,6 +48,7 @@ final class HttpFacadeTest {
      * @throws Exception If there is some problem inside
      */
     @Test
+    @SuppressWarnings("PMD.UnitTestShouldIncludeAssert")
     void handlesParallelHttpRequests() throws Exception {
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
@@ -72,11 +67,12 @@ final class HttpFacadeTest {
         final HttpFacade facade =
             HttpFacade.open(hosts, port, PortMocker.reserve());
         facade.listen();
-        final URI uri = UriBuilder
-            .fromUri(String.format("http://localhost:%d/", port))
-            .path("/a").build();
         try {
-            HttpFacadeTest.http(uri);
+            HttpFacadeTest.http(
+                UriBuilder
+                    .fromUri(String.format("http://localhost:%d/", port))
+                    .path("/a").build()
+            );
         } finally {
             facade.close();
         }
@@ -112,19 +108,25 @@ final class HttpFacadeTest {
         final URI uri = UriBuilder
             .fromUri(String.format("http://localhost:%d/", port))
             .path("/a").build();
-        final Date before = Date.from(Instant.ofEpochMilli(2000L));
-        final Date after = Date.from(Instant.ofEpochMilli(10_000L));
         try {
             new JdkRequest(uri)
                 .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
-                .header(HttpHeaders.AUTHORIZATION, HttpFacadeTest.auth())
-                .header(HttpHeaders.IF_MODIFIED_SINCE, DateUtils.formatDate(before))
+                .header(HttpHeaders.AUTHORIZATION, HttpFacadeTest.auth()).header(
+                    HttpHeaders.IF_MODIFIED_SINCE,
+                    DateUtils.formatDate(
+                        Date.from(Instant.ofEpochMilli(2000L))
+                    )
+                )
                 .uri().back().fetch().as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK);
             new JdkRequest(uri)
                 .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
-                .header(HttpHeaders.AUTHORIZATION, HttpFacadeTest.auth())
-                .header(HttpHeaders.IF_MODIFIED_SINCE, DateUtils.formatDate(after))
+                .header(HttpHeaders.AUTHORIZATION, HttpFacadeTest.auth()).header(
+                    HttpHeaders.IF_MODIFIED_SINCE,
+                    DateUtils.formatDate(
+                        Date.from(Instant.ofEpochMilli(10_000L))
+                    )
+                )
                 .uri().back().fetch().as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_NOT_MODIFIED);
         } finally {
@@ -138,12 +140,12 @@ final class HttpFacadeTest {
      */
     @Test
     void respondsWithLastModifiedHeader() throws Exception {
-        final Date date = Date.from(Instant.now());
+        final Instant date = Instant.now();
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(
             (Answer<Resource>) inv -> {
                 final Resource answer = Mockito.mock(Resource.class);
-                Mockito.doReturn(date)
+                Mockito.doReturn(Date.from(date))
                     .when(answer).lastModified();
                 Mockito.doReturn(HttpURLConnection.HTTP_OK)
                     .when(answer).status();
@@ -161,17 +163,18 @@ final class HttpFacadeTest {
             HttpFacade.open(hosts, port, PortMocker.reserve());
         try {
             facade.listen();
-            final URI uri = UriBuilder
-                .fromUri(String.format("http://localhost:%d/", port))
-                .path("/a").build();
-            final Response resp = new JdkRequest(uri)
+            MatcherAssert.assertThat(
+                new JdkRequest(
+                    UriBuilder
+                        .fromUri(String.format("http://localhost:%d/", port))
+                        .path("/a").build()
+                )
                 .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
                 .header(HttpHeaders.AUTHORIZATION, HttpFacadeTest.auth())
                 .uri().back().fetch().as(RestResponse.class)
-                .assertStatus(HttpURLConnection.HTTP_OK);
-            MatcherAssert.assertThat(
-                resp.headers().get(HttpHeaders.LAST_MODIFIED).get(0),
-                Matchers.is(DateUtils.formatDate(date))
+                .assertStatus(HttpURLConnection.HTTP_OK)
+                .headers().get(HttpHeaders.LAST_MODIFIED).get(0),
+                Matchers.is(DateUtils.formatDate(Date.from(date)))
             );
         } finally {
             facade.close();
@@ -205,16 +208,19 @@ final class HttpFacadeTest {
             HttpFacade.open(hosts, port, PortMocker.reserve());
         try {
             facade.listen();
-            final URI uri = UriBuilder
-                .fromUri(String.format("http://localhost:%d/", port))
-                .path("/a").build();
-            final Response resp = new JdkRequest(uri)
-                .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
-                .header(HttpHeaders.AUTHORIZATION, HttpFacadeTest.auth())
-                .uri().back().fetch().as(RestResponse.class)
-                .assertStatus(HttpURLConnection.HTTP_OK);
             MatcherAssert.assertThat(
-                Integer.parseInt(resp.headers().get("Age").get(0)),
+                Integer.parseInt(
+                    new JdkRequest(
+                        UriBuilder
+                            .fromUri(String.format("http://localhost:%d/", port))
+                            .path("/a").build()
+                    )
+                    .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
+                    .header(HttpHeaders.AUTHORIZATION, HttpFacadeTest.auth())
+                    .uri().back().fetch().as(RestResponse.class)
+                    .assertStatus(HttpURLConnection.HTTP_OK)
+                    .headers().get("Age").get(0)
+                ),
                 Matchers.greaterThanOrEqualTo(1)
             );
         } finally {
@@ -253,10 +259,11 @@ final class HttpFacadeTest {
             HttpFacade.open(hosts, port, PortMocker.reserve());
         try {
             facade.listen();
-            final URI uri = UriBuilder
-                .fromUri(String.format("http://localhost:%d/", port))
-                .path("/a").queryParam("ver", version).build();
-            new JdkRequest(uri).header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
+            new JdkRequest(
+                UriBuilder
+                    .fromUri(String.format("http://localhost:%d/", port))
+                    .path("/a").queryParam("ver", version).build()
+            ).header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
                 .header(HttpHeaders.AUTHORIZATION, HttpFacadeTest.auth())
                 .uri().back().fetch().as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK);
@@ -295,10 +302,11 @@ final class HttpFacadeTest {
             HttpFacade.open(hosts, port, PortMocker.reserve());
         try {
             facade.listen();
-            final URI uri = UriBuilder
-                .fromUri(String.format("http://localhost:%d/", port))
-                .path("/a").build();
-            new JdkRequest(uri).header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
+            new JdkRequest(
+                UriBuilder
+                    .fromUri(String.format("http://localhost:%d/", port))
+                    .path("/a").build()
+            ).header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
                 .header(HttpHeaders.AUTHORIZATION, HttpFacadeTest.auth())
                 .uri().back().fetch().as(RestResponse.class)
                 .assertStatus(HttpURLConnection.HTTP_OK);
@@ -381,19 +389,20 @@ final class HttpFacadeTest {
             HttpFacade.open(hosts, port, PortMocker.reserve());
         try {
             facade.listen();
-            final Response resp =
-                new JdkRequest(String.format("http://localhost:%d/", port))
-                    .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
-                    .header(HttpHeaders.ACCEPT_ENCODING, "gzip")
-                    .header(HttpHeaders.AUTHORIZATION, HttpFacadeTest.auth())
-                    .uri().path("/a").queryParam("all-versions", "")
-                    .back().fetch().as(RestResponse.class)
-                    .assertStatus(HttpURLConnection.HTTP_OK)
-                    .assertHeader(HttpHeaders.CONTENT_ENCODING, "gzip");
             MatcherAssert.assertThat(
                 IOUtils.toString(
                     new GZIPInputStream(
-                        new ByteArrayInputStream(resp.binary())
+                        new ByteArrayInputStream(
+                            new JdkRequest(String.format("http://localhost:%d/", port))
+                                .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
+                                .header(HttpHeaders.ACCEPT_ENCODING, "gzip")
+                                .header(HttpHeaders.AUTHORIZATION, HttpFacadeTest.auth())
+                                .uri().path("/a").queryParam("all-versions", "")
+                                .back().fetch().as(RestResponse.class)
+                                .assertStatus(HttpURLConnection.HTTP_OK)
+                                .assertHeader(HttpHeaders.CONTENT_ENCODING, "gzip")
+                                .binary()
+                        )
                     ),
                     StandardCharsets.UTF_8
                 ),
@@ -405,41 +414,71 @@ final class HttpFacadeTest {
     }
 
     /**
-     * HttpFacade can return content thought a secured content-encoding and
-     * response content-type.
-     * @throws Exception If there is some problem inside
-     * @todo #191:30mins The test fails to retrieve the expected content over
-     *  SSL. The response body is empty while it should be "secured".
-     *  Test fails on line 570.
-     *  Let's fix it and unignore the test.
+     * HttpFacade's javax.net.ssl.keyStore system property is set.
      */
     @Test
     @Disabled
-    void getsContentOverSsl() throws Exception {
+    void sslKeyStoreSystemPropertyIsSet() {
         MatcherAssert.assertThat(
             System.getProperty("javax.net.ssl.keyStore"),
             Matchers.notNullValue()
         );
+    }
+
+    /**
+     * HttpFacade's javax.net.ssl.keyStorePassword system property is set.
+     */
+    @Test
+    @Disabled
+    void sslKeyStorePasswordSystemPropertyIsSet() {
         MatcherAssert.assertThat(
             System.getProperty("javax.net.ssl.keyStorePassword"),
             Matchers.notNullValue()
         );
+    }
+
+    /**
+     * HttpFacade's javax.net.ssl.trustStore system property is set.
+     */
+    @Test
+    @Disabled
+    void sslTrustStoreSystemPropertyIsSet() {
         MatcherAssert.assertThat(
             System.getProperty("javax.net.ssl.trustStore"),
             Matchers.notNullValue()
         );
+    }
+
+    /**
+     * HttpFacade's javax.net.ssl.trustStorePassword system property is set.
+     */
+    @Test
+    @Disabled
+    void sslTrustStorePasswordSystemPropertyIsSet() {
         MatcherAssert.assertThat(
             System.getProperty("javax.net.ssl.trustStorePassword"),
             Matchers.notNullValue()
         );
+    }
+
+    /**
+     * HttpFacade can return content thought a secured content-encoding and
+     * response content-type, with OK status.
+     * @throws Exception If there is some problem inside
+     * @todo #191:30mins The test fails to retrieve the expected content over
+     *  SSL. The response body is empty while it should be "secured".
+     *  Let's fix it and unignore the test.
+     */
+    @Test
+    @Disabled
+    void getsOkStatusOverSsl() throws Exception {
         final Host host = Mockito.mock(Host.class);
-        final String body = "secured";
-        final Resource answer = new ResourceMocker().init().withContent(body).mock();
-        Mockito.doReturn(answer).when(host).fetch(
-            Mockito.any(URI.class),
-            Mockito.any(Range.class),
-            Mockito.any(Version.class)
-        );
+        Mockito.doReturn(new ResourceMocker().init().withContent("secured").mock())
+            .when(host).fetch(
+                Mockito.any(URI.class),
+                Mockito.any(Range.class),
+                Mockito.any(Version.class)
+            );
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
@@ -447,12 +486,53 @@ final class HttpFacadeTest {
             HttpFacade.open(hosts, PortMocker.reserve(), port);
         try {
             facade.listen();
-            new JdkRequest(String.format("https://localhost:%d/", port))
-                .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
-                .header(HttpHeaders.AUTHORIZATION, HttpFacadeTest.auth()).uri().path("/a")
-                .back().fetch().as(RestResponse.class)
-                .assertStatus(HttpURLConnection.HTTP_OK)
-                .assertBody(Matchers.is(body));
+            MatcherAssert.assertThat(
+                new JdkRequest(String.format("https://localhost:%d/", port))
+                    .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
+                    .header(HttpHeaders.AUTHORIZATION, HttpFacadeTest.auth()).uri().path("/a")
+                    .back().fetch().as(RestResponse.class)
+                    .status(),
+                Matchers.is(HttpURLConnection.HTTP_OK)
+            );
+        } finally {
+            facade.close();
+        }
+    }
+
+    /**
+     * HttpFacade can return content thought a secured content-encoding and
+     * response content-type, with the expected body.
+     * @throws Exception If there is some problem inside
+     * @todo #191:30mins The test fails to retrieve the expected content over
+     *  SSL. The response body is empty while it should be "secured".
+     *  Let's fix it and unignore the test.
+     */
+    @Test
+    @Disabled
+    void getsExpectedBodyOverSsl() throws Exception {
+        final Host host = Mockito.mock(Host.class);
+        final String body = "secured";
+        Mockito.doReturn(new ResourceMocker().init().withContent(body).mock())
+            .when(host).fetch(
+                Mockito.any(URI.class),
+                Mockito.any(Range.class),
+                Mockito.any(Version.class)
+            );
+        final Hosts hosts = Mockito.mock(Hosts.class);
+        Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
+        final int port = PortMocker.reserve();
+        final HttpFacade facade =
+            HttpFacade.open(hosts, PortMocker.reserve(), port);
+        try {
+            facade.listen();
+            MatcherAssert.assertThat(
+                new JdkRequest(String.format("https://localhost:%d/", port))
+                    .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
+                    .header(HttpHeaders.AUTHORIZATION, HttpFacadeTest.auth()).uri().path("/a")
+                    .back().fetch().as(RestResponse.class)
+                    .body(),
+                Matchers.is(body)
+            );
         } finally {
             facade.close();
         }
@@ -478,12 +558,13 @@ final class HttpFacadeTest {
             HttpFacade.open(hosts, port, PortMocker.reserve());
         try {
             facade.listen();
-            final URI uri = UriBuilder
-                .fromUri(String.format("http://localhost:%d/", port))
-                .path("/a").build();
-            new JdkRequest(uri)
-                .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
-                .header(HttpHeaders.AUTHORIZATION, HttpFacadeTest.auth()).uri().back().fetch();
+            new JdkRequest(
+                UriBuilder
+                    .fromUri(String.format("http://localhost:%d/", port))
+                    .path("/a").build()
+            )
+            .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
+            .header(HttpHeaders.AUTHORIZATION, HttpFacadeTest.auth()).uri().back().fetch();
             TimeUnit.SECONDS.sleep(3);
             Mockito.verify(resource, Mockito.times(1)).close();
         } finally {
@@ -515,15 +596,16 @@ final class HttpFacadeTest {
             HttpFacade.open(hosts, port, PortMocker.reserve());
         try {
             facade.listen();
-            final URI uri = UriBuilder
-                .fromUri(String.format("http://localhost:%d/", port))
-                .path("/a").build();
             MatcherAssert.assertThat(
-                new ApacheRequest(uri)
-                    .method("HEAD")
-                    .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
-                    .header(HttpHeaders.AUTHORIZATION, HttpFacadeTest.auth())
-                    .uri().back().fetch().body(),
+                new ApacheRequest(
+                    UriBuilder
+                        .fromUri(String.format("http://localhost:%d/", port))
+                        .path("/a").build()
+                )
+                .method("HEAD")
+                .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
+                .header(HttpHeaders.AUTHORIZATION, HttpFacadeTest.auth())
+                .uri().back().fetch().body(),
                 Matchers.is("")
             );
             Mockito.verify(resource, Mockito.never())

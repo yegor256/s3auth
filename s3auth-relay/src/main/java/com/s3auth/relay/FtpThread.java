@@ -56,7 +56,7 @@ final class FtpThread {
      * Dispatch one request from the encapsulated queue.
      * @return Amount of bytes sent to socket
      */
-    public long dispatch() {
+    long dispatch() {
         assert this.hosts != null;
         assert this.sockets != null;
         return 0L;

@@ -62,6 +62,7 @@ import software.amazon.awssdk.services.s3.model.UploadPartResponse;
  *
  * <p>Implements only the methods required by the test suite with stub
  * implementations, all other methods throw UnsupportedOperationException.
+ *
  * @since 0.0.1
  * @checkstyle ClassFanOutComplexityCheck (500 lines)
  */

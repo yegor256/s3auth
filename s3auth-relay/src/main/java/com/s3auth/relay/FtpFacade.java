@@ -35,7 +35,6 @@ import org.apache.commons.net.ftp.FTPReply;
  * @todo #213:30min Implement TLS secure port listening in a manner analogous to
  *  HttpFacade.
  */
-@SuppressWarnings("PMD.DoNotUseThreads")
 @Loggable(Loggable.DEBUG)
 final class FtpFacade implements Closeable {
 
@@ -80,17 +79,6 @@ final class FtpFacade implements Closeable {
         this.server = srv;
     }
 
-    /**
-     * Start listening to the ports.
-     */
-    public void listen() {
-        final ScheduledFuture<?> future = this.frontend.scheduleWithFixedDelay(
-            new VerboseRunnable(() -> this.process(this.server)),
-            0L, 1L, TimeUnit.NANOSECONDS
-        );
-        Logger.debug(this, "#listen(): scheduled %s", future);
-    }
-
     @Override
     public void close() throws IOException {
         try {
@@ -101,6 +89,19 @@ final class FtpFacade implements Closeable {
             throw new IOException(ex);
         }
         this.server.close();
+    }
+
+    /**
+     * Start listening to the ports.
+     */
+    void listen() {
+        Logger.debug(
+            this, "#listen(): scheduled %s",
+            this.frontend.scheduleWithFixedDelay(
+                new VerboseRunnable(() -> this.process(this.server)),
+                0L, 1L, TimeUnit.NANOSECONDS
+            )
+        );
     }
 
     /**
@@ -140,8 +141,13 @@ final class FtpFacade implements Closeable {
 
     /**
      * Process one server socket.
+     *
+     * <p>Socket ownership transfers to the queue; {@link FtpThread} closes
+     * it later.
+     *
      * @param svr The server socket
      */
+    @SuppressWarnings("PMD.CloseResource")
     private void process(final ServerSocket svr) {
         final Socket socket;
         try {
@@ -165,13 +171,13 @@ final class FtpFacade implements Closeable {
      * @param socket The socket to report to
      */
     private static void overflow(final Socket socket) {
-        final String message = String.format(
-            "We're sorry, the service is under high load at the moment (%d open connections), please try again in a few minutes",
-            FtpFacade.THREADS
-        );
         new FtpResponse()
-            .withCode(FTPReply.SERVICE_NOT_AVAILABLE)
-            .withText(message)
+            .withCode(FTPReply.SERVICE_NOT_AVAILABLE).withText(
+                String.format(
+                    "We're sorry, the service is under high load at the moment (%d open connections), please try again in a few minutes",
+                    FtpFacade.THREADS
+                )
+            )
             .send(socket);
     }
 

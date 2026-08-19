@@ -32,12 +32,17 @@ import javax.validation.constraints.NotNull;
 @Loggable(Loggable.DEBUG)
 final class FtpResponse {
 
+    @Override
+    public String toString() {
+        return this.asString();
+    }
+
     /**
      * With this FTP code.
      * @param cde The FTP reply code to set
      * @return This object
      */
-    public FtpResponse withCode(final int cde) {
+    FtpResponse withCode(final int cde) {
         return this;
     }
 
@@ -46,7 +51,7 @@ final class FtpResponse {
      * @param text Text of the reply
      * @return This object
      */
-    public FtpResponse withText(@NotNull final String text) {
+    FtpResponse withText(@NotNull final String text) {
         return this;
     }
 
@@ -54,13 +59,8 @@ final class FtpResponse {
      * Renders this FTP response as a String.
      * @return The response's canonical String representation ($code $text)
      */
-    public String asString() {
+    String asString() {
         return this.toString();
-    }
-
-    @Override
-    public String toString() {
-        return this.asString();
     }
 
     /**
@@ -73,7 +73,7 @@ final class FtpResponse {
         value = Loggable.DEBUG, limit = Integer.MAX_VALUE,
         ignore = IOException.class
     )
-    public long send(@NotNull final Socket socket) {
+    long send(@NotNull final Socket socket) {
         return 0L;
     }
 }

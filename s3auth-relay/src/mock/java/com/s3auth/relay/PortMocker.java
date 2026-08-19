@@ -26,13 +26,8 @@ public final class PortMocker {
     @SuppressWarnings("PMD.ProhibitPublicStaticMethods")
     public static int reserve() {
         final int port;
-        try {
-            final ServerSocket socket = new ServerSocket(0);
-            try {
-                port = socket.getLocalPort();
-            } finally {
-                socket.close();
-            }
+        try (ServerSocket socket = new ServerSocket(0)) {
+            port = socket.getLocalPort();
         } catch (final java.io.IOException ex) {
             throw new IllegalStateException("Failed to reserve port", ex);
         }

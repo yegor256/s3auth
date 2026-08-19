@@ -39,11 +39,6 @@ import org.apache.http.client.utils.DateUtils;
  * @see HttpFacade
  * @since 0.0.1
  */
-@SuppressWarnings({
-    "PMD.DoNotUseThreads",
-    "PMD.UseConcurrentHashMap",
-    "PMD.CyclomaticComplexity"
-})
 final class HttpThread {
 
     /**
@@ -109,25 +104,30 @@ final class HttpThread {
      * @return Amount of bytes sent to socket
      * @throws InterruptedException If interrupted while waiting for the queue
      */
-    @SuppressWarnings("PMD.AvoidCatchingThrowable")
-    public long dispatch() throws InterruptedException {
+    @SuppressWarnings({
+        "PMD.AvoidCatchingGenericException",
+        "PMD.CloseResource",
+        "PMD.UseTryWithResources"
+    })
+    long dispatch() throws InterruptedException {
         final Socket socket = this.sockets.take();
         final long start = System.currentTimeMillis();
-        long bytes = 0L;
+        long bytes;
         try {
             final HttpRequest request = HttpRequest.parse(socket);
             final boolean get = "GET".equals(request.method());
             if (get || "HEAD".equals(request.method())) {
-                final String date = String.format(
-                    "%ta, %1$td %1$tb %1$tY %1$tT %1$tz",
-                    Date.from(Instant.now())
-                );
-                final String elapsed =
-                    Long.toString(System.currentTimeMillis() - start);
                 HttpResponse response = new HttpResponse()
-                    .withHeader("Server", HttpThread.NAME)
-                    .withHeader(HttpHeaders.DATE, date)
-                    .withHeader("X-S3auth-Time", elapsed);
+                    .withHeader("Server", HttpThread.NAME).withHeader(
+                        HttpHeaders.DATE,
+                        String.format(
+                            "%ta, %1$td %1$tb %1$tY %1$tT %1$tz",
+                            Date.from(Instant.now())
+                        )
+                    ).withHeader(
+                        "X-S3auth-Time",
+                        Long.toString(System.currentTimeMillis() - start)
+                    );
                 Resource resource = null;
                 try {
                     resource = HttpThread.resource(this.host(request), request);
@@ -219,14 +219,14 @@ final class HttpThread {
                 throw new HttpException(HttpURLConnection.HTTP_NOT_MODIFIED);
             }
         }
-        if (request.headers().containsKey(HttpHeaders.IF_MODIFIED_SINCE)) {
-            final Date since = DateUtils.parseDate(
-                request.headers().get(HttpHeaders.IF_MODIFIED_SINCE)
-                    .iterator().next()
-            );
-            if (resource.lastModified().toInstant().isBefore(since.toInstant())) {
-                throw new HttpException(HttpURLConnection.HTTP_NOT_MODIFIED);
-            }
+        if (request.headers().containsKey(HttpHeaders.IF_MODIFIED_SINCE)
+            && resource.lastModified().toInstant().isBefore(
+                DateUtils.parseDate(
+                    request.headers().get(HttpHeaders.IF_MODIFIED_SINCE)
+                        .iterator().next()
+                ).toInstant()
+            )) {
+            throw new HttpException(HttpURLConnection.HTTP_NOT_MODIFIED);
         }
         if (request.headers().containsKey(HttpHeaders.ACCEPT_ENCODING)
             && request.headers().get(HttpHeaders.ACCEPT_ENCODING)

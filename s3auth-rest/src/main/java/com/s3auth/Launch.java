@@ -29,7 +29,6 @@ public final class Launch {
      * @param args Command line args
      * @throws IOException If fails
      */
-    @SuppressWarnings("PMD.ProhibitPublicStaticMethods")
     public static void main(final String[] args) throws IOException {
         new FtCli(
             new TkApp(new SyslogHosts(new DynamoHosts())),

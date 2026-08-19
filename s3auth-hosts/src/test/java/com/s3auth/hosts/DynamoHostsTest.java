@@ -4,11 +4,9 @@
  */
 package com.s3auth.hosts;
 
-import java.util.Set;
 import org.hamcrest.CustomMatcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -20,21 +18,65 @@ import org.junit.jupiter.api.Test;
 final class DynamoHostsTest {
 
     /**
-     * DynamoHosts can clean cache in runtime.
+     * DynamoHosts reports success when a domain is added.
      * @throws Exception If there is some problem inside
      */
     @Test
-    void updatesCachedData() throws Exception {
+    void addsDomainReturnsTrue() throws Exception {
+        final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
+        MatcherAssert.assertThat(
+            hosts.domains(new UserMocker().init().mock())
+                .add(new DomainMocker().init().mock()),
+            Matchers.is(true)
+        );
+        hosts.close();
+    }
+
+    /**
+     * DynamoHosts caches an added domain.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    void cachesAddedDomain() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
         final Domain domain = new DomainMocker().init().mock();
         final User user = new UserMocker().init().mock();
-        MatcherAssert.assertThat(
-            hosts.domains(user).add(domain),
-            Matchers.is(true)
-        );
+        hosts.domains(user).add(domain);
         MatcherAssert.assertThat(hosts.domains(user), Matchers.hasSize(1));
+        hosts.close();
+    }
+
+    /**
+     * DynamoHosts' cached domains contain the domain that was added.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    void cachedDataContainsAddedDomain() throws Exception {
+        final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
+        final Domain domain = new DomainMocker().init().mock();
+        final User user = new UserMocker().init().mock();
+        hosts.domains(user).add(domain);
         MatcherAssert.assertThat(
             hosts.domains(user).contains(domain),
+            Matchers.is(true)
+        );
+        hosts.close();
+    }
+
+    /**
+     * DynamoHosts allows the first user to add a domain.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    void addsNewDomainForFirstUser() throws Exception {
+        final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
+        final Domain domain = new DomainMocker().init().withName("ibm.com").mock();
+        final User first = new UserMocker().init()
+            .withIdentity("urn:facebook:7743")
+            .mock();
+        hosts.domains(first).remove(domain);
+        MatcherAssert.assertThat(
+            hosts.domains(first).add(domain),
             Matchers.is(true)
         );
         hosts.close();
@@ -45,7 +87,7 @@ final class DynamoHostsTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    void rejectsDuplicatesFromDifferentUsers() throws Exception {
+    void rejectsDuplicateDomainFromAnotherUser() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
         final Domain domain = new DomainMocker().init().withName("ibm.com").mock();
         final User first = new UserMocker().init()
@@ -55,13 +97,29 @@ final class DynamoHostsTest {
             .withIdentity("urn:facebook:7746")
             .mock();
         hosts.domains(first).remove(domain);
-        MatcherAssert.assertThat(
-            hosts.domains(first).add(domain),
-            Matchers.is(true)
-        );
+        hosts.domains(first).add(domain);
         MatcherAssert.assertThat(
             hosts.domains(second).add(domain),
             Matchers.is(false)
+        );
+        hosts.close();
+    }
+
+    /**
+     * DynamoHosts allows the first user to add a domain.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    void addsDomainForFirstUser() throws Exception {
+        final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
+        final Domain domain = new DomainMocker().init().withName("yahoo.com").mock();
+        final User first = new UserMocker().init()
+            .withIdentity("urn:facebook:5543")
+            .mock();
+        hosts.domains(first).remove(domain);
+        MatcherAssert.assertThat(
+            hosts.domains(first).add(domain),
+            Matchers.is(true)
         );
         hosts.close();
     }
@@ -71,7 +129,7 @@ final class DynamoHostsTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    void protectsDomainsAgainstRemoval() throws Exception {
+    void protectsDomainsAgainstRemovalByAnotherUser() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
         final Domain domain = new DomainMocker().init().withName("yahoo.com").mock();
         final User first = new UserMocker().init()
@@ -81,10 +139,7 @@ final class DynamoHostsTest {
             .withIdentity("urn:facebook:5546")
             .mock();
         hosts.domains(first).remove(domain);
-        MatcherAssert.assertThat(
-            hosts.domains(first).add(domain),
-            Matchers.is(true)
-        );
+        hosts.domains(first).add(domain);
         MatcherAssert.assertThat(
             hosts.domains(second).remove(domain),
             Matchers.is(false)
@@ -93,11 +148,11 @@ final class DynamoHostsTest {
     }
 
     /**
-     * DynamoHosts can clean/trim domain properties.
+     * DynamoHosts allows adding a domain with untrimmed properties.
      * @throws Exception If there is some problem inside
      */
     @Test
-    void trimsDomainProperties() throws Exception {
+    void addsDomainWithUntrimmedProperties() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
         final Domain domain = new DomainMocker().init()
             .withName(" google.com ")
@@ -112,16 +167,36 @@ final class DynamoHostsTest {
             hosts.domains(first).add(domain),
             Matchers.is(true)
         );
+        hosts.close();
+    }
+
+    /**
+     * DynamoHosts can clean/trim domain properties.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    void trimsDomainPropertiesOnAdd() throws Exception {
+        final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
+        final Domain domain = new DomainMocker().init()
+            .withName(" google.com ")
+            .withKey(" AKI56FXVOY5FEEZNZXAQ   ")
+            .withSecret("  ZFomiC6OObi6gD2J1QQcaW1evMUfqv5fVkpDImI9 ")
+            .mock();
+        final User first = new UserMocker().init()
+            .withIdentity("urn:facebook:8989")
+            .mock();
+        hosts.domains(first).remove(domain);
+        hosts.domains(first).add(domain);
         MatcherAssert.assertThat(
             hosts.domains(first),
             Matchers.hasItem(
                 new CustomMatcher<Domain>("trimmed values") {
                     @Override
                     public boolean matches(final Object obj) {
-                        final Domain domain = Domain.class.cast(obj);
-                        return "google.com".equals(domain.name())
-                            && "AKI56FXVOY5FEEZNZXAQ".equals(domain.key())
-                            && domain.secret().startsWith("ZFomiC6OObi");
+                        final Domain found = Domain.class.cast(obj);
+                        return "google.com".equals(found.name())
+                            && "AKI56FXVOY5FEEZNZXAQ".equals(found.key())
+                            && found.secret().startsWith("ZFomiC6OObi");
                     }
                 }
             )
@@ -160,7 +235,7 @@ final class DynamoHostsTest {
     void rejectsBrokenDomains() throws Exception {
         final Hosts hosts = new DynamoHosts(new DynamoMocker().mock());
         final User user = new UserMocker().init().mock();
-        final Domain[] domains = new Domain[] {
+        final Domain[] domains = {
             new DomainMocker().init().withName("").mock(),
             new DomainMocker().init().withName("invalid domain name").mock(),
             new DomainMocker().init().withKey("").mock(),
@@ -169,12 +244,10 @@ final class DynamoHostsTest {
             new DomainMocker().init().withSecret("broken-secret").mock(),
         };
         for (final Domain domain : domains) {
-            try {
-                hosts.domains(user).add(domain);
-                Assert.fail(String.format("exception expected for %s", domain));
-            } catch (final javax.validation.ValidationException ex) {
-                MatcherAssert.assertThat(ex, Matchers.notNullValue());
-            }
+            Assertions.assertThrows(
+                javax.validation.ValidationException.class,
+                () -> hosts.domains(user).add(domain)
+            );
         }
         hosts.close();
     }
@@ -194,11 +267,10 @@ final class DynamoHostsTest {
         hosts.domains(
             new UserMocker().init().withIdentity("urn:facebook:5548").mock()
         ).add(second);
-        final Set<Domain> domains = hosts.domains(
-            new UserMocker().init().withIdentity("urn:github:526301").mock()
-        );
         MatcherAssert.assertThat(
-            domains,
+            hosts.domains(
+                new UserMocker().init().withIdentity("urn:github:526301").mock()
+            ),
             Matchers.iterableWithSize(2)
         );
         hosts.close();

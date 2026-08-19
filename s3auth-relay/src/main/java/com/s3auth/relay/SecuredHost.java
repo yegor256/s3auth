@@ -116,14 +116,16 @@ final class SecuredHost implements Host {
     private Resource secured(final URI uri, final Range range,
         final Version version) throws IOException {
         if (!this.request.headers().containsKey(HttpHeaders.AUTHORIZATION)) {
-            final String realm = String.format(
-                "Basic realm=\"%s\"",
-                this.request.headers().get(HttpHeaders.HOST).iterator().next()
-            );
             throw new HttpException(
                 new HttpResponse()
-                    .withStatus(HttpURLConnection.HTTP_UNAUTHORIZED)
-                    .withHeader(HttpHeaders.WWW_AUTHENTICATE, realm)
+                    .withStatus(HttpURLConnection.HTTP_UNAUTHORIZED).withHeader(
+                        HttpHeaders.WWW_AUTHENTICATE,
+                        String.format(
+                            "Basic realm=\"%s\"",
+                            this.request.headers().get(HttpHeaders.HOST)
+                                .iterator().next()
+                        )
+                    )
             );
         }
         final Matcher matcher = SecuredHost.AUTH_PATTERN.matcher(

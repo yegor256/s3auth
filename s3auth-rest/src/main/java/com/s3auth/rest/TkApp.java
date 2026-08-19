@@ -60,7 +60,6 @@ import org.takes.tk.TkWrap;
  * @since 0.1
  * @checkstyle ClassFanOutComplexityCheck (500 lines)
  */
-@SuppressWarnings("PMD.ExcessiveImports")
 public class TkApp extends TkWrap {
 
     /**
@@ -89,17 +88,20 @@ public class TkApp extends TkWrap {
                 )
             );
         }
-        final Take take = new TkGzip(
-            TkApp.fallback(
-                new TkFlash(
-                    TkApp.auth(
-                        new TkForward(TkApp.regex(hosts))
+        return new TkWithHeaders(
+            new TkVersioned(
+                new TkMeasured(
+                    new TkGzip(
+                        TkApp.fallback(
+                            new TkFlash(
+                                TkApp.auth(
+                                    new TkForward(TkApp.regex(hosts))
+                                )
+                            )
+                        )
                     )
                 )
-            )
-        );
-        return new TkWithHeaders(
-            new TkVersioned(new TkMeasured(take)),
+            ),
             String.format("X-S3Auth-Revision: %s", TkApp.REV),
             "Vary: Cookie"
         );
@@ -123,9 +125,6 @@ public class TkApp extends TkWrap {
                     @Override
                     public Opt<Response> route(final RqFallback req)
                         throws IOException {
-                        final String err = ExceptionUtils.getStackTrace(
-                            req.throwable()
-                        );
                         return new Opt.Single<>(
                             new RsWithStatus(
                                 new RsWithType(
@@ -133,7 +132,12 @@ public class TkApp extends TkWrap {
                                         this.getClass().getResource(
                                             "exception.html.vm"
                                         ),
-                                        new RsVelocity.Pair("err", err),
+                                        new RsVelocity.Pair(
+                                            "err",
+                                            ExceptionUtils.getStackTrace(
+                                                req.throwable()
+                                            )
+                                        ),
                                         new RsVelocity.Pair("rev", TkApp.REV)
                                     ),
                                     "text/html"

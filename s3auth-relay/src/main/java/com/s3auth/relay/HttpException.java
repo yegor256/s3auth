@@ -84,7 +84,7 @@ final class HttpException extends IOException {
      * Build HTTP response.
      * @return The response
      */
-    public HttpResponse response() {
+    HttpResponse response() {
         return this.resp;
     }
 }

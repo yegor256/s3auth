@@ -21,15 +21,14 @@ import org.junit.jupiter.api.Test;
 final class MainTest {
 
     /**
-     * Main can start and listen on port.
+     * Main can start and respond on port.
      * @throws Exception If there is some problem inside
      * @todo #33 Test doesn't work since AWS Dynamo config is not available
      *  in runtime. We should find a way to mock it properly.
      */
     @Test
     @Disabled
-    @SuppressWarnings("PMD.DoNotUseThreads")
-    void startsAndListensOnPort() throws Exception {
+    void startsAndRespondsOnPort() throws Exception {
         final int port = PortMocker.reserve();
         final CountDownLatch done = new CountDownLatch(1);
         final Thread thread = new Thread(
@@ -49,13 +48,43 @@ final class MainTest {
         );
         thread.start();
         TimeUnit.SECONDS.sleep(1);
-        final URI uri = new URI(
-            String.format("http://localhost:%d/version", port)
-        );
         MatcherAssert.assertThat(
-            uri.toURL().getContent(),
+            new URI(
+                String.format("http://localhost:%d/version", port)
+            ).toURL().getContent(),
             Matchers.notNullValue()
         );
+        thread.interrupt();
+    }
+
+    /**
+     * Main stops listening when interrupted.
+     * @throws Exception If there is some problem inside
+     * @todo #33 Test doesn't work since AWS Dynamo config is not available
+     *  in runtime. We should find a way to mock it properly.
+     */
+    @Test
+    @Disabled
+    void stopsListeningWhenInterrupted() throws Exception {
+        final int port = PortMocker.reserve();
+        final CountDownLatch done = new CountDownLatch(1);
+        final Thread thread = new Thread(
+            new VerboseRunnable(
+                (Callable<Void>) () -> {
+                    try {
+                        Main.main(new String[]{Integer.toString(port)});
+                    } catch (final InterruptedException ex) {
+                        done.countDown();
+                        Thread.currentThread().interrupt();
+                        throw new IllegalStateException(ex);
+                    }
+                    return null;
+                },
+                false
+            )
+        );
+        thread.start();
+        TimeUnit.SECONDS.sleep(1);
         thread.interrupt();
         MatcherAssert.assertThat(
             done.await(1, TimeUnit.SECONDS),

@@ -30,7 +30,6 @@ import software.amazon.awssdk.services.cloudwatch.model.StandardUnit;
  */
 @Loggable(Loggable.DEBUG)
 @ScheduleWithFixedDelay(delay = 1, unit = TimeUnit.HOURS)
-@SuppressWarnings("PMD.DoNotUseThreads")
 public final class ScheduledCloudWatch implements Runnable, Closeable {
 
     /**

@@ -31,7 +31,6 @@ import org.junit.jupiter.api.Test;
  * Test case for {@link HttpResponse}.
  * @since 0.0.1
  */
-@SuppressWarnings("PMD.CyclomaticComplexity")
 final class HttpResponseTest {
 
     /**
@@ -55,15 +54,94 @@ final class HttpResponseTest {
     }
 
     /**
-     * HttpResponse can process a slow resource (a few seconds waiting).
+     * HttpResponse can process a slow resource (a few seconds waiting)
+     * within the expected timeout.
      * @throws Exception If there is some problem inside
      */
     @Test
-    @SuppressWarnings("PMD.DoNotUseThreads")
-    void sendsDataFromSlowResource() throws Exception {
+    void sendsDataFromSlowResourceWithinTimeout() throws Exception {
+        final HttpResponse response = new HttpResponse().withBody(
+            HttpResponseTest.slow("г some text")
+        );
+        final CountDownLatch done = new CountDownLatch(1);
+        try (ServerSocket server = new ServerSocket(0)) {
+            new Thread(
+                new VerboseRunnable(
+                    (Callable<Void>) () -> {
+                        final Socket reading = server.accept();
+                        IOUtils.toString(
+                            reading.getInputStream(), StandardCharsets.UTF_8
+                        );
+                        reading.close();
+                        done.countDown();
+                        return null;
+                    },
+                    true
+                )
+            ).start();
+            try (Socket writing = new Socket("localhost", server.getLocalPort())) {
+                response.send(writing);
+            }
+            MatcherAssert.assertThat(
+                done.await(1L, TimeUnit.SECONDS),
+                Matchers.is(true)
+            );
+        }
+    }
+
+    /**
+     * HttpResponse sends the expected content when processing a slow
+     * resource.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    void sendsExpectedContentFromSlowResource() throws Exception {
         final String content = "г some text";
+        final HttpResponse response = new HttpResponse().withBody(
+            HttpResponseTest.slow(content)
+        );
+        final CountDownLatch done = new CountDownLatch(1);
+        final StringBuilder received = new StringBuilder(100);
+        try (ServerSocket server = new ServerSocket(0)) {
+            new Thread(
+                new VerboseRunnable(
+                    (Callable<Void>) () -> {
+                        final Socket reading = server.accept();
+                        received.append(
+                            IOUtils.toString(
+                                reading.getInputStream(), StandardCharsets.UTF_8
+                            )
+                        );
+                        reading.close();
+                        done.countDown();
+                        return null;
+                    },
+                    true
+                )
+            ).start();
+            try (Socket writing = new Socket("localhost", server.getLocalPort())) {
+                response.send(writing);
+            }
+            done.await(1L, TimeUnit.SECONDS);
+            MatcherAssert.assertThat(
+                received.toString(),
+                Matchers.allOf(
+                    Matchers.startsWith("HTTP/1.1 200 OK"),
+                    Matchers.endsWith(content)
+                )
+            );
+        }
+    }
+
+    /**
+     * Build a resource which sleeps for a couple of seconds before writing
+     * its content.
+     * @param content Content to write
+     * @return The resource
+     */
+    private static Resource slow(final String content) {
         // @checkstyle AnonInnerLength (50 lines)
-        final Resource res = new Resource() {
+        return new Resource() {
             @Override
             public long writeTo(final OutputStream stream) {
                 try {
@@ -109,39 +187,5 @@ final class HttpResponseTest {
                 // Nothing to do here.
             }
         };
-        final HttpResponse response = new HttpResponse().withBody(res);
-        final ServerSocket server = new ServerSocket(0);
-        final CountDownLatch done = new CountDownLatch(1);
-        final StringBuilder received = new StringBuilder(100);
-        new Thread(
-            new VerboseRunnable(
-                (Callable<Void>) () -> {
-                    final Socket reading = server.accept();
-                    received.append(
-                        IOUtils.toString(
-                            reading.getInputStream(), StandardCharsets.UTF_8
-                        )
-                    );
-                    reading.close();
-                    done.countDown();
-                    return null;
-                },
-                true
-            )
-        ).start();
-        final Socket writing = new Socket("localhost", server.getLocalPort());
-        response.send(writing);
-        writing.close();
-        MatcherAssert.assertThat(
-            done.await(1L, TimeUnit.SECONDS),
-            Matchers.is(true)
-        );
-        MatcherAssert.assertThat(
-            received.toString(),
-            Matchers.allOf(
-                Matchers.startsWith("HTTP/1.1 200 OK"),
-                Matchers.endsWith(content)
-            )
-        );
     }
 }

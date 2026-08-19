@@ -12,8 +12,8 @@ import java.net.HttpURLConnection;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpHeaders;
 import org.hamcrest.Matchers;
-import org.junit.Assume;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -30,9 +30,9 @@ final class TkAppITCase {
     /**
      * Before the entire test.
      */
-    @BeforeClass
-    public static void before() {
-        Assume.assumeNotNull(TkAppITCase.HOME);
+    @BeforeAll
+    static void before() {
+        Assumptions.assumeTrue(TkAppITCase.HOME != null);
     }
 
     /**
