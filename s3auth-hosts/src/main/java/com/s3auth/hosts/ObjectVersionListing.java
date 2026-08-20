@@ -140,13 +140,6 @@ final class ObjectVersionListing implements Resource {
         );
     }
 
-    /**
-     * Fetch and transform the object version listing from S3.
-     * @param clnt Amazon S3 client
-     * @param bckt Bucket name
-     * @param key The S3 object key
-     * @return Transformed bytes
-     */
     private static byte[] list(final S3Client clnt, final String bckt, final String key) {
         final ImmutableList.Builder<ObjectVersion> versions =
             ImmutableList.builder();
@@ -192,12 +185,6 @@ final class ObjectVersionListing implements Resource {
         }
     }
 
-    /**
-     * Create a HTTP header from name and value.
-     * @param name Name of the header
-     * @param value The value
-     * @return Full HTTP header string
-     */
     @NotNull
     private static String header(@NotNull final String name,
         @NotNull final String value) {

@@ -37,6 +37,7 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 /**
  * Default implementation of {@link Host}.
  * @since 0.0.1
+ * @checkstyle NonStaticMethodCheck (500 lines)
  */
 @Immutable
 @Loggable(Loggable.DEBUG)
@@ -138,7 +139,7 @@ final class DefaultHost implements Host {
         final Collection<String> errors = new ArrayList<>(2);
         final DomainStatsData data = new H2DomainStatsData().init();
         for (final DefaultHost.ObjectName name : this.names(uri)) {
-            final DefaultHost.Attempt outcome =
+            final Attempt outcome =
                 this.attempt(name, range, version, data, errors);
             if (outcome.resource() != null) {
                 resource = outcome.resource();
@@ -186,17 +187,7 @@ final class DefaultHost implements Host {
         return this.statistics;
     }
 
-    /**
-     * Try to fetch a single object name, recording an error on failure.
-     * @param name Object name to try
-     * @param range Byte range requested
-     * @param version Version requested
-     * @param data Domain stats to record against
-     * @param errors Accumulator for error messages
-     * @return Outcome of the attempt
-     * @throws IOException If the bucket itself does not exist
-     */
-    private DefaultHost.Attempt attempt(final DefaultHost.ObjectName name,
+    private Attempt attempt(final DefaultHost.ObjectName name,
         final Range range, final Version version, final DomainStatsData data,
         final Collection<String> errors) throws IOException {
         Resource resource = null;
@@ -226,18 +217,9 @@ final class DefaultHost implements Host {
         } catch (final S3Exception ex) {
             resource = this.errorDocument(name, data, ex, errors);
         }
-        return new DefaultHost.Attempt(resource, done);
+        return new Attempt(resource, done);
     }
 
-    /**
-     * Fetch a single object, either as a version listing or a plain resource.
-     * @param bckt The S3 bucket
-     * @param name Object name to fetch
-     * @param range Byte range requested
-     * @param version Version requested
-     * @param data Domain stats to record against
-     * @return Fetched resource
-     */
     private static Resource fetchOne(final Bucket bckt,
         final DefaultHost.ObjectName name, final Range range,
         final Version version, final DomainStatsData data) {
@@ -249,7 +231,7 @@ final class DefaultHost implements Host {
         } else {
             resource = DefaultResource.fetch(
                 bckt.client(),
-                new DefaultResource.Locator(
+                new Locator(
                     bckt.bucket(), name.get(), range, version
                 ),
                 data
@@ -258,9 +240,6 @@ final class DefaultHost implements Host {
         return resource;
     }
 
-    /**
-     * Check that the bucket carries usable credentials.
-     */
     private void validate() {
         if (this.bucket.key().isEmpty()) {
             throw new IllegalStateException(
@@ -274,15 +253,6 @@ final class DefaultHost implements Host {
         }
     }
 
-    /**
-     * Fall back to the bucket website's configured error document,
-     * for a name that failed with an S3 client error.
-     * @param name The object name that failed
-     * @param data Domain stats to record against
-     * @param err The original client error
-     * @param errors Accumulator for error messages
-     * @return The error document's resource, or null if none applies
-     */
     private Resource errorDocument(final DefaultHost.ObjectName name,
         final DomainStatsData data, final S3Exception err,
         final Collection<String> errors) {
@@ -302,7 +272,7 @@ final class DefaultHost implements Host {
                     && config.errorDocument().key() != null) {
                     resource = DefaultResource.fetch(
                         this.bucket.client(),
-                        new DefaultResource.Locator(
+                        new Locator(
                             this.bucket.bucket(), config.errorDocument().key(),
                             Range.ENTIRE, Version.LATEST
                         ),
@@ -319,27 +289,17 @@ final class DefaultHost implements Host {
         return resource;
     }
 
-    /**
-     * Convert URI to all possible S3 object names (in order of importance).
-     * @param uri The URI
-     * @return Object names
-     * @checkstyle NonStaticMethodCheck (20 lines)
-     */
     private Iterable<DefaultHost.ObjectName> names(final URI uri) {
         final String name = StringUtils.strip(uri.getPath(), "/");
         final Collection<DefaultHost.ObjectName> names =
             new ArrayList<>(2);
         if (!name.isEmpty()) {
-            names.add(new DefaultHost.Simple(name));
+            names.add(new SimpleObjectName(name));
         }
         names.add(new DefaultHost.NameWithSuffix(name));
         return names;
     }
 
-    /**
-     * Fetch this host's S3 bucket website configuration.
-     * @return Website configuration
-     */
     private GetBucketWebsiteResponse website() {
         return this.bucket.client().getBucketWebsite(
             GetBucketWebsiteRequest.builder()
@@ -348,10 +308,6 @@ final class DefaultHost implements Host {
         );
     }
 
-    /**
-     * AWS credentials for CloudWatch, from manifest keys.
-     * @return Credentials provider for the AWS SDK
-     */
     private static StaticCredentialsProvider credentials() {
         return StaticCredentialsProvider.create(
             AwsBasicCredentials.create(
@@ -406,47 +362,6 @@ final class DefaultHost implements Host {
         @Override
         public String toString() {
             return String.format("%s+suffix", this.origin);
-        }
-    }
-
-    /**
-     * Object name.
-     * @since 0.0.1
-     */
-    private static final class Simple implements DefaultHost.ObjectName {
-
-        /**
-         * Original name.
-         */
-        private final transient String name;
-
-        /**
-         * Public ctor.
-         * @param nme The name
-         */
-        Simple(final String nme) {
-            this.name = nme;
-        }
-
-        @Override
-        public String get() {
-            return this.name;
-        }
-
-        @Override
-        public String toString() {
-            return this.name;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hashCode(this.name);
-        }
-
-        @Override
-        public boolean equals(final Object obj) {
-            return obj instanceof Simple
-                && Objects.equals(this.name, ((Simple) obj).name);
         }
     }
 
@@ -515,55 +430,12 @@ final class DefaultHost implements Host {
      * @since 0.0.1
      */
     @FunctionalInterface
-    private interface ObjectName {
+    interface ObjectName {
 
         /**
          * Returns a name of S3 object.
          * @return The name
          */
         String get();
-    }
-
-    /**
-     * Outcome of one attempt to fetch an object by name.
-     * @since 0.0.1
-     */
-    private static final class Attempt {
-
-        /**
-         * Resource found, if any.
-         */
-        private final transient Resource resource;
-
-        /**
-         * Whether no other name should be tried.
-         */
-        private final transient boolean done;
-
-        /**
-         * Ctor.
-         * @param found Resource found, if any
-         * @param fin Whether no other name should be tried
-         */
-        Attempt(final Resource found, final boolean fin) {
-            this.resource = found;
-            this.done = fin;
-        }
-
-        /**
-         * Resource found, if any.
-         * @return The resource, or null
-         */
-        Resource resource() {
-            return this.resource;
-        }
-
-        /**
-         * Whether no other name should be tried.
-         * @return TRUE if done
-         */
-        boolean done() {
-            return this.done;
-        }
     }
 }

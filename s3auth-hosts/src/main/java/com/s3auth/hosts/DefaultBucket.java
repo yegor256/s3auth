@@ -97,10 +97,6 @@ final class DefaultBucket implements Bucket {
         return this.domain.syslog();
     }
 
-    /**
-     * AWS credentials, built from the domain's key and secret.
-     * @return Credentials provider for the AWS SDK
-     */
     private StaticCredentialsProvider credentials() {
         return StaticCredentialsProvider.create(
             AwsBasicCredentials.create(
@@ -110,14 +106,6 @@ final class DefaultBucket implements Bucket {
         );
     }
 
-    /**
-     * Translate a legacy S3 region/endpoint string into a SDK v2 {@link Region}.
-     * Old s3auth records carry values like {@code s3}, {@code s3-eu-west-1},
-     * {@code s3-website-us-east-1} or {@code s3.amazonaws.com}, none of which
-     * the v2 SDK understands. This method strips the legacy prefixes and
-     * suffixes and returns the underlying region id.
-     * @return Region for the AWS SDK
-     */
     private Region awsRegion() {
         String raw = this.domain.region().trim();
         if (raw.endsWith(".amazonaws.com")) {

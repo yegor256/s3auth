@@ -105,14 +105,6 @@ final class SecuredHost implements Host {
         return this.host.stats();
     }
 
-    /**
-     * Fetch this URI in a secure way.
-     * @param uri The URI to fetch
-     * @param range The range
-     * @param version The object version
-     * @return Fetched resource
-     * @throws IOException If some IO problem inside
-     */
     private Resource secured(final URI uri, final Range range,
         final Version version) throws IOException {
         if (!this.request.headers().containsKey(HttpHeaders.AUTHORIZATION)) {

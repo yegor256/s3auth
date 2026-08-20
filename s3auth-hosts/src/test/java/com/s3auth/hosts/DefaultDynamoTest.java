@@ -67,12 +67,6 @@ final class DefaultDynamoTest {
         );
     }
 
-    /**
-     * Create and return a MkRegion with 20 random items in the given table.
-     * @param table Table
-     * @return The MkRegion
-     * @throws IOException If there is some problem inside
-     */
     @NotNull
     private MkRegion mockRegion(
         @NotNull(message = "table is never null") final String table)
@@ -96,10 +90,6 @@ final class DefaultDynamoTest {
         return region;
     }
 
-    /**
-     * Create and return a random amazon item.
-     * @return The client
-     */
     private Map<String, AttributeValue> item() {
         final ConcurrentMap<String, AttributeValue> item =
             new ConcurrentHashMap<>(0);

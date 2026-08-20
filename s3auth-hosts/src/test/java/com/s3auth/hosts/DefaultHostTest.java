@@ -371,10 +371,6 @@ final class DefaultHostTest {
         );
     }
 
-    /**
-     * Mock Host.Cloudwatch for test.
-     * @return Mock Cloudwatch
-     */
     private CloudWatch cloudWatch() {
         return new Host.CloudWatch() {
             private final transient CloudWatchClient cwatch =

@@ -223,11 +223,6 @@ final class SecuredHostTest {
         );
     }
 
-    /**
-     * Build raw HTTP request text out of lines.
-     * @param lines Lines of the request
-     * @return Raw request text
-     */
     private static String text(final String... lines) {
         return String.join(System.lineSeparator(), lines);
     }

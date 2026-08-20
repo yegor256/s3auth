@@ -54,11 +54,6 @@ final class TkIndex implements Take {
         );
     }
 
-    /**
-     * Convert domain to Xembly source.
-     * @param domain The domain
-     * @return Source
-     */
     private static XeSource source(final Domain domain) {
         return new XeAppend(
             "domain",

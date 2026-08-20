@@ -165,12 +165,6 @@ final class HtpasswdTest {
         );
     }
 
-    /**
-     * Create host that fetches the provided htpasswd content.
-     * @param htpasswd The content to fetch
-     * @return The host
-     * @throws Exception If there is some problem inside
-     */
     private Host host(final String htpasswd) throws Exception {
         final Host host = Mockito.spy(new HostMocker().init().mock());
         Mockito.doReturn(new ResourceMocker().init().withContent(htpasswd).mock())
@@ -179,10 +173,6 @@ final class HtpasswdTest {
         return host;
     }
 
-    /**
-     * Mock Host.Cloudwatch for test.
-     * @return Mock CloudWatch
-     */
     private CloudWatch cloudWatch() {
         return () -> Mockito.mock(CloudWatchClient.class);
     }

@@ -83,10 +83,6 @@ public final class ScheduledCloudWatch implements Runnable, Closeable {
         // Nothing to do, ScheduleWithFixedDelay will stop the thread.
     }
 
-    /**
-     * AWS credentials for CloudWatch, from manifest keys.
-     * @return Credentials provider for the AWS SDK
-     */
     private static StaticCredentialsProvider credentials() {
         return StaticCredentialsProvider.create(
             AwsBasicCredentials.create(
@@ -96,11 +92,6 @@ public final class ScheduledCloudWatch implements Runnable, Closeable {
         );
     }
 
-    /**
-     * Put data in Amazon Cloudwatch.
-     * @param stats The stats to put
-     * @param bucket The bucket corresponding to these stats
-     */
     @RetryOnFailure(delay = 5L, unit = TimeUnit.SECONDS)
     private void putData(final Stats stats, final String bucket) {
         this.cloudwatch.putMetricData(
@@ -111,12 +102,6 @@ public final class ScheduledCloudWatch implements Runnable, Closeable {
         );
     }
 
-    /**
-     * Metric datum for bytes transferred by a bucket.
-     * @param stats The stats to report
-     * @param bucket The bucket corresponding to these stats
-     * @return Datum ready to submit to CloudWatch
-     */
     private static MetricDatum datum(final Stats stats, final String bucket) {
         return MetricDatum.builder()
             .metricName("BytesTransferred")

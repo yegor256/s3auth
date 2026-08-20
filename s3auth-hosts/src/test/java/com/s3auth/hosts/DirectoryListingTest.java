@@ -68,12 +68,6 @@ final class DirectoryListingTest {
         );
     }
 
-    /**
-     * Get Matcher for object element checking.
-     * @param key The key
-     * @param size The size
-     * @return Matcher for object element
-     */
     private static Matcher<String> matchesObject(final String key, final int size) {
         return XhtmlMatchers.hasXPaths(
             String.format(
@@ -84,11 +78,6 @@ final class DirectoryListingTest {
         );
     }
 
-    /**
-     * Get Matcher for XML commonPrefix element XPath checking.
-     * @param prefix The key
-     * @return Matcher for common prefix element
-     */
     private static Matcher<String> matchesCommonPrefix(final String prefix) {
         return XhtmlMatchers.hasXPath(
             String.format(

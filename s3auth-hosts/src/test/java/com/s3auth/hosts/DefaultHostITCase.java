@@ -77,10 +77,6 @@ final class DefaultHostITCase {
         );
     }
 
-    /**
-     * Mock CloudWatch for test.
-     * @return Mock cloudwatch
-     */
     private CloudWatch cloudWatch() {
         return () -> Mockito.mock(CloudWatchClient.class);
     }

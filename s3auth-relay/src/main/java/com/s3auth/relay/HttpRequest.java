@@ -245,12 +245,6 @@ final class HttpRequest {
         );
     }
 
-    /**
-     * Parse header lines and create full map.
-     * @param lines All lines
-     * @return Map of headers
-     * @throws HttpException If some socket problem
-     */
     private static Map<String, Collection<String>> parseHeaders(
         final Iterable<String> lines) throws HttpException {
         final Map<String, Collection<String>> map =
@@ -273,11 +267,6 @@ final class HttpRequest {
         return map;
     }
 
-    /**
-     * Parse query parameters from request string and create full map.
-     * @param request Request string
-     * @return Map of headers
-     */
     private static Map<String, Collection<String>> parseParameters(
         final CharSequence request) {
         final Map<String, Collection<String>> map =

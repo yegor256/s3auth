@@ -97,10 +97,6 @@ final class SyslogHostsTest {
         }
     }
 
-    /**
-     * Find and return the first available port.
-     * @return The port number
-     */
     private static int port() {
         final int port;
         try (DatagramSocket socket = new DatagramSocket(0)) {

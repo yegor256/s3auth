@@ -17,7 +17,7 @@ public final class UserMocker {
     /**
      * The mock.
      */
-    private final transient UserMocker.MkUserBuilder user = new UserMocker.MkUserBuilder();
+    private final transient MkUserBuilder user = new MkUserBuilder();
 
     /**
      * Random generator.
@@ -65,114 +65,5 @@ public final class UserMocker {
      */
     public User mock() {
         return this.user.build();
-    }
-
-    /**
-     * Builder for MkUser.
-     * @since 0.0.1
-     */
-    private static final class MkUserBuilder {
-
-        /**
-         * The User identity.
-         */
-        private URN identity;
-
-        /**
-         * The user name.
-         */
-        private String name;
-
-        /**
-         * The User photo.
-         */
-        private URI photo;
-
-        /**
-         * Set identity.
-         * @param value The identity
-         * @return This builder
-         */
-        MkUserBuilder identity(final URN value) {
-            this.identity = value;
-            return this;
-        }
-
-        /**
-         * Set name.
-         * @param value The name
-         * @return This builder
-         */
-        MkUserBuilder name(final String value) {
-            this.name = value;
-            return this;
-        }
-
-        /**
-         * Set photo.
-         * @param value The photo
-         * @return This builder
-         */
-        MkUserBuilder photo(final URI value) {
-            this.photo = value;
-            return this;
-        }
-
-        /**
-         * Build the user.
-         * @return The user
-         */
-        UserMocker.MkUser build() {
-            return new UserMocker.MkUser(this.identity, this.name, this.photo);
-        }
-    }
-
-    /**
-     * Mock.
-     * @since 0.0.1
-     */
-    private static final class MkUser implements User {
-
-        /**
-         * The User identity.
-         */
-        private final transient URN identity;
-
-        /**
-         * The user name.
-         */
-        private final transient String name;
-
-        /**
-         * The User photo.
-         */
-        private final transient URI photo;
-
-        /**
-         * Constructor.
-         * @param ident The identity
-         * @param usr The name
-         * @param pht The photo
-         */
-        MkUser(final URN ident, final String usr, final URI pht) {
-            this.identity = ident;
-            this.name = usr;
-            this.photo = pht;
-        }
-
-        @Override
-        public URN identity() {
-            return this.identity;
-        }
-
-        @Override
-        public String name() {
-            return this.name;
-        }
-
-        @Override
-        public URI photo() {
-            return this.photo;
-        }
     }
 }

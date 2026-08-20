@@ -123,13 +123,9 @@ final class FtpFacade implements Closeable {
         return facade;
     }
 
-    /**
-     * Start the backend dispatcher threads.
-     * @param hosts Hosts
-     */
     private void start(final Hosts hosts) {
         final Runnable runnable = new VerboseRunnable(
-            new FtpFacade.FtpThreadRunnable(new FtpThread(this.sockets, hosts)), true, true
+            new FtpThreadRunnable(new FtpThread(this.sockets, hosts)), true, true
         );
         for (int idx = 0; idx < FtpFacade.THREADS; ++idx) {
             final ScheduledFuture<?> future = this.backend.scheduleWithFixedDelay(
@@ -139,14 +135,6 @@ final class FtpFacade implements Closeable {
         }
     }
 
-    /**
-     * Process one server socket.
-     *
-     * <p>Socket ownership transfers to the queue; {@link FtpThread} closes
-     * it later.
-     *
-     * @param svr The server socket
-     */
     @SuppressWarnings("PMD.CloseResource")
     private void process(final ServerSocket svr) {
         final Socket socket;
@@ -166,10 +154,6 @@ final class FtpFacade implements Closeable {
         }
     }
 
-    /**
-     * Report overflow problem to the socket and close it.
-     * @param socket The socket to report to
-     */
     private static void overflow(final Socket socket) {
         new FtpResponse()
             .withCode(FTPReply.SERVICE_NOT_AVAILABLE).withText(
@@ -181,11 +165,6 @@ final class FtpFacade implements Closeable {
             .send(socket);
     }
 
-    /**
-     * Shutdown a service.
-     * @param service The service to shut down
-     * @throws InterruptedException If fails to shutdown
-     */
     private void shutdown(final ExecutorService service)
         throws InterruptedException {
         service.shutdown();
@@ -199,31 +178,6 @@ final class FtpFacade implements Closeable {
             } else {
                 Logger.error(this, "#shutdown(): failed to stop threads");
             }
-        }
-    }
-
-    /**
-     * Dispatcher of FTPThread.
-     * @since 0.0.1
-     */
-    private static final class FtpThreadRunnable implements Runnable {
-
-        /**
-         * The thread to run.
-         */
-        private final transient FtpThread thread;
-
-        /**
-         * Constructor.
-         * @param thrd The FTPThread
-         */
-        FtpThreadRunnable(final FtpThread thrd) {
-            this.thread = thrd;
-        }
-
-        @Override
-        public void run() {
-            this.thread.dispatch();
         }
     }
 }

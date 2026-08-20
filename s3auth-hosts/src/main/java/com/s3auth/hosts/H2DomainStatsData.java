@@ -160,10 +160,6 @@ final class H2DomainStatsData implements DomainStatsData {
         return this;
     }
 
-    /**
-     * Make new session.
-     * @return Session
-     */
     private JdbcSession session() {
         return new JdbcSession(
             new UrlSource(

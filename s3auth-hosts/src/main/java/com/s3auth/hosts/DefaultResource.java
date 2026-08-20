@@ -130,7 +130,7 @@ final class DefaultResource implements Resource {
     @Override
     @Loggable(
         value = Loggable.DEBUG, limit = Integer.MAX_VALUE,
-        ignore = DefaultResource.StreamingException.class
+        ignore = StreamingException.class
     )
     public long writeTo(@NotNull final OutputStream output) throws IOException {
         int total = 0;
@@ -141,7 +141,7 @@ final class DefaultResource implements Resource {
                 try {
                     count = input.read(buffer);
                 } catch (final IOException ex) {
-                    throw new DefaultResource.StreamingException(
+                    throw new StreamingException(
                         String.format(
                             "failed to read %s/%s, range=%s, total=%d",
                             this.bucket,
@@ -158,7 +158,7 @@ final class DefaultResource implements Resource {
                 try {
                     output.write(buffer, 0, count);
                 } catch (final IOException ex) {
-                    throw new DefaultResource.StreamingException(
+                    throw new StreamingException(
                         String.format(
                             "failed to write %s/%s, range=%s, total=%d, count=%d",
                             this.bucket,
@@ -269,56 +269,37 @@ final class DefaultResource implements Resource {
      * @return Fetched resource
      */
     static DefaultResource fetch(@NotNull final S3Client clnt,
-        @NotNull final DefaultResource.Locator loc,
+        @NotNull final Locator loc,
         @NotNull final DomainStatsData dstats) {
         return new DefaultResource(
-            clnt, loc.bucket, loc.key, loc.range, loc.version, dstats,
+            clnt, loc.bucket(), loc.key(), loc.range(), loc.version(), dstats,
             clnt.getObject(DefaultResource.request(loc))
         );
     }
 
-    /**
-     * Create a HTTP header from name and value.
-     * @param name Name of the header
-     * @param value The value
-     * @return Full HTTP header string
-     */
     @NotNull
     private static String header(@NotNull final String name,
         @NotNull final String value) {
         return String.format("%s: %s", name, value);
     }
 
-    /**
-     * The response metadata of the opened stream.
-     * @return Response
-     */
     private GetObjectResponse response() {
         return this.stream.response();
     }
 
-    /**
-     * Make S3 request for the given coordinates.
-     * @param loc Coordinates of the object to fetch
-     * @return Request
-     */
-    private static GetObjectRequest request(final DefaultResource.Locator loc) {
+    private static GetObjectRequest request(final Locator loc) {
         final GetObjectRequest.Builder builder = GetObjectRequest.builder()
-            .bucket(loc.bucket)
-            .key(loc.key);
-        if (!loc.range.equals(Range.ENTIRE)) {
-            builder.range(String.format("bytes=%d-%d", loc.range.first(), loc.range.last()));
+            .bucket(loc.bucket())
+            .key(loc.key());
+        if (!loc.range().equals(Range.ENTIRE)) {
+            builder.range(String.format("bytes=%d-%d", loc.range().first(), loc.range().last()));
         }
-        if (!loc.version.latest()) {
-            builder.versionId(loc.version.version());
+        if (!loc.version().latest()) {
+            builder.versionId(loc.version().version());
         }
         return builder.build();
     }
 
-    /**
-     * Get total size of an S3 object.
-     * @return Size of it in bytes
-     */
     private long size() {
         final long size;
         if (this.range.equals(Range.ENTIRE)) {
@@ -328,7 +309,7 @@ final class DefaultResource implements Resource {
                 ResponseInputStream<GetObjectResponse> resp =
                     this.client.getObject(
                         DefaultResource.request(
-                            new DefaultResource.Locator(
+                            new Locator(
                                 this.bucket, this.key, Range.ENTIRE, this.version
                             )
                         )
@@ -340,71 +321,5 @@ final class DefaultResource implements Resource {
             }
         }
         return size;
-    }
-
-    /**
-     * Custom IO exception.
-     * @since 0.0.1
-     */
-    private static final class StreamingException extends IOException {
-
-        /**
-         * Serialization marker.
-         */
-        private static final long serialVersionUID = 0x7529FA781E111179L;
-
-        /**
-         * Public ctor.
-         * @param cause The cause of it
-         * @param thr The cause of it
-         */
-        StreamingException(final String cause, final Throwable thr) {
-            super(
-                String.format("%s: '%s'", cause, thr.getMessage()),
-                thr
-            );
-        }
-    }
-
-    /**
-     * Coordinates of an S3 object to fetch.
-     * @since 0.0.1
-     */
-    static final class Locator {
-
-        /**
-         * Bucket name.
-         */
-        private final transient String bucket;
-
-        /**
-         * Key in the bucket.
-         */
-        private final transient String key;
-
-        /**
-         * The range.
-         */
-        private final transient Range range;
-
-        /**
-         * The version.
-         */
-        private final transient Version version;
-
-        /**
-         * Ctor.
-         * @param bckt Bucket name
-         * @param name Key name
-         * @param rng Range to deliver
-         * @param ver Version of object to retrieve
-         */
-        Locator(final String bckt, final String name,
-            final Range rng, final Version ver) {
-            this.bucket = bckt;
-            this.key = name;
-            this.range = rng;
-            this.version = ver;
-        }
     }
 }

@@ -133,12 +133,6 @@ final class HttpResponseTest {
         }
     }
 
-    /**
-     * Build a resource which sleeps for a couple of seconds before writing
-     * its content.
-     * @param content Content to write
-     * @return The resource
-     */
     private static Resource slow(final String content) {
         // @checkstyle AnonInnerLength (50 lines)
         return new Resource() {

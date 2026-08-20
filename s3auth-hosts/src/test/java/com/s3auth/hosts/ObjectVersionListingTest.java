@@ -65,12 +65,6 @@ final class ObjectVersionListingTest {
         );
     }
 
-    /**
-     * Get Matcher for XML version element XPath checking.
-     * @param key The key
-     * @param version The version
-     * @return The XML element matcher
-     */
     private static Matcher<String> matchesKeyXpath(final String key,
         final String version) {
         return XhtmlMatchers.hasXPath(

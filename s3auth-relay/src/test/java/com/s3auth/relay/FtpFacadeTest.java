@@ -71,11 +71,6 @@ final class FtpFacadeTest {
         }
     }
 
-    /**
-     * Returns a mock FTPFacade.
-     * @return Mock FTPFacade
-     * @throws IOException If something goes wrong
-     */
     private static FtpFacade mockFacade() throws IOException {
         final Host host = Mockito.mock(Host.class);
         Mockito.doAnswer(

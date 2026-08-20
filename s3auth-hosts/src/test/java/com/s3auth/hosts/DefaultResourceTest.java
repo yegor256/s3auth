@@ -47,7 +47,7 @@ final class DefaultResourceTest {
         MatcherAssert.assertThat(
             DefaultResource.fetch(
                 client,
-                new DefaultResource.Locator("a", "", Range.ENTIRE, Version.LATEST),
+                new Locator("a", "", Range.ENTIRE, Version.LATEST),
                 Mockito.mock(DomainStatsData.class)
             ).headers(),
             Matchers.hasItem("Content-Length: 1")
@@ -74,7 +74,7 @@ final class DefaultResourceTest {
             ResourceMocker.toString(
                 DefaultResource.fetch(
                     client,
-                    new DefaultResource.Locator("b", "", Range.ENTIRE, Version.LATEST),
+                    new Locator("b", "", Range.ENTIRE, Version.LATEST),
                     Mockito.mock(DomainStatsData.class)
                 )
             ),
@@ -108,7 +108,7 @@ final class DefaultResourceTest {
             ResourceMocker.toByteArray(
                 DefaultResource.fetch(
                     client,
-                    new DefaultResource.Locator("c", "", Range.ENTIRE, Version.LATEST),
+                    new Locator("c", "", Range.ENTIRE, Version.LATEST),
                     Mockito.mock(DomainStatsData.class)
                 )
             ),
@@ -150,7 +150,7 @@ final class DefaultResourceTest {
             () -> ResourceMocker.toString(
                 DefaultResource.fetch(
                     client,
-                    new DefaultResource.Locator("d", "", Range.ENTIRE, Version.LATEST),
+                    new Locator("d", "", Range.ENTIRE, Version.LATEST),
                     Mockito.mock(DomainStatsData.class)
                 )
             )
@@ -177,7 +177,7 @@ final class DefaultResourceTest {
         MatcherAssert.assertThat(
             DefaultResource.fetch(
                 client,
-                new DefaultResource.Locator("x", "", Range.ENTIRE, Version.LATEST),
+                new Locator("x", "", Range.ENTIRE, Version.LATEST),
                 Mockito.mock(DomainStatsData.class)
             ).lastModified(),
             Matchers.is(Date.from(date))
@@ -204,7 +204,7 @@ final class DefaultResourceTest {
         MatcherAssert.assertThat(
             DefaultResource.fetch(
                 client,
-                new DefaultResource.Locator("e", "", Range.ENTIRE, Version.LATEST),
+                new Locator("e", "", Range.ENTIRE, Version.LATEST),
                 Mockito.mock(DomainStatsData.class)
             ).headers(),
             Matchers.hasItem("Cache-Control: max-age: 600, public")
@@ -231,7 +231,7 @@ final class DefaultResourceTest {
         MatcherAssert.assertThat(
             DefaultResource.fetch(
                 client,
-                new DefaultResource.Locator("f", "", Range.ENTIRE, Version.LATEST),
+                new Locator("f", "", Range.ENTIRE, Version.LATEST),
                 Mockito.mock(DomainStatsData.class)
             ).headers(),
             Matchers.hasItem("Cache-Control: must-revalidate")
@@ -266,7 +266,7 @@ final class DefaultResourceTest {
             ResourceMocker.toByteArray(
                 DefaultResource.fetch(
                     client,
-                    new DefaultResource.Locator(bucket, "", Range.ENTIRE, Version.LATEST),
+                    new Locator(bucket, "", Range.ENTIRE, Version.LATEST),
                     stats
                 )
             ),
@@ -300,7 +300,7 @@ final class DefaultResourceTest {
         ).when(client).getObject(Mockito.any(GetObjectRequest.class));
         DefaultResource.fetch(
             client,
-            new DefaultResource.Locator(
+            new Locator(
                 "h", "", Range.ENTIRE, new Version.Simple(version)
             ),
             Mockito.mock(DomainStatsData.class)
@@ -329,7 +329,7 @@ final class DefaultResourceTest {
             .getObject(Mockito.any(GetObjectRequest.class));
         DefaultResource.fetch(
             client,
-            new DefaultResource.Locator("i", "", Range.ENTIRE, Version.LATEST),
+            new Locator("i", "", Range.ENTIRE, Version.LATEST),
             Mockito.mock(DomainStatsData.class)
         ).close();
         Mockito.verify(stream, Mockito.times(1)).close();
@@ -356,7 +356,7 @@ final class DefaultResourceTest {
         MatcherAssert.assertThat(
             DefaultResource.fetch(
                 client,
-                new DefaultResource.Locator(
+                new Locator(
                     "j", "", new Range.Simple(0, 1), Version.LATEST
                 ),
                 Mockito.mock(DomainStatsData.class)
@@ -387,7 +387,7 @@ final class DefaultResourceTest {
         MatcherAssert.assertThat(
             DefaultResource.fetch(
                 client,
-                new DefaultResource.Locator("abcdef", "", Range.ENTIRE, Version.LATEST),
+                new Locator("abcdef", "", Range.ENTIRE, Version.LATEST),
                 Mockito.mock(DomainStatsData.class)
             ).headers(),
             Matchers.hasItem("Content-Encoding: gzip")

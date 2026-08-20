@@ -90,7 +90,7 @@ final class LocalHost implements Host {
 
     @Override
     public Stats stats() {
-        return new LocalHost.DummyStats();
+        return new DummyStats();
     }
 
     /**
@@ -102,11 +102,6 @@ final class LocalHost implements Host {
         return "relay.s3auth.com".equals(name);
     }
 
-    /**
-     * Shutdown.
-     * @param uri URI just dispatched
-     * @return The exception to throw
-     */
     @SuppressWarnings("PMD.DoNotTerminateVM")
     private IOException halt(final String uri) {
         if (uri.equals(LocalHost.SHUTDOWN)) {
@@ -122,17 +117,5 @@ final class LocalHost implements Host {
                 )
             )
         );
-    }
-
-    /**
-     * Dummy host stats.
-     * @since 0.0.1
-     */
-    private static final class DummyStats implements Stats {
-
-        @Override
-        public long bytesTransferred() {
-            return 0;
-        }
     }
 }

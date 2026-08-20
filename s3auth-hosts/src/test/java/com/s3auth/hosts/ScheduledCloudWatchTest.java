@@ -44,12 +44,6 @@ final class ScheduledCloudWatchTest {
         cloudwatch.close();
     }
 
-    /**
-     * Metric datum expected for these bytes and bucket.
-     * @param bytes The bytes transferred
-     * @param bucket The bucket name
-     * @return Expected datum
-     */
     private static MetricDatum datum(final long bytes, final String bucket) {
         return MetricDatum.builder()
             .metricName("BytesTransferred")

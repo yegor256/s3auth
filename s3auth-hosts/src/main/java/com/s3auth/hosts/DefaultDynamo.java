@@ -180,10 +180,6 @@ final class DefaultDynamo implements Dynamo {
         return removed;
     }
 
-    /**
-     * Scan valve fetching only the attributes this class understands.
-     * @return Valve limited to relevant attributes
-     */
     private static ScanValve valve() {
         return new ScanValve().withAttributeToGet(
             DefaultDynamo.USER,
@@ -196,10 +192,6 @@ final class DefaultDynamo implements Dynamo {
         ).withLimit(1_000_000);
     }
 
-    /**
-     * Create AWS credentials.
-     * @return Creds
-     */
     private static Credentials creds() {
         Credentials creds = new Credentials.Simple(
             Manifests.read("S3Auth-AwsDynamoKey"),
@@ -214,12 +206,6 @@ final class DefaultDynamo implements Dynamo {
         return creds;
     }
 
-    /**
-     * Turn item into domain.
-     * @param item Item
-     * @return Domain
-     * @throws IOException If fails
-     */
     private static Domain domain(final Item item) throws IOException {
         if (!item.has(DefaultDynamo.SYSLOG)) {
             item.put(

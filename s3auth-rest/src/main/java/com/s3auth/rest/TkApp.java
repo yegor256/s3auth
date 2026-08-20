@@ -75,11 +75,6 @@ public class TkApp extends TkWrap {
         super(TkApp.make(hosts));
     }
 
-    /**
-     * Make it.
-     * @param hosts Hosts
-     * @return Take
-     */
     private static Take make(final Hosts hosts) {
         if (!"UTF-8".equals(Charset.defaultCharset().name())) {
             throw new IllegalStateException(
@@ -107,11 +102,6 @@ public class TkApp extends TkWrap {
         );
     }
 
-    /**
-     * Authenticated.
-     * @param takes Take
-     * @return Authenticated takes
-     */
     private static Take fallback(final Take takes) {
         return new TkFallback(
             takes,
@@ -151,11 +141,6 @@ public class TkApp extends TkWrap {
         );
     }
 
-    /**
-     * Authenticated.
-     * @param takes Take
-     * @return Authenticated takes
-     */
     private static Take auth(final Take takes) {
         return new TkAuth(
             takes,
@@ -190,11 +175,6 @@ public class TkApp extends TkWrap {
         );
     }
 
-    /**
-     * Regex takes.
-     * @param hosts Hosts
-     * @return Take
-     */
     private static Take regex(final Hosts hosts) {
         return new TkFork(
             new FkParams(

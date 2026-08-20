@@ -142,13 +142,9 @@ final class HttpFacade implements Closeable {
         return facade;
     }
 
-    /**
-     * Start the backend dispatcher threads.
-     * @param hosts Hosts
-     */
     private void start(final Hosts hosts) {
         final Runnable runnable = new VerboseRunnable(
-            new HttpFacade.HttpThreadRunnable(
+            new HttpThreadRunnable(
                 new HttpThread(this.sockets, hosts)
             ),
             true, true
@@ -161,14 +157,6 @@ final class HttpFacade implements Closeable {
         }
     }
 
-    /**
-     * Process one server socket.
-     *
-     * <p>Socket ownership transfers to the queue; {@link HttpThread} closes
-     * it later.
-     *
-     * @param svr The server socket
-     */
     @SuppressWarnings("PMD.CloseResource")
     private void process(final ServerSocket svr) {
         final Socket socket;
@@ -191,10 +179,6 @@ final class HttpFacade implements Closeable {
         }
     }
 
-    /**
-     * Report overflow problem to the socket and close it.
-     * @param socket The socket to report to
-     */
     private static void overflow(final Socket socket) {
         try {
             new HttpResponse()
@@ -210,11 +194,6 @@ final class HttpFacade implements Closeable {
         }
     }
 
-    /**
-     * Shutdown a service.
-     * @param service The service to shut down
-     * @throws InterruptedException If fails to shutdown
-     */
     private void shutdown(final ExecutorService service)
         throws InterruptedException {
         service.shutdown();
@@ -227,36 +206,6 @@ final class HttpFacade implements Closeable {
                 Logger.info(this, "#shutdown(): shutdownNow() succeeded");
             } else {
                 Logger.error(this, "#shutdown(): failed to stop threads");
-            }
-        }
-    }
-
-    /**
-     * Dispatcher of HttpThread.
-     * @since 0.0.1
-     */
-    private static final class HttpThreadRunnable implements Runnable {
-
-        /**
-         * The thread to run.
-         */
-        private final transient HttpThread thread;
-
-        /**
-         * Constructor.
-         * @param thrd The HttpThread
-         */
-        HttpThreadRunnable(final HttpThread thrd) {
-            this.thread = thrd;
-        }
-
-        @Override
-        public void run() {
-            try {
-                this.thread.dispatch();
-            } catch (final InterruptedException ex) {
-                Thread.currentThread().interrupt();
-                Logger.warn(this, "%s", ex);
             }
         }
     }

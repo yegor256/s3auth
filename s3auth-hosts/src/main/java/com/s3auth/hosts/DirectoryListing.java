@@ -143,14 +143,7 @@ final class DirectoryListing implements Resource {
         );
     }
 
-    /**
-     * Paginate through all S3 objects and common prefixes under a key.
-     * @param clnt Amazon S3 client
-     * @param bckt Bucket name
-     * @param key The S3 object key prefix
-     * @return Objects and common prefixes found
-     */
-    private static DirectoryListing.Listing paginate(final S3Client clnt,
+    private static Listing paginate(final S3Client clnt,
         final String bckt, final String key) {
         final Collection<S3Object> objects = new ArrayList<>(0);
         final Collection<String> prefixes = new ArrayList<>(0);
@@ -178,23 +171,16 @@ final class DirectoryListing implements Resource {
                 more = token != null;
             }
         }
-        return new DirectoryListing.Listing(objects, prefixes);
+        return new Listing(objects, prefixes);
     }
 
-    /**
-     * Transform a listing into XHTML bytes.
-     * @param key The S3 object key prefix
-     * @param listing Objects and common prefixes found
-     * @return Transformed bytes
-     */
-    private static byte[] transform(final String key,
-        final DirectoryListing.Listing listing) {
+    private static byte[] transform(final String key, final Listing listing) {
         final Directives dirs = new Directives()
             .add("directory").attr("prefix", key);
-        for (final String prefix : listing.prefixes) {
+        for (final String prefix : listing.prefixes()) {
             dirs.add("commonPrefix").set(prefix).up();
         }
-        for (final S3Object object : listing.objects) {
+        for (final S3Object object : listing.objects()) {
             dirs.add("object")
                 .add("path")
                 .set(object.key()).up()
@@ -213,42 +199,9 @@ final class DirectoryListing implements Resource {
         }
     }
 
-    /**
-     * Create a HTTP header from name and value.
-     * @param name Name of the header
-     * @param value The value
-     * @return Full HTTP header string
-     */
     @NotNull
     private static String header(@NotNull final String name,
         @NotNull final String value) {
         return String.format("%s: %s", name, value);
-    }
-
-    /**
-     * Objects and common prefixes found while paginating a bucket listing.
-     * @since 0.0.1
-     */
-    private static final class Listing {
-
-        /**
-         * S3 objects found.
-         */
-        private final transient Collection<S3Object> objects;
-
-        /**
-         * Common prefixes found.
-         */
-        private final transient Collection<String> prefixes;
-
-        /**
-         * Ctor.
-         * @param objs S3 objects found
-         * @param prfxs Common prefixes found
-         */
-        Listing(final Collection<S3Object> objs, final Collection<String> prfxs) {
-            this.objects = objs;
-            this.prefixes = prfxs;
-        }
     }
 }

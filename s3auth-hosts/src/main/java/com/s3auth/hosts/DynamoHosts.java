@@ -123,12 +123,6 @@ public final class DynamoHosts implements Hosts {
         this.dynamo.close();
     }
 
-    /**
-     * Add new domain for the given user (this method is NOT thread-safe).
-     * @param user The user
-     * @param domain The domain
-     * @return Item was added (FALSE means that we already had it)
-     */
     private boolean add(final URN user, final Domain domain) {
         boolean added = false;
         try {
@@ -141,12 +135,6 @@ public final class DynamoHosts implements Hosts {
         return added;
     }
 
-    /**
-     * Remove this domain (this method is NOT thread-safe).
-     * @param user Who is removing it
-     * @param domain The domain
-     * @return Item was removed (FALSE means that we didn't have it)
-     */
     private boolean remove(final URN user, final Domain domain) {
         boolean removed = false;
         try {
@@ -160,12 +148,6 @@ public final class DynamoHosts implements Hosts {
         return removed;
     }
 
-    /**
-     * Find domain by name or NULL if not found.
-     * @param name Name of domain to find
-     * @return Domain found or null
-     * @throws IOException If something goes wrong
-     */
     private Domain byName(final String name) throws IOException {
         Domain domain = null;
         for (final Set<Domain> domains : this.dynamo.load().values()) {

@@ -143,19 +143,11 @@ public interface Resource extends Closeable {
                 && this.raw.equals(((PlainText) obj).raw);
         }
 
-        /**
-         * Text as bytes.
-         * @return Bytes of the text
-         */
         @Cacheable(forever = true)
         private byte[] text() {
             return this.raw.getBytes(StandardCharsets.UTF_8);
         }
 
-        /**
-         * HTTP headers for this resource.
-         * @return Headers
-         */
         @Cacheable(forever = true)
         private Array<String> hdrs() {
             return new Array<>(

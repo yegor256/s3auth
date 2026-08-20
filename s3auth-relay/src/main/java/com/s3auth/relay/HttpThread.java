@@ -188,13 +188,6 @@ final class HttpThread {
         return bytes;
     }
 
-    /**
-     * Make a resource from host and request.
-     * @param host The host
-     * @param request HTTP request
-     * @return The resource
-     * @throws IOException If some IO exception
-     */
     private static Resource resource(final Host host, final HttpRequest request)
         throws IOException {
         final Version version;
@@ -237,12 +230,6 @@ final class HttpThread {
         return resource;
     }
 
-    /**
-     * Get host from request.
-     * @param request The HTTP request
-     * @return Host ready to fetch content
-     * @throws HttpException If some error inside
-     */
     private Host host(final HttpRequest request) throws HttpException {
         final Map<String, Collection<String>> headers = request.headers();
         if (!headers.containsKey(HttpHeaders.HOST)) {
@@ -285,12 +272,6 @@ final class HttpThread {
         return host;
     }
 
-    /**
-     * Send failure to the socket.
-     * @param cause The problem
-     * @param socket The socket to talk to
-     * @return Number of bytes sent
-     */
     private long failure(final HttpException cause, final Socket socket) {
         try {
             final long bytes = cause.response().send(socket);

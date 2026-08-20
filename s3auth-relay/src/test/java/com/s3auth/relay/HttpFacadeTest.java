@@ -615,11 +615,6 @@ final class HttpFacadeTest {
         }
     }
 
-    /**
-     * Make HTTP request.
-     * @param path URI to hit
-     * @throws Exception If fails
-     */
     @Parallel(threads = 50)
     private static void http(final URI path) throws Exception {
         new JdkRequest(path)
@@ -633,10 +628,6 @@ final class HttpFacadeTest {
             .assertBody(Matchers.containsString("hello"));
     }
 
-    /**
-     * Basic auth header value for user a:b.
-     * @return The header value
-     */
     private static String auth() {
         return String.format(
             "Basic %s",
