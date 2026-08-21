@@ -62,7 +62,7 @@ final class DirectoryListing implements Resource {
 
     @Override
     public int status() {
-        return HttpURLConnection.HTTP_OK;
+        return HttpURLConnection.HTTP_NOT_FOUND;
     }
 
     @Override
