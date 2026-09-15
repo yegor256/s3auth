@@ -13,7 +13,7 @@ import java.util.Objects;
 /**
  * A {@link Host} that temporarily rejects certain resources, by regex.
  *
- * <p>The class is immutable and thread-safe.
+ * <p>The class is immutable and thread-safe.</p>
  *
  * @since 0.0.1
  */
@@ -32,6 +32,7 @@ final class RejectingHost implements Host {
 
     /**
      * Public ctor.
+     *
      * @param hst Original host
      * @param ptns Patterns
      */

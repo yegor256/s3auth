@@ -31,7 +31,7 @@ import org.apache.commons.lang3.StringUtils;
  * HTTP request.
  *
  * <p>This class helps us to consume a HTTP request from an IO socket, and
- * parse its content. This is how it can be used (socket should be opened):
+ * parse its content. This is how it can be used (socket should be opened):</p>
  *
  * <pre>
  * HttpRequest req = HttpRequest.parse(socket);
@@ -39,9 +39,9 @@ import org.apache.commons.lang3.StringUtils;
  * URI uri = req.requestUri();
  * </pre>
  *
- * <p>We don't support any other methods except "GET".
+ * <p>We don't support any other methods except "GET".</p>
  *
- * <p>The class is mutable and thread-safe.
+ * <p>The class is mutable and thread-safe.</p>
  *
  * @see HttpThread
  * @since 0.0.1
@@ -51,6 +51,7 @@ final class HttpRequest {
 
     /**
      * Range HTTP header.
+     *
      * @see <a href="HTTP headers">http://en.wikipedia.org/wiki/List_of_HTTP_header_fields</a>
      */
     private static final String RANGE_HEADER = "Range";
@@ -101,6 +102,7 @@ final class HttpRequest {
 
     /**
      * Private ctor, with all fields already computed.
+     *
      * @param method HTTP method
      * @param address URI requested
      * @param headers HTTP headers
@@ -117,6 +119,7 @@ final class HttpRequest {
 
     /**
      * Get all found HTTP headers. Note that the returned map is unmodifiable.
+     *
      * @return Headers
      */
     Map<String, Collection<String>> headers() {
@@ -126,6 +129,7 @@ final class HttpRequest {
     /**
      * Get all found HTTP parameters.
      * Note that the returned map is unmodifiable.
+     *
      * @return Headers
      */
     Map<String, Collection<String>> parameters() {
@@ -134,6 +138,7 @@ final class HttpRequest {
 
     /**
      * Get URI requested.
+     *
      * @return The URI
      */
     URI requestUri() {
@@ -142,6 +147,7 @@ final class HttpRequest {
 
     /**
      * Get HTTP method requested.
+     *
      * @return The method
      */
     String method() {
@@ -150,6 +156,7 @@ final class HttpRequest {
 
     /**
      * Get range requested.
+     *
      * @return The URI
      * @throws HttpException If something is wrong
      * @see <a href="http://en.wikipedia.org/wiki/Byte_serving">Byte Serving</a>
@@ -183,7 +190,7 @@ final class HttpRequest {
      * Parse a HTTP request out of a socket.
      *
      * <p>It's important NOT to close the reader in this method. If it's
-     * closed here the entire socket gets closed.
+     * closed here the entire socket gets closed.</p>
      *
      * @param socket Socket to read from
      * @return The request parsed

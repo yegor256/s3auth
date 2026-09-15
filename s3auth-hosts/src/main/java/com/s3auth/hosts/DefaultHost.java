@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -36,6 +37,7 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 
 /**
  * Default implementation of {@link Host}.
+ *
  * @since 0.0.1
  * @checkstyle NonStaticMethodCheck (500 lines)
  */
@@ -83,6 +85,7 @@ final class DefaultHost implements Host {
 
     /**
      * Public ctor.
+     *
      * @param bckt The S3 bucket to use
      */
     DefaultHost(@NotNull final Bucket bckt) {
@@ -94,6 +97,7 @@ final class DefaultHost implements Host {
 
     /**
      * Ctor for unit tests.
+     *
      * @param bckt The S3 bucket to use
      * @param cwatch The Amazon Cloudwatch client
      */
@@ -319,6 +323,7 @@ final class DefaultHost implements Host {
 
     /**
      * Object name with a suffix from a bucket.
+     *
      * @since 0.0.1
      */
     @Loggable(Loggable.DEBUG)
@@ -331,6 +336,7 @@ final class DefaultHost implements Host {
 
         /**
          * Public ctor.
+         *
          * @param name The original name
          */
         NameWithSuffix(final String name) {
@@ -367,6 +373,7 @@ final class DefaultHost implements Host {
 
     /**
      * Stats for this domain.
+     *
      * @since 0.0.1
      */
     @Loggable(Loggable.DEBUG)
@@ -379,6 +386,7 @@ final class DefaultHost implements Host {
 
         /**
          * Public ctor.
+         *
          * @param bckt The bucket
          */
         HostStats(final Bucket bckt) {
@@ -402,7 +410,7 @@ final class DefaultHost implements Host {
                         )
                         .unit(StandardUnit.BYTES)
                         .period((int) TimeUnit.DAYS.toSeconds(7))
-                        .startTime(now.minus(7, java.time.temporal.ChronoUnit.DAYS))
+                        .startTime(now.minus(7, ChronoUnit.DAYS))
                         .endTime(now)
                         .build()
                 ).datapoints();
@@ -427,6 +435,7 @@ final class DefaultHost implements Host {
 
     /**
      * Name of an S3 Object, context dependent.
+     *
      * @since 0.0.1
      */
     @FunctionalInterface
@@ -434,6 +443,7 @@ final class DefaultHost implements Host {
 
         /**
          * Returns a name of S3 object.
+         *
          * @return The name
          */
         String get();

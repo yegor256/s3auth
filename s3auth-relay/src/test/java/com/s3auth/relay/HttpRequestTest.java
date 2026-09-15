@@ -11,12 +11,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link HttpRequest}.
+ *
  * @since 0.0.1
  */
 final class HttpRequestTest {
 
     /**
      * HttpRequest can parse the request URI.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -34,6 +36,7 @@ final class HttpRequestTest {
 
     /**
      * HttpRequest can parse the Host header.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -51,6 +54,7 @@ final class HttpRequestTest {
 
     /**
      * HttpRequest can retrieve a header by its original case.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -68,6 +72,7 @@ final class HttpRequestTest {
 
     /**
      * HttpRequest can retrieve a header by its uppercase name.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -85,6 +90,7 @@ final class HttpRequestTest {
 
     /**
      * HttpRequest can retrieve a header by its lowercase name.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -102,6 +108,7 @@ final class HttpRequestTest {
 
     /**
      * HttpRequest can retrieve a header by its mixed-case name.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -119,6 +126,7 @@ final class HttpRequestTest {
 
     /**
      * HttpRequest can retrieve the first byte of a full range header value.
+     *
      * @throws Exception If a problem occurs
      */
     @Test
@@ -137,6 +145,7 @@ final class HttpRequestTest {
 
     /**
      * HttpRequest can retrieve the last byte of a full range header value.
+     *
      * @throws Exception If a problem occurs
      */
     @Test
@@ -156,6 +165,7 @@ final class HttpRequestTest {
     /**
      * HttpRequest can retrieve the first byte of a range with only the
      * first byte specified, e.g. "byte=100-" for "From byte 100".
+     *
      * @throws Exception If a problem occurs
      */
     @Test
@@ -175,6 +185,7 @@ final class HttpRequestTest {
     /**
      * HttpRequest defaults the last byte to the maximum long value when
      * only the first byte is specified, e.g. "byte=100-" for "From byte 100".
+     *
      * @throws Exception If a problem occurs
      */
     @Test
@@ -193,6 +204,7 @@ final class HttpRequestTest {
 
     /**
      * HttpRequest can retrieve the "test" query parameter.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -210,6 +222,7 @@ final class HttpRequestTest {
 
     /**
      * HttpRequest can retrieve the "hello" query parameter.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -227,6 +240,7 @@ final class HttpRequestTest {
 
     /**
      * HttpRequest can retrieve duplicate query parameter values.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -248,6 +262,7 @@ final class HttpRequestTest {
     /**
      * HttpRequest can retrieve a non-duplicate query parameter alongside
      * duplicate ones.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -266,6 +281,7 @@ final class HttpRequestTest {
     /**
      * HttpRequest can retrieve a query parameter with no specified value
      * at the start of the query string.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -284,6 +300,7 @@ final class HttpRequestTest {
     /**
      * HttpRequest can retrieve a query parameter with a specified value,
      * among others with no value.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -302,6 +319,7 @@ final class HttpRequestTest {
     /**
      * HttpRequest can retrieve a query parameter with no specified value
      * at the end of the query string.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -319,6 +337,7 @@ final class HttpRequestTest {
 
     /**
      * HttpRequest parses the request URI for HTTP HEAD method requests.
+     *
      * @throws Exception If something goes wrong
      */
     @Test
@@ -335,6 +354,7 @@ final class HttpRequestTest {
 
     /**
      * HttpRequest parses the Host header for HTTP HEAD method requests.
+     *
      * @throws Exception If something goes wrong
      */
     @Test

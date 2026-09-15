@@ -6,6 +6,7 @@ package com.s3auth.hosts;
 
 /**
  * Mocker of {@link Domain}.
+ *
  * @since 0.0.1
  */
 public final class DomainMocker {
@@ -13,11 +14,18 @@ public final class DomainMocker {
     /**
      * The mock.
      */
-    private final transient MkDomainBuilder domain =
-        new MkDomainBuilder();
+    private final transient MkDomainBuilder domain;
+
+    /**
+     * Constructor.
+     */
+    public DomainMocker() {
+        this.domain = new MkDomainBuilder();
+    }
 
     /**
      * Init.
+     *
      * @return This object
      */
     public DomainMocker init() {
@@ -32,6 +40,7 @@ public final class DomainMocker {
 
     /**
      * With this name.
+     *
      * @param name The name
      * @return This object
      */
@@ -42,6 +51,7 @@ public final class DomainMocker {
 
     /**
      * With this key.
+     *
      * @param key The key
      * @return This object
      */
@@ -52,6 +62,7 @@ public final class DomainMocker {
 
     /**
      * With this secret.
+     *
      * @param secret The secret
      * @return This object
      */
@@ -62,6 +73,7 @@ public final class DomainMocker {
 
     /**
      * With this bucket.
+     *
      * @param bckt The bucket
      * @return This object
      */
@@ -72,6 +84,7 @@ public final class DomainMocker {
 
     /**
      * With this region.
+     *
      * @param region The region
      * @return This object
      */
@@ -82,6 +95,7 @@ public final class DomainMocker {
 
     /**
      * With this syslog.
+     *
      * @param syslog The syslog
      * @return This object
      */
@@ -92,6 +106,7 @@ public final class DomainMocker {
 
     /**
      * Mock it.
+     *
      * @return The domain
      */
     public Domain mock() {

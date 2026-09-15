@@ -9,6 +9,7 @@ import java.net.URI;
 
 /**
  * Mock.
+ *
  * @since 0.0.1
  */
 final class MkUser implements User {
@@ -30,6 +31,7 @@ final class MkUser implements User {
 
     /**
      * Constructor.
+     *
      * @param ident The identity
      * @param usr The name
      * @param pht The photo

@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Bag of domains.
+ *
  * @since 0.0.1
  */
 @Loggable(Loggable.DEBUG)
@@ -68,6 +69,7 @@ final class Domains extends AbstractSet<Domain> {
 
     /**
      * Has this domain inside?
+     *
      * @param name The domain to check
      * @return TRUE if it is inside already
      */
@@ -77,6 +79,7 @@ final class Domains extends AbstractSet<Domain> {
 
     /**
      * Get domain by name (runtime exception if it doesn't exist).
+     *
      * @param name The domain
      * @return Found domain
      */

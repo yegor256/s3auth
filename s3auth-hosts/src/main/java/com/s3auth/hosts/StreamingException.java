@@ -8,6 +8,7 @@ import java.io.IOException;
 
 /**
  * Custom IO exception.
+ *
  * @since 0.0.1
  */
 final class StreamingException extends IOException {
@@ -19,6 +20,7 @@ final class StreamingException extends IOException {
 
     /**
      * Public ctor.
+     *
      * @param cause The cause of it
      * @param thr The cause of it
      */

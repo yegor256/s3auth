@@ -17,12 +17,14 @@ import software.amazon.awssdk.services.cloudwatch.CloudWatchClient;
 
 /**
  * Integration test case for {@link DefaultHost}.
+ *
  * @since 0.0.1
  */
 final class DefaultHostITCase {
 
     /**
      * DefaultHost can fetch a real object from S3 bucket.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test

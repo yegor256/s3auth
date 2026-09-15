@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
  * A {@link Host} that adds extra information on top of bucket's
  * original content.
  *
- * <p>The class is immutable and thread-safe.
+ * <p>The class is immutable and thread-safe.</p>
  *
  * @since 0.0.1
  */
@@ -38,6 +38,7 @@ final class SmartHost implements Host {
 
     /**
      * Public ctor.
+     *
      * @param hst Original host
      */
     SmartHost(@NotNull final Host hst) {

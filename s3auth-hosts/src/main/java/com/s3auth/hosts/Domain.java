@@ -18,7 +18,7 @@ import javax.validation.Payload;
 /**
  * Configuration of a single domain.
  *
- * <p>Implementation must be immutable and thread-safe.
+ * <p>Implementation must be immutable and thread-safe.</p>
  *
  * @since 0.0.1
  */
@@ -28,6 +28,7 @@ public interface Domain {
 
     /**
      * Name of domain.
+     *
      * @return Full name of domain
      * @see <a href="https://en.wikipedia.org/wiki/Domain_name">Domain Name</a>
      */
@@ -35,24 +36,28 @@ public interface Domain {
 
     /**
      * Key.
+     *
      * @return AWS key
      */
     String key();
 
     /**
      * Secret key.
+     *
      * @return AWS secret key
      */
     String secret();
 
     /**
      * Bucket name.
+     *
      * @return S3 bucket name
      */
     String bucket();
 
     /**
      * Region of S3 bucket.
+     *
      * @return Region name/endpoint, e.g. "s3-us-east-1"
      * @see <a href="https://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region">S3 Regions</a>
      */
@@ -60,12 +65,14 @@ public interface Domain {
 
     /**
      * Syslog host and port of domain.
+     *
      * @return Syslog host and port
      */
     String syslog();
 
     /**
      * Valid.
+     *
      * @since 0.0.1
      */
     @Target(ElementType.TYPE)
@@ -76,18 +83,21 @@ public interface Domain {
 
         /**
          * Message of the validation error.
+         *
          * @return Message
          */
         String message() default "invalid domain";
 
         /**
          * Groups.
+         *
          * @return Groups
          */
         Class<?>[] groups() default { };
 
         /**
          * Payload.
+         *
          * @return Payload
          */
         Class<? extends Payload>[] payload() default { };
@@ -95,12 +105,20 @@ public interface Domain {
 
     /**
      * Validator of Domain.
+     *
      * @since 0.0.1
      * @checkstyle CyclomaticComplexity (200 lines)
      * @checkstyle NPathComplexityCheck (200 lines)
      */
     @SuppressWarnings("PMD.NPathComplexity")
     final class Validator implements ConstraintValidator<Domain.Valid, Domain> {
+
+        /**
+         * Constructor.
+         */
+        Validator() {
+            // Nothing to initialize.
+        }
 
         @Override
         public void initialize(final Domain.Valid annotation) {

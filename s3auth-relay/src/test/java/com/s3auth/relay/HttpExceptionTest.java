@@ -12,12 +12,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link HttpException}.
+ *
  * @since 0.0.1
  */
 final class HttpExceptionTest {
 
     /**
      * HttpException can be instantiated with a text.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -35,6 +37,7 @@ final class HttpExceptionTest {
 
     /**
      * HttpException can be instantiated with a NULL inside exception.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test

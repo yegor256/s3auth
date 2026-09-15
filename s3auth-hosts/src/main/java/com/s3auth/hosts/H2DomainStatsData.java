@@ -18,6 +18,7 @@ import java.util.Objects;
 
 /**
  * Storage of {@link Stats} per domain with H2 Database.
+ *
  * @since 0.0.1
  */
 @Immutable
@@ -80,6 +81,7 @@ final class H2DomainStatsData implements DomainStatsData {
 
     /**
      * Public ctor.
+     *
      * @param src The file pointing to the database to use
      */
     H2DomainStatsData(final File src) {
@@ -145,6 +147,7 @@ final class H2DomainStatsData implements DomainStatsData {
 
     /**
      * Create tables.
+     *
      * @return This
      * @throws IOException If an IO Exception occurs
      */

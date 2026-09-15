@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 
 /**
  * Test case for {@link Domain}.
+ *
  * @since 0.0.1
  */
 final class DomainTest {

@@ -32,9 +32,9 @@ import org.apache.http.client.utils.DateUtils;
  *
  * <p>The class is responsible for getting a new socket from a blocking
  * queue, processing it, and closing the socket. The class is instantiated
- * by {@link HttpFacade} and is executed by Services Executor routinely.
+ * by {@link HttpFacade} and is executed by Services Executor routinely.</p>
  *
- * <p>The class is thread-safe.
+ * <p>The class is thread-safe.</p>
  *
  * @see HttpFacade
  * @since 0.0.1
@@ -45,11 +45,6 @@ final class HttpThread {
      * S3 version query string.
      */
     private static final String VER = "ver";
-
-    /**
-     * S3 version listing query string.
-     */
-    private static final String ALL_VERSIONS = "all-versions";
 
     /**
      * Name of the server we show in HTTP headers.
@@ -90,6 +85,7 @@ final class HttpThread {
 
     /**
      * Public ctor.
+     *
      * @param sckts Sockets to read from
      * @param hsts Hosts
      */
@@ -101,6 +97,7 @@ final class HttpThread {
 
     /**
      * Dispatch one request from the encapsulated queue.
+     *
      * @return Amount of bytes sent to socket
      * @throws InterruptedException If interrupted while waiting for the queue
      */
@@ -191,7 +188,7 @@ final class HttpThread {
     private static Resource resource(final Host host, final HttpRequest request)
         throws IOException {
         final Version version;
-        if (request.parameters().containsKey(HttpThread.ALL_VERSIONS)) {
+        if (request.parameters().containsKey("all-versions")) {
             version = Version.LIST;
         } else if (request.parameters().containsKey(HttpThread.VER)) {
             version = new Version.Simple(

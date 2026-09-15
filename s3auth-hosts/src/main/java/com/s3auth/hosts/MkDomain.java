@@ -6,6 +6,7 @@ package com.s3auth.hosts;
 
 /**
  * Mock.
+ *
  * @since 0.0.1
  */
 @SuppressWarnings("PMD.DataClass")
@@ -43,6 +44,7 @@ final class MkDomain implements Domain {
 
     /**
      * Constructor.
+     *
      * @param nme The name
      * @param keyy The key
      * @param scr The secret

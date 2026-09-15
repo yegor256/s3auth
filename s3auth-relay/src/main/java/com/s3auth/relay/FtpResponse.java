@@ -12,16 +12,16 @@ import javax.validation.constraints.NotNull;
 /**
  * FTP response, writable to IO socket.
  *
- * <p>It is a Builder design pattern, which can be used as the following:
+ * <p>It is a Builder design pattern, which can be used as the following:</p>
  *
  * <pre> new FtpResponse()
  *   .withCode(230)
  *   .withText("here is my text")
  *   .send(socket);</pre>
  *
- * <p>By default FTP code is OK (200) and content is empty.
+ * <p>By default FTP code is OK (200) and content is empty.</p>
  *
- * <p>The class is NOT thread-safe.
+ * <p>The class is NOT thread-safe.</p>
  *
  * @see FtpThread
  * @since 0.0.1
@@ -39,6 +39,7 @@ final class FtpResponse {
 
     /**
      * With this FTP code.
+     *
      * @param cde The FTP reply code to set
      * @return This object
      */
@@ -48,6 +49,7 @@ final class FtpResponse {
 
     /**
      * With this FTP text.
+     *
      * @param text Text of the reply
      * @return This object
      */
@@ -57,6 +59,7 @@ final class FtpResponse {
 
     /**
      * Renders this FTP response as a String.
+     *
      * @return The response's canonical String representation ($code $text)
      */
     String asString() {
@@ -65,6 +68,7 @@ final class FtpResponse {
 
     /**
      * Send it to the socket.
+     *
      * @param socket The socket to write to
      * @return How many bytes were actually sent
      * @checkstyle NonStaticMethodCheck (10 lines)

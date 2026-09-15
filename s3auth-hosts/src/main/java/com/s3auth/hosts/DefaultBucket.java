@@ -17,6 +17,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 
 /**
  * Default implementation of {@link Bucket}.
+ *
  * @since 0.0.1
  */
 @Immutable
@@ -30,6 +31,7 @@ final class DefaultBucket implements Bucket {
 
     /**
      * Public ctor.
+     *
      * @param dmn The domain
      */
     DefaultBucket(@NotNull final Domain dmn) {

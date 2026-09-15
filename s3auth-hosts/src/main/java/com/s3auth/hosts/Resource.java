@@ -23,6 +23,7 @@ import org.apache.commons.io.IOUtils;
 
 /**
  * Found resource.
+ *
  * @since 0.0.1
  */
 @Immutable
@@ -30,12 +31,14 @@ public interface Resource extends Closeable {
 
     /**
      * Get HTTP status.
+     *
      * @return The status
      */
     int status();
 
     /**
      * Write its content to the writer.
+     *
      * @param stream The stream to write to
      * @return How many bytes were written
      * @throws IOException If some error with I/O inside
@@ -44,6 +47,7 @@ public interface Resource extends Closeable {
 
     /**
      * Get a collection of all necessary HTTP headers for this resource.
+     *
      * @return Collection of HTTP headers
      * @throws IOException If some error with I/O inside
      */
@@ -51,6 +55,7 @@ public interface Resource extends Closeable {
 
     /**
      * Get its ETag.
+     *
      * @return The etag
      * @link <a href="https://en.wikipedia.org/wiki/HTTP_ETag">ETag</a>
      */
@@ -58,18 +63,21 @@ public interface Resource extends Closeable {
 
     /**
      * Get its last modified date.
+     *
      * @return The last modified date
      */
     Date lastModified();
 
     /**
      * Get the resource's HTTP Content-Type.
+     *
      * @return The HTTP Content-Type of the resource
      */
     String contentType();
 
     /**
      * Simple resource made out of plain text.
+     *
      * @since 0.0.1
      */
     @Immutable
@@ -83,6 +91,7 @@ public interface Resource extends Closeable {
 
         /**
          * Public ctor.
+         *
          * @param txt The text to show
          */
         public PlainText(@NotNull final String txt) {

@@ -12,6 +12,7 @@ import java.util.Arrays;
 
 /**
  * Mocker of {@link Resource}.
+ *
  * @since 0.0.1
  */
 public final class ResourceMocker {
@@ -19,11 +20,18 @@ public final class ResourceMocker {
     /**
      * The mock.
      */
-    private final transient MkResourceBuilder resource =
-        new MkResourceBuilder();
+    private final transient MkResourceBuilder resource;
+
+    /**
+     * Constructor.
+     */
+    public ResourceMocker() {
+        this.resource = new MkResourceBuilder();
+    }
 
     /**
      * Default one.
+     *
      * @return This object
      */
     public ResourceMocker init() {
@@ -34,6 +42,7 @@ public final class ResourceMocker {
 
     /**
      * With this content.
+     *
      * @param content The content
      * @return This object
      */
@@ -44,6 +53,7 @@ public final class ResourceMocker {
 
     /**
      * With this headers.
+     *
      * @param headers The headers
      * @return This object
      */
@@ -54,6 +64,7 @@ public final class ResourceMocker {
 
     /**
      * Convert resource to string.
+     *
      * @param res The resource
      * @return Its text
      * @throws IOException If fails
@@ -65,6 +76,7 @@ public final class ResourceMocker {
 
     /**
      * Convert resource to byte array.
+     *
      * @param res The resource
      * @return Its text
      * @throws IOException If fails
@@ -78,6 +90,7 @@ public final class ResourceMocker {
 
     /**
      * Mock it.
+     *
      * @return The resource
      */
     public Resource mock() {

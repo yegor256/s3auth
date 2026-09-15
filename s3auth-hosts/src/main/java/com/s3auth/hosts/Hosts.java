@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * Collection of hosts.
  *
- * <p>Implementation must be thread-safe.
+ * <p>Implementation must be thread-safe.</p>
  *
  * @since 0.0.1
  */
@@ -21,6 +21,7 @@ public interface Hosts extends Closeable {
 
     /**
      * Find one host by domain name.
+     *
      * @param domain The domain name
      * @return Host found
      * @throws IOException If not found or some other IO problem
@@ -29,6 +30,7 @@ public interface Hosts extends Closeable {
 
     /**
      * Get domains of the given user.
+     *
      * @param user The user
      * @return Modifiable collection of domains
      * @throws IOException If some error inside
@@ -37,6 +39,7 @@ public interface Hosts extends Closeable {
 
     /**
      * Thrown by {@link #find(String)} if domain is not found.
+     *
      * @since 0.0.1
      */
     class NotFoundException extends IOException {
@@ -48,6 +51,7 @@ public interface Hosts extends Closeable {
 
         /**
          * Public ctor.
+         *
          * @param cause The cause of it
          */
         public NotFoundException(final String cause) {

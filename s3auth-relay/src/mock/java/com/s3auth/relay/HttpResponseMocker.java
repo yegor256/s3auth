@@ -11,6 +11,7 @@ import org.mockito.Mockito;
 
 /**
  * Mocker of {@link HttpResponse}.
+ *
  * @since 0.0.1
  */
 public final class HttpResponseMocker {
@@ -24,6 +25,7 @@ public final class HttpResponseMocker {
 
     /**
      * Convert response to string.
+     *
      * @param resp The response
      * @return Text form
      * @throws Exception If there is some problem inside

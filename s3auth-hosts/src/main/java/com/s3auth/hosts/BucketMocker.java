@@ -8,6 +8,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 
 /**
  * Mocker of {@link Bucket}.
+ *
  * @since 0.0.1
  */
 public final class BucketMocker {
@@ -15,11 +16,18 @@ public final class BucketMocker {
     /**
      * The mock.
      */
-    private final transient MkBucketBuilder bucket =
-        new MkBucketBuilder();
+    private final transient MkBucketBuilder bucket;
+
+    /**
+     * Constructor.
+     */
+    public BucketMocker() {
+        this.bucket = new MkBucketBuilder();
+    }
 
     /**
      * Init.
+     *
      * @return This object
      */
     public BucketMocker init() {
@@ -34,6 +42,7 @@ public final class BucketMocker {
 
     /**
      * With this name.
+     *
      * @param name The name
      * @return This object
      */
@@ -44,6 +53,7 @@ public final class BucketMocker {
 
     /**
      * With this key.
+     *
      * @param key The key
      * @return This object
      */
@@ -54,6 +64,7 @@ public final class BucketMocker {
 
     /**
      * With this secret.
+     *
      * @param secret The secret
      * @return This object
      */
@@ -64,6 +75,7 @@ public final class BucketMocker {
 
     /**
      * With this bucket.
+     *
      * @param bckt The bucket
      * @return This object
      */
@@ -74,6 +86,7 @@ public final class BucketMocker {
 
     /**
      * With this region.
+     *
      * @param region The region
      * @return This object
      */
@@ -84,6 +97,7 @@ public final class BucketMocker {
 
     /**
      * With this client.
+     *
      * @param client The client
      * @return This object
      */
@@ -94,6 +108,7 @@ public final class BucketMocker {
 
     /**
      * Mock it.
+     *
      * @return The bucket
      */
     public Bucket mock() {

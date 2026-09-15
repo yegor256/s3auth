@@ -9,6 +9,7 @@ import java.util.Set;
 
 /**
  * Mock.
+ *
  * @since 0.0.1
  */
 final class MkHosts implements Hosts {

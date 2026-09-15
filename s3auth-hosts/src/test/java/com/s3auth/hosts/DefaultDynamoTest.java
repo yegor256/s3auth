@@ -22,6 +22,7 @@ import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
 /**
  * Test case for {@link DefaultDynamo}.
+ *
  * @since 0.0.1
  */
 final class DefaultDynamoTest {

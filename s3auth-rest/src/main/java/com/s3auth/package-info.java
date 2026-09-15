@@ -5,6 +5,7 @@
 
 /**
  * Main.
+ *
  * @since 0.0.1
  */
 package com.s3auth;

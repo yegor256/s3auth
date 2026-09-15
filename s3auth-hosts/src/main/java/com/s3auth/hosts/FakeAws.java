@@ -61,13 +61,20 @@ import software.amazon.awssdk.services.s3.model.UploadPartResponse;
  * Fake AWS S3 client implementation for testing.
  *
  * <p>Implements only the methods required by the test suite with stub
- * implementations, all other methods throw UnsupportedOperationException.
+ * implementations, all other methods throw UnsupportedOperationException.</p>
  *
  * @since 0.0.1
  * @checkstyle ClassFanOutComplexityCheck (500 lines)
  */
 @SuppressWarnings({"PMD", "serial"})
 public final class FakeAws implements S3Client, Serializable {
+
+    /**
+     * Constructor.
+     */
+    public FakeAws() {
+        // Nothing to initialize.
+    }
 
     @Override
     public String serviceName() {

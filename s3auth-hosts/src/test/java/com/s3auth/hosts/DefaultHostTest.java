@@ -45,12 +45,14 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 
 /**
  * Test case for {@link DefaultHost}.
+ *
  * @since 0.0.1
  */
 final class DefaultHostTest {
 
     /**
      * DefaultHost can load resource from S3.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -120,6 +122,7 @@ final class DefaultHostTest {
 
     /**
      * DefaultHost can reject authorization with invalid credentials.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -134,6 +137,7 @@ final class DefaultHostTest {
 
     /**
      * DefaultHost can throw a specific exception for a non existent bucket.
+     *
      * @see <a href="http://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html">S3 Error Responses</a>
      */
     @Test
@@ -170,6 +174,7 @@ final class DefaultHostTest {
     /**
      * DefaultHost can return a directory listing when the resource key does
      * not exist and ends with "index.html".
+     *
      * @throws Exception If a problem occurs
      */
     @Test
@@ -207,6 +212,7 @@ final class DefaultHostTest {
 
     /**
      * DefaultHost can return a version listing.
+     *
      * @throws Exception If a problem occurs
      */
     @Test
@@ -242,6 +248,7 @@ final class DefaultHostTest {
 
     /**
      * DefaultHost can correctly return index.html version listing.
+     *
      * @throws Exception If a problem occurs
      */
     @Test
@@ -307,6 +314,7 @@ final class DefaultHostTest {
 
     /**
      * DefaultHost can load error document from S3 if status code is 4xx.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test

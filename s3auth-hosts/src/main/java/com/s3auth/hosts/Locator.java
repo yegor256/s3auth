@@ -6,6 +6,7 @@ package com.s3auth.hosts;
 
 /**
  * Coordinates of an S3 object to fetch.
+ *
  * @since 0.0.1
  */
 @SuppressWarnings("PMD.DataClass")
@@ -33,6 +34,7 @@ final class Locator {
 
     /**
      * Ctor.
+     *
      * @param bckt Bucket name
      * @param name Key name
      * @param rng Range to deliver
@@ -48,6 +50,7 @@ final class Locator {
 
     /**
      * Bucket name.
+     *
      * @return The name
      */
     String bucket() {
@@ -56,6 +59,7 @@ final class Locator {
 
     /**
      * Key in the bucket.
+     *
      * @return The key
      */
     String key() {
@@ -64,6 +68,7 @@ final class Locator {
 
     /**
      * The range.
+     *
      * @return The range
      */
     Range range() {
@@ -72,6 +77,7 @@ final class Locator {
 
     /**
      * The version.
+     *
      * @return The version
      */
     Version version() {

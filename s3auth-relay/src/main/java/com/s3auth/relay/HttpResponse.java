@@ -24,7 +24,7 @@ import org.apache.commons.httpclient.HttpStatus;
 /**
  * HTTP response, writable to IO socket.
  *
- * <p>It is a Builder design pattern, which can be used as the following:
+ * <p>It is a Builder design pattern, which can be used as the following:</p>
  *
  * <pre> new HttpResponse()
  *   .withStatus(200)
@@ -33,9 +33,9 @@ import org.apache.commons.httpclient.HttpStatus;
  *   .withBody("here is my content")
  *   .send(socket);</pre>
  *
- * <p>By default HTTP status is OK (200) and content is empty.
+ * <p>By default HTTP status is OK (200) and content is empty.</p>
  *
- * <p>The class is NOT thread-safe.
+ * <p>The class is NOT thread-safe.</p>
  *
  * @see HttpThread
  * @since 0.0.1
@@ -71,6 +71,7 @@ final class HttpResponse {
 
     /**
      * Set HTTP status.
+     *
      * @param stts The HTTP status to set
      * @return This object
      */
@@ -86,6 +87,7 @@ final class HttpResponse {
 
     /**
      * Add HTTP header.
+     *
      * @param name Name of the HTTP header
      * @param value Text value
      * @return This object
@@ -98,6 +100,7 @@ final class HttpResponse {
 
     /**
      * With this HTTP body.
+     *
      * @param res The resource to get the body from
      * @return This object
      */
@@ -109,6 +112,7 @@ final class HttpResponse {
 
     /**
      * With this HTTP body.
+     *
      * @param text Text of the body
      * @return This object
      */
@@ -119,6 +123,7 @@ final class HttpResponse {
 
     /**
      * Send it to the socket.
+     *
      * @param socket The socket to write to
      * @return How many bytes were actually sent
      * @throws IOException If some IO problem inside

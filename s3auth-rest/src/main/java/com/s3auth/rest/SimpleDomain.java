@@ -8,6 +8,7 @@ import com.s3auth.hosts.Domain;
 
 /**
  * Simple domain.
+ *
  * @since 0.1
  */
 final class SimpleDomain implements Domain {
@@ -49,6 +50,7 @@ final class SimpleDomain implements Domain {
 
     /**
      * Ctor.
+     *
      * @param hst The host name
      */
     SimpleDomain(final String hst) {
@@ -57,6 +59,7 @@ final class SimpleDomain implements Domain {
 
     /**
      * Constructor.
+     *
      * @param hst The host name
      * @param access AWS access key
      * @param scrt AWS secret
@@ -111,6 +114,7 @@ final class SimpleDomain implements Domain {
     /**
      * Syslog host and port to use, falling back to the default one
      * when the given value is empty.
+     *
      * @param syslg Syslog host and port given, may be empty
      * @return Syslog host and port to use
      */

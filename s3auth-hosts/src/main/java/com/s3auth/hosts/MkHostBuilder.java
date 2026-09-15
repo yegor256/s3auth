@@ -6,6 +6,7 @@ package com.s3auth.hosts;
 
 /**
  * Builder for MkHost.
+ *
  * @since 0.0.1
  */
 final class MkHostBuilder {
@@ -32,6 +33,7 @@ final class MkHostBuilder {
 
     /**
      * Set resource.
+     *
      * @param value The resource
      * @return This builder
      */
@@ -42,6 +44,7 @@ final class MkHostBuilder {
 
     /**
      * Set authorized.
+     *
      * @param value The authorized
      * @return This builder
      */
@@ -52,6 +55,7 @@ final class MkHostBuilder {
 
     /**
      * Set hidden.
+     *
      * @param value The hidden
      * @return This builder
      */
@@ -62,6 +66,7 @@ final class MkHostBuilder {
 
     /**
      * Set syslog.
+     *
      * @param value The syslog
      * @return This builder
      */
@@ -72,6 +77,7 @@ final class MkHostBuilder {
 
     /**
      * Build the host.
+     *
      * @return The host
      */
     MkHost build() {

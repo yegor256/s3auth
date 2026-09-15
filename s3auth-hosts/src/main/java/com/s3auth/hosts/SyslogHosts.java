@@ -28,6 +28,7 @@ public final class SyslogHosts implements Hosts {
 
     /**
      * Public ctor.
+     *
      * @param hsts The hosts to add syslog capability to
      */
     public SyslogHosts(final Hosts hsts) {

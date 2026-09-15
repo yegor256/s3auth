@@ -27,9 +27,9 @@ import javax.validation.constraints.NotNull;
 /**
  * HTTP facade (port listener).
  *
- * <p>The class is instantiated in {@link Main}, once per application run.
+ * <p>The class is instantiated in {@link Main}, once per application run.</p>
  *
- * <p>The class is mutable and thread-safe.
+ * <p>The class is mutable and thread-safe.</p>
  *
  * @see Main
  * @since 0.0.1
@@ -73,6 +73,7 @@ final class HttpFacade implements Closeable {
 
     /**
      * Private ctor, threads started by {@link #open}.
+     *
      * @param frnt Frontend executor
      * @param back Backend executor
      * @param skts Blocking queue of ready-to-be-processed sockets
@@ -123,6 +124,7 @@ final class HttpFacade implements Closeable {
 
     /**
      * Open a facade and start its backend threads.
+     *
      * @param hosts Hosts
      * @param port Port number
      * @param sslport SSL port number

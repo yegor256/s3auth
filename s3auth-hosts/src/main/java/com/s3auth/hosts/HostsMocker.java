@@ -6,6 +6,7 @@ package com.s3auth.hosts;
 
 /**
  * Mocker of {@link Hosts}.
+ *
  * @since 0.0.1
  */
 public final class HostsMocker {
@@ -13,10 +14,18 @@ public final class HostsMocker {
     /**
      * The mock.
      */
-    private final transient Hosts hosts = new MkHosts();
+    private final transient Hosts hosts;
+
+    /**
+     * Constructor.
+     */
+    public HostsMocker() {
+        this.hosts = new MkHosts();
+    }
 
     /**
      * Mock it.
+     *
      * @return The hosts
      */
     public Hosts mock() {

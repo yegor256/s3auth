@@ -16,12 +16,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link Main}.
+ *
  * @since 0.0.1
  */
 final class MainTest {
 
     /**
      * Main can start and respond on port.
+     *
      * @throws Exception If there is some problem inside
      * @todo #33 Test doesn't work since AWS Dynamo config is not available
      *  in runtime. We should find a way to mock it properly.
@@ -59,6 +61,7 @@ final class MainTest {
 
     /**
      * Main stops listening when interrupted.
+     *
      * @throws Exception If there is some problem inside
      * @todo #33 Test doesn't work since AWS Dynamo config is not available
      *  in runtime. We should find a way to mock it properly.

@@ -32,6 +32,7 @@ import software.amazon.awssdk.services.s3.model.ObjectVersion;
 
 /**
  * XML S3 Object Version Listing.
+ *
  * @since 0.0.1
  */
 @Immutable
@@ -53,6 +54,7 @@ final class ObjectVersionListing implements Resource {
 
     /**
      * Private ctor, content fetched by {@link #fetch}.
+     *
      * @param cnt The already-fetched content
      */
     private ObjectVersionListing(final byte[] cnt) {
@@ -128,6 +130,7 @@ final class ObjectVersionListing implements Resource {
 
     /**
      * Fetch an object version listing from S3.
+     *
      * @param clnt Amazon S3 client
      * @param bckt Bucket name
      * @param name The S3 object key

@@ -9,6 +9,7 @@ import java.net.URI;
 
 /**
  * Builder for MkUser.
+ *
  * @since 0.0.1
  */
 final class MkUserBuilder {
@@ -30,6 +31,7 @@ final class MkUserBuilder {
 
     /**
      * Set identity.
+     *
      * @param value The identity
      * @return This builder
      */
@@ -40,6 +42,7 @@ final class MkUserBuilder {
 
     /**
      * Set name.
+     *
      * @param value The name
      * @return This builder
      */
@@ -50,6 +53,7 @@ final class MkUserBuilder {
 
     /**
      * Set photo.
+     *
      * @param value The photo
      * @return This builder
      */
@@ -60,6 +64,7 @@ final class MkUserBuilder {
 
     /**
      * Build the user.
+     *
      * @return The user
      */
     MkUser build() {

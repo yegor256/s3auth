@@ -4,10 +4,12 @@
  */
 package com.s3auth.relay;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 
 /**
  * Mocker of HTTP port.
+ *
  * @since 0.0.1
  */
 public final class PortMocker {
@@ -21,6 +23,7 @@ public final class PortMocker {
 
     /**
      * Find and return the first available port.
+     *
      * @return The port number
      */
     @SuppressWarnings("PMD.ProhibitPublicStaticMethods")
@@ -28,7 +31,7 @@ public final class PortMocker {
         final int port;
         try (ServerSocket socket = new ServerSocket(0)) {
             port = socket.getLocalPort();
-        } catch (final java.io.IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException("Failed to reserve port", ex);
         }
         return port;

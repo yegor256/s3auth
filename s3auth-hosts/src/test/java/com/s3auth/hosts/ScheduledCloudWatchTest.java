@@ -15,12 +15,14 @@ import software.amazon.awssdk.services.cloudwatch.model.StandardUnit;
 
 /**
  * Test case for {@link ScheduledCloudWatch}.
+ *
  * @since 0.0.1
  */
 final class ScheduledCloudWatchTest {
 
     /**
      * If an exception occurs.
+     *
      * @throws Exception If something goes wrong
      */
     @Test

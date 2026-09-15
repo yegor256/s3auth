@@ -8,6 +8,7 @@ import java.util.Collection;
 
 /**
  * Builder for MkResource.
+ *
  * @since 0.0.1
  */
 final class MkResourceBuilder {
@@ -29,6 +30,7 @@ final class MkResourceBuilder {
 
     /**
      * Set content.
+     *
      * @param value The content
      * @return This builder
      */
@@ -39,6 +41,7 @@ final class MkResourceBuilder {
 
     /**
      * Set status.
+     *
      * @param value The status
      * @return This builder
      */
@@ -49,6 +52,7 @@ final class MkResourceBuilder {
 
     /**
      * Set headers.
+     *
      * @param value The headers
      * @return This builder
      */
@@ -59,6 +63,7 @@ final class MkResourceBuilder {
 
     /**
      * Build the resource.
+     *
      * @return The resource
      */
     MkResource build() {

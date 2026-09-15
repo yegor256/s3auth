@@ -17,6 +17,7 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 
 /**
  * Test case for {@link Htpasswd}.
+ *
  * @since 0.0.1
  */
 final class HtpasswdTest {
@@ -47,6 +48,7 @@ final class HtpasswdTest {
 
     /**
      * Htpasswd can manage apache hashes, with MD5 algorithm.
+     *
      * @throws Exception If there is some problem inside
      * @link ftp://ftp.arlut.utexas.edu/pub/java_hashes/MD5Crypt.java
      */
@@ -92,6 +94,7 @@ final class HtpasswdTest {
 
     /**
      * Htpasswd can manage apache hashes, with PLAIN/TEXT algorithm.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -106,6 +109,7 @@ final class HtpasswdTest {
 
     /**
      * Htpasswd can reject an incorrect password against a PLAIN/TEXT hash.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -120,6 +124,7 @@ final class HtpasswdTest {
 
     /**
      * Htpasswd can manage apache hashes, with Crypt algorithm.
+     *
      * @throws Exception If there is some problem inside
      * @link <a href="http://jxutil.sourceforge.net/API/org/sourceforge/jxutil/JCrypt.html">JCrypt</a>
      * @link <a href="http://www.dynamic.net.au/christos/crypt/">Crypt</a>
@@ -136,6 +141,7 @@ final class HtpasswdTest {
 
     /**
      * Htpasswd can ignore broken lines.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -150,6 +156,7 @@ final class HtpasswdTest {
 
     /**
      * Htpasswd can use default host.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test

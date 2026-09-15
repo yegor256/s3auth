@@ -22,12 +22,14 @@ import org.mockito.Mockito;
 
 /**
  * Test case for {@link SecuredHost}.
+ *
  * @since 0.0.1
  */
 final class SecuredHostTest {
 
     /**
      * SecuredHost can request authorization.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -63,6 +65,7 @@ final class SecuredHostTest {
 
     /**
      * SecuredHost can detect incorrect data.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -97,6 +100,7 @@ final class SecuredHostTest {
 
     /**
      * SecuredHost can report {@code Host#toString()} when authorization fails.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -161,6 +165,7 @@ final class SecuredHostTest {
 
     /**
      * SecuredHost can use credentials containing special characters.
+     *
      * @throws Exception If something wrong occurs
      */
     @Test
@@ -201,6 +206,7 @@ final class SecuredHostTest {
 
     /**
      * SecuredHost can accept Base64 header.
+     *
      * @throws Exception If something wrong occurs
      */
     @Test

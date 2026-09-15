@@ -11,6 +11,7 @@ import org.takes.Take;
 
 /**
  * Index page of an anonymous user.
+ *
  * @since 0.1
  */
 final class TkLogin implements Take {

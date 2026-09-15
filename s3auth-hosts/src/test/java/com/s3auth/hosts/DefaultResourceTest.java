@@ -6,6 +6,7 @@ package com.s3auth.hosts;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.Date;
@@ -24,12 +25,14 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
 /**
  * Test case for {@link DefaultResource}.
+ *
  * @since 0.0.1
  */
 final class DefaultResourceTest {
 
     /**
      * DefaultResource can build headers.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -56,6 +59,7 @@ final class DefaultResourceTest {
 
     /**
      * DefaultResource can write to output stream.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -84,6 +88,7 @@ final class DefaultResourceTest {
 
     /**
      * DefaultResource can write a real input stream to output stream.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -118,43 +123,46 @@ final class DefaultResourceTest {
 
     /**
      * DefaultResource can throw when failed to read.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
     void throwsWhenFailedToRead() throws Exception {
         final S3Client client = Mockito.mock(S3Client.class);
-        Mockito.doReturn(
-            new ResponseInputStream<>(
-                GetObjectResponse.builder()
-                    .contentLength(10L)
-                    .build(),
-                AbortableInputStream.create(
-                    new java.io.InputStream() {
-                        @Override
-                        public int read() throws IOException {
-                            throw new IOException("oops");
-                        }
+        try (
+            InputStream broken = new InputStream() {
+                @Override
+                public int read() throws IOException {
+                    throw new IOException("oops");
+                }
 
-                        @Override
-                        public int read(final byte[] buf, final int off, final int len)
-                            throws IOException {
-                            return this.read();
-                        }
-                    }
+                @Override
+                public int read(final byte[] buf, final int off, final int len)
+                    throws IOException {
+                    return this.read();
+                }
+            }
+        ) {
+            Mockito.doReturn(
+                new ResponseInputStream<>(
+                    GetObjectResponse.builder()
+                        .contentLength(10L)
+                        .build(),
+                    AbortableInputStream.create(broken)
                 )
-            )
-        ).when(client)
-            .getObject(Mockito.any(GetObjectRequest.class));
-        Assertions.assertThrows(
-            IOException.class,
-            () -> ResourceMocker.toString(
-                DefaultResource.fetch(
-                    client,
-                    new Locator("d", "", Range.ENTIRE, Version.LATEST),
-                    Mockito.mock(DomainStatsData.class)
+            ).when(client)
+                .getObject(Mockito.any(GetObjectRequest.class));
+            Assertions.assertThrows(
+                IOException.class,
+                () -> ResourceMocker.toString(
+                    DefaultResource.fetch(
+                        client,
+                        new Locator("d", "", Range.ENTIRE, Version.LATEST),
+                        Mockito.mock(DomainStatsData.class)
+                    )
                 )
-            )
-        );
+            );
+        }
     }
 
     /**
@@ -186,6 +194,7 @@ final class DefaultResourceTest {
 
     /**
      * DefaultResource can get Cache-Control info.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -214,6 +223,7 @@ final class DefaultResourceTest {
     /**
      * DefaultResource can get default Cache-Control info if resource metadata
      * does not specify it.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -240,6 +250,7 @@ final class DefaultResourceTest {
 
     /**
      * DefaultResource can post metrics.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -309,6 +320,7 @@ final class DefaultResourceTest {
 
     /**
      * DefaultResource can close the underlying S3Object.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -338,6 +350,7 @@ final class DefaultResourceTest {
     /**
      * DefaultResource closes the underlying object when obtaining the full
      * object size from the Content-Range header.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -369,6 +382,7 @@ final class DefaultResourceTest {
 
     /**
      * DefaultResource can get Content-Encoding info.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test

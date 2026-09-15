@@ -20,7 +20,7 @@ import javax.validation.Payload;
 /**
  * Single user.
  *
- * <p>Implementation must be immutable and thread-safe.
+ * <p>Implementation must be immutable and thread-safe.</p>
  *
  * @since 0.0.1
  */
@@ -50,24 +50,28 @@ public interface User {
 
     /**
      * Unique name of it.
+     *
      * @return Unique name as URN
      */
     URN identity();
 
     /**
      * Full name to display.
+     *
      * @return Full name
      */
     String name();
 
     /**
      * Photo.
+     *
      * @return URL of the image
      */
     URI photo();
 
     /**
      * Valid User.
+     *
      * @since 0.0.1
      */
     @Target(ElementType.TYPE)
@@ -78,18 +82,21 @@ public interface User {
 
         /**
          * Message of the validation error.
+         *
          * @return Message
          */
         String message() default "invalid user";
 
         /**
          * Groups.
+         *
          * @return Groups
          */
         Class<?>[] groups() default { };
 
         /**
          * Payload.
+         *
          * @return Payload
          */
         Class<? extends Payload>[] payload() default { };
@@ -97,9 +104,17 @@ public interface User {
 
     /**
      * Validator of User.
+     *
      * @since 0.0.1
      */
     final class Validator implements ConstraintValidator<User.Valid, User> {
+
+        /**
+         * Constructor.
+         */
+        Validator() {
+            // Nothing to initialize.
+        }
 
         @Override
         public void initialize(final User.Valid annotation) {

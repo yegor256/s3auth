@@ -14,7 +14,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 /**
  * Exception during HTTP request processing.
  *
- * <p>The class is immutable and thread-safe.
+ * <p>The class is immutable and thread-safe.</p>
  *
  * @since 0.0.1
  */
@@ -33,6 +33,7 @@ final class HttpException extends IOException {
 
     /**
      * Public ctor.
+     *
      * @param status The status
      */
     HttpException(final int status) {
@@ -41,6 +42,7 @@ final class HttpException extends IOException {
 
     /**
      * Public ctor.
+     *
      * @param status The status
      * @param cause The cause of it
      */
@@ -55,6 +57,7 @@ final class HttpException extends IOException {
 
     /**
      * Public ctor.
+     *
      * @param status The status
      * @param cause The cause of it
      */
@@ -64,6 +67,7 @@ final class HttpException extends IOException {
 
     /**
      * Public ctor.
+     *
      * @param response The response
      */
     HttpException(@NotNull final HttpResponse response) {
@@ -72,6 +76,7 @@ final class HttpException extends IOException {
 
     /**
      * Private ctor, with a pre-built message.
+     *
      * @param response The response
      * @param message The exception message
      */
@@ -82,6 +87,7 @@ final class HttpException extends IOException {
 
     /**
      * Build HTTP response.
+     *
      * @return The response
      */
     HttpResponse response() {

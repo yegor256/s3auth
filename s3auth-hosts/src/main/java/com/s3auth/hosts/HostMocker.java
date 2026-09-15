@@ -8,6 +8,7 @@ import java.net.URI;
 
 /**
  * Mocker of {@link Host}.
+ *
  * @since 0.0.1
  */
 public final class HostMocker {
@@ -15,10 +16,18 @@ public final class HostMocker {
     /**
      * The mock.
      */
-    private final transient MkHostBuilder host = new MkHostBuilder();
+    private final transient MkHostBuilder host;
+
+    /**
+     * Constructor.
+     */
+    public HostMocker() {
+        this.host = new MkHostBuilder();
+    }
 
     /**
      * Initialize it.
+     *
      * @return This object
      */
     public HostMocker init() {
@@ -31,6 +40,7 @@ public final class HostMocker {
 
     /**
      * With this content for this URI.
+     *
      * @param uri The URI to match
      * @param content The content to return
      * @return This object
@@ -42,6 +52,7 @@ public final class HostMocker {
 
     /**
      * With this syslog.
+     *
      * @param syslog The syslog to return
      * @return This object
      */
@@ -52,6 +63,7 @@ public final class HostMocker {
 
     /**
      * Mock it.
+     *
      * @return The host
      */
     public Host mock() {

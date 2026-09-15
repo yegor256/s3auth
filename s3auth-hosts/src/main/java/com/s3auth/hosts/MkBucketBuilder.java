@@ -8,6 +8,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 
 /**
  * Builder for MkBucket.
+ *
  * @since 0.0.1
  */
 final class MkBucketBuilder {
@@ -44,6 +45,7 @@ final class MkBucketBuilder {
 
     /**
      * Set name.
+     *
      * @param value The name
      * @return This builder
      */
@@ -54,6 +56,7 @@ final class MkBucketBuilder {
 
     /**
      * Set key.
+     *
      * @param value The key
      * @return This builder
      */
@@ -64,6 +67,7 @@ final class MkBucketBuilder {
 
     /**
      * Set secret.
+     *
      * @param value The secret
      * @return This builder
      */
@@ -74,6 +78,7 @@ final class MkBucketBuilder {
 
     /**
      * Set bucket.
+     *
      * @param value The bucket
      * @return This builder
      */
@@ -84,6 +89,7 @@ final class MkBucketBuilder {
 
     /**
      * Set region.
+     *
      * @param value The region
      * @return This builder
      */
@@ -94,6 +100,7 @@ final class MkBucketBuilder {
 
     /**
      * Set client.
+     *
      * @param value The client
      * @return This builder
      */
@@ -104,6 +111,7 @@ final class MkBucketBuilder {
 
     /**
      * Build the bucket.
+     *
      * @return The bucket
      */
     MkBucket build() {

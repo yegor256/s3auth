@@ -39,12 +39,14 @@ import org.mockito.stubbing.Answer;
 
 /**
  * Test case for {@link HttpFacade}.
+ *
  * @since 0.0.1
  */
 final class HttpFacadeTest {
 
     /**
      * HttpFacade can process parallel requests.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -80,6 +82,7 @@ final class HttpFacadeTest {
 
     /**
      * HttpFacade can process the If-Modified-Since header.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -136,6 +139,7 @@ final class HttpFacadeTest {
 
     /**
      * HttpFacade returns the Last-Modified header with the response.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -183,6 +187,7 @@ final class HttpFacadeTest {
 
     /**
      * HttpFacade returns the Age header with the response.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -230,6 +235,7 @@ final class HttpFacadeTest {
 
     /**
      * HttpFacade can parse S3 version query and pass it on to Resource.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -274,6 +280,7 @@ final class HttpFacadeTest {
 
     /**
      * HttpFacade will request the latest version if it is not specified.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -317,6 +324,7 @@ final class HttpFacadeTest {
 
     /**
      * HttpFacade can request the list of versions of an object.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -359,6 +367,7 @@ final class HttpFacadeTest {
     /**
      * HttpFacade can return compressed content with the appropriate request
      * content-encoding and response content-type.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -389,25 +398,26 @@ final class HttpFacadeTest {
             HttpFacade.open(hosts, port, PortMocker.reserve());
         try {
             facade.listen();
-            MatcherAssert.assertThat(
-                IOUtils.toString(
-                    new GZIPInputStream(
-                        new ByteArrayInputStream(
-                            new JdkRequest(String.format("http://localhost:%d/", port))
-                                .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
-                                .header(HttpHeaders.ACCEPT_ENCODING, "gzip")
-                                .header(HttpHeaders.AUTHORIZATION, HttpFacadeTest.auth())
-                                .uri().path("/a").queryParam("all-versions", "")
-                                .back().fetch().as(RestResponse.class)
-                                .assertStatus(HttpURLConnection.HTTP_OK)
-                                .assertHeader(HttpHeaders.CONTENT_ENCODING, "gzip")
-                                .binary()
-                        )
-                    ),
-                    StandardCharsets.UTF_8
-                ),
-                Matchers.is(body)
-            );
+            try (
+                GZIPInputStream gzip = new GZIPInputStream(
+                    new ByteArrayInputStream(
+                        new JdkRequest(String.format("http://localhost:%d/", port))
+                            .header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN)
+                            .header(HttpHeaders.ACCEPT_ENCODING, "gzip")
+                            .header(HttpHeaders.AUTHORIZATION, HttpFacadeTest.auth())
+                            .uri().path("/a").queryParam("all-versions", "")
+                            .back().fetch().as(RestResponse.class)
+                            .assertStatus(HttpURLConnection.HTTP_OK)
+                            .assertHeader(HttpHeaders.CONTENT_ENCODING, "gzip")
+                            .binary()
+                    )
+                )
+            ) {
+                MatcherAssert.assertThat(
+                    IOUtils.toString(gzip, StandardCharsets.UTF_8),
+                    Matchers.is(body)
+                );
+            }
         } finally {
             facade.close();
         }
@@ -464,6 +474,7 @@ final class HttpFacadeTest {
     /**
      * HttpFacade can return content thought a secured content-encoding and
      * response content-type, with OK status.
+     *
      * @throws Exception If there is some problem inside
      * @todo #191:30mins The test fails to retrieve the expected content over
      *  SSL. The response body is empty while it should be "secured".
@@ -502,6 +513,7 @@ final class HttpFacadeTest {
     /**
      * HttpFacade can return content thought a secured content-encoding and
      * response content-type, with the expected body.
+     *
      * @throws Exception If there is some problem inside
      * @todo #191:30mins The test fails to retrieve the expected content over
      *  SSL. The response body is empty while it should be "secured".
@@ -540,6 +552,7 @@ final class HttpFacadeTest {
 
     /**
      * HttpFacade closes the Resource after fetching data.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -574,6 +587,7 @@ final class HttpFacadeTest {
 
     /**
      * HttpFacade can service HTTP HEAD methods.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test

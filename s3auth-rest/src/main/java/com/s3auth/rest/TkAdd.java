@@ -18,6 +18,7 @@ import org.takes.rq.form.RqFormBase;
 
 /**
  * Add a domain.
+ *
  * @since 0.1
  */
 final class TkAdd implements Take {
@@ -29,6 +30,7 @@ final class TkAdd implements Take {
 
     /**
      * Ctor.
+     *
      * @param hsts Hosts
      */
     TkAdd(final Hosts hsts) {

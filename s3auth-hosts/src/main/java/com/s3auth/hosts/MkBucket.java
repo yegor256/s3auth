@@ -8,6 +8,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 
 /**
  * Mock.
+ *
  * @since 0.0.1
  */
 @SuppressWarnings("PMD.DataClass")
@@ -45,6 +46,7 @@ final class MkBucket implements Bucket {
 
     /**
      * Constructor.
+     *
      * @param nme The name
      * @param keyy The key
      * @param scr The secret

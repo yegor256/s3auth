@@ -13,6 +13,7 @@ import org.takes.http.FtCli;
 
 /**
  * Launch (used only for heroku).
+ *
  * @since 0.0.1
  */
 public final class Launch {
@@ -26,6 +27,7 @@ public final class Launch {
 
     /**
      * Entry point.
+     *
      * @param args Command line args
      * @throws IOException If fails
      */

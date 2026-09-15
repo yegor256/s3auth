@@ -14,6 +14,7 @@ import joptsimple.OptionSet;
 
 /**
  * Main entrance to the system.
+ *
  * @since 0.0.1
  */
 @Immutable
@@ -29,6 +30,7 @@ public final class Main {
 
     /**
      * Entrance.
+     *
      * @param args Optional arguments
      * @throws Exception If something is wrong
      * @todo #213:30min Create a FtpFacade in order to provide a FTP gateway.

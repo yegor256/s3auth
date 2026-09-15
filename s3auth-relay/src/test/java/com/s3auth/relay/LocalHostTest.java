@@ -15,12 +15,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link LocalHost}.
+ *
  * @since 0.0.1
  */
 final class LocalHostTest {
 
     /**
      * LocalHost does not hide a regular URI.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -55,6 +57,7 @@ final class LocalHostTest {
 
     /**
      * LocalHost can render a simple home page.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -69,6 +72,7 @@ final class LocalHostTest {
 
     /**
      * LocalHost can report current version.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test

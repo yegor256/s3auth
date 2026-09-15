@@ -57,6 +57,7 @@ import org.takes.tk.TkWrap;
 
 /**
  * Takes app.
+ *
  * @since 0.1
  * @checkstyle ClassFanOutComplexityCheck (500 lines)
  */
@@ -69,6 +70,7 @@ public class TkApp extends TkWrap {
 
     /**
      * Ctor.
+     *
      * @param hosts Hosts
      */
     public TkApp(@NotNull final Hosts hosts) {

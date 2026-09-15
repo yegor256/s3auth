@@ -13,6 +13,7 @@ import org.apache.commons.io.IOUtils;
 
 /**
  * Mock.
+ *
  * @since 0.0.1
  */
 final class MkResource implements Resource {
@@ -34,6 +35,7 @@ final class MkResource implements Resource {
 
     /**
      * Constructor.
+     *
      * @param cnt The content
      * @param sts The status
      * @param hdrs The headers

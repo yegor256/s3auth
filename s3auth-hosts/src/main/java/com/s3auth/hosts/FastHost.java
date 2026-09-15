@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * A {@link Host} that does everything fast.
  *
- * <p>The class is immutable and thread-safe.
+ * <p>The class is immutable and thread-safe.</p>
  *
  * @since 0.2
  */
@@ -28,6 +28,7 @@ final class FastHost implements Host {
 
     /**
      * Public ctor.
+     *
      * @param hst Original host
      */
     FastHost(final Host hst) {

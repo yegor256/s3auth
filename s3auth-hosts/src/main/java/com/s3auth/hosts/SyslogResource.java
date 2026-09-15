@@ -16,6 +16,7 @@ import org.productivity.java.syslog4j.impl.net.udp.UDPNetSyslogConfig;
 
 /**
  * Syslog Resource wrapper.
+ *
  * @since 0.0.1
  */
 final class SyslogResource implements Resource {
@@ -42,6 +43,7 @@ final class SyslogResource implements Resource {
 
     /**
      * Constructor.
+     *
      * @param res The underlying resource
      * @param uri The URI to fetch
      * @param host The syslog host

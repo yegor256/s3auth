@@ -14,7 +14,7 @@ import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 /**
  * Abstraction on top of DynamoDB SDK.
  *
- * <p>Implementation must be thread-safe.
+ * <p>Implementation must be thread-safe.</p>
  *
  * @since 0.0.1
  */
@@ -23,6 +23,7 @@ interface Dynamo extends Closeable {
 
     /**
      * Load all data from DynamoDB.
+     *
      * @return Map of users and their domains
      * @throws IOException If some IO problem inside
      */
@@ -30,6 +31,7 @@ interface Dynamo extends Closeable {
 
     /**
      * Save to DynamoDB.
+     *
      * @param user Who is the owner
      * @param domain The domain to save
      * @return TRUE if successfully added
@@ -39,6 +41,7 @@ interface Dynamo extends Closeable {
 
     /**
      * Delete from DynamoDB.
+     *
      * @param domain The domain to save
      * @return TRUE if successfully deleted
      */
@@ -46,6 +49,7 @@ interface Dynamo extends Closeable {
 
     /**
      * Client to Amazon.
+     *
      * @since 0.0.1
      */
     @Immutable
@@ -54,6 +58,7 @@ interface Dynamo extends Closeable {
 
         /**
          * Get Amazon client.
+         *
          * @return The client
          */
         DynamoDbClient get();

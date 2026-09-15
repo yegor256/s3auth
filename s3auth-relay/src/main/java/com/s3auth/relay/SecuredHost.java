@@ -25,9 +25,9 @@ import org.apache.commons.codec.binary.Base64;
  *
  * <p>It's a wrapper around {@link Host}, that adds HTTP Basic Auth mechanism
  * to a normal HTTP request processing. The class is instantiated in
- * {@link HttpThread}.
+ * {@link HttpThread}.</p>
  *
- * <p>The class is immutable and thread-safe.
+ * <p>The class is immutable and thread-safe.</p>
  *
  * @see HttpThread
  * @since 0.0.1
@@ -53,6 +53,7 @@ final class SecuredHost implements Host {
 
     /**
      * Public ctor.
+     *
      * @param hst Original host
      * @param rqst The request
      */

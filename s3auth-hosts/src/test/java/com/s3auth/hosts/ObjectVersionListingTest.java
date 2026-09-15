@@ -19,12 +19,14 @@ import software.amazon.awssdk.services.s3.model.ObjectVersion;
 
 /**
  * Test case for {@link ObjectVersionListing}.
+ *
  * @since 0.0.1
  */
 final class ObjectVersionListingTest {
 
     /**
      * Fetches version listing for bucket.
+     *
      * @throws Exception If something goes wrong
      */
     @Test

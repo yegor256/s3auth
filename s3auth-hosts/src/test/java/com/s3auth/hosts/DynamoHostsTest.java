@@ -4,6 +4,8 @@
  */
 package com.s3auth.hosts;
 
+import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 import org.hamcrest.CustomMatcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -13,12 +15,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link DynamoHosts}.
+ *
  * @since 0.0.1
  */
 final class DynamoHostsTest {
 
     /**
      * DynamoHosts reports success when a domain is added.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -34,6 +38,7 @@ final class DynamoHostsTest {
 
     /**
      * DynamoHosts caches an added domain.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -48,6 +53,7 @@ final class DynamoHostsTest {
 
     /**
      * DynamoHosts' cached domains contain the domain that was added.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -65,6 +71,7 @@ final class DynamoHostsTest {
 
     /**
      * DynamoHosts allows the first user to add a domain.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -84,6 +91,7 @@ final class DynamoHostsTest {
 
     /**
      * DynamoHosts can reject duplicates.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -107,6 +115,7 @@ final class DynamoHostsTest {
 
     /**
      * DynamoHosts allows the first user to add a domain.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -126,6 +135,7 @@ final class DynamoHostsTest {
 
     /**
      * DynamoHosts can protect domains against removal.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -149,6 +159,7 @@ final class DynamoHostsTest {
 
     /**
      * DynamoHosts allows adding a domain with untrimmed properties.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -172,6 +183,7 @@ final class DynamoHostsTest {
 
     /**
      * DynamoHosts can clean/trim domain properties.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -215,7 +227,7 @@ final class DynamoHostsTest {
             .withIdentity("urn:unknown:4254353")
             .mock();
         Assertions.assertThrows(
-            javax.validation.ConstraintViolationException.class,
+            ConstraintViolationException.class,
             () -> {
                 try {
                     hosts.domains(user);
@@ -228,6 +240,7 @@ final class DynamoHostsTest {
 
     /**
      * DynamoHosts can reject broken domains.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -245,7 +258,7 @@ final class DynamoHostsTest {
         };
         for (final Domain domain : domains) {
             Assertions.assertThrows(
-                javax.validation.ValidationException.class,
+                ValidationException.class,
                 () -> hosts.domains(user).add(domain)
             );
         }
@@ -254,6 +267,7 @@ final class DynamoHostsTest {
 
     /**
      * DynamoHosts can fetch all domains from any user for the super user.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test

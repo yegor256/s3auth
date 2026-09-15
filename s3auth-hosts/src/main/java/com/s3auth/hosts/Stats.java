@@ -8,6 +8,7 @@ import com.jcabi.aspects.Immutable;
 
 /**
  * Statistics for a given domain.
+ *
  * @since 0.0.1
  */
 @Immutable
@@ -16,12 +17,14 @@ public interface Stats {
 
     /**
      * The bytes transferred for this domain for the previous week.
+     *
      * @return Bytes transferred
      */
     long bytesTransferred();
 
     /**
      * Simple stats.
+     *
      * @since 0.0.1
      */
     @Immutable
@@ -34,6 +37,7 @@ public interface Stats {
 
         /**
          * Ctor.
+         *
          * @param transferred Number of bytes transferred
          */
         public Simple(final long transferred) {

@@ -28,7 +28,7 @@ import software.amazon.awssdk.services.dynamodb.model.AttributeValueUpdate;
 /**
  * Abstraction on top of DynamoDB SDK.
  *
- * <p>The class is mutable and thread-safe.
+ * <p>The class is mutable and thread-safe.</p>
  *
  * @since 0.0.1
  */
@@ -93,6 +93,7 @@ final class DefaultDynamo implements Dynamo {
 
     /**
      * Ctor for unit tests.
+     *
      * @param rgn The jcabi-dynamo Region
      * @param tbl Table name
      */

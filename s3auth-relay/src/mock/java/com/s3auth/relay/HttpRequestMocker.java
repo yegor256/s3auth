@@ -11,6 +11,7 @@ import org.mockito.Mockito;
 
 /**
  * Mocker of {@link HttpRequest}.
+ *
  * @since 0.0.1
  */
 public final class HttpRequestMocker {
@@ -24,6 +25,7 @@ public final class HttpRequestMocker {
 
     /**
      * Convert string to request.
+     *
      * @param text The text
      * @return Requests
      * @throws Exception If there is some problem inside

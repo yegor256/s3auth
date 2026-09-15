@@ -13,12 +13,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link Resource}.
+ *
  * @since 0.0.1
  */
 final class ResourceTest {
 
     /**
      * Resource.PlainText can return text content.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -32,6 +34,7 @@ final class ResourceTest {
 
     /**
      * Resource.PlainText can produce correct HTTP headers.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test

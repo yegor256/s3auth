@@ -8,6 +8,7 @@ import java.net.URI;
 
 /**
  * Mock.
+ *
  * @since 0.0.1
  */
 final class MkHost implements Host {
@@ -34,6 +35,7 @@ final class MkHost implements Host {
 
     /**
      * Constructor.
+     *
      * @param res The resource
      * @param auth The authorized
      * @param hid The hidden

@@ -8,6 +8,7 @@ import com.jcabi.log.Logger;
 
 /**
  * Dispatcher of HttpThread.
+ *
  * @since 0.0.1
  */
 final class HttpThreadRunnable implements Runnable {
@@ -19,6 +20,7 @@ final class HttpThreadRunnable implements Runnable {
 
     /**
      * Constructor.
+     *
      * @param thrd The HttpThread
      */
     HttpThreadRunnable(final HttpThread thrd) {

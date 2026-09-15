@@ -4,6 +4,7 @@
  */
 package com.s3auth.hosts;
 
+import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.URI;
 import java.util.Arrays;
@@ -25,6 +26,7 @@ import org.productivity.java.syslog4j.server.SyslogServerIF;
 
 /**
  * Test case for {@link SyslogHosts}.
+ *
  * @since 0.0.1
  */
 final class SyslogHostsTest {
@@ -101,7 +103,7 @@ final class SyslogHostsTest {
         final int port;
         try (DatagramSocket socket = new DatagramSocket(0)) {
             port = socket.getLocalPort();
-        } catch (final java.io.IOException ex) {
+        } catch (final IOException ex) {
             throw new IllegalStateException("Failed to reserve port", ex);
         }
         return port;

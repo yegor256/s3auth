@@ -21,6 +21,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Htpasswd file abstraction.
+ *
  * @since 0.0.1
  */
 @Immutable
@@ -34,6 +35,7 @@ final class Htpasswd {
 
     /**
      * All known algorithms.
+     *
      * @see <a href="http://httpd.apache.org/docs/2.2/misc/password_encryptions.html">Algorithms supported by Apache</a>
      */
     private static final Htpasswd.Algorithm[] ALGORITHMS = {
@@ -50,6 +52,7 @@ final class Htpasswd {
 
     /**
      * Public ctor.
+     *
      * @param hst The host to work with
      */
     Htpasswd(@NotNull final Host hst) {
@@ -78,6 +81,7 @@ final class Htpasswd {
 
     /**
      * Can this user login in with this credentials?
+     *
      * @param user User name
      * @param password Password
      * @return Yes or no
@@ -144,6 +148,7 @@ final class Htpasswd {
 
     /**
      * Algorithm.
+     *
      * @since 0.0.1
      */
     @FunctionalInterface
@@ -151,6 +156,7 @@ final class Htpasswd {
 
         /**
          * Do they match?
+         *
          * @param hash The hash
          * @param password The password
          * @return TRUE if they match

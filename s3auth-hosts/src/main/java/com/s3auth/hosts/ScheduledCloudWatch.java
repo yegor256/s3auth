@@ -44,6 +44,7 @@ public final class ScheduledCloudWatch implements Runnable, Closeable {
 
     /**
      * Public ctor.
+     *
      * @throws IOException If an IO Exception occurs
      */
     public ScheduledCloudWatch() throws IOException {
@@ -57,6 +58,7 @@ public final class ScheduledCloudWatch implements Runnable, Closeable {
 
     /**
      * Ctor.
+     *
      * @param stats The stats data to obtain
      * @param cwatch The Cloudwatch client
      */

@@ -9,6 +9,7 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 
 /**
  * Objects and common prefixes found while paginating a bucket listing.
+ *
  * @since 0.0.1
  */
 final class Listing {
@@ -25,6 +26,7 @@ final class Listing {
 
     /**
      * Ctor.
+     *
      * @param objs S3 objects found
      * @param prfxs Common prefixes found
      */
@@ -35,6 +37,7 @@ final class Listing {
 
     /**
      * S3 objects found.
+     *
      * @return The objects
      */
     Collection<S3Object> objects() {
@@ -43,6 +46,7 @@ final class Listing {
 
     /**
      * Common prefixes found.
+     *
      * @return The prefixes
      */
     Collection<String> prefixes() {

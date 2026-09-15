@@ -8,6 +8,7 @@ import java.util.Objects;
 
 /**
  * Object name.
+ *
  * @since 0.0.1
  */
 final class SimpleObjectName implements DefaultHost.ObjectName {
@@ -19,6 +20,7 @@ final class SimpleObjectName implements DefaultHost.ObjectName {
 
     /**
      * Public ctor.
+     *
      * @param nme The name
      */
     SimpleObjectName(final String nme) {

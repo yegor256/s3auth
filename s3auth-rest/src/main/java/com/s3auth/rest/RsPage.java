@@ -32,6 +32,7 @@ import org.takes.rs.xe.XeStylesheet;
 
 /**
  * Index resource, front page of the website.
+ *
  * @since 0.1
  */
 final class RsPage extends RsWrap {
@@ -48,6 +49,7 @@ final class RsPage extends RsWrap {
 
     /**
      * Ctor.
+     *
      * @param xsl XSL
      * @param req Request
      * @param src Source

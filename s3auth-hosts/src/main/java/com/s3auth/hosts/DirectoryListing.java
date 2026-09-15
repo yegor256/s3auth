@@ -33,6 +33,7 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 
 /**
  * XML Directory Listing.
+ *
  * @since 0.0.1
  */
 @Immutable
@@ -54,6 +55,7 @@ final class DirectoryListing implements Resource {
 
     /**
      * Private ctor, content fetched by {@link #fetch}.
+     *
      * @param cnt The already-fetched content
      */
     private DirectoryListing(final byte[] cnt) {
@@ -129,6 +131,7 @@ final class DirectoryListing implements Resource {
 
     /**
      * Fetch a directory listing from S3.
+     *
      * @param clnt Amazon S3 client
      * @param bckt Bucket name
      * @param name The S3 object key

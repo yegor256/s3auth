@@ -10,6 +10,7 @@ import java.util.Objects;
 
 /**
  * S3 Object version.
+ *
  * @since 0.0.1
  */
 @Immutable
@@ -17,6 +18,7 @@ public interface Version {
 
     /**
      * Specify that the latest version be fetched.
+     *
      * @since 0.0.1
      */
     Version LATEST = new Version() {
@@ -38,6 +40,7 @@ public interface Version {
 
     /**
      * Specify that the object's versions be listed.
+     *
      * @since 0.0.1
      */
     Version LIST = new Version() {
@@ -59,6 +62,7 @@ public interface Version {
 
     /**
      * Flag specifying whether the latest version is to be fetched.
+     *
      * @return Boolean value true, if we're fetching the latest version
      */
     boolean latest();
@@ -66,18 +70,21 @@ public interface Version {
     /**
      * Flag specifying whether versions should be listed instead of obtaining
      * a particular version.
+     *
      * @return Boolean value true, if we're fetching the list of versions
      */
     boolean list();
 
     /**
      * Version ID of the S3 object.
+     *
      * @return Version ID
      */
     String version();
 
     /**
      * Simple implementation.
+     *
      * @since 0.0.1
      */
     @Immutable
@@ -91,6 +98,7 @@ public interface Version {
 
         /**
          * Public ctor.
+         *
          * @param version Version ID string
          */
         public Simple(final String version) {

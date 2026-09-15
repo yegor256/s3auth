@@ -6,6 +6,7 @@ package com.s3auth.relay;
 
 /**
  * Dispatcher of FTPThread.
+ *
  * @since 0.0.1
  */
 final class FtpThreadRunnable implements Runnable {
@@ -17,6 +18,7 @@ final class FtpThreadRunnable implements Runnable {
 
     /**
      * Constructor.
+     *
      * @param thrd The FTPThread
      */
     FtpThreadRunnable(final FtpThread thrd) {

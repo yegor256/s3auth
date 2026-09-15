@@ -5,6 +5,7 @@
 
 /**
  * Configuration of hosts.
+ *
  * @since 0.0.1
  */
 package com.s3auth.hosts;

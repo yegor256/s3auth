@@ -10,6 +10,7 @@ import java.util.Random;
 
 /**
  * Mocker of {@link User}.
+ *
  * @since 0.0.1
  */
 public final class UserMocker {
@@ -17,15 +18,24 @@ public final class UserMocker {
     /**
      * The mock.
      */
-    private final transient MkUserBuilder user = new MkUserBuilder();
+    private final transient MkUserBuilder user;
 
     /**
      * Random generator.
      */
-    private final transient Random rand = new Random();
+    private final transient Random rand;
+
+    /**
+     * Constructor.
+     */
+    public UserMocker() {
+        this.user = new MkUserBuilder();
+        this.rand = new Random();
+    }
 
     /**
      * Default one.
+     *
      * @return This object
      */
     public UserMocker init() {
@@ -42,6 +52,7 @@ public final class UserMocker {
 
     /**
      * With provided identity.
+     *
      * @param identity The identity
      * @return This object
      */
@@ -52,6 +63,7 @@ public final class UserMocker {
 
     /**
      * With provided identity.
+     *
      * @param identity The identity
      * @return This object
      */
@@ -61,6 +73,7 @@ public final class UserMocker {
 
     /**
      * Mock it.
+     *
      * @return The user
      */
     public User mock() {

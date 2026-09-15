@@ -15,12 +15,14 @@ import org.takes.rq.RqWrap;
 
 /**
  * User retriever from request.
+ *
  * @since 0.1
  */
 final class RqUser extends RqWrap {
 
     /**
      * Ctor.
+     *
      * @param req Request
      */
     RqUser(final Request req) {
@@ -29,6 +31,7 @@ final class RqUser extends RqWrap {
 
     /**
      * Has alias?
+     *
      * @return TRUE if alias is there
      * @throws IOException If fails
      */
@@ -38,6 +41,7 @@ final class RqUser extends RqWrap {
 
     /**
      * Get user.
+     *
      * @return User
      * @throws IOException If fails
      */

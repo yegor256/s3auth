@@ -5,6 +5,7 @@
 
 /**
  * HTTP to S3 relay, tests.
+ *
  * @since 0.0.1
  */
 package com.s3auth.relay;

@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 
 /**
  * Syslog host wrapper.
+ *
  * @since 0.0.1
  */
 @Immutable
@@ -32,6 +33,7 @@ final class SyslogHost implements Host {
 
     /**
      * Constructor.
+     *
      * @param hst Host
      */
     SyslogHost(final Host hst) {

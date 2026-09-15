@@ -8,6 +8,7 @@ import com.s3auth.hosts.Stats;
 
 /**
  * Dummy host stats.
+ *
  * @since 0.0.1
  */
 final class DummyStats implements Stats {

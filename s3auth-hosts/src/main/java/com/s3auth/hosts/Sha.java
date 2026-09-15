@@ -12,6 +12,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  * SHA1 hash builder.
+ *
  * @since 0.0.1
  */
 @Loggable(Loggable.DEBUG)

@@ -6,6 +6,7 @@ package com.s3auth.hosts;
 
 /**
  * Builder for MkDomain.
+ *
  * @since 0.0.1
  */
 final class MkDomainBuilder {
@@ -42,6 +43,7 @@ final class MkDomainBuilder {
 
     /**
      * Set name.
+     *
      * @param value The name
      * @return This builder
      */
@@ -52,6 +54,7 @@ final class MkDomainBuilder {
 
     /**
      * Set key.
+     *
      * @param value The key
      * @return This builder
      */
@@ -62,6 +65,7 @@ final class MkDomainBuilder {
 
     /**
      * Set secret.
+     *
      * @param value The secret
      * @return This builder
      */
@@ -72,6 +76,7 @@ final class MkDomainBuilder {
 
     /**
      * Set bucket.
+     *
      * @param value The bucket
      * @return This builder
      */
@@ -82,6 +87,7 @@ final class MkDomainBuilder {
 
     /**
      * Set region.
+     *
      * @param value The region
      * @return This builder
      */
@@ -92,6 +98,7 @@ final class MkDomainBuilder {
 
     /**
      * Set syslog.
+     *
      * @param value The syslog
      * @return This builder
      */
@@ -102,6 +109,7 @@ final class MkDomainBuilder {
 
     /**
      * Build the domain.
+     *
      * @return The domain
      */
     MkDomain build() {

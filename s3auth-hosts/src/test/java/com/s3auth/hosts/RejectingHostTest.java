@@ -11,12 +11,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link RejectingHost}.
+ *
  * @since 0.0.1
  */
 final class RejectingHostTest {
 
     /**
      * RejectingHost can reject by regex.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test

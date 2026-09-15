@@ -29,12 +29,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link HttpResponse}.
+ *
  * @since 0.0.1
  */
 final class HttpResponseTest {
 
     /**
      * HttpResponse can send correct HTTP response.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -56,6 +58,7 @@ final class HttpResponseTest {
     /**
      * HttpResponse can process a slow resource (a few seconds waiting)
      * within the expected timeout.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -92,6 +95,7 @@ final class HttpResponseTest {
     /**
      * HttpResponse sends the expected content when processing a slow
      * resource.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test

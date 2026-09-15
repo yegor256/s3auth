@@ -17,6 +17,7 @@ import javax.ws.rs.core.HttpHeaders;
 
 /**
  * Wrapper for {@link Resource} that writes GZIP compressed output.
+ *
  * @since 0.0.1
  */
 @Immutable
@@ -30,6 +31,7 @@ public final class GzipResource implements Resource {
 
     /**
      * Public ctor.
+     *
      * @param res The underlying resource to compress
      */
     public GzipResource(final Resource res) {

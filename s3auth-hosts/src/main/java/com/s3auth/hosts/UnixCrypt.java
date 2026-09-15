@@ -10,6 +10,7 @@ import org.apache.commons.codec.digest.Crypt;
 
 /**
  * UNIX crypt.
+ *
  * @since 0.0.1
  */
 @Loggable(Loggable.DEBUG)

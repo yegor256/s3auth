@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Integration case for {@link TkApp}.
+ *
  * @since 0.5
  */
 final class TkAppITCase {
@@ -37,6 +38,7 @@ final class TkAppITCase {
 
     /**
      * IndexRs can render absent pages.
+     *
      * @throws Exception If some problem inside
      */
     @Test
@@ -60,6 +62,7 @@ final class TkAppITCase {
 
     /**
      * IndexRs can render valid pages.
+     *
      * @throws Exception If some problem inside
      */
     @Test
@@ -82,6 +85,7 @@ final class TkAppITCase {
 
     /**
      * IndexRs can show version.
+     *
      * @throws Exception If some problem inside
      */
     @Test

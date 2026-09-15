@@ -25,12 +25,14 @@ import org.mockito.stubbing.Answer;
 
 /**
  * Test case for {@link FtpFacade}.
+ *
  * @since 0.0.1
  */
 final class FtpFacadeTest {
 
     /**
      * Connects successfully.
+     *
      * @throws IOException If it fails inside
      */
     @Test
@@ -52,6 +54,7 @@ final class FtpFacadeTest {
 
     /**
      * Disconnects successfully.
+     *
      * @throws IOException If it fails inside
      */
     @Test

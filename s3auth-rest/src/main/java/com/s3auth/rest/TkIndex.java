@@ -21,6 +21,7 @@ import org.xembly.Directives;
 
 /**
  * Index page of a logged in user.
+ *
  * @since 0.1
  */
 final class TkIndex implements Take {
@@ -32,6 +33,7 @@ final class TkIndex implements Take {
 
     /**
      * Ctor.
+     *
      * @param hsts Hosts
      */
     TkIndex(final Hosts hsts) {

@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * Mocker of {@link Dynamo}.
+ *
  * @since 0.0.1
  */
 public final class DynamoMocker {
@@ -20,11 +21,18 @@ public final class DynamoMocker {
     /**
      * Users and their domains.
      */
-    private final transient ConcurrentMap<URN, Domains> users =
-        new ConcurrentHashMap<>();
+    private final transient ConcurrentMap<URN, Domains> users;
+
+    /**
+     * Constructor.
+     */
+    public DynamoMocker() {
+        this.users = new ConcurrentHashMap<>();
+    }
 
     /**
      * Mock it.
+     *
      * @return The dynamo
      */
     public Dynamo mock() {

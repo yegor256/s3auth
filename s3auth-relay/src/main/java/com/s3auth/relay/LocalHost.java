@@ -25,7 +25,7 @@ import javax.validation.constraints.NotNull;
  * that should not go to Amazon S3, but should stay within this server. Mostly
  * for deployment automation purposes. The class is instantiated by
  * {@link HttpThread} according to the information in {@code "Host"}
- * HTTP header.
+ * HTTP header.</p>
  *
  * @see HttpThread
  * @since 0.0.1
@@ -95,6 +95,7 @@ final class LocalHost implements Host {
 
     /**
      * Is it your name?
+     *
      * @param name The name of host, provided in "Host" HTTP header
      * @return TRUE if this is a localhost
      */

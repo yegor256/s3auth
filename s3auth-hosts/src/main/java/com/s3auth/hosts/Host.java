@@ -12,6 +12,7 @@ import software.amazon.awssdk.services.cloudwatch.CloudWatchClient;
 
 /**
  * One host.
+ *
  * @since 0.0.1
  */
 @Immutable
@@ -19,6 +20,7 @@ public interface Host extends Closeable {
 
     /**
      * Find resource and return its input stream.
+     *
      * @param uri Name of resource
      * @param range Range of data to return
      * @param version The version of the data to return
@@ -29,6 +31,7 @@ public interface Host extends Closeable {
 
     /**
      * This URI require authentication?
+     *
      * @param uri Which URI we're trying to access
      * @return Yes or no
      * @throws IOException If some error with I/O inside
@@ -37,6 +40,7 @@ public interface Host extends Closeable {
 
     /**
      * Can this user login in with this credentials?
+     *
      * @param user User name
      * @param password Password
      * @return Yes or no
@@ -46,18 +50,21 @@ public interface Host extends Closeable {
 
     /**
      * Get this resource's syslog host and port.
+     *
      * @return Syslog host and port
      */
     String syslog();
 
     /**
      * Get the stats for this host's domain.
+     *
      * @return Statistics for this domain
      */
     Stats stats();
 
     /**
      * Client to Amazon CloudWatch.
+     *
      * @since 0.0.1
      */
     @Immutable
@@ -66,6 +73,7 @@ public interface Host extends Closeable {
 
         /**
          * Get Amazon client.
+         *
          * @return The client
          */
         CloudWatchClient get();

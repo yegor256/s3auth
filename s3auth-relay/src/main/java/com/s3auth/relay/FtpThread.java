@@ -14,9 +14,9 @@ import javax.validation.constraints.NotNull;
  *
  * <p>The class is responsible for getting a new socket from a blocking
  * queue, processing it, and closing the socket. The class is instantiated
- * by {@link FtpFacade} and is executed by Services Executor routinely.
+ * by {@link FtpFacade} and is executed by Services Executor routinely.</p>
  *
- * <p>The class is thread-safe.
+ * <p>The class is thread-safe.</p>
  *
  * @see FtpFacade
  * @since 0.0.1
@@ -43,6 +43,7 @@ final class FtpThread {
 
     /**
      * Public ctor.
+     *
      * @param sckts Sockets to read from
      * @param hsts Hosts
      */
@@ -54,6 +55,7 @@ final class FtpThread {
 
     /**
      * Dispatch one request from the encapsulated queue.
+     *
      * @return Amount of bytes sent to socket
      */
     long dispatch() {

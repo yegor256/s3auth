@@ -26,7 +26,7 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 /**
  * Default implementation of {@link Resource}.
  *
- * <p>The class is mutable and thread-safe.
+ * <p>The class is mutable and thread-safe.</p>
  *
  * @since 0.0.1
  */
@@ -70,6 +70,7 @@ final class DefaultResource implements Resource {
 
     /**
      * Private ctor, stream opened by {@link #fetch}.
+     *
      * @param clnt Amazon S3 client
      * @param bckt Bucket name
      * @param name Key name
@@ -263,6 +264,7 @@ final class DefaultResource implements Resource {
 
     /**
      * Fetch an object from S3.
+     *
      * @param clnt Amazon S3 client
      * @param loc Coordinates of the object to fetch
      * @param dstats Domain stats data

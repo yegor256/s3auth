@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link H2DomainStatsData}.
+ *
  * @since 0.0.1
  */
 final class H2DomainStatsDataTest {

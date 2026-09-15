@@ -13,6 +13,7 @@ import org.takes.rs.RsWithStatus;
 
 /**
  * Not found page.
+ *
  * @since 0.1
  */
 final class TkNotFound implements Take {

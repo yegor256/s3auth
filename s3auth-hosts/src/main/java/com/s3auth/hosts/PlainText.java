@@ -8,6 +8,7 @@ import com.jcabi.aspects.Loggable;
 
 /**
  * Plain Text.
+ *
  * @since 0.0.1
  */
 @Loggable(Loggable.DEBUG)

@@ -20,12 +20,14 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 
 /**
  * Test case for {@link DirectoryListing}.
+ *
  * @since 0.0.1
  */
 final class DirectoryListingTest {
 
     /**
      * Fetches directory listing for bucket, if object does not exist.
+     *
      * @throws Exception If something goes wrong
      */
     @Test

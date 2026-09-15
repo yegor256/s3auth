@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Default implementation of domain.
+ *
  * @since 0.0.1
  */
 @Immutable
@@ -24,6 +25,7 @@ final class DefaultDomain implements Domain {
 
     /**
      * Public ctor.
+     *
      * @param name Name of it
      * @param key Key of it
      * @param secret Secret of it
@@ -78,6 +80,7 @@ final class DefaultDomain implements Domain {
 
     /**
      * Public ctor.
+     *
      * @param domain The domain
      */
     DefaultDomain(@NotNull final Domain domain) {

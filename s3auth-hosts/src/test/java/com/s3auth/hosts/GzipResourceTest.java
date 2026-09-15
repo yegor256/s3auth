@@ -15,12 +15,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link GzipResource}.
+ *
  * @since 0.0.1
  */
 final class GzipResourceTest {
 
     /**
      * GzipResource writes gzip compressed output.
+     *
      * @throws Exception If something goes wrong
      */
     @Test
@@ -31,19 +33,21 @@ final class GzipResourceTest {
         );
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
         res.writeTo(out);
-        MatcherAssert.assertThat(
-            IOUtils.toString(
-                new GZIPInputStream(
-                    new ByteArrayInputStream(out.toByteArray())
-                ),
-                StandardCharsets.UTF_8
-            ),
-            Matchers.is(text)
-        );
+        try (
+            GZIPInputStream gzip = new GZIPInputStream(
+                new ByteArrayInputStream(out.toByteArray())
+            )
+        ) {
+            MatcherAssert.assertThat(
+                IOUtils.toString(gzip, StandardCharsets.UTF_8),
+                Matchers.is(text)
+            );
+        }
     }
 
     /**
      * GzipResource returns Content-Encoding header.
+     *
      * @throws Exception If something goes wrong
      */
     @Test

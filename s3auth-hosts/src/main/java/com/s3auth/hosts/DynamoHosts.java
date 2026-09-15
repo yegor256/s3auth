@@ -21,7 +21,7 @@ import javax.validation.constraints.Pattern;
 /**
  * Collection of hosts, persisted in Amazon DynamoDB.
  *
- * <p>The class is mutable and thread-safe.
+ * <p>The class is mutable and thread-safe.</p>
  *
  * @since 0.0.1
  */
@@ -43,6 +43,7 @@ public final class DynamoHosts implements Hosts {
 
     /**
      * Default ctor.
+     *
      * @param dnm The dynamo abstract
      */
     public DynamoHosts(@NotNull final Dynamo dnm) {
@@ -166,6 +167,7 @@ public final class DynamoHosts implements Hosts {
 
     /**
      * Wrap of domains.
+     *
      * @since 0.0.1
      */
     @Loggable(Loggable.DEBUG)
@@ -183,6 +185,7 @@ public final class DynamoHosts implements Hosts {
 
         /**
          * Public ctor.
+         *
          * @param usr User
          * @param dmns Domains
          */

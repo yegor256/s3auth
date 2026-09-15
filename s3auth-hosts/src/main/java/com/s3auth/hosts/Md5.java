@@ -11,6 +11,7 @@ import org.apache.commons.codec.digest.Md5Crypt;
 
 /**
  * MD5 hash builder.
+ *
  * @since 0.0.1
  */
 @Loggable(Loggable.DEBUG)
