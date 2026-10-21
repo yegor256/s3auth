@@ -515,9 +515,9 @@ final class HttpFacadeTest {
      * response content-type, with the expected body.
      *
      * @throws Exception If there is some problem inside
-     * @todo #191:30mins The test fails to retrieve the expected content over
-     *  SSL. The response body is empty while it should be "secured".
-     *  Let's fix it and unignore the test.
+     * @todo #191:30mins The second SSL test also receives an empty response
+     *  body instead of the expected one. Let us fix the SSL handshake in
+     *  the test server and unignore this test too.
      */
     @Test
     @Disabled

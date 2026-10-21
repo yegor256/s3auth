@@ -63,8 +63,8 @@ final class MainTest {
      * Main stops listening when interrupted.
      *
      * @throws Exception If there is some problem inside
-     * @todo #33 Test doesn't work since AWS Dynamo config is not available
-     *  in runtime. We should find a way to mock it properly.
+     * @todo #33 This test cannot run either, because AWS Dynamo config is
+     *  absent in runtime. We should mock it and unignore the test.
      */
     @Test
     @Disabled
