@@ -6,8 +6,11 @@ package com.s3auth.relay;
 
 import com.jcabi.aspects.Loggable;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import javax.validation.constraints.NotNull;
+import org.apache.commons.net.ftp.FTPReply;
 
 /**
  * FTP response, writable to IO socket.
@@ -25,16 +28,23 @@ import javax.validation.constraints.NotNull;
  *
  * @see FtpThread
  * @since 0.0.1
- * @todo #213:30min Implement methods 'withCode', 'withText', 'send' as above.
- *  Also, implement 'asString' and unignore test 'constructsCorrectly' in
- *  FtpResponseTest.
  */
 @Loggable(Loggable.DEBUG)
 final class FtpResponse {
 
+    /**
+     * FTP reply code.
+     */
+    private transient int code = FTPReply.COMMAND_OK;
+
+    /**
+     * FTP reply text.
+     */
+    private transient String text = "";
+
     @Override
     public String toString() {
-        return this.asString();
+        return String.format("%d %s", this.code, this.text);
     }
 
     /**
@@ -44,16 +54,18 @@ final class FtpResponse {
      * @return This object
      */
     FtpResponse withCode(final int cde) {
+        this.code = cde;
         return this;
     }
 
     /**
      * With this FTP text.
      *
-     * @param text Text of the reply
+     * @param txt Text of the reply
      * @return This object
      */
-    FtpResponse withText(@NotNull final String text) {
+    FtpResponse withText(@NotNull final String txt) {
+        this.text = txt;
         return this;
     }
 
@@ -71,13 +83,23 @@ final class FtpResponse {
      *
      * @param socket The socket to write to
      * @return How many bytes were actually sent
-     * @checkstyle NonStaticMethodCheck (10 lines)
      */
     @Loggable(
         value = Loggable.DEBUG, limit = Integer.MAX_VALUE,
         ignore = IOException.class
     )
+    @SuppressWarnings("PMD.CloseResource")
     long send(@NotNull final Socket socket) {
-        return 0L;
+        final byte[] data = String.format(
+            "%d %s%c%c", this.code, this.text, '\r', '\n'
+        ).getBytes(StandardCharsets.UTF_8);
+        try {
+            final OutputStream stream = socket.getOutputStream();
+            stream.write(data);
+            stream.flush();
+        } catch (final IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+        return data.length;
     }
 }
