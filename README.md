@@ -40,7 +40,8 @@ sending us your pull request please run full Maven build:
 mvn clean install -Pqulice
 ```
 
-To avoid build errors use JDK 11+ and Maven 3.3+.
+To avoid build errors use JDK 17+ and Maven 3.3+.
+Continuous integration builds with JDK 21.
 
 To run it locally:
 
