@@ -476,20 +476,19 @@ final class HttpFacadeTest {
      * response content-type, with OK status.
      *
      * @throws Exception If there is some problem inside
-     * @todo #191:30mins The test fails to retrieve the expected content over
-     *  SSL. The response body is empty while it should be "secured".
-     *  Let's fix it and unignore the test.
      */
     @Test
-    @Disabled
     void getsOkStatusOverSsl() throws Exception {
         final Host host = Mockito.mock(Host.class);
-        Mockito.doReturn(new ResourceMocker().init().withContent("secured").mock())
-            .when(host).fetch(
-                Mockito.any(URI.class),
-                Mockito.any(Range.class),
-                Mockito.any(Version.class)
-            );
+        Mockito.doReturn(
+            new ResourceMocker().init().withContent("secured")
+                .withHeaders("Content-Type: text/plain")
+                .mock()
+        ).when(host).fetch(
+            Mockito.any(URI.class),
+            Mockito.any(Range.class),
+            Mockito.any(Version.class)
+        );
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
@@ -515,21 +514,20 @@ final class HttpFacadeTest {
      * response content-type, with the expected body.
      *
      * @throws Exception If there is some problem inside
-     * @todo #191:30mins The second SSL test also receives an empty response
-     *  body instead of the expected one. Let us fix the SSL handshake in
-     *  the test server and unignore this test too.
      */
     @Test
-    @Disabled
     void getsExpectedBodyOverSsl() throws Exception {
         final Host host = Mockito.mock(Host.class);
         final String body = "secured";
-        Mockito.doReturn(new ResourceMocker().init().withContent(body).mock())
-            .when(host).fetch(
-                Mockito.any(URI.class),
-                Mockito.any(Range.class),
-                Mockito.any(Version.class)
-            );
+        Mockito.doReturn(
+            new ResourceMocker().init().withContent(body)
+                .withHeaders("Content-Type: text/plain")
+                .mock()
+        ).when(host).fetch(
+            Mockito.any(URI.class),
+            Mockito.any(Range.class),
+            Mockito.any(Version.class)
+        );
         final Hosts hosts = Mockito.mock(Hosts.class);
         Mockito.doReturn(host).when(hosts).find(Mockito.anyString());
         final int port = PortMocker.reserve();
