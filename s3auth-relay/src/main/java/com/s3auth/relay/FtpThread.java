@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
@@ -65,6 +66,11 @@ final class FtpThread {
      * Pattern to split the PORT command argument into octets.
      */
     private static final Pattern COMMA = Pattern.compile(",");
+
+    /**
+     * Connect timeout for the data connection, in milliseconds.
+     */
+    private static final int CONNECT_TIMEOUT = 10_000;
 
     /**
      * Queue of sockets to get from.
@@ -147,9 +153,11 @@ final class FtpThread {
                 final String cmd = parts[0].toUpperCase(Locale.ENGLISH);
                 try {
                     if ("USER".equals(cmd)) {
-                        host = this.user(parts, socket);
+                        host = null;
                         auth = false;
+                        host = this.user(parts, socket);
                     } else if ("PASS".equals(cmd)) {
+                        auth = false;
                         auth = this.pass(host, parts, socket);
                     } else if ("PORT".equals(cmd)) {
                         data = FtpThread.port(parts, socket);
@@ -255,6 +263,14 @@ final class FtpThread {
             ),
             (values[4] << 8) + values[5]
         );
+        final InetAddress control = socket.getInetAddress();
+        final InetAddress target = data.getAddress();
+        if (control == null || target == null || !control.equals(target)) {
+            throw new FtpException(
+                FTPReply.COMMAND_NOT_IMPLEMENTED_FOR_PARAMETER,
+                "PORT address must match the control connection peer"
+            );
+        }
         new FtpResponse().withCode(
             FTPReply.COMMAND_OK
         ).withText("PORT command successful").send(socket);
@@ -276,10 +292,17 @@ final class FtpThread {
                 "send PORT command first"
             );
         }
+        if (path.isEmpty()) {
+            throw new FtpException(
+                FTPReply.SYNTAX_ERROR_IN_ARGUMENTS,
+                "path is required for RETR"
+            );
+        }
+        final URI uri = FtpThread.uri(path);
         final Resource resource;
         try {
             resource = host.fetch(
-                URI.create(path), Range.ENTIRE, Version.LATEST
+                uri, Range.ENTIRE, Version.LATEST
             );
         } catch (final IOException ex) {
             Logger.warn(this, "#retr(): %[exception]s", ex);
@@ -313,7 +336,7 @@ final class FtpThread {
     private long transfer(final Resource resource,
         final InetSocketAddress data) throws IOException {
         try (Socket socket = new Socket()) {
-            socket.connect(data);
+            socket.connect(data, FtpThread.CONNECT_TIMEOUT);
             final OutputStream stream = socket.getOutputStream();
             final long bytes = resource.writeTo(stream);
             stream.flush();
@@ -359,6 +382,26 @@ final class FtpThread {
             );
         }
         return octet;
+    }
+
+    /**
+     * Parse the RETR path into a URI, rejecting the ones the URI syntax
+     * can't take (spaces and other illegal characters).
+     *
+     * @param path Raw path from the RETR command
+     * @return Parsed URI
+     * @throws FtpException If the path is not a valid URI
+     */
+    private static URI uri(final String path) throws FtpException {
+        try {
+            return URI.create(path);
+        } catch (final IllegalArgumentException ex) {
+            throw new FtpException(
+                FTPReply.FILE_UNAVAILABLE,
+                String.format("invalid RETR path '%s'", path),
+                ex
+            );
+        }
     }
 
     private static String argument(final String... parts) {

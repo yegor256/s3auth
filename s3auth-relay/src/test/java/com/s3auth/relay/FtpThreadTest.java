@@ -408,6 +408,180 @@ final class FtpThreadTest {
         }
     }
 
+    /**
+     * FtpThread can reject a PORT command pointing at an address other
+     * than the control connection peer (FTP bounce attack).
+     *
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    void rejectsPortToForeignAddress() throws Exception {
+        try (
+            ServerSocket server = new ServerSocket(0);
+            Socket client = new Socket("localhost", server.getLocalPort());
+            BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                    client.getInputStream(), StandardCharsets.UTF_8
+                )
+            )
+        ) {
+            final BlockingQueue<Socket> sockets = new LinkedBlockingQueue<>();
+            sockets.put(server.accept());
+            final Thread worker = FtpThreadTest.dispatch(
+                new FtpThread(sockets, FtpThreadTest.mockHosts())
+            );
+            reader.readLine();
+            FtpThreadTest.login(client, reader);
+            FtpThreadTest.write(client, "PORT 10,0,0,1,1,1");
+            MatcherAssert.assertThat(
+                reader.readLine(),
+                Matchers.startsWith("504 ")
+            );
+            FtpThreadTest.write(client, "RETR /index.html");
+            MatcherAssert.assertThat(
+                reader.readLine(),
+                Matchers.startsWith("425 ")
+            );
+            FtpThreadTest.write(client, "QUIT");
+            reader.readLine();
+            worker.join();
+        }
+    }
+
+    /**
+     * FtpThread can drop the authorized session state when USER fails
+     * after a successful login.
+     *
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    void resetsSessionOnFailedUser() throws Exception {
+        final Hosts hosts = FtpThreadTest.mockHosts();
+        Mockito.doThrow(new Hosts.NotFoundException("no such domain"))
+            .when(hosts)
+            .find("unknown.example.org");
+        try (
+            ServerSocket server = new ServerSocket(0);
+            Socket client = new Socket("localhost", server.getLocalPort());
+            BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                    client.getInputStream(), StandardCharsets.UTF_8
+                )
+            )
+        ) {
+            final BlockingQueue<Socket> sockets = new LinkedBlockingQueue<>();
+            sockets.put(server.accept());
+            final Thread worker = FtpThreadTest.dispatch(
+                new FtpThread(sockets, hosts)
+            );
+            reader.readLine();
+            FtpThreadTest.login(client, reader);
+            FtpThreadTest.write(client, "USER unknown.example.org");
+            MatcherAssert.assertThat(
+                reader.readLine(),
+                Matchers.startsWith("530 ")
+            );
+            FtpThreadTest.write(client, "RETR /index.html");
+            MatcherAssert.assertThat(
+                reader.readLine(),
+                Matchers.startsWith("530 ")
+            );
+            FtpThreadTest.write(client, "QUIT");
+            reader.readLine();
+            worker.join();
+        }
+    }
+
+    /**
+     * FtpThread can drop the authorized session state when PASS fails
+     * after a successful login.
+     *
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    void resetsAuthOnFailedPass() throws Exception {
+        try (
+            ServerSocket server = new ServerSocket(0);
+            Socket client = new Socket("localhost", server.getLocalPort());
+            BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                    client.getInputStream(), StandardCharsets.UTF_8
+                )
+            )
+        ) {
+            final BlockingQueue<Socket> sockets = new LinkedBlockingQueue<>();
+            sockets.put(server.accept());
+            final Thread worker = FtpThreadTest.dispatch(
+                new FtpThread(sockets, FtpThreadTest.mockHosts())
+            );
+            reader.readLine();
+            FtpThreadTest.login(client, reader);
+            FtpThreadTest.write(client, "PASS alex:wrong");
+            MatcherAssert.assertThat(
+                reader.readLine(),
+                Matchers.startsWith("530 ")
+            );
+            FtpThreadTest.write(client, "RETR /index.html");
+            MatcherAssert.assertThat(
+                reader.readLine(),
+                Matchers.startsWith("530 ")
+            );
+            FtpThreadTest.write(client, "QUIT");
+            reader.readLine();
+            worker.join();
+        }
+    }
+
+    /**
+     * FtpThread can reject RETR paths that are empty or not valid URIs.
+     *
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    void rejectsInvalidRetrPaths() throws Exception {
+        try (
+            ServerSocket server = new ServerSocket(0);
+            Socket client = new Socket("localhost", server.getLocalPort());
+            BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                    client.getInputStream(), StandardCharsets.UTF_8
+                )
+            )
+        ) {
+            final BlockingQueue<Socket> sockets = new LinkedBlockingQueue<>();
+            sockets.put(server.accept());
+            final Thread worker = FtpThreadTest.dispatch(
+                new FtpThread(sockets, FtpThreadTest.mockHosts())
+            );
+            reader.readLine();
+            FtpThreadTest.login(client, reader);
+            try (ServerSocket data = new ServerSocket(0)) {
+                final int port = data.getLocalPort();
+                FtpThreadTest.write(
+                    client,
+                    String.format("PORT 127,0,0,1,%d,%d", port >> 8, port & 0xFF)
+                );
+                MatcherAssert.assertThat(
+                    reader.readLine(),
+                    Matchers.startsWith("200 ")
+                );
+            }
+            FtpThreadTest.write(client, "RETR /hello world.html");
+            MatcherAssert.assertThat(
+                reader.readLine(),
+                Matchers.startsWith("550 ")
+            );
+            FtpThreadTest.write(client, "RETR");
+            MatcherAssert.assertThat(
+                reader.readLine(),
+                Matchers.startsWith("501 ")
+            );
+            FtpThreadTest.write(client, "QUIT");
+            reader.readLine();
+            worker.join();
+        }
+    }
+
     private static void dataDance(final Socket client,
         final BufferedReader reader) throws IOException {
         try (ServerSocket data = new ServerSocket(0)) {
