@@ -415,6 +415,7 @@ final class FtpThreadTest {
      * @throws Exception If there is some problem inside
      */
     @Test
+    @SuppressWarnings("PMD.UnitTestContainsTooManyAsserts")
     void rejectsPortToForeignAddress() throws Exception {
         try (
             ServerSocket server = new ServerSocket(0);
@@ -455,6 +456,7 @@ final class FtpThreadTest {
      * @throws Exception If there is some problem inside
      */
     @Test
+    @SuppressWarnings("PMD.UnitTestContainsTooManyAsserts")
     void resetsSessionOnFailedUser() throws Exception {
         final Hosts hosts = FtpThreadTest.mockHosts();
         Mockito.doThrow(new Hosts.NotFoundException("no such domain"))
@@ -499,6 +501,7 @@ final class FtpThreadTest {
      * @throws Exception If there is some problem inside
      */
     @Test
+    @SuppressWarnings("PMD.UnitTestContainsTooManyAsserts")
     void resetsAuthOnFailedPass() throws Exception {
         try (
             ServerSocket server = new ServerSocket(0);
@@ -538,6 +541,7 @@ final class FtpThreadTest {
      * @throws Exception If there is some problem inside
      */
     @Test
+    @SuppressWarnings("PMD.UnitTestContainsTooManyAsserts")
     void rejectsInvalidRetrPaths() throws Exception {
         try (
             ServerSocket server = new ServerSocket(0);

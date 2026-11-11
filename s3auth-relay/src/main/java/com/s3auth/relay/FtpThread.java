@@ -15,13 +15,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.regex.Pattern;
 import javax.validation.constraints.NotNull;
@@ -49,7 +49,11 @@ import org.apache.commons.net.ftp.FTPReply;
  * @todo #565:30min Support passive mode (PASV) data connections, which
  *  many FTP clients prefer over the active mode implemented here with
  *  the PORT command.
+ * @todo #565:40min Extract the command handlers (USER, PASS, PORT, RETR)
+ *  from FtpThread into a separate object, to drop the GodClass warning
+ *  that appeared when the review remarks were implemented in this class.
  */
+@SuppressWarnings("PMD.GodClass")
 final class FtpThread {
 
     /**
@@ -66,11 +70,6 @@ final class FtpThread {
      * Pattern to split the PORT command argument into octets.
      */
     private static final Pattern COMMA = Pattern.compile(",");
-
-    /**
-     * Connect timeout for the data connection, in milliseconds.
-     */
-    private static final int CONNECT_TIMEOUT = 10_000;
 
     /**
      * Queue of sockets to get from.
@@ -127,6 +126,7 @@ final class FtpThread {
         return bytes;
     }
 
+    @SuppressWarnings("PMD.NullAssignment")
     private long session(final Socket socket) throws IOException {
         long bytes = new FtpResponse().withCode(
             FTPReply.SERVICE_READY
@@ -263,9 +263,7 @@ final class FtpThread {
             ),
             (values[4] << 8) + values[5]
         );
-        final InetAddress control = socket.getInetAddress();
-        final InetAddress target = data.getAddress();
-        if (control == null || target == null || !control.equals(target)) {
+        if (!Objects.equals(data.getAddress(), socket.getInetAddress())) {
             throw new FtpException(
                 FTPReply.COMMAND_NOT_IMPLEMENTED_FOR_PARAMETER,
                 "PORT address must match the control connection peer"
@@ -290,12 +288,6 @@ final class FtpThread {
             throw new FtpException(
                 FTPReply.CANNOT_OPEN_DATA_CONNECTION,
                 "send PORT command first"
-            );
-        }
-        if (path.isEmpty()) {
-            throw new FtpException(
-                FTPReply.SYNTAX_ERROR_IN_ARGUMENTS,
-                "path is required for RETR"
             );
         }
         final URI uri = FtpThread.uri(path);
@@ -336,7 +328,7 @@ final class FtpThread {
     private long transfer(final Resource resource,
         final InetSocketAddress data) throws IOException {
         try (Socket socket = new Socket()) {
-            socket.connect(data, FtpThread.CONNECT_TIMEOUT);
+            socket.connect(data, 10_000);
             final OutputStream stream = socket.getOutputStream();
             final long bytes = resource.writeTo(stream);
             stream.flush();
@@ -375,7 +367,7 @@ final class FtpThread {
                 ex
             );
         }
-        if (octet < 0 || octet > 255) {
+        if ((octet & ~0xFF) != 0) {
             throw new FtpException(
                 FTPReply.SYNTAX_ERROR_IN_ARGUMENTS,
                 String.format("'%s' is out of range 0..255", value)
@@ -384,15 +376,13 @@ final class FtpThread {
         return octet;
     }
 
-    /**
-     * Parse the RETR path into a URI, rejecting the ones the URI syntax
-     * can't take (spaces and other illegal characters).
-     *
-     * @param path Raw path from the RETR command
-     * @return Parsed URI
-     * @throws FtpException If the path is not a valid URI
-     */
     private static URI uri(final String path) throws FtpException {
+        if (path.isEmpty()) {
+            throw new FtpException(
+                FTPReply.SYNTAX_ERROR_IN_ARGUMENTS,
+                "path is required for RETR"
+            );
+        }
         try {
             return URI.create(path);
         } catch (final IllegalArgumentException ex) {
