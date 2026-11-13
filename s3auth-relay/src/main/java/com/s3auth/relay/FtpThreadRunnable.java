@@ -4,6 +4,8 @@
  */
 package com.s3auth.relay;
 
+import com.jcabi.log.Logger;
+
 /**
  * Dispatcher of FTPThread.
  *
@@ -27,6 +29,11 @@ final class FtpThreadRunnable implements Runnable {
 
     @Override
     public void run() {
-        this.thread.dispatch();
+        try {
+            this.thread.dispatch();
+        } catch (final InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            Logger.warn(this, "%s", ex);
+        }
     }
 }
