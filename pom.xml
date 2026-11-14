@@ -149,7 +149,7 @@
       <dependency>
         <groupId>software.amazon.awssdk</groupId>
         <artifactId>bom</artifactId>
-        <version>2.58.0</version>
+        <version>2.59.1</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -250,17 +250,17 @@
       <dependency>
         <groupId>software.amazon.awssdk</groupId>
         <artifactId>s3</artifactId>
-        <version>2.58.0</version>
+        <version>2.59.1</version>
       </dependency>
       <dependency>
         <groupId>software.amazon.awssdk</groupId>
         <artifactId>cloudwatch</artifactId>
-        <version>2.58.0</version>
+        <version>2.59.1</version>
       </dependency>
       <dependency>
         <groupId>software.amazon.awssdk</groupId>
         <artifactId>dynamodb</artifactId>
-        <version>2.58.0</version>
+        <version>2.59.1</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
