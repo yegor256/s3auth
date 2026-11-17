@@ -5,8 +5,6 @@
 package com.s3auth.relay;
 
 import com.jcabi.aspects.Loggable;
-import com.jcabi.log.Logger;
-import com.jcabi.log.VerboseRunnable;
 import com.jcabi.log.VerboseThreads;
 import com.s3auth.hosts.Hosts;
 import java.io.Closeable;
@@ -14,112 +12,54 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.validation.constraints.NotNull;
 
 /**
  * HTTP facade (port listener).
  *
- * <p>The class is instantiated in {@link Main}, once per application run.</p>
+ * <p>The class is instantiated in {@link Main}, once per application run.
+ * All protocol-neutral machinery (executor services, socket queue, accept
+ * loop, graceful shutdown) lives in {@link Facade}; this class only
+ * provides HTTP-specific behavior.</p>
  *
  * <p>The class is mutable and thread-safe.</p>
  *
  * @see Main
+ * @see Facade
  * @since 0.0.1
- * @todo #213:1hr Create new a class Facade with all protocol-neutral code
- *  (such as socket handling, socket queue, etc). Then convert {@link com
- *  .s3auth.relay.HttpFacade} and {@link com.s3auth.relay.FtpFacade} so they use
- *  the new Facade class in order to avoid code duplication.
  */
 @Loggable(Loggable.DEBUG)
 final class HttpFacade implements Closeable {
 
     /**
-     * How many threads to use.
+     * The protocol-neutral facade doing all the work.
      */
-    private static final int THREADS = 100;
+    private final transient Facade facade;
 
     /**
-     * Executor service, with socket openers.
-     */
-    private final transient ScheduledExecutorService frontend;
-
-    /**
-     * Executor service, with consuming threads.
-     */
-    private final transient ScheduledExecutorService backend;
-
-    /**
-     * Blocking queue of ready-to-be-processed sockets.
-     */
-    private final transient BlockingQueue<Socket> sockets;
-
-    /**
-     * Server socket.
-     */
-    private final transient ServerSocket server;
-
-    /**
-     * Secured Server socket.
-     */
-    private final transient ServerSocket secured;
-
-    /**
-     * Private ctor, threads started by {@link #open}.
+     * Private ctor.
      *
-     * @param frnt Frontend executor
-     * @param back Backend executor
-     * @param skts Blocking queue of ready-to-be-processed sockets
-     * @param srv Server socket
-     * @param sec Secured server socket
+     * @param fcd The protocol-neutral facade
      */
-    private HttpFacade(final ScheduledExecutorService frnt,
-        final ScheduledExecutorService back, final BlockingQueue<Socket> skts,
-        final ServerSocket srv, final ServerSocket sec) {
-        this.frontend = frnt;
-        this.backend = back;
-        this.sockets = skts;
-        this.server = srv;
-        this.secured = sec;
+    private HttpFacade(final Facade fcd) {
+        this.facade = fcd;
     }
 
     @Override
     public void close() throws IOException {
-        try {
-            this.shutdown(this.frontend);
-            this.shutdown(this.backend);
-        } catch (final InterruptedException ex) {
-            Thread.currentThread().interrupt();
-            throw new IOException(ex);
-        }
-        this.server.close();
+        this.facade.close();
     }
 
     /**
      * Start listening to the ports.
      */
     void listen() {
-        Logger.debug(
-            this, "#listen(): scheduled %s",
-            this.frontend.scheduleWithFixedDelay(
-                new VerboseRunnable(() -> this.process(this.server)),
-                0L, 1L, TimeUnit.NANOSECONDS
-            )
-        );
-        Logger.debug(
-            this, "#listen(): scheduled %s",
-            this.frontend.scheduleWithFixedDelay(
-                new VerboseRunnable(() -> this.process(this.secured)),
-                0L, 1L, TimeUnit.NANOSECONDS
-            )
-        );
+        this.facade.listen();
     }
 
     /**
@@ -131,54 +71,26 @@ final class HttpFacade implements Closeable {
      * @return Opened facade
      * @throws IOException If can't initialize
      */
-    static HttpFacade open(@NotNull final Hosts hosts, final int port, final int sslport)
-        throws IOException {
-        final HttpFacade facade = new HttpFacade(
+    static HttpFacade open(@NotNull final Hosts hosts, final int port,
+        final int sslport) throws IOException {
+        final BlockingQueue<Socket> sockets = new SynchronousQueue<>();
+        final Facade facade = new Facade(
             Executors.newScheduledThreadPool(2, new VerboseThreads("front")),
-            Executors.newScheduledThreadPool(HttpFacade.THREADS, new VerboseThreads("back")),
-            new SynchronousQueue<>(),
-            new ServerSocket(port),
-            SSLServerSocketFactory.getDefault().createServerSocket(sslport)
-        );
-        facade.start(hosts);
-        return facade;
-    }
-
-    private void start(final Hosts hosts) {
-        final Runnable runnable = new VerboseRunnable(
-            new HttpThreadRunnable(
-                new HttpThread(this.sockets, hosts)
+            Executors.newScheduledThreadPool(
+                Facade.THREADS, new VerboseThreads("back")
             ),
-            true, true
+            sockets,
+            Arrays.asList(
+                new ServerSocket(port),
+                SSLServerSocketFactory.getDefault().createServerSocket(sslport)
+            ),
+            new HttpThreadRunnable(new HttpThread(sockets, hosts)),
+            HttpFacade::overflow,
+            100L,
+            1_000L
         );
-        for (int idx = 0; idx < HttpFacade.THREADS; ++idx) {
-            final ScheduledFuture<?> future = this.backend.scheduleWithFixedDelay(
-                runnable, 0L, 1L, TimeUnit.NANOSECONDS
-            );
-            Logger.debug(this, "#start(): scheduled %s", future);
-        }
-    }
-
-    @SuppressWarnings("PMD.CloseResource")
-    private void process(final ServerSocket svr) {
-        final Socket socket;
-        try {
-            socket = svr.accept();
-        } catch (final IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-        try {
-            if (!this.sockets.offer(socket, 10, TimeUnit.SECONDS)) {
-                HttpFacade.overflow(socket);
-                Logger.warn(
-                    this, "too many open connections (%d), can't open any more",
-                    HttpFacade.THREADS
-                );
-            }
-        } catch (final InterruptedException ex) {
-            Thread.currentThread().interrupt();
-            throw new IllegalStateException(ex);
-        }
+        facade.start();
+        return new HttpFacade(facade);
     }
 
     private static void overflow(final Socket socket) {
@@ -187,28 +99,12 @@ final class HttpFacade implements Closeable {
                 .withStatus(HttpURLConnection.HTTP_GATEWAY_TIMEOUT).withBody(
                     String.format(
                         "We're sorry, the site is under high load at the moment (%d open connections), please try again in a few minutes",
-                        HttpFacade.THREADS
+                        Facade.THREADS
                     )
                 )
                 .send(socket);
         } catch (final IOException ex) {
             throw new IllegalStateException(ex);
-        }
-    }
-
-    private void shutdown(final ExecutorService service)
-        throws InterruptedException {
-        service.shutdown();
-        if (service.awaitTermination(100, TimeUnit.MILLISECONDS)) {
-            Logger.info(this, "#shutdown(): succeeded");
-        } else {
-            Logger.warn(this, "#shutdown(): failed");
-            service.shutdownNow();
-            if (service.awaitTermination(1, TimeUnit.SECONDS)) {
-                Logger.info(this, "#shutdown(): shutdownNow() succeeded");
-            } else {
-                Logger.error(this, "#shutdown(): failed to stop threads");
-            }
         }
     }
 }
