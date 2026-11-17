@@ -8,6 +8,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.s3auth.hosts.DynamoHosts;
+import com.s3auth.hosts.Hosts;
 import java.util.concurrent.TimeUnit;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -37,6 +38,17 @@ public final class Main {
      *  Also unignore test 'connectDisconnect' in FtpFacadeTest.
      */
     public static void main(final String[] args) throws Exception {
+        Main.main(args, new DynamoHosts());
+    }
+
+    /**
+     * Entrance with injectable hosts, to be used in tests.
+     *
+     * @param args Optional arguments
+     * @param hosts Hosts to serve requests from
+     * @throws Exception If something is wrong
+     */
+    static void main(final String[] args, final Hosts hosts) throws Exception {
         final OptionParser parser = new OptionParser("p:s:d");
         final OptionSet options = parser.parse(args);
         final int port;
@@ -52,7 +64,7 @@ public final class Main {
             secured = 443;
         }
         final HttpFacade facade =
-            HttpFacade.open(new DynamoHosts(), port, secured);
+            HttpFacade.open(hosts, port, secured);
         facade.listen();
         Logger.warn(Main.class, "started at http://localhost:%d...", port);
         if (options.has("d")) {
