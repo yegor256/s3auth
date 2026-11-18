@@ -330,6 +330,7 @@
           <mergeUserSettings>true</mergeUserSettings>
           <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
           <debug>false</debug>
+          <mavenOpts>-Dmaven.repo.local.tail=${user.home}/.m2/repository</mavenOpts>
           <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
           <noLog>false</noLog>
           <postBuildHookScript>verify</postBuildHookScript>
