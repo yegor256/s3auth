@@ -10,6 +10,7 @@ import com.s3auth.hosts.Hosts;
 import com.s3auth.hosts.Range;
 import com.s3auth.hosts.ResourceMocker;
 import com.s3auth.hosts.Version;
+import java.net.Socket;
 import java.net.URI;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
@@ -74,6 +75,49 @@ final class MainTest {
             ).toURL().getContent(),
             Matchers.notNullValue()
         );
+        thread.interrupt();
+    }
+
+    /**
+     * Main can start the FTP facade when the FTP port is configured.
+     *
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    void startsFtpFacadeWhenConfigured() throws Exception {
+        final Hosts hosts = Mockito.mock(Hosts.class);
+        final int http = PortMocker.reserve();
+        final int secured = PortMocker.reserve();
+        final int ftp = PortMocker.reserve();
+        final Thread thread = new Thread(
+            new VerboseRunnable(
+                (Callable<Void>) () -> {
+                    try {
+                        Main.main(
+                            new String[] {
+                                "-p", Integer.toString(http),
+                                "-s", Integer.toString(secured),
+                                "-f", Integer.toString(ftp),
+                            },
+                            hosts
+                        );
+                    } catch (final InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                        throw new IllegalStateException(ex);
+                    }
+                    return null;
+                },
+                false
+            )
+        );
+        thread.start();
+        TimeUnit.SECONDS.sleep(1L);
+        try (Socket socket = new Socket("localhost", ftp)) {
+            MatcherAssert.assertThat(
+                socket.isConnected(),
+                Matchers.is(true)
+            );
+        }
         thread.interrupt();
     }
 
