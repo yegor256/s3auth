@@ -34,8 +34,6 @@ public final class Main {
      *
      * @param args Optional arguments
      * @throws Exception If something is wrong
-     * @todo #213:30min Create a FtpFacade in order to provide a FTP gateway.
-     *  Also unignore test 'connectDisconnect' in FtpFacadeTest.
      */
     public static void main(final String[] args) throws Exception {
         Main.main(args, new DynamoHosts());
@@ -49,7 +47,7 @@ public final class Main {
      * @throws Exception If something is wrong
      */
     static void main(final String[] args, final Hosts hosts) throws Exception {
-        final OptionParser parser = new OptionParser("p:s:d");
+        final OptionParser parser = new OptionParser("p:s:f:d");
         final OptionSet options = parser.parse(args);
         final int port;
         if (options.has("p")) {
@@ -67,6 +65,14 @@ public final class Main {
             HttpFacade.open(hosts, port, secured);
         facade.listen();
         Logger.warn(Main.class, "started at http://localhost:%d...", port);
+        if (options.has("f")) {
+            final int ftp = Integer.parseInt(options.valueOf("f").toString());
+            final FtpFacade gateway = FtpFacade.open(hosts, ftp);
+            gateway.listen();
+            Logger.warn(
+                Main.class, "started at ftp://localhost:%d...", ftp
+            );
+        }
         if (options.has("d")) {
             while (true) {
                 TimeUnit.MINUTES.sleep(1);
