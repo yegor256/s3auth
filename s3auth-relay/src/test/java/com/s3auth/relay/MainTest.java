@@ -10,11 +10,16 @@ import com.s3auth.hosts.Hosts;
 import com.s3auth.hosts.Range;
 import com.s3auth.hosts.ResourceMocker;
 import com.s3auth.hosts.Version;
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -160,5 +165,121 @@ final class MainTest {
             done.await(1L, TimeUnit.SECONDS),
             Matchers.is(true)
         );
+    }
+
+    /**
+     * Main rolls back HTTP startup when the FTP port is occupied.
+     *
+     * <p>When the FTP port cannot be bound, {@link Main} must close the
+     * already-started HTTP facade, releasing both HTTP ports and all its
+     * worker threads, instead of leaving a half-started process behind.</p>
+     *
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    void rollsBackHttpWhenFtpPortIsOccupied() throws Exception {
+        final Hosts hosts = Mockito.mock(Hosts.class);
+        try (ServerSocket occupied = new ServerSocket(0)) {
+            final int ftp = occupied.getLocalPort();
+            final int http = PortMocker.reserve();
+            final int secured = PortMocker.reserve();
+            final Collection<String> before = MainTest.workers();
+            final AtomicReference<Throwable> failure = new AtomicReference<>();
+            final Thread thread = new Thread(
+                new VerboseRunnable(
+                    (Callable<Void>) () -> {
+                        Main.main(
+                            new String[] {
+                                "-p", Integer.toString(http),
+                                "-s", Integer.toString(secured),
+                                "-f", Integer.toString(ftp),
+                            },
+                            hosts
+                        );
+                        return null;
+                    },
+                    false
+                )
+            );
+            thread.setUncaughtExceptionHandler(
+                (thrd, throwable) -> failure.set(throwable)
+            );
+            thread.start();
+            thread.join(TimeUnit.SECONDS.toMillis(30L));
+            final Collection<String> problems = new ArrayList<>(0);
+            if (failure.get() == null) {
+                problems.add(
+                    String.format(
+                        "main() did not fail though FTP port %d is occupied",
+                        ftp
+                    )
+                );
+            }
+            int after = MainTest.workers().size();
+            int attempt = 0;
+            while (after != before.size() && attempt < 50) {
+                TimeUnit.MILLISECONDS.sleep(100L);
+                after = MainTest.workers().size();
+                ++attempt;
+            }
+            if (after != before.size()) {
+                problems.add(
+                    String.format(
+                        "worker threads not released: %d alive, %d expected",
+                        after, before.size()
+                    )
+                );
+            }
+            if (!MainTest.rebindable(http)) {
+                problems.add(
+                    String.format("HTTP port %d is not released", http)
+                );
+            }
+            if (!MainTest.rebindable(secured)) {
+                problems.add(
+                    String.format(
+                        "secured HTTP port %d is not released", secured
+                    )
+                );
+            }
+            MatcherAssert.assertThat(
+                String.join(String.format("%n"), problems),
+                problems,
+                Matchers.empty()
+            );
+        }
+    }
+
+    private static Collection<String> workers() {
+        final Collection<String> names = new ArrayList<>(0);
+        for (final Thread thread : Thread.getAllStackTraces().keySet()) {
+            final String name = thread.getName();
+            if (name.startsWith("front") || name.startsWith("back")) {
+                names.add(name);
+            }
+        }
+        return names;
+    }
+
+    private static boolean rebindable(final int port) throws IOException {
+        boolean free = false;
+        boolean interrupted = false;
+        int attempt = 0;
+        while (!free && !interrupted && attempt < 50) {
+            try (ServerSocket probe = new ServerSocket(port)) {
+                if (probe.getLocalPort() == port) {
+                    free = true;
+                }
+            } catch (final IOException ex) {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(100L);
+                } catch (final InterruptedException stop) {
+                    Thread.currentThread().interrupt();
+                    interrupted = true;
+                }
+            }
+            ++attempt;
+        }
+        return free;
     }
 }
