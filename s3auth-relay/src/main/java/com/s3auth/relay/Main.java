@@ -9,6 +9,8 @@ import com.jcabi.aspects.Loggable;
 import com.jcabi.log.Logger;
 import com.s3auth.hosts.DynamoHosts;
 import com.s3auth.hosts.Hosts;
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -23,6 +25,11 @@ import joptsimple.OptionSet;
 public final class Main {
 
     /**
+     * Highest valid TCP port number.
+     */
+    private static final int MAX_PORT = 0xFFFF;
+
+    /**
      * It's a utility class.
      */
     private Main() {
@@ -34,8 +41,6 @@ public final class Main {
      *
      * @param args Optional arguments
      * @throws Exception If something is wrong
-     * @todo #213:30min Create a FtpFacade in order to provide a FTP gateway.
-     *  Also unignore test 'connectDisconnect' in FtpFacadeTest.
      */
     public static void main(final String[] args) throws Exception {
         Main.main(args, new DynamoHosts());
@@ -49,7 +54,7 @@ public final class Main {
      * @throws Exception If something is wrong
      */
     static void main(final String[] args, final Hosts hosts) throws Exception {
-        final OptionParser parser = new OptionParser("p:s:d");
+        final OptionParser parser = new OptionParser("p:s:f:d");
         final OptionSet options = parser.parse(args);
         final int port;
         if (options.has("p")) {
@@ -63,14 +68,52 @@ public final class Main {
         } else {
             secured = 443;
         }
+        final int ftp;
+        if (options.has("f")) {
+            ftp = Integer.parseInt(options.valueOf("f").toString());
+            Main.validate(ftp);
+        } else {
+            ftp = -1;
+        }
         final HttpFacade facade =
             HttpFacade.open(hosts, port, secured);
-        facade.listen();
-        Logger.warn(Main.class, "started at http://localhost:%d...", port);
+        try {
+            facade.listen();
+            Logger.warn(Main.class, "started at http://localhost:%d...", port);
+            if (ftp >= 0) {
+                final FtpFacade gateway = FtpFacade.open(hosts, ftp);
+                gateway.listen();
+                Logger.warn(
+                    Main.class, "started at ftp://localhost:%d...", ftp
+                );
+            }
+        } catch (final IOException ex) {
+            Main.close(facade, ex);
+            throw ex;
+        }
         if (options.has("d")) {
             while (true) {
                 TimeUnit.MINUTES.sleep(1);
             }
+        }
+    }
+
+    private static void validate(final int port) {
+        if (port < 0 || port > Main.MAX_PORT) {
+            throw new IllegalArgumentException(
+                String.format(
+                    "Port %d is out of valid range [0..%d]",
+                    port, Main.MAX_PORT
+                )
+            );
+        }
+    }
+
+    private static void close(final Closeable facade, final Throwable failure) {
+        try {
+            facade.close();
+        } catch (final IOException ex) {
+            failure.addSuppressed(ex);
         }
     }
 }
