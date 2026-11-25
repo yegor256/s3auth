@@ -70,6 +70,49 @@ final class DirectoryListingTest {
         );
     }
 
+    /**
+     * Fetches directory listing where object and folder names contain
+     * characters that must be percent-encoded in generated links, e.g. #331.
+     *
+     * @throws Exception If something goes wrong
+     */
+    @Test
+    void encodesSpecialCharactersInLinks() throws Exception {
+        final S3Client client = Mockito.mock(S3Client.class);
+        final ImmutableList.Builder<CommonPrefix> prfxs =
+            ImmutableList.builder();
+        for (final String prefix : new String[] {"Well [64]/"}) {
+            prfxs.add(CommonPrefix.builder().prefix(prefix).build());
+        }
+        final ImmutableList.Builder<S3Object> builder =
+            ImmutableList.builder();
+        for (final String key : new String[] {"Layout [Print]/a b.txt"}) {
+            builder.add(S3Object.builder().key(key).size(10L).build());
+        }
+        Mockito.doReturn(
+            ListObjectsResponse.builder()
+                .contents(builder.build())
+                .commonPrefixes(prfxs.build())
+                .isTruncated(false)
+                .build()
+        ).when(client).listObjects(Mockito.any(ListObjectsRequest.class));
+        MatcherAssert.assertThat(
+            new String(
+                ResourceMocker.toByteArray(
+                    DirectoryListing.fetch(client, "bucket", "")
+                ),
+                StandardCharsets.UTF_8
+            ),
+            Matchers.allOf(
+                matchesEncodedObject(
+                    "Layout [Print]/a b.txt",
+                    "Layout%20%5BPrint%5D/a%20b.txt"
+                ),
+                matchesEncodedPrefix("Well [64]/", "Well%20%5B64%5D/")
+            )
+        );
+    }
+
     private static Matcher<String> matchesObject(final String key, final int size) {
         return XhtmlMatchers.hasXPaths(
             String.format(
@@ -85,6 +128,26 @@ final class DirectoryListingTest {
             String.format(
                 "//xhtml:a[@href=\"/%sindex.html\" and .=\"%s\"]",
                 prefix, prefix
+            )
+        );
+    }
+
+    private static Matcher<String> matchesEncodedObject(
+        final String key, final String href) {
+        return XhtmlMatchers.hasXPath(
+            String.format(
+                "//xhtml:a[@href=\"/%s\" and .=\"%s\"]",
+                href, key
+            )
+        );
+    }
+
+    private static Matcher<String> matchesEncodedPrefix(
+        final String prefix, final String href) {
+        return XhtmlMatchers.hasXPath(
+            String.format(
+                "//xhtml:a[@href=\"/%sindex.html\" and .=\"%s\"]",
+                href, prefix
             )
         );
     }

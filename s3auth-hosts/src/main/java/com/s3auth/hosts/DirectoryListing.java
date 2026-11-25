@@ -13,12 +13,14 @@ import com.jcabi.xml.XSLDocument;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.zip.CRC32;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.HttpHeaders;
@@ -181,11 +183,14 @@ final class DirectoryListing implements Resource {
         final Directives dirs = new Directives()
             .add("directory").attr("prefix", key);
         for (final String prefix : listing.prefixes()) {
-            dirs.add("commonPrefix").set(prefix).up();
+            dirs.add("commonPrefix")
+                .attr("href", DirectoryListing.encoded(prefix))
+                .set(prefix).up();
         }
         for (final S3Object object : listing.objects()) {
             dirs.add("object")
                 .add("path")
+                .attr("href", DirectoryListing.encoded(object.key()))
                 .set(object.key()).up()
                 .add("size")
                 .set(Long.toString(object.size())).up()
@@ -206,5 +211,17 @@ final class DirectoryListing implements Resource {
     private static String header(@NotNull final String name,
         @NotNull final String value) {
         return String.format("%s: %s", name, value);
+    }
+
+    private static String encoded(final String key) {
+        final String[] parts = key.split("/", -1);
+        final List<String> segments = new ArrayList<>(parts.length);
+        for (final String part : parts) {
+            segments.add(
+                URLEncoder.encode(part, StandardCharsets.UTF_8)
+                    .replace("+", "%20")
+            );
+        }
+        return String.join("/", segments);
     }
 }

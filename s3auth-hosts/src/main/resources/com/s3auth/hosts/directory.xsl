@@ -51,7 +51,7 @@
         <a>
           <xsl:attribute name="href">
             <xsl:text>/</xsl:text>
-            <xsl:value-of select="."/>
+            <xsl:value-of select="@href"/>
             <xsl:text>index.html</xsl:text>
           </xsl:attribute>
           <xsl:value-of select="."/>
@@ -65,7 +65,7 @@
         <a>
           <xsl:attribute name="href">
             <xsl:text>/</xsl:text>
-            <xsl:value-of select="path"/>
+            <xsl:value-of select="path/@href"/>
           </xsl:attribute>
           <xsl:value-of select="path"/>
         </a>
