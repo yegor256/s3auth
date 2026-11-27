@@ -7,6 +7,7 @@ package com.s3auth.hosts;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.zip.GZIPInputStream;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
@@ -55,6 +56,29 @@ final class GzipResourceTest {
         MatcherAssert.assertThat(
             new GzipResource(new Resource.PlainText("foo")).headers(),
             Matchers.hasItem("Content-Encoding: gzip")
+        );
+    }
+
+    /**
+     * GzipResource omits the uncompressed Content-Length header and
+     * requests connection-close framing.
+     *
+     * @throws Exception If something goes wrong
+     */
+    @Test
+    void omitsContentLengthAndUsesConnectionClose() throws Exception {
+        final Collection<String> headers = new GzipResource(
+            new Resource.PlainText("hello")
+        ).headers();
+        MatcherAssert.assertThat(
+            headers,
+            Matchers.not(
+                Matchers.hasItem(Matchers.startsWith("Content-Length:"))
+            )
+        );
+        MatcherAssert.assertThat(
+            headers,
+            Matchers.hasItem("Connection: close")
         );
     }
 }

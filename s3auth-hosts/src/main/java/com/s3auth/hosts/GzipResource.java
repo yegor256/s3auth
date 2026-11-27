@@ -57,9 +57,15 @@ public final class GzipResource implements Resource {
 
     @Override
     public Collection<String> headers() throws IOException {
-        return ImmutableList.<String>builder()
-            .addAll(this.resource.headers())
+        final ImmutableList.Builder<String> headers = ImmutableList.builder();
+        for (final String header : this.resource.headers()) {
+            if (!header.regionMatches(true, 0, "Content-Length:", 0, 15)) {
+                headers.add(header);
+            }
+        }
+        return headers
             .add(String.format("%s: %s", HttpHeaders.CONTENT_ENCODING, "gzip"))
+            .add("Connection: close")
             .build();
     }
 
