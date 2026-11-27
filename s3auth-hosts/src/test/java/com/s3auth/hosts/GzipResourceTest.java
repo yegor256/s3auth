@@ -57,4 +57,32 @@ final class GzipResourceTest {
             Matchers.hasItem("Content-Encoding: gzip")
         );
     }
+
+    /**
+     * GzipResource omits the uncompressed Content-Length header.
+     *
+     * @throws Exception If something goes wrong
+     */
+    @Test
+    void omitsUncompressedContentLength() throws Exception {
+        MatcherAssert.assertThat(
+            new GzipResource(new Resource.PlainText("hello")).headers(),
+            Matchers.not(
+                Matchers.hasItem(Matchers.startsWith("Content-Length:"))
+            )
+        );
+    }
+
+    /**
+     * GzipResource requests connection-close framing.
+     *
+     * @throws Exception If something goes wrong
+     */
+    @Test
+    void requestsConnectionCloseFraming() throws Exception {
+        MatcherAssert.assertThat(
+            new GzipResource(new Resource.PlainText("hello")).headers(),
+            Matchers.hasItem("Connection: close")
+        );
+    }
 }
